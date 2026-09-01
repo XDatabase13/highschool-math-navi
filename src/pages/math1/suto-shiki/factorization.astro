@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SutoShikiDetail from '../../../components/SutoShikiDetail.astro';
+import { getSutoShikiProblem } from '../../../data/math1/suto-shiki';
+
+const problem = getSutoShikiProblem('factorization');
+if (!problem) {
+  throw new Error('factorization problem not found');
+}
+---
+
+<BaseLayout title={`${problem.title} | 数学I 数と式`}>
+  <p class="breadcrumb">
+    数学I ＞ {problem.unit} ＞ {problem.title}
+  </p>
+
+  <SutoShikiDetail problem={problem} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/">← トップへ戻る</a>
+  </nav>
+</BaseLayout>

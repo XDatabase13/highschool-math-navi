@@ -1,17 +1,17 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="高校数学ナビ（試作）">
+  <section class="hero">
+    <h1>高校数学ナビ</h1>
+    <p>
+      このサイトは、高校数学の学習ナビゲーションサイトのプロトタイプです。
+      現在は数学I「二次関数」のみを対象に、問題ページのUIと学習導線を試作しています。
+    </p>
+    <a class="btn-primary" href="/math1/quadratic/">数学I「二次関数」の問題一覧へ</a>
+    <p class="hero-secondary">
+      <a href="/app/">アプリ／データベース型UI（試作）を試す →</a>
+    </p>
+  </section>
+</BaseLayout>

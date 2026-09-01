@@ -1,0 +1,148 @@
+---
+// 円に内接する四角形ABCD（AB=3, AD=5, BC=2, ∠BAD=60°, CD・BDは未知/計算対象）の
+// 問題図。showDiagonal で「補助線BDを引いた後」の図に切り替える。
+// この問題1件専用の図なので、汎用の図形描画コンポーネントにはしない。
+
+interface Props {
+  showDiagonal?: boolean;
+  caption?: string;
+}
+
+const { showDiagonal = false, caption } = Astro.props;
+
+// 実際の値（CD, BDは解答上の既知の結果。図はこれを踏まえた正しい位置関係で描く）。
+const AB = 3;
+const AD = 5;
+const BC = 2;
+const CD = 3;
+const BD = Math.sqrt(19);
+const angleBAD = Math.PI / 3; // 60°
+
+// A,B,DはすべてこのBDを弦とする外接円上にあり、半径は正弦定理から求まる。
+// ABCDは同一円に内接するので、この円をそのままA→B→C→Dの配置に使う。
+const R = BD / (2 * Math.sin(angleBAD));
+
+function centralAngle(chord: number): number {
+  return 2 * Math.asin(chord / (2 * R));
+}
+
+const arcAB = centralAngle(AB);
+const arcBC = centralAngle(BC);
+const arcCD = centralAngle(CD);
+// arcDAは一周(2π)からの残りとして求める（丸め誤差を吸収）。
+const arcDA = 2 * Math.PI - arcAB - arcBC - arcCD;
+void arcDA;
+
+const VIEW = 320;
+const CENTER = VIEW / 2;
+const RADIUS = 112;
+
+const thetaA = Math.PI / 2; // Aを円の上部に配置
+const thetaB = thetaA - arcAB;
+const thetaC = thetaB - arcBC;
+const thetaD = thetaC - arcCD;
+
+function point(theta: number) {
+  return {
+    x: CENTER + RADIUS * Math.cos(theta),
+    y: CENTER - RADIUS * Math.sin(theta),
+  };
+}
+
+const A = point(thetaA);
+const B = point(thetaB);
+const C = point(thetaC);
+const D = point(thetaD);
+
+function unitVec(from: { x: number; y: number }, to: { x: number; y: number }) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  return { x: dx / len, y: dy / len };
+}
+
+// 辺ラベルは、円の中心から弦の中点方向へ少し外側にずらして配置する。
+function outwardLabel(p1: { x: number; y: number }, p2: { x: number; y: number }, offset = 20) {
+  const mx = (p1.x + p2.x) / 2;
+  const my = (p1.y + p2.y) / 2;
+  const u = unitVec({ x: CENTER, y: CENTER }, { x: mx, y: my });
+  return { x: mx + u.x * offset, y: my + u.y * offset };
+}
+
+const labelAB = outwardLabel(A, B);
+const labelAD = outwardLabel(A, D);
+const labelBC = outwardLabel(B, C);
+const labelCD = outwardLabel(C, D);
+
+// ∠BADを示す小さな弧。AB方向・AD方向それぞれ距離rの点を、内角側に短い弧で結ぶ。
+const ANGLE_ARC_R = 26;
+const uAB = unitVec(A, B);
+const uAD = unitVec(A, D);
+const angleP1 = { x: A.x + uAB.x * ANGLE_ARC_R, y: A.y + uAB.y * ANGLE_ARC_R };
+const angleP2 = { x: A.x + uAD.x * ANGLE_ARC_R, y: A.y + uAD.y * ANGLE_ARC_R };
+const cross = uAB.x * uAD.y - uAB.y * uAD.x;
+const sweepFlag = cross > 0 ? 1 : 0;
+const angleArcPath = `M ${angleP1.x.toFixed(1)} ${angleP1.y.toFixed(1)} A ${ANGLE_ARC_R} ${ANGLE_ARC_R} 0 0 ${sweepFlag} ${angleP2.x.toFixed(1)} ${angleP2.y.toFixed(1)}`;
+const bisector = unitVec({ x: 0, y: 0 }, { x: uAB.x + uAD.x, y: uAB.y + uAD.y });
+const angleLabelPos = { x: A.x + bisector.x * (ANGLE_ARC_R + 16), y: A.y + bisector.y * (ANGLE_ARC_R + 16) };
+
+const labelBD = { x: (B.x + D.x) / 2 + 10, y: (B.y + D.y) / 2 };
+
+const points: Record<'A' | 'B' | 'C' | 'D', { x: number; y: number }> = { A, B, C, D };
+const pointLabelOffsets: Record<'A' | 'B' | 'C' | 'D', { dx: number; dy: number }> = {
+  A: { dx: 0, dy: -14 },
+  B: { dx: 14, dy: -2 },
+  C: { dx: 10, dy: 16 },
+  D: { dx: -14, dy: 14 },
+};
+---
+
+<figure class="circle-figure">
+  <svg
+    viewBox={`0 0 ${VIEW} ${VIEW}`}
+    class="circle-figure-svg"
+    role="img"
+    aria-label={
+      showDiagonal
+        ? '円に内接する四角形ABCD。対角線BDが追加され、三角形ABDと三角形BCDに分かれている。'
+        : '円に内接する四角形ABCD。AB=3、AD=5、BC=2、角BAD=60度、CDは未知。'
+    }
+  >
+    <circle cx={CENTER} cy={CENTER} r={RADIUS} class="circle-figure-circle" />
+
+    <polygon
+      points={`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`}
+      class="circle-figure-quad"
+    />
+
+    {showDiagonal && (
+      <line x1={B.x} y1={B.y} x2={D.x} y2={D.y} class="circle-figure-diagonal" />
+    )}
+
+    <path d={angleArcPath} class="circle-figure-angle-arc" />
+    <text x={angleLabelPos.x} y={angleLabelPos.y} class="circle-figure-angle-label">60°</text>
+
+    {(['A', 'B', 'C', 'D'] as const).map((key) => (
+      <>
+        <circle cx={points[key].x} cy={points[key].y} r="4" class="circle-figure-point" />
+        <text
+          x={points[key].x + pointLabelOffsets[key].dx}
+          y={points[key].y + pointLabelOffsets[key].dy}
+          class="circle-figure-point-label"
+        >
+          {key}
+        </text>
+      </>
+    ))}
+
+    <text x={labelAB.x} y={labelAB.y} class="circle-figure-side-label">AB=3</text>
+    <text x={labelAD.x} y={labelAD.y} class="circle-figure-side-label">AD=5</text>
+    <text x={labelBC.x} y={labelBC.y} class="circle-figure-side-label">BC=2</text>
+    <text x={labelCD.x} y={labelCD.y} class="circle-figure-side-label">CD</text>
+
+    {showDiagonal && (
+      <text x={labelBD.x} y={labelBD.y} class="circle-figure-diagonal-label">BD</text>
+    )}
+  </svg>
+  {caption && <figcaption class="circle-figure-caption">{caption}</figcaption>}
+</figure>

@@ -1,0 +1,67 @@
+---
+import ThinkingFlow from './ThinkingFlow.astro';
+import type { QuadraticCaseProblem } from '../data/math1/quadratic-case';
+
+interface Props {
+  problem: QuadraticCaseProblem;
+}
+
+const { problem } = Astro.props;
+---
+
+<h1>{problem.title}</h1>
+
+<ul class="label-list">
+  {problem.labels.map((label) => (
+    <li class="label-item">
+      <span class="label-name">{label.name}</span>
+      <span class="label-value">{label.value}</span>
+    </li>
+  ))}
+</ul>
+
+<section class="problem-section">
+  <h2>問題</h2>
+  <p class="statement-text">{problem.statement}</p>
+</section>
+
+<section class="impression-section">
+  <h2>所感</h2>
+  <h3 class="impression-subhead">問題メタ</h3>
+  <p>{problem.impressionPositioning}</p>
+  <h3 class="impression-subhead">解法メタ</h3>
+  <p>{problem.impressionAdvice}</p>
+</section>
+
+<section class="thinking-section">
+  <h2>考え方</h2>
+  <ThinkingFlow steps={problem.steps} />
+</section>
+
+<section class="final-answer-section">
+  <h2>最終解答</h2>
+  <button type="button" class="reveal-answer-btn" data-answer-toggle>
+    解答を見る
+  </button>
+  <ul class="answer-branch-list" data-answer-box hidden>
+    {problem.answerBranches.map((branch) => (
+      <li class="answer-branch-item">
+        <span class="answer-branch-condition">{branch.condition}</span>
+        <span class="answer-branch-result">{branch.result}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
+    if (btn.dataset.answerBound) return;
+    btn.dataset.answerBound = 'true';
+    const box = btn.parentElement?.querySelector<HTMLElement>('[data-answer-box]');
+    btn.addEventListener('click', () => {
+      const isHidden = box?.hasAttribute('hidden') ?? false;
+      box?.toggleAttribute('hidden');
+      btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+    });
+  });
+</script>

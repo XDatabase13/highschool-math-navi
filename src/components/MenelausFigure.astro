@@ -1,0 +1,140 @@
+---
+// 三角形ABC・辺AB上のD・辺CA上のF・辺BCのC側延長上のEというメネラウスの定理の問題図。
+// showRoute で「A→D→B→E→C→F→Aとたどるルート」の矢印オーバーレイを切り替える。
+// この問題1件専用の図なので、汎用の図形描画コンポーネントにはしない。
+
+interface Props {
+  showRoute?: boolean;
+  caption?: string;
+}
+
+const { showRoute = false, caption } = Astro.props;
+
+type Point = { x: number; y: number };
+
+// 三角形ABCの座標は「関係が読み取れればよい」ための仮の配置（実寸ではない）。
+// D, F, Eはこの三角形と与えられた比（AD:DB=2:3, CF:FA=4:5）から計算して求める。
+const A: Point = { x: 170, y: 40 };
+const B: Point = { x: 60, y: 260 };
+const C: Point = { x: 260, y: 260 };
+
+function lerp(p1: Point, p2: Point, t: number): Point {
+  return { x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t };
+}
+
+// AD:DB = 2:3 → D は A から B へ 2/5 進んだ点。
+const D = lerp(A, B, 2 / 5);
+// CF:FA = 4:5 → F は C から A へ 4/9 進んだ点。
+const F = lerp(C, A, 4 / 9);
+
+// E は 直線DF と 直線BC の交点として計算する（BE:EC=15:8はここから導かれる結果）。
+function lineIntersection(p1: Point, p2: Point, p3: Point, p4: Point): Point {
+  const a1 = p2.y - p1.y;
+  const b1 = p1.x - p2.x;
+  const c1 = a1 * p1.x + b1 * p1.y;
+  const a2 = p4.y - p3.y;
+  const b2 = p3.x - p4.x;
+  const c2 = a2 * p3.x + b2 * p3.y;
+  const det = a1 * b2 - a2 * b1;
+  return { x: (b2 * c1 - b1 * c2) / det, y: (a1 * c2 - a2 * c1) / det };
+}
+
+const E = lineIntersection(D, F, B, C);
+
+const VIEW_W = 580;
+const VIEW_H = 320;
+
+const pointLabelOffsets: Record<'A' | 'B' | 'C' | 'D' | 'E' | 'F', { dx: number; dy: number }> = {
+  A: { dx: 0, dy: -14 },
+  B: { dx: -16, dy: 14 },
+  C: { dx: 8, dy: 18 },
+  D: { dx: -18, dy: -2 },
+  F: { dx: 14, dy: -6 },
+  E: { dx: 12, dy: 16 },
+};
+const points: Record<'A' | 'B' | 'C' | 'D' | 'E' | 'F', Point> = { A, B, C, D, E, F };
+
+// A→D→B→E→C→F→A の順にたどる、メネラウスの「1周ルート」。
+// B→E→C は一直線上に重なるため、両端を少し内側に詰めて描き、
+// 矢印の先端（矢じり）が次の区間の線に隠れないようにする。
+function inset(from: Point, to: Point, px: number): [Point, Point] {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len;
+  const uy = dy / len;
+  return [
+    { x: from.x + ux * px, y: from.y + uy * px },
+    { x: to.x - ux * px, y: to.y - uy * px },
+  ];
+}
+
+const route: [Point, Point][] = [
+  inset(A, D, 6),
+  inset(D, B, 6),
+  inset(B, E, 6),
+  inset(E, C, 6),
+  inset(C, F, 6),
+  inset(F, A, 6),
+];
+---
+
+<figure class="menelaus-figure">
+  <svg
+    viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+    class="menelaus-figure-svg"
+    role="img"
+    aria-label={
+      showRoute
+        ? '三角形ABCの図に、A→D→B→E→C→Fと一周してAに戻るメネラウスのルートを矢印で示している。'
+        : '三角形ABC。DはAB上でAD:DB=2:3、FはCA上でCF:FA=4:5、EはBCをC側へ延長した直線上にあり、D,F,Eは一直線。BE:ECは未知。'
+    }
+  >
+    <defs>
+      <marker
+        id="menelaus-arrowhead"
+        markerWidth="8"
+        markerHeight="8"
+        refX="5.5"
+        refY="3"
+        orient="auto"
+      >
+        <path d="M0,0 L6,3 L0,6 Z" class="menelaus-route-arrowhead" />
+      </marker>
+    </defs>
+
+    <polygon points={`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`} class="menelaus-triangle" />
+    <line x1={C.x} y1={C.y} x2={E.x} y2={E.y} class="menelaus-extension" />
+    <line x1={D.x} y1={D.y} x2={E.x} y2={E.y} class="menelaus-transversal" />
+
+    {showRoute &&
+      route.map(([from, to]) => (
+        <line
+          x1={from.x}
+          y1={from.y}
+          x2={to.x}
+          y2={to.y}
+          class="menelaus-route"
+          marker-end="url(#menelaus-arrowhead)"
+        />
+      ))}
+
+    {(['A', 'B', 'C', 'D', 'E', 'F'] as const).map((key) => (
+      <>
+        <circle cx={points[key].x} cy={points[key].y} r="4" class="menelaus-point" />
+        <text
+          x={points[key].x + pointLabelOffsets[key].dx}
+          y={points[key].y + pointLabelOffsets[key].dy}
+          class="menelaus-point-label"
+        >
+          {key}
+        </text>
+      </>
+    ))}
+
+    <text x={D.x - 6} y={D.y - 16} class="menelaus-ratio-label">AD:DB=2:3</text>
+    <text x={F.x + 10} y={F.y - 18} class="menelaus-ratio-label">CF:FA=4:5</text>
+    <text x={E.x + 4} y={E.y + 30} class="menelaus-ratio-label">BE:EC=?</text>
+  </svg>
+  {caption && <figcaption class="menelaus-figure-caption">{caption}</figcaption>}
+</figure>

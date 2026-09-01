@@ -1,0 +1,229 @@
+---
+import { starRating } from '../utils/stars';
+import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex, type PreparedQuadratic27Entry } from '../utils/prepareQuadratic27Entry';
+
+interface Props {
+  prepared: PreparedQuadratic27Entry;
+}
+
+const { prepared } = Astro.props;
+const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
+---
+
+<h1>{entry.data.problem_id}　{entry.data.title}</h1>
+
+<ul class="label-list">
+  <li class="label-item">
+    <span class="label-name">重要度</span>
+    <span class="label-value">{entry.data.importance_label}</span>
+  </li>
+  <li class="label-item">
+    <span class="label-name">難易度</span>
+    <span class="label-value">{starRating(entry.data.difficulty, 4)}</span>
+  </li>
+</ul>
+
+{problem && (
+  <section class="problem-section">
+    <h2>問題</h2>
+    <div set:html={problem.html} />
+    {problemAssets.map(({ svg }) => (
+      <figure class="problem-asset-figure" set:html={svg} />
+    ))}
+  </section>
+)}
+
+{(problemMeta || solutionMeta) && (
+  <section class="impression-section">
+    <h2>所感</h2>
+    {problemMeta && (
+      <>
+        <h3 class="impression-subhead">問題メタ</h3>
+        <div set:html={problemMeta.html} />
+      </>
+    )}
+    {solutionMeta && (
+      <>
+        <h3 class="impression-subhead">解法メタ</h3>
+        <div set:html={solutionMeta.html} />
+      </>
+    )}
+  </section>
+)}
+
+{thinkingFlow && (
+  <section class="thinking-section">
+    <h2>ThinkingFlow</h2>
+    {thinkingFlow.subsections.every((s) => s.subsections.length === 0) ? (
+      // 通常Flow：見出しがそのまま末端ステップ
+      // data-flow-kind="q27"：ThinkingFlow.astroの汎用スクリプトと二重に
+      // click handlerが付かないよう、このコンポーネント専用スクリプトの対象を区別する。
+      <div class="thinking-flow" data-flow-kind="q27">
+        <button type="button" class="reveal-all-btn" data-reveal-all>
+          考え方を全部見る
+        </button>
+        <ol class="thinking-steps">
+          {thinkingFlow.subsections.map((step, index) => {
+            verifyStepNumberMatchesIndex(entry.data.problem_id, '通常Flow', step.title, index + 1);
+            const { displayTitle, highlighted } = parseStepTitle(step.title);
+            return (
+              <li
+                class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
+                data-step-index={index}
+                hidden={index !== 0}
+              >
+                <div class="thinking-step-header">
+                  <span class="thinking-step-label">{displayTitle}</span>
+                  {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
+                </div>
+                <div class="thinking-step-body" set:html={step.html} />
+                {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
+                  <figure class="problem-asset-figure" set:html={svg} />
+                ))}
+                {index < thinkingFlow.subsections.length - 1 && (
+                  <button
+                    type="button"
+                    class="next-step-btn"
+                    data-next-from={index}
+                    hidden={index !== 0}
+                  >
+                    次の考え方を見る
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    ) : (
+      // 小問付きFlow：(1)/(2)ごとに独立した.thinking-flowを並べる。
+      thinkingFlow.subsections.map((part) => (
+        <div class="thinking-part">
+          <h3 class="thinking-part-label">{part.title}</h3>
+          <div class="thinking-flow" data-flow-kind="q27">
+            <button type="button" class="reveal-all-btn" data-reveal-all>
+              考え方を全部見る
+            </button>
+            <ol class="thinking-steps">
+              {part.subsections.map((step, index) => {
+                verifyStepNumberMatchesIndex(
+                  entry.data.problem_id,
+                  `小問Flow ${part.title}`,
+                  step.title,
+                  index + 1,
+                );
+                const { displayTitle, highlighted } = parseStepTitle(step.title);
+                return (
+                  <li
+                    class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
+                    data-step-index={index}
+                    hidden={index !== 0}
+                  >
+                    <div class="thinking-step-header">
+                      <span class="thinking-step-label">{displayTitle}</span>
+                      {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
+                    </div>
+                    <div class="thinking-step-body" set:html={step.html} />
+                    {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
+                      <figure class="problem-asset-figure" set:html={svg} />
+                    ))}
+                    {index < part.subsections.length - 1 && (
+                      <button
+                        type="button"
+                        class="next-step-btn"
+                        data-next-from={index}
+                        hidden={index !== 0}
+                      >
+                        次の考え方を見る
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </div>
+      ))
+    )}
+  </section>
+)}
+
+{finalAnswer && (
+  <section class="final-answer-section">
+    <h2>最終解答</h2>
+    <button type="button" class="reveal-answer-btn" data-answer-toggle>
+      解答を見る
+    </button>
+    <div class="result-box" data-answer-box hidden>
+      {finalAnswer.subsections.length === 0 ? (
+        <div set:html={finalAnswer.html} />
+      ) : (
+        finalAnswer.subsections.map((part) => (
+          <div class="final-answer-part">
+            <h3 class="final-answer-part-label">{part.title}</h3>
+            <div set:html={part.html} />
+          </div>
+        ))
+      )}
+      {finalAnswerAssets.map(({ svg }) => (
+        <figure class="problem-asset-figure" set:html={svg} />
+      ))}
+    </div>
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.thinking-flow[data-flow-kind="q27"]').forEach((flow) => {
+    if (flow.dataset.q27Bound) return;
+    flow.dataset.q27Bound = 'true';
+
+    const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
+    const total = stepEls.length;
+    const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
+
+    let revealedCount = 1;
+
+    function applyState() {
+      stepEls.forEach((stepEl, i) => {
+        stepEl.hidden = i >= revealedCount;
+      });
+      flow.querySelectorAll<HTMLButtonElement>('.next-step-btn').forEach((btn) => {
+        const fromIndex = Number(btn.dataset.nextFrom);
+        btn.hidden = !(fromIndex === revealedCount - 1 && revealedCount < total);
+      });
+      if (revealAllBtn) {
+        revealAllBtn.textContent = revealedCount >= total ? '考え方を閉じる' : '考え方を全部見る';
+      }
+    }
+
+    flow.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+
+      const nextBtn = target.closest<HTMLButtonElement>('.next-step-btn');
+      if (nextBtn) {
+        revealedCount = Math.min(revealedCount + 1, total);
+        applyState();
+        return;
+      }
+
+      const revealBtn = target.closest<HTMLButtonElement>('[data-reveal-all]');
+      if (revealBtn) {
+        revealedCount = revealedCount >= total ? 1 : total;
+        applyState();
+      }
+    });
+
+    applyState();
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
+    if (btn.dataset.answerBound) return;
+    btn.dataset.answerBound = 'true';
+    const box = btn.parentElement?.querySelector<HTMLElement>('[data-answer-box]');
+    btn.addEventListener('click', () => {
+      const isHidden = box?.hasAttribute('hidden') ?? false;
+      box?.toggleAttribute('hidden');
+      btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+    });
+  });
+</script>

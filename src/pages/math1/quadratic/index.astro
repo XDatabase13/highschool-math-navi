@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// 正本Markdown（math_db_quadratic_working/problems/）をContent Collections経由で読み込む。
+// TSへの手動転記は行わない。
+const problems = (await getCollection('quadratic27')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+---
+
+<BaseLayout title="数学I 二次関数 | 高校数学ナビ">
+  <p class="breadcrumb"><a href="/">トップ</a> / 数学I / 二次関数</p>
+
+  <h1>数学I「二次関数」</h1>
+  <p class="section-lead">二次関数の問題一覧です（M1-QF-001〜027、正本Markdown読み込みの試験実装）。</p>
+
+  <div class="problem-list">
+    {problems.map((problem) => (
+      <a class="problem-card" href={`/math1/quadratic/${problem.id}/`}>
+        <div class="problem-card-header">
+          <span class="problem-card-number">{problem.data.problem_id}</span>
+          <span class="problem-card-title">{problem.data.title}</span>
+        </div>
+        <div class="problem-card-meta">
+          <span>重要度：{problem.data.importance_label}</span>
+          <span>難易度：{problem.data.difficulty}</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

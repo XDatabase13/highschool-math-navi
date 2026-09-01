@@ -1,0 +1,22 @@
+---
+import { starRating } from '../utils/stars';
+import type { QuadraticProblem } from '../data/math1/quadratic';
+
+interface Props {
+  problem: QuadraticProblem;
+  href: string;
+}
+
+const { problem, href } = Astro.props;
+---
+
+<a class="problem-card" href={href}>
+  <div class="problem-card-header">
+    <span class="problem-card-number">{problem.number}</span>
+    <span class="problem-card-title">{problem.title}</span>
+  </div>
+  <div class="problem-card-meta">
+    <span>重要度：{starRating(problem.importance)}</span>
+    <span>難易度：{starRating(problem.difficulty)}</span>
+  </div>
+</a>

@@ -1,0 +1,841 @@
+:root {
+  --color-bg: #f7f7f4;
+  --color-surface: #ffffff;
+  --color-border: #e3e2de;
+  --color-text: #232323;
+  --color-text-muted: #767672;
+  --color-primary: #2f5f7a;
+  --color-primary-dark: #234a60;
+  --color-accent-bg: #eef4f7;
+  --font-base: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
+  --radius: 8px;
+  --max-width: 1080px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-base);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1, h2, h3 {
+  line-height: 1.4;
+  color: var(--color-text);
+}
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 1rem;
+}
+h2 {
+  font-size: 1.15rem;
+  margin: 2rem 0 0.75rem;
+  border-left: 4px solid var(--color-primary);
+  padding-left: 0.6rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul {
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+}
+
+/* App shell */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  background: var(--color-primary-dark);
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+.site-title {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.site-title:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}
+.site-tagline {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #d6e3ea;
+}
+
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.main-content {
+  padding: 2rem 1.5rem 4rem 0;
+  min-width: 0;
+}
+
+/* Nav */
+.side-nav {
+  border-right: 1px solid var(--color-border);
+  padding: 1.5rem 1rem 1.5rem 0;
+}
+.nav-toggle-btn {
+  display: none;
+}
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-subject {
+  margin-bottom: 1rem;
+}
+.nav-subject-name {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.nav-subject--empty .nav-subject-name {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+.nav-units {
+  list-style: none;
+  margin: 0;
+  padding-left: 0.75rem;
+}
+.nav-units li {
+  margin-bottom: 0.2rem;
+}
+
+/* Top page */
+.hero {
+  padding: 1rem 0 2rem;
+}
+.hero p {
+  max-width: 40em;
+}
+.btn-primary {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+}
+.btn-primary:hover {
+  background: var(--color-primary-dark);
+  text-decoration: none;
+}
+.hero-secondary {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1rem;
+}
+.breadcrumb a {
+  color: var(--color-text-muted);
+}
+
+/* Problem list */
+.section-lead {
+  color: var(--color-text-muted);
+}
+.problem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.problem-card {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  padding: 1rem 1.25rem;
+  color: var(--color-text);
+}
+.problem-card:hover {
+  border-color: var(--color-primary);
+  text-decoration: none;
+}
+.problem-card-header {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+.problem-card-number {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.problem-card-title {
+  font-weight: 700;
+}
+.problem-card-meta {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* Problem detail */
+.problem-section,
+.problem-meta-section,
+.answer-flow-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.meta-line {
+  font-weight: 700;
+}
+.note {
+  color: var(--color-text-muted);
+}
+
+/* Answer flow */
+.answer-flow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.answer-step {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--color-border);
+}
+.answer-step:first-child {
+  border-top: none;
+}
+.answer-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.answer-step-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--color-accent-bg);
+  color: var(--color-primary-dark);
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.answer-step-label {
+  flex: 1;
+  min-width: 10em;
+}
+.ask-btn {
+  border: 1px solid var(--color-primary);
+  background: #fff;
+  color: var(--color-primary);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.ask-btn:hover {
+  background: var(--color-accent-bg);
+}
+
+.prompt-box {
+  margin-top: 0.75rem;
+  margin-left: 2.3rem;
+  padding: 1rem;
+  background: var(--color-accent-bg);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.prompt-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+.copy-btn {
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Labels (優先度・難易度・位置づけ等) */
+.label-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+.label-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  background: var(--color-accent-bg);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+}
+.label-name {
+  color: var(--color-text-muted);
+}
+.label-value {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+/* Problem statement */
+.statement-text {
+  white-space: pre-line;
+  font-weight: 700;
+}
+
+/* Impression */
+.impression-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.impression-subhead {
+  margin: 0 0 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+  border: none;
+  padding: 0;
+}
+.impression-subhead + p {
+  margin-bottom: 1.1rem;
+}
+
+/* Thinking flow (考え方) */
+.thinking-section {
+  margin-bottom: 1.5rem;
+}
+.reveal-all-btn {
+  display: block;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.reveal-all-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.thinking-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.thinking-step {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.thinking-step--highlight {
+  border-left-color: var(--color-primary);
+  background: var(--color-accent-bg);
+}
+.thinking-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.thinking-step-label {
+  font-weight: 700;
+}
+.thinking-step-star {
+  color: var(--color-primary);
+}
+.thinking-step-body {
+  margin-bottom: 0.9rem;
+}
+.thinking-step-note {
+  margin: -0.4rem 0 0.9rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+.thinking-step-action {
+  margin-bottom: 0.6rem;
+}
+.thinking-step-action:last-of-type {
+  margin-bottom: 0.9rem;
+}
+.toggle-btn,
+.ai-btn {
+  border: 1px solid var(--color-primary);
+  background: #fff;
+  color: var(--color-primary);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.toggle-btn:hover,
+.ai-btn:hover {
+  background: var(--color-accent-bg);
+}
+.result-box {
+  margin-top: 0.6rem;
+  padding: 0.9rem 1rem;
+  background: var(--color-accent-bg);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.result-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.95rem;
+  margin: 0;
+}
+.ai-placeholder {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+.next-step-btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.next-step-btn:hover {
+  background: var(--color-primary-dark);
+}
+.next-step-btn[hidden] {
+  display: none;
+}
+
+/* Final answer */
+.final-answer-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.reveal-answer-btn {
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.reveal-answer-btn:hover {
+  background: var(--color-primary-dark);
+}
+.final-answer {
+  margin: 0.9rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+.answer-branch-list {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+.answer-branch-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--color-border);
+}
+.answer-branch-item:first-child {
+  border-top: none;
+}
+.answer-branch-condition {
+  color: var(--color-text-muted);
+  min-width: 9em;
+}
+.answer-branch-result {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-primary-dark);
+}
+
+/* Case graph comparison（グラフによる場合分け比較） */
+.case-graph-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.9rem;
+}
+.case-graph-card {
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  padding: 0.6rem 0.6rem 0.8rem;
+}
+.case-graph-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.case-graph-curve {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 2;
+}
+.case-graph-curve--domain {
+  stroke: var(--color-primary);
+  stroke-width: 3;
+}
+.case-graph-guide {
+  stroke: var(--color-text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.case-graph-guide-label {
+  font-size: 11px;
+  fill: var(--color-text-muted);
+  text-anchor: middle;
+}
+.case-graph-vertex {
+  fill: var(--color-primary-dark);
+}
+.case-graph-caption {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.78rem;
+}
+
+/* 静的に生成するproblem asset SVG（graph/figure/graph-compare）共通のクラス。
+   色・線幅はここでだけ決め、個々のSVGファイルには埋め込まない。 */
+.problem-asset-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.pa-axis {
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+  fill: none;
+}
+.pa-axis-fill {
+  fill: var(--color-text);
+}
+.pa-curve {
+  stroke: var(--color-primary);
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pa-curve-secondary {
+  stroke: var(--color-text-muted);
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pa-guide {
+  stroke: var(--color-text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  fill: none;
+}
+.pa-dot-closed {
+  fill: var(--color-primary-dark);
+  stroke: var(--color-primary-dark);
+}
+.pa-dot-open {
+  fill: var(--color-surface);
+  stroke: var(--color-primary-dark);
+  stroke-width: 2;
+}
+.pa-label {
+  font-size: 11px;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+.pa-label-muted {
+  font-size: 10px;
+  fill: var(--color-text-muted);
+  text-anchor: middle;
+}
+.pa-figure-line {
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+  fill: none;
+}
+.pa-figure-fill {
+  fill: var(--color-accent-bg);
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+}
+.case-graph-key {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+.case-graph-label {
+  color: var(--color-text);
+}
+.case-graph-condition {
+  color: var(--color-text-muted);
+}
+
+/* Cyclic quadrilateral figure（円に内接する四角形の問題図） */
+.circle-figure {
+  margin: 0 0 1.25rem;
+  max-width: 320px;
+}
+.circle-figure-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.circle-figure-circle {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+}
+.circle-figure-quad {
+  fill: rgba(47, 95, 122, 0.06);
+  stroke: var(--color-text);
+  stroke-width: 1.75;
+}
+.circle-figure-diagonal {
+  stroke: var(--color-primary);
+  stroke-width: 3;
+  stroke-dasharray: 6 4;
+}
+.circle-figure-diagonal-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--color-primary-dark);
+}
+.circle-figure-point {
+  fill: var(--color-text);
+}
+.circle-figure-point-label {
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+.circle-figure-side-label {
+  font-size: 12px;
+  fill: var(--color-text-muted);
+  text-anchor: middle;
+}
+.circle-figure-angle-arc {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+}
+.circle-figure-angle-label {
+  font-size: 12px;
+  fill: var(--color-primary-dark);
+  text-anchor: middle;
+}
+.circle-figure-caption {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* Thinking table（相関係数などの計算表） */
+.thinking-table-wrap {
+  overflow-x: auto;
+}
+.thinking-table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.thinking-table th,
+.thinking-table td {
+  border: 1px solid var(--color-border);
+  padding: 0.4rem 0.7rem;
+  text-align: center;
+}
+.thinking-table thead th {
+  background: var(--color-accent-bg);
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+.thinking-table tbody th {
+  background: var(--color-accent-bg);
+  color: var(--color-primary-dark);
+  text-align: left;
+  font-weight: 700;
+}
+.thinking-table-corner {
+  background: var(--color-surface);
+}
+
+/* Menelaus figure（メネラウスの定理の問題図） */
+.menelaus-figure {
+  margin: 0 0 1.25rem;
+  max-width: 480px;
+}
+.menelaus-figure-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.menelaus-triangle {
+  fill: rgba(47, 95, 122, 0.06);
+  stroke: var(--color-text);
+  stroke-width: 1.75;
+}
+.menelaus-extension {
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.menelaus-transversal {
+  stroke: var(--color-primary-dark);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 3;
+}
+.menelaus-route {
+  stroke: var(--color-primary);
+  stroke-width: 3;
+  opacity: 0.85;
+}
+.menelaus-route-arrowhead {
+  fill: var(--color-primary);
+}
+.menelaus-point {
+  fill: var(--color-text);
+}
+.menelaus-point-label {
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+.menelaus-ratio-label {
+  font-size: 12px;
+  fill: var(--color-text-muted);
+}
+.menelaus-figure-caption {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+/* Prev/next & related page nav */
+.page-nav {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.9rem;
+}
+.page-nav-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .side-nav {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+  }
+  .nav-toggle-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    font-weight: 700;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .nav-list {
+    display: none;
+    margin-top: 0.75rem;
+  }
+  .nav-list.is-open {
+    display: block;
+  }
+  .main-content {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .prompt-box {
+    margin-left: 0;
+  }
+}

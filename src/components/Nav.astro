@@ -1,0 +1,38 @@
+---
+import { subjectNav } from '../data/subjects';
+---
+
+<nav class="side-nav" aria-label="学習ナビゲーション">
+  <button
+    type="button"
+    class="nav-toggle-btn"
+    aria-expanded="false"
+    aria-controls="nav-list"
+  >
+    学習ナビゲーション
+  </button>
+  <ul class="nav-list" id="nav-list">
+    {subjectNav.map((subject) => (
+      <li class:list={['nav-subject', subject.units.length === 0 && 'nav-subject--empty']}>
+        <span class="nav-subject-name">{subject.name}</span>
+        {subject.units.length > 0 && (
+          <ul class="nav-units">
+            {subject.units.map((unit) => (
+              <li><a href={unit.href}>{unit.name}</a></li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  const toggleBtn = document.querySelector<HTMLButtonElement>('.nav-toggle-btn');
+  const navList = document.getElementById('nav-list');
+
+  toggleBtn?.addEventListener('click', () => {
+    const isOpen = navList?.classList.toggle('is-open') ?? false;
+    toggleBtn.setAttribute('aria-expanded', String(isOpen));
+  });
+</script>

@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# ad-hoc review/audit packages (e.g. Codex構造監査 deliverables) and their zips
+review_package*/
+review_package*.zip

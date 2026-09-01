@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ThinkingFlow from '../../../components/ThinkingFlow.astro';
+import { quadratic018Sample } from '../../../data/math1/quadratic-018-sample';
+
+// 比較実験用ページ。正本(math_db_quadratic_working/problems/M1-QF-018.md)は書き換えない。
+// quadratic-018-sample.ts側でFlow本文だけを書き直し、6問検証サンプルと同じ
+// ThinkingFlow.astro / QuadraticCaseGraphSetコンポーネントで描画する。
+// 27問の正本パイプライン([slug].astro / quadratic27コレクション)には接続しない。
+const problem = quadratic018Sample;
+---
+
+<BaseLayout title={`【比較用】${problem.problemId} ${problem.title} | 数学I 二次関数`}>
+  <p class="breadcrumb">
+    <a href="/">トップ</a> / <a href="/math1/quadratic/">二次関数</a> / {problem.problemId}（比較用サンプル）
+  </p>
+
+  <p class="sample-page-note">
+    これは正本 <code>M1-QF-018.md</code>（検算済み・見出しと数式は変更なし）をもとに、
+    ThinkingFlow各段階の本文だけを書き直し、6問検証サンプルと同じ描画コンポーネントで表示した比較用ページです。
+    問題メタ・解法メタは正本の文章をそのまま使用しています。
+    正本のページは <a href="/math1/quadratic/M1-QF-018/">こちら</a>。
+  </p>
+
+  <h1>{problem.problemId}　{problem.title}</h1>
+
+  <ul class="label-list">
+    {problem.labels.map((label) => (
+      <li class="label-item">
+        <span class="label-name">{label.name}</span>
+        <span class="label-value">{label.value}</span>
+      </li>
+    ))}
+  </ul>
+
+  <section class="problem-section">
+    <h2>問題</h2>
+    <p class="statement-text">{problem.statement}</p>
+  </section>
+
+  <section class="impression-section">
+    <h2>所感</h2>
+    <h3 class="impression-subhead">問題メタ</h3>
+    <p>{problem.problemMeta}</p>
+    <h3 class="impression-subhead">解法メタ</h3>
+    <p>{problem.solutionMeta}</p>
+  </section>
+
+  {problem.parts.map((part) => (
+    <div class="quadratic-sample-part">
+      <h2 class="thinking-part-label">{part.partLabel}</h2>
+
+      <section class="thinking-section">
+        <h3>考え方</h3>
+        <ThinkingFlow steps={part.steps} />
+      </section>
+
+      <section class="final-answer-section">
+        <h3>最終解答</h3>
+        <button type="button" class="reveal-answer-btn" data-answer-toggle>
+          解答を見る
+        </button>
+        <ul class="answer-branch-list" data-answer-box hidden>
+          {part.answerBranches.map((branch) => (
+            <li class="answer-branch-item">
+              <span class="answer-branch-condition">{branch.condition}</span>
+              <span class="answer-branch-result">{branch.result}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  ))}
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/math1/quadratic/">← 二次関数の問題一覧へ戻る</a>
+    <div class="page-nav-links">
+      <a href="/math1/quadratic/M1-QF-018/">正本版のM1-QF-018を見る →</a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
+    if (btn.dataset.answerBound) return;
+    btn.dataset.answerBound = 'true';
+    const box = btn.parentElement?.querySelector<HTMLElement>('[data-answer-box]');
+    btn.addEventListener('click', () => {
+      const isHidden = box?.hasAttribute('hidden') ?? false;
+      box?.toggleAttribute('hidden');
+      btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+    });
+  });
+</script>
+
+<style>
+  .sample-page-note {
+    background: var(--color-accent-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .sample-page-note code {
+    font-size: 0.85em;
+  }
+  .quadratic-sample-part {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .quadratic-sample-part:first-of-type {
+    border-top: none;
+  }
+</style>

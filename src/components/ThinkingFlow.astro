@@ -1,0 +1,168 @@
+---
+import QuadraticCaseGraphSet from './QuadraticCaseGraphSet.astro';
+import CyclicQuadFigure from './CyclicQuadFigure.astro';
+import ThinkingTable from './ThinkingTable.astro';
+import MenelausFigure from './MenelausFigure.astro';
+import type { ThinkingFlowStep } from '../data/shared';
+
+interface Props {
+  steps: ThinkingFlowStep[];
+}
+
+const { steps } = Astro.props;
+
+// ステップの種類によって「途中結果」ボタンの文言を変える。
+// 大規模な一般化はせず、kindごとの分岐だけで最小限に対応する。
+function revealLabel(step: ThinkingFlowStep): string {
+  if (step.kind === 'figure' || step.kind === 'menelaus-route') return '図を見る';
+  if (step.kind === 'table') return '表を見る';
+  return '途中結果を見る';
+}
+function hideLabel(step: ThinkingFlowStep): string {
+  if (step.kind === 'figure' || step.kind === 'menelaus-route') return '図を隠す';
+  if (step.kind === 'table') return '表を隠す';
+  return '途中結果を隠す';
+}
+---
+
+<div class="thinking-flow">
+  <button type="button" class="reveal-all-btn" data-reveal-all>
+    考え方を全部見る
+  </button>
+
+  <ol class="thinking-steps">
+    {steps.map((step, index) => (
+      <li
+        class:list={['thinking-step', step.highlight && 'thinking-step--highlight']}
+        data-step-index={index}
+        hidden={index !== 0}
+      >
+        <div class="thinking-step-header">
+          <span class="thinking-step-label">{step.label}</span>
+          {step.highlight && (
+            <span class="thinking-step-star" aria-hidden="true">★</span>
+          )}
+        </div>
+        <p class="thinking-step-body">{step.body}</p>
+        {step.note && <p class="thinking-step-note">{step.note}</p>}
+
+        <div class="thinking-step-action">
+          <button
+            type="button"
+            class="toggle-btn"
+            data-target={`result-${step.id}`}
+            data-reveal-label={revealLabel(step)}
+            data-hide-label={hideLabel(step)}
+          >
+            {revealLabel(step)}
+          </button>
+          <div class="result-box" id={`result-${step.id}`} hidden>
+            {step.kind === 'graph-compare' ? (
+              <QuadraticCaseGraphSet cases={step.cases} domainMin={step.domainMin} domainMax={step.domainMax} />
+            ) : step.kind === 'figure' ? (
+              <CyclicQuadFigure showDiagonal={step.figureVariant === 'quad-with-diagonal'} />
+            ) : step.kind === 'table' ? (
+              <ThinkingTable table={step.table} />
+            ) : step.kind === 'menelaus-route' ? (
+              <MenelausFigure showRoute={step.showRoute} />
+            ) : (
+              <pre class="result-text">{step.intermediateResult}</pre>
+            )}
+          </div>
+        </div>
+
+        <div class="thinking-step-action">
+          <button type="button" class="ai-btn" data-target={`ai-${step.id}`}>
+            この段階をAIに聞く
+          </button>
+          <p class="ai-placeholder" id={`ai-${step.id}`} hidden>
+            AI補助は今後実装予定です。
+          </p>
+        </div>
+
+        {index < steps.length - 1 && (
+          <button type="button" class="next-step-btn" data-next-from={index} hidden={index !== 0}>
+            次の考え方を見る
+          </button>
+        )}
+      </li>
+    ))}
+  </ol>
+</div>
+
+<script>
+  // data-flow-kind="q27"（Quadratic27Detail専用マークアップ）は、あちら側の
+  // スクリプトが担当するのでここでは対象外にする。二重にclick handlerが付くのを防ぐ。
+  document.querySelectorAll<HTMLElement>('.thinking-flow:not([data-flow-kind="q27"])').forEach((flow) => {
+    const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
+    const total = stepEls.length;
+    const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
+
+    // revealedCount: 現在「段階表示」で見えているステップ数。
+    let revealedCount = 1;
+
+    function applyState() {
+      stepEls.forEach((stepEl, i) => {
+        stepEl.hidden = i >= revealedCount;
+      });
+      flow.querySelectorAll<HTMLButtonElement>('.next-step-btn').forEach((btn) => {
+        const fromIndex = Number(btn.dataset.nextFrom);
+        btn.hidden = !(fromIndex === revealedCount - 1 && revealedCount < total);
+      });
+      if (revealAllBtn) {
+        revealAllBtn.textContent = revealedCount >= total ? '考え方を閉じる' : '考え方を全部見る';
+      }
+    }
+
+    flow.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+
+      const toggleBtn = target.closest<HTMLButtonElement>('.toggle-btn');
+      if (toggleBtn) {
+        const targetId = toggleBtn.dataset.target;
+        const box = targetId ? flow.querySelector<HTMLElement>(`#${targetId}`) : null;
+        if (box) {
+          const isHidden = box.hasAttribute('hidden');
+          box.toggleAttribute('hidden');
+          const revealText = toggleBtn.dataset.revealLabel ?? '途中結果を見る';
+          const hideText = toggleBtn.dataset.hideLabel ?? '途中結果を隠す';
+          toggleBtn.textContent = isHidden ? hideText : revealText;
+        }
+        return;
+      }
+
+      const aiBtn = target.closest<HTMLButtonElement>('.ai-btn');
+      if (aiBtn) {
+        const targetId = aiBtn.dataset.target;
+        const box = targetId ? flow.querySelector<HTMLElement>(`#${targetId}`) : null;
+        box?.toggleAttribute('hidden');
+        return;
+      }
+
+      const nextBtn = target.closest<HTMLButtonElement>('.next-step-btn');
+      if (nextBtn) {
+        revealedCount = Math.min(revealedCount + 1, total);
+        applyState();
+        return;
+      }
+
+      const revealBtn = target.closest<HTMLButtonElement>('[data-reveal-all]');
+      if (revealBtn) {
+        if (revealedCount >= total) {
+          // 初期状態に戻す。途中結果・AI表示も合わせて閉じる。
+          revealedCount = 1;
+          flow.querySelectorAll<HTMLElement>('.result-box').forEach((box) => box.setAttribute('hidden', ''));
+          flow.querySelectorAll<HTMLElement>('.ai-placeholder').forEach((box) => box.setAttribute('hidden', ''));
+          flow.querySelectorAll<HTMLButtonElement>('.toggle-btn').forEach((btn) => {
+            btn.textContent = btn.dataset.revealLabel ?? '途中結果を見る';
+          });
+        } else {
+          revealedCount = total;
+        }
+        applyState();
+      }
+    });
+
+    applyState();
+  });
+</script>

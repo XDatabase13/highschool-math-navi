@@ -1,0 +1,48 @@
+---
+import 'katex/dist/katex.min.css';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import { getCollection } from 'astro:content';
+import { prepareQuadratic27Entry } from '../../../utils/prepareQuadratic27Entry';
+
+// 正本Markdown（math_db_quadratic_working/problems/）をContent Collections経由で読み込む。
+// 表示は app/index.astro（DB型UI）と共通の Quadratic27Detail / prepareQuadratic27Entry を使う。
+// これにより、重要度・難易度の表示やThinkingFlowの強調（☆マーク）が両ページで一致する。
+export async function getStaticPaths() {
+  const problems = await getCollection('quadratic27');
+  return problems.map((problem) => ({
+    params: { slug: problem.id },
+    props: { problem },
+  }));
+}
+
+const { problem } = Astro.props;
+const prepared = await prepareQuadratic27Entry(problem);
+
+const allProblems = (await getCollection('quadratic27')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+const index = allProblems.findIndex((p) => p.id === problem.id);
+const prevProblem = allProblems[index - 1];
+const nextProblem = allProblems[index + 1];
+---
+
+<BaseLayout title={`${problem.data.problem_id} ${problem.data.title} | 数学I 二次関数`}>
+  <p class="breadcrumb">
+    <a href="/">トップ</a> / <a href="/math1/quadratic/">二次関数</a> / {problem.data.problem_id}
+  </p>
+
+  <Quadratic27Detail prepared={prepared} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/math1/quadratic/">← 二次関数の問題一覧へ戻る</a>
+    <div class="page-nav-links">
+      {prevProblem && (
+        <a href={`/math1/quadratic/${prevProblem.id}/`}>← {prevProblem.data.problem_id} {prevProblem.data.title}</a>
+      )}
+      {nextProblem && (
+        <a href={`/math1/quadratic/${nextProblem.id}/`}>{nextProblem.data.problem_id} {nextProblem.data.title} →</a>
+      )}
+    </div>
+  </nav>
+</BaseLayout>

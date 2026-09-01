@@ -1,0 +1,33 @@
+---
+// 相関係数の計算表など、「途中結果が表そのもの」であるステップ用の表示。
+// 6問検証中につき、汎用の表エンジンにはせず、
+// 列見出し＋行配列をそのままHTMLテーブルに描くだけの最小構成。
+
+interface Props {
+  table: {
+    columnHeaders: string[];
+    rows: { label: string; values: string[] }[];
+  };
+}
+
+const { table } = Astro.props;
+---
+
+<div class="thinking-table-wrap">
+  <table class="thinking-table">
+    <thead>
+      <tr>
+        <th class="thinking-table-corner"></th>
+        {table.columnHeaders.map((header) => <th>{header}</th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {table.rows.map((row) => (
+        <tr>
+          <th scope="row">{row.label}</th>
+          {row.values.map((value) => <td>{value}</td>)}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

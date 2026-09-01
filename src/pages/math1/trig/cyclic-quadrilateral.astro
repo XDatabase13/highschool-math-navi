@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TrigProblemDetail from '../../../components/TrigProblemDetail.astro';
+import { getTrigProblem } from '../../../data/math1/trig';
+
+const problem = getTrigProblem('cyclic-quadrilateral');
+if (!problem) {
+  throw new Error('cyclic-quadrilateral problem not found');
+}
+---
+
+<BaseLayout title={`${problem.title} | 数学I 三角比`}>
+  <p class="breadcrumb">
+    数学I ＞ {problem.unit} ＞ {problem.title}
+  </p>
+
+  <TrigProblemDetail problem={problem} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/">← トップへ戻る</a>
+  </nav>
+</BaseLayout>

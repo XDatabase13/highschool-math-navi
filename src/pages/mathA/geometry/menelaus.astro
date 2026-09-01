@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MenelausDetail from '../../../components/MenelausDetail.astro';
+import { getGeometryProblem } from '../../../data/mathA/geometry';
+
+const problem = getGeometryProblem('menelaus');
+if (!problem) {
+  throw new Error('menelaus problem not found');
+}
+---
+
+<BaseLayout title={`${problem.title} | 数学A 図形の性質`}>
+  <p class="breadcrumb">
+    数学A ＞ {problem.unit} ＞ {problem.title}
+  </p>
+
+  <MenelausDetail problem={problem} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/">← トップへ戻る</a>
+  </nav>
+</BaseLayout>

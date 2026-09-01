@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProbabilityDetail from '../../../components/ProbabilityDetail.astro';
+import { getProbabilityProblem } from '../../../data/mathA/probability';
+
+const problem = getProbabilityProblem('repeated-trials');
+if (!problem) {
+  throw new Error('repeated-trials problem not found');
+}
+---
+
+<BaseLayout title={`${problem.title} | 数学A 場合の数と確率`}>
+  <p class="breadcrumb">
+    数学A ＞ {problem.unit} ＞ {problem.title}
+  </p>
+
+  <ProbabilityDetail problem={problem} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/">← トップへ戻る</a>
+  </nav>
+</BaseLayout>

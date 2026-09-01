@@ -1,0 +1,79 @@
+---
+import type { GraphCase } from '../data/shared';
+
+interface Props {
+  cases: GraphCase[];
+  /** 定義域の左端・右端（数学上の値）。省略時はこれまで通り[0,2]。 */
+  domainMin?: number;
+  domainMax?: number;
+}
+
+const { cases, domainMin = 0, domainMax = 2 } = Astro.props;
+
+// 3ケース共通の描画用座標系。
+// 縦方向の高さは意味を持たない（この問題では横方向の位置関係だけが重要）ため、
+// どのケースも同じ形・同じ高さの放物線を、頂点のx位置だけずらして描く。
+const VIEW_W = 220;
+const VIEW_H = 150;
+const BASELINE_Y = 110; // 頂点のy位置（すべてのケースで共通）
+const TOP_Y = 14;
+const CURVE_HALF_WIDTH = 130; // ローカル座標でのカーブの片側の広がり(px)
+const X0_SVG = 70; // 定義域の左端の位置
+const X2_SVG = 150; // 定義域の右端の位置
+const MATH_TO_SVG_SCALE = (X2_SVG - X0_SVG) / (domainMax - domainMin); // 1(数学上のx)あたりのpx
+
+function mathToSvgX(mathX: number): number {
+  return X0_SVG + (mathX - domainMin) * MATH_TO_SVG_SCALE;
+}
+
+function curveY(localX: number): number {
+  const t = localX / CURVE_HALF_WIDTH;
+  return BASELINE_Y - (BASELINE_Y - TOP_Y) * t * t;
+}
+
+function buildCurvePoints(vertexSvgX: number, fromLocal: number, toLocal: number, steps = 16): string {
+  const points: string[] = [];
+  for (let i = 0; i <= steps; i += 1) {
+    const localX = fromLocal + ((toLocal - fromLocal) * i) / steps;
+    const x = vertexSvgX + localX;
+    const y = curveY(localX);
+    points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+  }
+  return points.join(' ');
+}
+
+const graphs = cases.map((graphCase) => {
+  const vertexSvgX = mathToSvgX(graphCase.vertexX);
+  const fullCurve = buildCurvePoints(vertexSvgX, -CURVE_HALF_WIDTH, CURVE_HALF_WIDTH);
+  const domainFromLocal = Math.max(X0_SVG - vertexSvgX, -CURVE_HALF_WIDTH);
+  const domainToLocal = Math.min(X2_SVG - vertexSvgX, CURVE_HALF_WIDTH);
+  const domainCurve = buildCurvePoints(vertexSvgX, domainFromLocal, domainToLocal);
+  return { ...graphCase, vertexSvgX, fullCurve, domainCurve };
+});
+---
+
+<div class="case-graph-grid">
+  {graphs.map((graph) => (
+    <figure class="case-graph-card">
+      <svg
+        viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+        class="case-graph-svg"
+        role="img"
+        aria-label={`${graph.label}のグラフ（${graph.condition}）`}
+      >
+        <polyline points={graph.fullCurve} class="case-graph-curve" />
+        <polyline points={graph.domainCurve} class="case-graph-curve case-graph-curve--domain" />
+        <line x1={X0_SVG} y1={TOP_Y} x2={X0_SVG} y2={BASELINE_Y + 14} class="case-graph-guide" />
+        <line x1={X2_SVG} y1={TOP_Y} x2={X2_SVG} y2={BASELINE_Y + 14} class="case-graph-guide" />
+        <text x={X0_SVG} y={BASELINE_Y + 30} class="case-graph-guide-label">{domainMin}</text>
+        <text x={X2_SVG} y={BASELINE_Y + 30} class="case-graph-guide-label">{domainMax}</text>
+        <circle cx={graph.vertexSvgX} cy={BASELINE_Y} r="4" class="case-graph-vertex" />
+      </svg>
+      <figcaption class="case-graph-caption">
+        <span class="case-graph-key">{graph.key}</span>
+        <span class="case-graph-label">{graph.label}</span>
+        <span class="case-graph-condition">{graph.condition}</span>
+      </figcaption>
+    </figure>
+  ))}
+</div>

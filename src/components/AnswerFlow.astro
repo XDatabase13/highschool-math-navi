@@ -1,0 +1,66 @@
+---
+import type { AnswerStep } from '../data/math1/quadratic';
+
+interface Props {
+  steps: AnswerStep[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="answer-flow">
+  {steps.map((step, index) => (
+    <li class="answer-step">
+      <div class="answer-step-header">
+        <span class="answer-step-index">{index + 1}</span>
+        <span class="answer-step-label">{step.label}</span>
+        <button type="button" class="ask-btn" data-target={`prompt-${step.id}`}>
+          ここが分からない
+        </button>
+      </div>
+      <div class="prompt-box" id={`prompt-${step.id}`} hidden>
+        <pre class="prompt-text">{step.prompt}</pre>
+        <button type="button" class="copy-btn" data-copy-target={`prompt-${step.id}`}>
+          プロンプトをコピー
+        </button>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<script>
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+
+    const askBtn = target.closest<HTMLButtonElement>('.ask-btn');
+    if (askBtn) {
+      const box = document.getElementById(askBtn.dataset.target ?? '');
+      if (box) {
+        const isHidden = box.hasAttribute('hidden');
+        if (isHidden) {
+          box.removeAttribute('hidden');
+          askBtn.textContent = '閉じる';
+        } else {
+          box.setAttribute('hidden', '');
+          askBtn.textContent = 'ここが分からない';
+        }
+      }
+      return;
+    }
+
+    const copyBtn = target.closest<HTMLButtonElement>('.copy-btn');
+    if (copyBtn) {
+      const box = document.getElementById(copyBtn.dataset.copyTarget ?? '');
+      const textEl = box?.querySelector('.prompt-text');
+      const text = textEl?.textContent ?? '';
+
+      navigator.clipboard.writeText(text).then(() => {
+        const original = copyBtn.textContent;
+        copyBtn.textContent = 'コピーしました';
+        setTimeout(() => {
+          copyBtn.textContent = original;
+        }, 1500);
+      });
+    }
+  });
+</script>

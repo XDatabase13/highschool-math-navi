@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DataAnalysisDetail from '../../../components/DataAnalysisDetail.astro';
+import { getDataAnalysisProblem } from '../../../data/math1/data-analysis';
+
+const problem = getDataAnalysisProblem('correlation-coefficient');
+if (!problem) {
+  throw new Error('correlation-coefficient problem not found');
+}
+---
+
+<BaseLayout title={`${problem.title} | 数学I データの分析`}>
+  <p class="breadcrumb">
+    数学I ＞ {problem.unit} ＞ {problem.title}
+  </p>
+
+  <DataAnalysisDetail problem={problem} />
+
+  <nav class="page-nav" aria-label="関連ページ">
+    <a href="/">← トップへ戻る</a>
+  </nav>
+</BaseLayout>

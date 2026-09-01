@@ -1,0 +1,62 @@
+---
+import ThinkingFlow from './ThinkingFlow.astro';
+import MenelausFigure from './MenelausFigure.astro';
+import type { GeometryProblem } from '../data/mathA/geometry';
+
+interface Props {
+  problem: GeometryProblem;
+}
+
+const { problem } = Astro.props;
+---
+
+<h1>{problem.title}</h1>
+
+<ul class="label-list">
+  {problem.labels.map((label) => (
+    <li class="label-item">
+      <span class="label-name">{label.name}</span>
+      <span class="label-value">{label.value}</span>
+    </li>
+  ))}
+</ul>
+
+<section class="problem-section">
+  <h2>問題</h2>
+  <p class="statement-text">{problem.statement}</p>
+  <MenelausFigure showRoute={false} caption="三角形ABCと直線DFE（ルートはまだ示していない）" />
+</section>
+
+<section class="impression-section">
+  <h2>所感</h2>
+  <h3 class="impression-subhead">問題メタ</h3>
+  <p>{problem.impressionPositioning}</p>
+  <h3 class="impression-subhead">解法メタ</h3>
+  <p>{problem.impressionAdvice}</p>
+</section>
+
+<section class="thinking-section">
+  <h2>考え方</h2>
+  <ThinkingFlow steps={problem.steps} />
+</section>
+
+<section class="final-answer-section">
+  <h2>最終解答</h2>
+  <button type="button" class="reveal-answer-btn" data-answer-toggle>
+    解答を見る
+  </button>
+  <p class="final-answer" data-answer-box hidden>{problem.answer}</p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
+    if (btn.dataset.answerBound) return;
+    btn.dataset.answerBound = 'true';
+    const box = btn.parentElement?.querySelector<HTMLElement>('[data-answer-box]');
+    btn.addEventListener('click', () => {
+      const isHidden = box?.hasAttribute('hidden') ?? false;
+      box?.toggleAttribute('hidden');
+      btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+    });
+  });
+</script>

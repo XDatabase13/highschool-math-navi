@@ -4,30 +4,30 @@ import 'katex/dist/katex.min.css';
 import { getCollection } from 'astro:content';
 import { prepareQuadratic27Entry } from '../../utils/prepareQuadratic27Entry';
 import SutoShikiDetail from '../../components/SutoShikiDetail.astro';
-import QuadraticCaseDetail from '../../components/QuadraticCaseDetail.astro';
 import Quadratic27Detail from '../../components/Quadratic27Detail.astro';
 import TrigProblemDetail from '../../components/TrigProblemDetail.astro';
 import DataAnalysisDetail from '../../components/DataAnalysisDetail.astro';
 import ProbabilityDetail from '../../components/ProbabilityDetail.astro';
 import MenelausDetail from '../../components/MenelausDetail.astro';
-import { subjectNav } from '../../data/subjects';
+import { subjectNav, publicSubjectNav } from '../../data/subjects';
 import { sutoShikiProblems } from '../../data/math1/suto-shiki';
-import { quadraticCaseProblems } from '../../data/math1/quadratic-case';
 import { trigProblems } from '../../data/math1/trig';
 import { dataAnalysisProblems } from '../../data/math1/data-analysis';
 import { probabilityProblems } from '../../data/mathA/probability';
 import { geometryProblems } from '../../data/mathA/geometry';
 
-// 27問監査用：Content Collections経由で正本Markdown（math_db_quadratic_working/problems/）を読み込む。
+// 正式公開DB：Content Collections経由で正本Markdown（math_db_quadratic_working/problems/）を読み込む。
 // TSへの手動転記はしない。
 // 正本Markdownの分割・asset対応付けは utils/prepareQuadratic27Entry（[slug].astroと共通）で行う。
 // 表示は Quadratic27Detail コンポーネント（同じく[slug].astroと共通）に委ねる。
-const quadratic27Entries = await Promise.all(
-  (await getCollection('quadratic27')).map((entry) => prepareQuadratic27Entry(entry)),
-);
+const quadratic27Entries = (
+  await Promise.all((await getCollection('quadratic27')).map((entry) => prepareQuadratic27Entry(entry)))
+).sort((a, b) => a.entry.data.display_order - b.entry.data.display_order);
 
-// このページでナビゲーション可能な単元は、実データを持つ6つのみ（数学I 4つ + 数学A 2つ）。
+// このページでナビゲーション可能な単元は、実データを持つ6つ（数学I 4つ + 数学A 2つ）。
 // href文字列から単元IDへの対応は、この6単元分のみ判定できればよい。
+// 科目・単元ペイン自体は公開向けに publicSubjectNav（sampleOnly除外）で描画するが、
+// パンくず用のunitMetaは6問検証サンプル分も含めて引けるよう subjectNav（全件）から作る。
 function unitIdFromHref(href: string): string {
   if (href.includes('suto-shiki')) return 'suto-shiki';
   if (href.includes('quadratic')) return 'quadratic';
@@ -51,8 +51,11 @@ for (const subject of subjectNav) {
   }
 }
 
-const DEFAULT_UNIT = 'suto-shiki';
-const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
+// 正式公開DBの初期表示は数学I「二次関数」（M1-QF-001〜054）。
+// 6問検証サンプルは publicSubjectNav側で科目・単元ペインから既に外れているため、
+// 初期選択先として使わない。
+const DEFAULT_UNIT = 'quadratic';
+const DEFAULT_PROBLEM = `quadratic:${quadratic27Entries[0].entry.id}`;
 ---
 
 <html lang="ja">
@@ -62,26 +65,26 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>高校数学DB（試作） | 高校数学ナビ</title>
+    <title>問題データベース（試作） | 高校数学ナビ</title>
   </head>
   <body>
     <div class="db-shell">
       <header class="db-header">
-        <span class="db-header-title">高校数学DB</span>
-        <span class="db-header-tagline">試作版</span>
+        <span class="db-header-title">高校数学ナビ</span>
         <span class="db-current-path" id="db-current-path">
-          数学I ＞ 数と式 ＞ {sutoShikiProblems[0].title}
+          数学I ＞ 二次関数 ＞ {quadratic27Entries[0].entry.data.title}
         </span>
-        <a class="db-header-back" href="/">← 通常表示へ</a>
+        <a class="db-header-back" href="/">← トップへ戻る</a>
       </header>
 
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
           <ul class="db-subject-list">
-            {subjectNav.map((subject) => (
-              <li class="db-subject">
-                <span class="db-subject-name">{subject.name}</span>
-                {subject.units.length > 0 ? (
+            {publicSubjectNav
+              .filter((subject) => subject.units.length > 0)
+              .map((subject) => (
+                <li class="db-subject">
+                  <span class="db-subject-name">{subject.name}</span>
                   <ul class="db-unit-list">
                     {subject.units.map((unit) => {
                       const unitId = unitIdFromHref(unit.href);
@@ -99,16 +102,14 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
                       );
                     })}
                   </ul>
-                ) : (
-                  <p class="db-unit-placeholder">準備中</p>
-                )}
-              </li>
-            ))}
+                </li>
+              ))}
           </ul>
+          <p class="db-subject-note">他の単元は順次追加予定</p>
         </nav>
 
         <section class="db-pane db-pane-list" aria-label="問題一覧">
-          <ul class="db-problem-list" data-unit-panel="suto-shiki">
+          <ul class="db-problem-list" data-unit-panel="suto-shiki" hidden>
             {sutoShikiProblems.map((problem) => (
               <li>
                 <button
@@ -129,32 +130,18 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
               </li>
             ))}
           </ul>
-          <ul class="db-problem-list" data-unit-panel="quadratic" hidden>
-            {quadraticCaseProblems.map((problem) => (
-              <li>
-                <button
-                  type="button"
-                  class="db-problem-item"
-                  data-problem-id={`quadratic:${problem.slug}`}
-                >
-                  <span class="db-problem-title">{problem.title}</span>
-                  <span class="db-problem-meta">
-                    <span class="db-problem-chip db-problem-chip--sample">6問検証サンプル</span>
-                    {problem.labels.slice(0, 2).map((label) => (
-                      <span class="db-problem-chip">{label.name}：{label.value}</span>
-                    ))}
-                  </span>
-                </button>
-              </li>
-            ))}
+          <ul class="db-problem-list" data-unit-panel="quadratic">
             {quadratic27Entries.map(({ entry }) => (
               <li>
                 <button
                   type="button"
-                  class="db-problem-item"
+                  class:list={[
+                    'db-problem-item',
+                    `quadratic:${entry.id}` === DEFAULT_PROBLEM && 'is-selected',
+                  ]}
                   data-problem-id={`quadratic:${entry.id}`}
                 >
-                  <span class="db-problem-title">{entry.data.problem_id} {entry.data.title}</span>
+                  <span class="db-problem-title">{entry.data.title}</span>
                   <span class="db-problem-meta">
                     <span class="db-problem-chip">重要度：{entry.data.importance_label}</span>
                     <span class="db-problem-chip">難易度：{entry.data.difficulty}</span>
@@ -239,7 +226,6 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
               </li>
             ))}
           </ul>
-          <p class="db-list-note">承認済みの6問すべて（数と式・二次関数・三角比・データの分析・場合の数と確率・図形の性質）を実装済みです。</p>
         </section>
 
         <section class="db-pane db-pane-detail" aria-label="選択中の問題の詳細">
@@ -252,20 +238,11 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
               <SutoShikiDetail problem={problem} />
             </div>
           ))}
-          {quadraticCaseProblems.map((problem) => (
-            <div
-              class="db-detail-panel"
-              data-detail-panel={`quadratic:${problem.slug}`}
-              hidden
-            >
-              <QuadraticCaseDetail problem={problem} />
-            </div>
-          ))}
           {quadratic27Entries.map((prepared) => (
             <div
               class="db-detail-panel"
               data-detail-panel={`quadratic:${prepared.entry.id}`}
-              hidden
+              hidden={`quadratic:${prepared.entry.id}` !== DEFAULT_PROBLEM}
             >
               <Quadratic27Detail prepared={prepared} />
             </div>
@@ -396,10 +373,6 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
         font-weight: 700;
         font-size: 1.05rem;
       }
-      .db-header-tagline {
-        font-size: 0.75rem;
-        color: #d6e3ea;
-      }
       .db-current-path {
         margin-left: auto;
         font-size: 0.8rem;
@@ -410,8 +383,17 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
       }
       .db-header-back {
         font-size: 0.8rem;
-        color: #fff;
+        color: #bcdff0;
         flex-shrink: 0;
+        padding: 0.3rem 0.6rem;
+        margin: -0.3rem -0.6rem -0.3rem 0;
+        border-radius: var(--radius);
+        transition: background-color 0.15s ease, color 0.15s ease;
+      }
+      .db-header-back:hover {
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        text-decoration: none;
       }
 
       .db-body {
@@ -475,6 +457,11 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
       .db-unit-placeholder {
         margin: 0 0 0 0.6rem;
         font-size: 0.85rem;
+        color: var(--color-text-muted);
+      }
+      .db-subject-note {
+        margin: 1rem 0 0;
+        font-size: 0.75rem;
         color: var(--color-text-muted);
       }
 

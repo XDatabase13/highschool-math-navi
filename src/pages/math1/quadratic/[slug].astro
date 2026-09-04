@@ -27,9 +27,12 @@ const prevProblem = allProblems[index - 1];
 const nextProblem = allProblems[index + 1];
 ---
 
-<BaseLayout title={`${problem.data.problem_id} ${problem.data.title} | 数学I 二次関数`}>
+<BaseLayout
+  title={`${problem.data.title} | 数学I 二次関数`}
+  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）の問題ページです。`}
+>
   <p class="breadcrumb">
-    <a href="/">トップ</a> / <a href="/math1/quadratic/">二次関数</a> / {problem.data.problem_id}
+    <a href="/">トップ</a> / <a href="/math1/quadratic/">二次関数</a> / {problem.data.title}
   </p>
 
   <Quadratic27Detail prepared={prepared} />
@@ -38,10 +41,10 @@ const nextProblem = allProblems[index + 1];
     <a href="/math1/quadratic/">← 二次関数の問題一覧へ戻る</a>
     <div class="page-nav-links">
       {prevProblem && (
-        <a href={`/math1/quadratic/${prevProblem.id}/`}>← {prevProblem.data.problem_id} {prevProblem.data.title}</a>
+        <a href={`/math1/quadratic/${prevProblem.id}/`}>← {prevProblem.data.title}</a>
       )}
       {nextProblem && (
-        <a href={`/math1/quadratic/${nextProblem.id}/`}>{nextProblem.data.problem_id} {nextProblem.data.title} →</a>
+        <a href={`/math1/quadratic/${nextProblem.id}/`}>{nextProblem.data.title} →</a>
       )}
     </div>
   </nav>

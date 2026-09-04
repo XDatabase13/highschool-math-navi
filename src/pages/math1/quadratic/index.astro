@@ -9,17 +9,22 @@ const problems = (await getCollection('quadratic27')).sort(
 );
 ---
 
-<BaseLayout title="数学I 二次関数 | 高校数学ナビ">
+<BaseLayout
+  title="数学I 二次関数 | 高校数学ナビ"
+  description="数学I「二次関数」の問題一覧（二次関数・二次方程式・二次不等式、54問）です。重要度・難易度を目安に、まず何をやるか考えられます。"
+>
   <p class="breadcrumb"><a href="/">トップ</a> / 数学I / 二次関数</p>
 
   <h1>数学I「二次関数」</h1>
-  <p class="section-lead">二次関数の問題一覧です（M1-QF-001〜027、正本Markdown読み込みの試験実装）。</p>
+  <p class="section-lead">
+    二次関数・二次方程式・二次不等式を含む54問の一覧です。
+    <a href="/#importance-difficulty">重要度・難易度について</a>
+  </p>
 
   <div class="problem-list">
     {problems.map((problem) => (
       <a class="problem-card" href={`/math1/quadratic/${problem.id}/`}>
         <div class="problem-card-header">
-          <span class="problem-card-number">{problem.data.problem_id}</span>
           <span class="problem-card-title">{problem.data.title}</span>
         </div>
         <div class="problem-card-meta">

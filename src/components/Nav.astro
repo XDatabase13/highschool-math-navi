@@ -1,5 +1,5 @@
 ---
-import { subjectNav } from '../data/subjects';
+import { publicSubjectNav } from '../data/subjects';
 ---
 
 <nav class="side-nav" aria-label="学習ナビゲーション">
@@ -12,7 +12,7 @@ import { subjectNav } from '../data/subjects';
     学習ナビゲーション
   </button>
   <ul class="nav-list" id="nav-list">
-    {subjectNav.map((subject) => (
+    {publicSubjectNav.map((subject) => (
       <li class:list={['nav-subject', subject.units.length === 0 && 'nav-subject--empty']}>
         <span class="nav-subject-name">{subject.name}</span>
         {subject.units.length > 0 && (

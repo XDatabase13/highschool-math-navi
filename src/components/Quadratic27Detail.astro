@@ -11,7 +11,7 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
 ---
 
 <div class="q27-detail">
-<h1>{entry.data.problem_id}　{entry.data.title}</h1>
+<h1>{entry.data.title}</h1>
 
 <ul class="label-list">
   <li class="label-item">
@@ -21,6 +21,9 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
   <li class="label-item">
     <span class="label-name">難易度</span>
     <span class="label-value">{starRating(entry.data.difficulty, 4)}</span>
+  </li>
+  <li class="label-item label-item--link">
+    <a href="/#importance-difficulty">重要度・難易度について</a>
   </li>
 </ul>
 
@@ -65,7 +68,6 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
 
 {(problemMeta || solutionMeta) && (
   <section class="impression-section">
-    <h2>所感</h2>
     {problemMeta && (
       <>
         <h3 class="impression-subhead">問題メタ</h3>

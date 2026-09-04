@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img">
+<polyline points="60.0,40.0 190.0,130.0" class="pa-curve"/>
+<circle cx="60.0" cy="40.0" r="4.5" class="pa-dot-closed"/>
+<text x="60.0" y="28.0" class="pa-label">(-1, 6)</text>
+<circle cx="190.0" cy="130.0" r="4.5" class="pa-dot-closed"/>
+<text x="190.0" y="146.0" class="pa-label">(3, -2)</text>
+
+</svg>

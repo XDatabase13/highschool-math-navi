@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="24.0" y1="134.0" x2="216.0" y2="134.0" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="212.0" y="126.0" class="pa-label">x</text>
+<polyline points="24.00,30.00 33.60,49.76 43.20,67.44 52.80,83.04 62.40,96.56 72.00,108.00 81.60,117.36 91.20,124.64 100.80,129.84 110.40,132.96 120.00,134.00 129.60,132.96 139.20,129.84 148.80,124.64 158.40,117.36 168.00,108.00 177.60,96.56 187.20,83.04 196.80,67.44 206.40,49.76 216.00,30.00" class="pa-curve"/>
+<circle cx="120.0" cy="134.0" r="4.5" class="pa-dot-closed"/>
+<text x="120.0" y="150.0" class="pa-label">x=3</text>
+</svg>

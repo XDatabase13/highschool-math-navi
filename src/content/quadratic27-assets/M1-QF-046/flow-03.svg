@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="24.0" y1="75.0" x2="216.0" y2="75.0" class="pa-axis" marker-start="url(#pa-arrow)" marker-end="url(#pa-arrow)"/>
+
+<line x1="84.0" y1="75.0" x2="84.0" y2="60.0" class="pa-guide"/>
+<line x1="180.0" y1="75.0" x2="180.0" y2="60.0" class="pa-guide"/>
+<line x1="24.0" y1="60.0" x2="84.0" y2="60.0" class="pa-band"/>
+<line x1="180.0" y1="60.0" x2="216.0" y2="60.0" class="pa-band"/>
+<circle cx="84.0" cy="60.0" r="4.5" class="pa-dot-open"/>
+<circle cx="180.0" cy="60.0" r="4.5" class="pa-dot-open"/>
+<text x="84.0" y="46.0" class="pa-label">-1</text>
+<text x="180.0" y="46.0" class="pa-label">3</text>
+
+<line x1="54.3" y1="75.0" x2="54.3" y2="90.0" class="pa-guide"/>
+<line x1="161.7" y1="75.0" x2="161.7" y2="90.0" class="pa-guide"/>
+<line x1="54.3" y1="90.0" x2="161.7" y2="90.0" class="pa-band-secondary"/>
+<circle cx="54.3" cy="90.0" r="4.5" class="pa-dot-open"/>
+<circle cx="161.7" cy="90.0" r="4.5" class="pa-dot-open"/>
+<text x="54.3" y="110.0" class="pa-label-muted">-√5</text>
+<text x="161.7" y="110.0" class="pa-label-muted">√5</text>
+</svg>

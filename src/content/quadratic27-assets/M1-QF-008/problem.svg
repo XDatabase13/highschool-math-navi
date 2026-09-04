@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="24.0" y1="77.4" x2="216.0" y2="77.4" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="56.0" y1="146.0" x2="56.0" y2="24.0" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="212.0" y="69.4" class="pa-label">x</text>
+<text x="66.0" y="36.0" class="pa-label">y</text>
+<text x="48.0" y="91.4" class="pa-label-muted">O</text>
+<line x1="120.0" y1="24.0" x2="120.0" y2="146.0" class="pa-guide"/>
+<polyline points="57.6,126.2 60.2,119.1 62.8,112.3 65.4,105.8 68.0,99.7 70.6,93.8 73.2,88.2 75.8,82.9 78.4,77.9 81.0,73.2 83.6,68.8 86.2,64.8 88.8,61.0 91.4,57.5 94.0,54.4 96.6,51.5 99.2,48.9 101.8,46.6 104.4,44.7 107.0,43.0 109.6,41.7 112.2,40.6 114.8,39.9 117.4,39.4 120.0,39.3 122.6,39.4 125.2,39.9 127.8,40.6 130.4,41.7 133.0,43.0 135.6,44.7 138.2,46.6 140.8,48.9 143.4,51.5 146.0,54.4 148.6,57.5 151.2,61.0 153.8,64.8 156.4,68.8 159.0,73.2 161.6,77.9 164.2,82.9 166.8,88.2 169.4,93.8 172.0,99.7 174.6,105.8 177.2,112.3 179.8,119.1 182.4,126.2" class="pa-curve"/>
+<circle cx="120.0" cy="39.3" r="4.5" class="pa-dot-closed"/>
+<text x="120.0" y="29.3" class="pa-label">(2, 5)</text>
+<circle cx="56.0" cy="130.8" r="4.5" class="pa-dot-closed"/>
+<text x="80.0" y="138.0" class="pa-label">(0, -7)</text>
+
+</svg>

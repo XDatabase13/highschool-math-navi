@@ -1,14 +1,16 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// 正本Markdownは highschool_math_db の外、隣接フォルダ math_db_quadratic_working/problems/ にある。
-// problem.md はここでは一切書き換えない。読み込むだけ。
+// 正本Markdownは highschool_math_db の外、隣接フォルダ math_db_quadratic_working/problems/ にある
+// （唯一の正本。ここでは一切書き換えない）。
+// GitHub Actions等、正本フォルダが存在しない環境でもbuildできるよう、Web公開対象54問だけを
+// repo内 src/content/quadratic27/ へコピーした「公開用スナップショット」をここでは読み込む。
+// スナップショットは npm run sync-content（scripts/sync-quadratic-content.mjs）で
+// 正本から再生成する派生データであり、人が直接編集する対象ではない。
 const quadratic27 = defineCollection({
   loader: glob({
-    // 段階的な試験実装（001→006→017→003）が完了し、事前監査でも27問全件に
-    // 構造的な問題がないことを確認できたため、M1-QF-001〜027を一括対象とする。
     pattern: 'M1-QF-*.md',
-    base: '../math_db_quadratic_working/problems',
+    base: './src/content/quadratic27',
     // slugではなく、正本のproblem_id（不変キー）をそのままidにする。
     generateId: ({ data }) => String(data.problem_id),
   }),

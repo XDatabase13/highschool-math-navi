@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 150" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="20" y1="24" x2="240" y2="24" class="pa-figure-line" stroke-width="3"/>
+<text x="130" y="16" class="pa-label-muted">壁</text>
+<rect x="70" y="24" width="120" height="96" class="pa-figure-fill"/>
+<line x1="70" y1="24" x2="70" y2="120" class="pa-figure-line"/>
+<line x1="190" y1="24" x2="190" y2="120" class="pa-figure-line"/>
+<line x1="70" y1="120" x2="190" y2="120" class="pa-figure-line"/>
+<text x="60" y="72" class="pa-label" text-anchor="end">x</text>
+<text x="130" y="136" class="pa-label" text-anchor="middle">30-2x</text>
+
+</svg>

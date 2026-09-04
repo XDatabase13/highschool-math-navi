@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="24.0" y1="105.3" x2="216.0" y2="105.3" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="212.0" y="97.3" class="pa-label">x</text>
+<polyline points="24.0,24.0 33.6,41.4 43.2,56.9 52.8,70.7 62.4,82.6 72.0,92.6 81.6,100.9 91.2,107.3 100.8,111.8 110.4,114.6 120.0,115.5 129.6,114.6 139.2,111.8 148.8,107.3 158.4,100.9 168.0,92.6 177.6,82.6 187.2,70.7 196.8,56.9 206.4,41.4 216.0,24.0" class="pa-curve"/>
+<polyline points="88.0,105.3 96.0,109.8 104.0,113.0 112.0,114.9 120.0,115.5 128.0,114.9 136.0,113.0 144.0,109.8 152.0,105.3" class="pa-curve-highlight"/>
+<line x1="88.0" y1="105.3" x2="152.0" y2="105.3" class="pa-axis-highlight"/>
+<circle cx="88.0" cy="105.3" r="4.5" class="pa-dot-highlight-open"/>
+<text x="88.0" y="121.3" class="pa-label">2</text>
+<circle cx="152.0" cy="105.3" r="4.5" class="pa-dot-highlight-open"/>
+<text x="152.0" y="121.3" class="pa-label">3</text>
+</svg>

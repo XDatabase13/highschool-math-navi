@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 165" role="img">
+<line x1="10.0" y1="110.0" x2="100.0" y2="110.0" class="pa-axis"/>
+<polyline points="15,78.8 20,90.8 25,101.2 30,110.0 35,117.2 40,122.8 45,126.8 50,129.2 55,130.0 60,129.2 65,126.8 70,122.8 75,117.2 80,110.0 85,101.2 90,90.8 95,78.8" class="pa-curve"/>
+<circle cx="30.0" cy="110.0" r="4" class="pa-dot-closed"/>
+<circle cx="80.0" cy="110.0" r="4" class="pa-dot-closed"/>
+<text x="30.0" y="98.0" class="pa-label">3a</text>
+<text x="80.0" y="98.0" class="pa-label">-2a</text>
+<text x="55.0" y="152.0" class="pa-label-muted">3aが左、-2aが右</text>
+
+<line x1="120.0" y1="110.0" x2="210.0" y2="110.0" class="pa-axis"/>
+<polyline points="125,58.8 130,70.8 135,81.2 140,90.0 145,97.2 150,102.8 155,106.8 160,109.2 165,110.0 170,109.2 175,106.8 180,102.8 185,97.2 190,90.0 195,81.2 200,70.8 205,58.8" class="pa-curve"/>
+<circle cx="165.0" cy="110.0" r="4" class="pa-dot-closed"/>
+<text x="165.0" y="98.0" class="pa-label">3a=-2a</text>
+<text x="165.0" y="152.0" class="pa-label-muted">2つの共有点が一致</text>
+
+<line x1="230.0" y1="110.0" x2="320.0" y2="110.0" class="pa-axis"/>
+<polyline points="235,78.8 240,90.8 245,101.2 250,110.0 255,117.2 260,122.8 265,126.8 270,129.2 275,130.0 280,129.2 285,126.8 290,122.8 295,117.2 300,110.0 305,101.2 310,90.8 315,78.8" class="pa-curve"/>
+<circle cx="250.0" cy="110.0" r="4" class="pa-dot-closed"/>
+<circle cx="300.0" cy="110.0" r="4" class="pa-dot-closed"/>
+<text x="250.0" y="98.0" class="pa-label">-2a</text>
+<text x="300.0" y="98.0" class="pa-label">3a</text>
+<text x="275.0" y="152.0" class="pa-label-muted">-2aが左、3aが右</text>
+</svg>

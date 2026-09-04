@@ -156,7 +156,6 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
                 >
                   <span class="db-problem-title">{entry.data.problem_id} {entry.data.title}</span>
                   <span class="db-problem-meta">
-                    <span class="db-problem-chip db-problem-chip--sample">27問（正本Markdown）</span>
                     <span class="db-problem-chip">重要度：{entry.data.importance_label}</span>
                     <span class="db-problem-chip">難易度：{entry.data.difficulty}</span>
                   </span>
@@ -550,35 +549,15 @@ const DEFAULT_PROBLEM = `suto-shiki:${sutoShikiProblems[0].slug}`;
         margin-top: 0;
       }
 
-      /* asset(SVG)は正本ファイルをそのまま挿入するため、縦横比維持と右ペイン内への収まりだけ調整する。 */
+      /* asset(SVG)は正本ファイルをそのまま挿入するため、右ペイン内への収まりだけ調整する。
+         余白・.thinking-part等の共通スタイルはglobal.css側（M1-QF-001〜054共通）に集約した。 */
       .problem-asset-figure {
-        margin: 1rem 0 0;
         max-width: 480px;
       }
       .problem-asset-figure :global(svg) {
         display: block;
         width: 100%;
         height: auto;
-      }
-
-      /* 小問(1)/(2)付きThinkingFlow：それぞれ独立した.thinking-flowを縦に並べるだけの最小限の区切り。 */
-      .thinking-part + .thinking-part {
-        margin-top: 1.75rem;
-      }
-      .thinking-part-label {
-        margin: 0 0 0.75rem;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--color-primary-dark);
-      }
-      .final-answer-part + .final-answer-part {
-        margin-top: 1rem;
-      }
-      .final-answer-part-label {
-        margin: 0 0 0.4rem;
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--color-primary-dark);
       }
 
       /* PCの3ペインをスマホへ無理に縮小しない。狭幅では単純に縦積みにする。 */

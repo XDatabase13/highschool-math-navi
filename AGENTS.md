@@ -1,85 +1,170 @@
 ## プロジェクトの目的
 
-高校数学の学習ナビゲーションサイトのプロトタイプ開発です。
+高校数学の学習ナビゲーションサイトのクローズド試作です。
 
-現在の対象範囲は、**性質の異なる6分野・6問の代表問題を用いた
-問題ページ構造（UI・思考フロー・図表・分岐の表現）の検証** です。
-数学Iを含む数学全体を網羅的に作ることが目的ではありません。
+中心価値は、問題や詳しい解説を大量に増やすことではなく、
 
-対象は以下の承認済み6問に限定します。この6問以外の教材コンテンツを
-自由に追加してよいという意味ではありません。
+> **「何をやるか」「何を後回しにするか」「どういう順番で考えるか」を明確にすること**
 
-1. 数と式｜因数分解（実装済み）
-2. 二次関数｜文字を含む最大・最小（未実装）
-3. 三角比｜円に内接する四角形（未実装。問題タイプ〔図＋補助線＋既習事項を
-   つなぐ〕は確定しているが、具体的な数値設定は未確定。本実装時に教科書・
-   学校準拠問題集の標準的な出題構成を確認のうえ調整する）
-4. データの分析｜相関係数（未実装）
-5. 確率｜反復試行（未実装）
-6. 図形の性質｜メネラウスの定理（未実装）
+です。
 
-### 例外：二次関数のみ27問
+現在、数学I「二次関数」M1-QF-001〜054の54問について、
 
-上記2「二次関数」については、ユーザー指示により例外として、
-数学I・二次関数の代表問題1問に代えて、**M1-QF-001〜027の27問**を
-ローカルWeb監査用に実装することを承認済みとする。
+- 独立検算
+- 教材化
+- asset生成
+- PC実画面レビュー
+- Codex構造監査
+- 最終build
 
-正本は `math_db_quadratic_working/problems/` のMarkdownであり、
-Astro Content Collectionsで読み込む（TSへの手動転記・二重管理はしない）。
-他の5分野については、上記の1問限定ルールを維持する。
+まで完了しています。
 
-現段階では完成サービスを作ることが目的ではなく、
-問題ページのUI・教材構造・学習導線を検証するための **クローズドな試作** です。
+スマートフォン表示の確認・調整は別Phaseです。明示的な依頼なしにスマホ向けの大規模調整へ進まないでください。
 
-このサイトでは、問題数や詳細解説を増やすこと自体を価値としません。
-「何をやるか・何をやらないか・どういう順番で考えるか」を明確にすることを重視します。
+他分野の既存サンプルUIも存在しますが、教材コンテンツを独断で追加・拡張しないでください。
 
-## 開発ルール（厳守）
+---
+
+## 正本と責任範囲
+
+教材データの正本は `math_db_quadratic_working/problems/` のMarkdownです。
+
+Astro Content Collectionsから読み込み、TypeScript等へ教材本文を手動転記して二重管理しません。
+
+`problem.md` の数学的固定内容には、少なくとも以下を含みます。
+
+- 問題文
+- 問題メタ
+- 解法メタ
+- ThinkingFlowの見出し・順序
+- 各Flowの中間結果・数式・確認事項
+- 最終解答
+- asset配置情報
+
+これらを、明示的なユーザー指示なしに勝手に数学的変更しないでください。
+
+問題メタ・解法メタは人間側の価値です。初回教材化時に書き換え・言い換え・整文しません。
+人間レビューで具体的な修正指示が与えられた場合のみ、その指示範囲で正本Markdownを更新して構いません。
+
+ページ生成は `verification_status: 独立検算済み` の問題だけを対象にします。
+
+---
+
+## 問題ページの現行構造
+
+基本構造は以下です。
+
+1. 問題情報
+2. 問題
+3. 必要な場合のみ「問題の言い換え」
+4. 問題メタ
+5. 解法メタ
+6. ThinkingFlow
+7. 最終解答
+
+### 問題の言い換え
+
+`## 問題の言い換え` が存在する場合だけUIを表示します。
+
+問題IDのハードコードで判定せず、Markdown sectionの存在で汎用的に処理してください。
+
+通常の数学的条件は `## 問題` に残し、補助的な言い換えだけを分離します。
+
+### ThinkingFlow
+
+現行UIは逐次表示型ではなく、一覧型アコーディオンです。
+
+- 初期状態：全Flowの題名を表示、本文は閉じる
+- 各Flow：個別開閉
+- 「考え方を全部見る」：全開
+- 全開後：まとめて閉じられる
+- 最終解答：ThinkingFlowとは独立状態
+
+Flow数は固定しません。
+
+通常問題：
+
+```text
+## ThinkingFlow
+### 1. ...
+### 2. ...
+```
+
+小問付き問題：
+
+```text
+## ThinkingFlow
+### (1)
+#### 1. ...
+#### 2. ...
+
+### (2)
+#### 1. ...
+```
+
+小問構造・Flow構造を問題IDで特別扱いしないでください。
+
+---
+
+## assetルール
+
+assetの表示位置はファイル名ではなく `problem.md` のmetadataを正本とします。
+
+- 通常Flow：`placement + flow`
+- 小問内Flow：`placement + part + flow`
+- 問題文：`placement: problem`
+- 最終解答：`placement: final_answer`
+
+`problem.svg` のようなファイル名だけから表示位置を推測しないでください。
+
+assetは必要最小限とし、数学的に意味のある視覚補助として使います。
+色・線幅・ラベル位置等は実装側で調整できますが、人間レビュー済みassetを理由なく作り直さないでください。
+
+---
+
+## 開発ルール
 
 - Astro + TypeScript を使用する
-- 上記の承認済み6問以外の教材コンテンツは勝手に作らない（二次関数の27問例外を除く）
-- ログイン・ユーザー管理は作らない
-- データベースは導入しない
-- 課金機能は作らない
-- 外部AI APIを直接接続しない（後述のプロンプト生成・コピー機能に留める）
-- SEOや本番公開対応はまだ行わない
+- 教材データと表示UIを分離する
+- 問題ID別の場当たり的な分岐を増やさない
 - 不要な機能を勝手に追加しない
-- まずはシンプルで変更しやすい構造を優先する
-- 教材データと表示UIは分離する（コンテンツはデータとして持ち、コンポーネントはそれを描画するだけにする）
+- ログイン・ユーザー管理を作らない
+- データベースを導入しない
+- 課金機能を作らない
+- 外部AI APIを直接接続しない
+- SEO・本番公開対応は、明示的にそのPhaseへ入るまで行わない
+- 既存の人間レビュー済みUI・asset・教材文を、リファクタリング目的だけで変更しない
+- 範囲外の修正が必要に見える場合は、先に報告して確認する
 
-上記のルールは既定の動作より優先されます。範囲外の作業が必要そうに見えても、
-勝手に対象を広げず、まずユーザーに確認してください。
+既存の `Quadratic27...` 等の旧名称がコード上に残っていても、名称だけを理由に勝手にrenameしないでください。
 
-## 問題ページの基本構成
+---
 
-1. 問題
-2. 問題の位置づけ
-3. 重要度・難易度
-4. 短い所感
-5. 解答フロー
-6. 解答フローの各段階から「ここが分からない」を選べる
-7. 選択した段階について外部生成AIへ質問するためのプロンプトを生成・コピーできる
-8. 関連問題・前後ページへのナビゲーション
+## build・監査
 
-## Development
+教材変更・構造変更後は、必要に応じて以下を確認します。
 
-When starting the dev server, use background mode:
+- `npx astro build`
+- KaTeXエラー
+- asset参照切れ
+- `part / flow` 配置不整合
+- parser上のsection / subsection / Flow欠落
+- 意図しない問題IDハードコード
 
-```
-astro dev --background
-```
+現在のM1-QF-001〜054はCodex構造監査済みで、FIX相当の構造的不整合はありません。
 
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+既存54問を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。
+純粋なUI・余白・asset描画調整等は、数学的固定内容を変えない限り原則として再独立検算対象ではありません。
+
+---
 
 ## Documentation
 
-Full documentation: https://docs.astro.build
+詳細仕様は、READMEより以下の正本文書を優先してください。
 
-Consult these guides before working on related tasks:
+- `math_service_design_summary.md`
+- `problem_authoring_workflow.md`
+- `_TEMPLATE_for_page_generation.md`
+- `quadratic_function_problem_master.xlsx`
 
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+README / AGENTS.mdには概要と作業境界を置き、正本文書と同じ細則を過剰に重複させないでください。

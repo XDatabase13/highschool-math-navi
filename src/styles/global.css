@@ -7,6 +7,7 @@
   --color-primary: #2f5f7a;
   --color-primary-dark: #234a60;
   --color-accent-bg: #eef4f7;
+  --color-highlight: #c0392b;
   --font-base: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
   --radius: 8px;
   --max-width: 1080px;
@@ -334,6 +335,57 @@ ul {
   font-weight: 700;
 }
 
+/* 問題文内の小問(1)/(2)/(3)（M1-QF-032/035/042など） */
+.problem-parts {
+  margin-top: 0.5rem;
+}
+.problem-part + .problem-part {
+  margin-top: 0.6rem;
+}
+.problem-part-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+/* 「問題の言い換え」（M1-QF-047/048/049/053/054）：任意セクションがある問題だけ
+   問題欄の近くに小さなボタンを出す。ThinkingFlowほど大きなカードにはしない。 */
+.paraphrase-box {
+  margin-top: 0.75rem;
+}
+.paraphrase-toggle {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.paraphrase-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.paraphrase-content {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.85rem;
+  background: var(--color-bg);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+.paraphrase-part + .paraphrase-part {
+  margin-top: 0.5rem;
+}
+.paraphrase-part-label {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 /* Impression */
 .impression-section {
   background: var(--color-surface);
@@ -405,6 +457,38 @@ ul {
 }
 .thinking-step-body {
   margin-bottom: 0.9rem;
+}
+
+/* M1-QF-001〜054（Quadratic27Detail）：Flowごとに独立して開閉するアコーディオン。
+   題名だけの状態が初期状態で、本文・数式・assetはthinking-step-content側にまとめて隠す。 */
+.thinking-step-toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.thinking-step-toggle:hover .thinking-step-label {
+  color: var(--color-primary);
+}
+.thinking-step-caret {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 0.55em;
+  height: 0.55em;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+.thinking-step-toggle[aria-expanded="true"] .thinking-step-caret {
+  transform: rotate(45deg);
+}
+.thinking-step-content {
+  padding-top: 0.05rem;
 }
 .thinking-step-note {
   margin: -0.4rem 0 0.9rem;
@@ -570,12 +654,36 @@ ul {
 
 /* 静的に生成するproblem asset SVG（graph/figure/graph-compare）共通のクラス。
    色・線幅はここでだけ決め、個々のSVGファイルには埋め込まない。 */
+.problem-asset-figure {
+  margin: 0.75rem 0 0;
+}
 .problem-asset-figure svg {
   display: block;
   width: 100%;
   height: auto;
   max-width: 420px;
   margin: 0 auto;
+}
+
+/* 小問(1)/(2)付きThinkingFlow：それぞれ独立した.thinking-flowを縦に並べるだけの最小限の区切り。
+   （app/index.astroのDB型UIと[slug].astroの単体ページ、両方で使う共通スタイルとしてここに集約） */
+.thinking-part + .thinking-part {
+  margin-top: 1.1rem;
+}
+.thinking-part-label {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+.final-answer-part + .final-answer-part {
+  margin-top: 0.7rem;
+}
+.final-answer-part-label {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
 }
 .pa-axis {
   stroke: var(--color-text);
@@ -599,10 +707,44 @@ ul {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* 条件を満たす部分（放物線・x軸の区間）を強調する共通クラス。M1-QF-042/045/046等。 */
+.pa-curve-highlight {
+  stroke: var(--color-highlight);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pa-axis-highlight {
+  stroke: var(--color-highlight);
+  stroke-width: 3;
+}
+.pa-dot-highlight {
+  fill: var(--color-highlight);
+  stroke: var(--color-highlight);
+}
+.pa-dot-highlight-open {
+  fill: var(--color-surface);
+  stroke: var(--color-highlight);
+  stroke-width: 2;
+}
 .pa-guide {
   stroke: var(--color-text-muted);
   stroke-width: 1;
   stroke-dasharray: 3 3;
+  fill: none;
+}
+/* numberline（1本の数直線に2条件を上下2段で示す）専用の帯線。M1-QF-045/046/050等。 */
+.pa-band {
+  stroke: var(--color-primary);
+  stroke-width: 6;
+  stroke-linecap: round;
+  fill: none;
+}
+.pa-band-secondary {
+  stroke: var(--color-text-muted);
+  stroke-width: 6;
+  stroke-linecap: round;
   fill: none;
 }
 .pa-dot-closed {
@@ -622,6 +764,13 @@ ul {
 .pa-label-muted {
   font-size: 10px;
   fill: var(--color-text-muted);
+  text-anchor: middle;
+}
+/* 複数グラフ比較図の(1)(2)(3)識別ラベル。長いキャプションの代わりに使う。 */
+.pa-panel-label {
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--color-primary-dark);
   text-anchor: middle;
 }
 .pa-figure-line {
@@ -838,4 +987,61 @@ ul {
   .prompt-box {
     margin-left: 0;
   }
+}
+
+/* ============================================================
+   M1-QF-001〜054（Quadratic27Detail）専用：縦方向コンパクト化
+   .problem-section / .impression-section / .thinking-section /
+   .final-answer-section / .thinking-step / .reveal-all-btn /
+   .reveal-answer-btn / .result-box / .final-answer / h1 / h2 /
+   .label-list は他5科目のサンプルページ（ThinkingFlow.astro等）
+   とクラス名を共有しているため、.q27-detail 配下だけに絞って
+   上書きする（他5科目の見た目には影響させない）。
+   文字サイズ・行間・KaTeX数式の余白は変更せず、padding/marginの
+   無駄な空白だけを削る方針。
+   ============================================================ */
+.q27-detail h1 {
+  margin: 0 0 0.7rem;
+}
+.q27-detail h2 {
+  margin: 1.1rem 0 0.5rem;
+}
+.q27-detail .label-list {
+  margin: 0 0 1rem;
+}
+.q27-detail .problem-section,
+.q27-detail .impression-section,
+.q27-detail .final-answer-section {
+  padding: 1.05rem 1.15rem;
+  margin-bottom: 1rem;
+}
+.q27-detail .thinking-section {
+  margin-bottom: 1rem;
+}
+.q27-detail .impression-subhead + p {
+  margin-bottom: 0.8rem;
+}
+.q27-detail .reveal-all-btn {
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.8rem;
+}
+.q27-detail .thinking-step {
+  padding: 0.7rem 0.95rem;
+  margin-bottom: 0.55rem;
+}
+.q27-detail .thinking-step-header {
+  margin-bottom: 0.35rem;
+}
+.q27-detail .thinking-step-body {
+  margin-bottom: 0.6rem;
+}
+.q27-detail .result-box {
+  margin-top: 0.45rem;
+  padding: 0.65rem 0.85rem;
+}
+.q27-detail .reveal-answer-btn {
+  padding: 0.42rem 0.9rem;
+}
+.q27-detail .final-answer {
+  margin: 0.6rem 0 0;
 }

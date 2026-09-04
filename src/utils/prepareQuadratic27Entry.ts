@@ -14,6 +14,9 @@ export type AssetEntry = {
 export interface PreparedQuadratic27Entry {
   entry: CollectionEntry<'quadratic27'>;
   problem: MarkdownSection | undefined;
+  // 「## 問題の言い換え」は任意セクション。存在する問題だけUI上に
+  // 「言い換えを見る」ボタンを出す（セクションの有無で判定する。frontmatterフラグは使わない）。
+  paraphrase: MarkdownSection | undefined;
   problemMeta: MarkdownSection | undefined;
   solutionMeta: MarkdownSection | undefined;
   thinkingFlow: MarkdownSection | undefined;
@@ -66,6 +69,7 @@ export async function prepareQuadratic27Entry(
   return {
     entry,
     problem: findSection(sections, '問題'),
+    paraphrase: findSection(sections, '問題の言い換え'),
     problemMeta: findSection(sections, '問題メタ'),
     solutionMeta: findSection(sections, '解法メタ'),
     thinkingFlow: findSection(sections, 'ThinkingFlow'),

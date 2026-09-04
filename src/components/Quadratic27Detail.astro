@@ -7,9 +7,10 @@ interface Props {
 }
 
 const { prepared } = Astro.props;
-const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
+const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
 ---
 
+<div class="q27-detail">
 <h1>{entry.data.problem_id}　{entry.data.title}</h1>
 
 <ul class="label-list">
@@ -27,9 +28,38 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
   <section class="problem-section">
     <h2>問題</h2>
     <div set:html={problem.html} />
+    {problem.subsections.length > 0 && (
+      <div class="problem-parts">
+        {problem.subsections.map((part) => (
+          <div class="problem-part">
+            <h3 class="problem-part-label">{part.title}</h3>
+            <div set:html={part.html} />
+          </div>
+        ))}
+      </div>
+    )}
     {problemAssets.map(({ svg }) => (
       <figure class="problem-asset-figure" set:html={svg} />
     ))}
+    {paraphrase && (
+      <div class="paraphrase-box">
+        <button type="button" class="paraphrase-toggle" data-paraphrase-toggle>
+          言い換えを見る
+        </button>
+        <div class="paraphrase-content" data-paraphrase-content hidden>
+          {paraphrase.subsections.length === 0 ? (
+            <div set:html={paraphrase.html} />
+          ) : (
+            paraphrase.subsections.map((part) => (
+              <div class="paraphrase-part">
+                <h4 class="paraphrase-part-label">{part.title}</h4>
+                <div set:html={part.html} />
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    )}
   </section>
 )}
 
@@ -70,26 +100,18 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
               <li
                 class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
                 data-step-index={index}
-                hidden={index !== 0}
               >
-                <div class="thinking-step-header">
+                <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
                   <span class="thinking-step-label">{displayTitle}</span>
                   {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
+                  <span class="thinking-step-caret" aria-hidden="true" />
+                </button>
+                <div class="thinking-step-content" data-step-content hidden>
+                  <div class="thinking-step-body" set:html={step.html} />
+                  {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
+                    <figure class="problem-asset-figure" set:html={svg} />
+                  ))}
                 </div>
-                <div class="thinking-step-body" set:html={step.html} />
-                {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
-                  <figure class="problem-asset-figure" set:html={svg} />
-                ))}
-                {index < thinkingFlow.subsections.length - 1 && (
-                  <button
-                    type="button"
-                    class="next-step-btn"
-                    data-next-from={index}
-                    hidden={index !== 0}
-                  >
-                    次の考え方を見る
-                  </button>
-                )}
               </li>
             );
           })}
@@ -117,26 +139,18 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
                   <li
                     class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
                     data-step-index={index}
-                    hidden={index !== 0}
                   >
-                    <div class="thinking-step-header">
+                    <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
                       <span class="thinking-step-label">{displayTitle}</span>
                       {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
+                      <span class="thinking-step-caret" aria-hidden="true" />
+                    </button>
+                    <div class="thinking-step-content" data-step-content hidden>
+                      <div class="thinking-step-body" set:html={step.html} />
+                      {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
+                        <figure class="problem-asset-figure" set:html={svg} />
+                      ))}
                     </div>
-                    <div class="thinking-step-body" set:html={step.html} />
-                    {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
-                      <figure class="problem-asset-figure" set:html={svg} />
-                    ))}
-                    {index < part.subsections.length - 1 && (
-                      <button
-                        type="button"
-                        class="next-step-btn"
-                        data-next-from={index}
-                        hidden={index !== 0}
-                      >
-                        次の考え方を見る
-                      </button>
-                    )}
                   </li>
                 );
               })}
@@ -171,6 +185,7 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
     </div>
   </section>
 )}
+</div>
 
 <script>
   document.querySelectorAll<HTMLElement>('.thinking-flow[data-flow-kind="q27"]').forEach((flow) => {
@@ -178,42 +193,52 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
     flow.dataset.q27Bound = 'true';
 
     const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
-    const total = stepEls.length;
     const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
 
-    let revealedCount = 1;
+    // 各Flowは題名のみの初期状態から独立して開閉できる。「考え方を全部見る」は
+    // 全Flow展開⇔全Flow閉じるのトグルとして扱う。
+    function setStepExpanded(stepEl: HTMLElement, expanded: boolean) {
+      const toggle = stepEl.querySelector<HTMLButtonElement>('[data-step-toggle]');
+      const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
+      if (toggle) toggle.setAttribute('aria-expanded', String(expanded));
+      if (content) content.hidden = !expanded;
+    }
 
-    function applyState() {
-      stepEls.forEach((stepEl, i) => {
-        stepEl.hidden = i >= revealedCount;
+    function updateRevealAllLabel() {
+      if (!revealAllBtn) return;
+      const allExpanded = stepEls.every((stepEl) => {
+        const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
+        return content ? !content.hidden : true;
       });
-      flow.querySelectorAll<HTMLButtonElement>('.next-step-btn').forEach((btn) => {
-        const fromIndex = Number(btn.dataset.nextFrom);
-        btn.hidden = !(fromIndex === revealedCount - 1 && revealedCount < total);
-      });
-      if (revealAllBtn) {
-        revealAllBtn.textContent = revealedCount >= total ? '考え方を閉じる' : '考え方を全部見る';
-      }
+      revealAllBtn.textContent = allExpanded ? '考え方を閉じる' : '考え方を全部見る';
     }
 
     flow.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
 
-      const nextBtn = target.closest<HTMLButtonElement>('.next-step-btn');
-      if (nextBtn) {
-        revealedCount = Math.min(revealedCount + 1, total);
-        applyState();
+      const stepToggle = target.closest<HTMLButtonElement>('[data-step-toggle]');
+      if (stepToggle) {
+        const stepEl = stepToggle.closest<HTMLElement>('.thinking-step');
+        if (stepEl) {
+          const isExpanded = stepToggle.getAttribute('aria-expanded') === 'true';
+          setStepExpanded(stepEl, !isExpanded);
+          updateRevealAllLabel();
+        }
         return;
       }
 
       const revealBtn = target.closest<HTMLButtonElement>('[data-reveal-all]');
       if (revealBtn) {
-        revealedCount = revealedCount >= total ? 1 : total;
-        applyState();
+        const allExpanded = stepEls.every((stepEl) => {
+          const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
+          return content ? !content.hidden : true;
+        });
+        stepEls.forEach((stepEl) => setStepExpanded(stepEl, !allExpanded));
+        updateRevealAllLabel();
       }
     });
 
-    applyState();
+    updateRevealAllLabel();
   });
 
   document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
@@ -224,6 +249,17 @@ const { entry, problem, problemMeta, solutionMeta, thinkingFlow, finalAnswer, pr
       const isHidden = box?.hasAttribute('hidden') ?? false;
       box?.toggleAttribute('hidden');
       btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-paraphrase-toggle]').forEach((btn) => {
+    if (btn.dataset.paraphraseBound) return;
+    btn.dataset.paraphraseBound = 'true';
+    const box = btn.parentElement?.querySelector<HTMLElement>('[data-paraphrase-content]');
+    btn.addEventListener('click', () => {
+      const isHidden = box?.hasAttribute('hidden') ?? false;
+      box?.toggleAttribute('hidden');
+      btn.textContent = isHidden ? '言い換えを閉じる' : '言い換えを見る';
     });
   });
 </script>

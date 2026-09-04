@@ -75,6 +75,11 @@ const DEFAULT_PROBLEM = `quadratic:${quadratic27Entries[0].entry.id}`;
           数学I ＞ 二次関数 ＞ {quadratic27Entries[0].entry.data.title}
         </span>
         <a class="db-header-back" href="/">← トップへ戻る</a>
+        <nav class="db-header-info" aria-label="サイト情報">
+          <a href="/privacy/">プライバシー</a>
+          <a href="/disclaimer/">免責事項</a>
+          <a href="/contact/">お問い合わせ</a>
+        </nav>
       </header>
 
       <div class="db-body">
@@ -392,6 +397,22 @@ const DEFAULT_PROBLEM = `quadratic:${quadratic27Entries[0].entry.id}`;
       }
       .db-header-back:hover {
         background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        text-decoration: none;
+      }
+      .db-header-info {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        flex-shrink: 0;
+        padding-left: 0.8rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .db-header-info a {
+        font-size: 0.75rem;
+        color: #bcdff0;
+      }
+      .db-header-info a:hover {
         color: #fff;
         text-decoration: none;
       }

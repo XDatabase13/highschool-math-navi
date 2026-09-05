@@ -69,7 +69,7 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
   <body>
     <div class="db-shell">
       <header class="db-header">
-        <span class="db-header-title">高校数学ナビ</span>
+        <a class="db-header-title" href="/">高校数学ナビ</a>
         <span class="db-current-path">{breadcrumb}</span>
         <a class="db-header-back" href="/">← トップへ戻る</a>
         <nav class="db-header-info" aria-label="サイト情報">
@@ -160,6 +160,12 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
       .db-header-title {
         font-weight: 700;
         font-size: 1.05rem;
+        color: #fff;
+        text-decoration: none;
+      }
+      .db-header-title:hover {
+        text-decoration: none;
+        opacity: 0.9;
       }
       .db-current-path {
         margin-left: auto;

@@ -283,6 +283,7 @@ ul {
 /* Top page: DB画面プレビュー（説明より先に実画面を見せる） */
 .hero-preview {
   max-width: 1040px;
+  margin: 0 auto;
   padding: 0.5rem 0 0.5rem;
 }
 .preview-trigger {

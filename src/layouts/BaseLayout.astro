@@ -9,12 +9,26 @@ interface Props {
   // トップページは説明・入口用ページのため、科目選択用の左サイドナビを出さない。
   // 科目選択は /app/（3ペインDB）側へ集約する。
   showNav?: boolean;
+  // TOPページ限定のブランド表示・レイアウト幅調整。他のno-navページ
+  // （Privacy/Disclaimer/Contact/404）には波及させないためのオプトイン。
+  largeBrand?: boolean;
+  wideLayout?: boolean;
+  // TOPページ限定の配色（Cool Paper × Digital Blue）。.app配下のCSS変数を
+  // 上書きするだけなので、このクラスを持たない他ページは既存の配色のまま。
+  topTheme?: boolean;
 }
 
 const DEFAULT_DESCRIPTION =
   '「何をやるか」「何を後回しにするか」を明確にするための高校数学ナビ（試作公開中）。';
 
-const { title, description = DEFAULT_DESCRIPTION, showNav = true } = Astro.props;
+const {
+  title,
+  description = DEFAULT_DESCRIPTION,
+  showNav = true,
+  largeBrand = false,
+  wideLayout = false,
+  topTheme = false,
+} = Astro.props;
 ---
 
 <html lang="ja">
@@ -27,13 +41,14 @@ const { title, description = DEFAULT_DESCRIPTION, showNav = true } = Astro.props
     <meta name="description" content={description} />
     <title>{title}</title>
     <Analytics />
+    <slot name="head" />
   </head>
   <body>
-    <div class="app">
+    <div class:list={['app', topTheme && 'top-theme']}>
       <header class="site-header">
-        <a class="site-title" href="/">高校数学ナビ</a>
+        <a class:list={['site-title', largeBrand && 'site-title--top']} href="/">高校数学ナビ</a>
       </header>
-      <div class:list={['layout', !showNav && 'layout--no-nav']}>
+      <div class:list={['layout', !showNav && 'layout--no-nav', wideLayout && 'layout--wide']}>
         {showNav && <Nav />}
         <main class="main-content">
           <slot />

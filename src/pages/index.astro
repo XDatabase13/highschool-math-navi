@@ -6,165 +6,241 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="高校数学ナビ｜「何を解くか」で迷わないための高校数学ナビ"
   description="教科書の代表的な問題から定期試験の＋αまでを整理し、「まず何をやるか」「どこまでやるか」を考えるための目安を示す高校数学ナビ（試作公開中）。"
   showNav={false}
+  largeBrand
+  wideLayout
+  topTheme
 >
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@600&family=M+PLUS+2:wght@400;600&family=Noto+Sans+JP:wght@400&family=Zen+Maru+Gothic:wght@700&display=swap"
+    />
+  </Fragment>
+
   <section class="hero">
+    <h1 class="hero-title hero-title--home">重要度と難易度で選べる<br />高校数学の問題データベース</h1>
+    <p class="hero-tagline">重要度 × 難易度 × 定期試験 × ThinkingFlow</p>
     <div class="hero-badges">
       <span class="badge badge-status">試作公開中</span>
-      <span class="badge badge-sub">推薦・定期試験向け</span>
-    </div>
-
-    <h1 class="hero-title">「何を解くか」で迷わないための高校数学ナビ</h1>
-
-    <div class="hero-lead">
-      <p>
-        教科書・学校の問題集・市販の問題集には、たくさんの問題があります。
-        でも、すべての問題を同じように扱う必要はありません。
-      </p>
-      <p>
-        このサイトでは、<strong>教科書の代表的な問題から、定期試験で扱われる＋αの問題まで</strong>を整理し、
-        <strong>「まず何をやるか」「どこまでやるか」</strong>を考えるための目安を示します。
-      </p>
     </div>
 
     <div class="hero-actions">
-      <a class="btn-primary" href="/app/">問題データベースへ</a>
+      <a class="hero-cta-link" href="/app/">問題データベースを見る →</a>
+    </div>
+  </section>
+
+  <section class="hero-preview" aria-label="高校数学ナビの実際の画面">
+    <button type="button" class="preview-trigger" data-lightbox-trigger aria-haspopup="dialog">
+      <img
+        class="preview-image"
+        src="/images/top-db-preview.png"
+        width="2556"
+        height="1181"
+        alt="高校数学ナビの問題データベース画面。左に科目・単元、中央に問題一覧、右に選択中の問題の詳細（問題文・問題メタ・解法メタ・ThinkingFlow・最終解答）が並ぶ3カラム構成。"
+        loading="eager"
+      />
+    </button>
+  </section>
+
+  <section class="features-section" aria-labelledby="features-heading">
+    <div class="features-intro">
+      <p class="features-eyebrow">CONCEPT</p>
+      <h2 id="features-heading" class="features-heading">高校数学ナビの4つの特徴</h2>
+    </div>
+
+    <div class="concept-grid" aria-label="サイトの4つの特徴">
+      <div class="concept-col">
+        <div class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M24 8 L42 40 L6 40 Z" />
+            <path d="M19.5 16 L28.5 16" />
+            <path d="M15 24 L33 24" />
+            <path d="M10.5 32 L37.5 32" />
+          </svg>
+        </div>
+        <h3 class="concept-col-title">重要度</h3>
+        <ul class="concept-items">
+          <li class="concept-item">
+            <span class="concept-item-label">土台</span>
+            <span class="concept-item-desc">高校数学の土台</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">本命</span>
+            <span class="concept-item-desc">定期試験で優先</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">次点</span>
+            <span class="concept-item-desc">本命の次</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">余力</span>
+            <span class="concept-item-desc">余裕があれば</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="concept-col">
+        <div class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 41 H14 V34 H23 V27 H32 V20 H41 V13" />
+          </svg>
+        </div>
+        <h3 class="concept-col-title">難易度</h3>
+        <ol class="concept-items">
+          <li class="concept-item concept-item--numbered">
+            <span class="concept-item-num">1</span>
+            <span class="concept-item-label">基本</span>
+            <span class="concept-item-desc">教科書の基本</span>
+          </li>
+          <li class="concept-item concept-item--numbered">
+            <span class="concept-item-num">2</span>
+            <span class="concept-item-label">標準</span>
+            <span class="concept-item-desc">教科書の標準</span>
+          </li>
+          <li class="concept-item concept-item--numbered">
+            <span class="concept-item-num">3</span>
+            <span class="concept-item-label">応用</span>
+            <span class="concept-item-desc">教科書で難しい側</span>
+          </li>
+          <li class="concept-item concept-item--numbered">
+            <span class="concept-item-num">4</span>
+            <span class="concept-item-label">発展</span>
+            <span class="concept-item-desc">標準より一段難しい</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="concept-col">
+        <div class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 20 L24 8 L40 20" />
+            <path d="M10 20 V36 H30 V20" />
+            <path d="M18 36 V28 H22 V36" />
+            <rect x="27" y="25" width="14" height="18" rx="1.5" />
+            <path d="M30.5 31 H37.5" />
+            <path d="M30.5 35 H37.5" />
+            <path d="M30.5 39 H35" />
+          </svg>
+        </div>
+        <h3 class="concept-col-title">定期試験</h3>
+        <ul class="concept-items">
+          <li class="concept-item">
+            <span class="concept-item-label">授業</span>
+            <span class="concept-item-desc">重く扱った問題を優先</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">教材</span>
+            <span class="concept-item-desc">学校の教科書と問題集も確認</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">傾向</span>
+            <span class="concept-item-desc">先生の出題傾向も判断材料</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">目安</span>
+            <span class="concept-item-desc">サイトの重要度は一つの目安</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="concept-col">
+        <div class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="15" y="5" width="18" height="9" rx="2" />
+            <path d="M24 14 V19" />
+            <path d="M24 19 L20.5 23 L24 27 L27.5 23 Z" />
+            <path d="M24 27 V32" />
+            <rect x="15" y="32" width="18" height="9" rx="2" />
+          </svg>
+        </div>
+        <h3 class="concept-col-title">ThinkingFlow</h3>
+        <ul class="concept-items">
+          <li class="concept-item">
+            <span class="concept-item-label">全体</span>
+            <span class="concept-item-desc">解き方の全体像が見える</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">段階</span>
+            <span class="concept-item-desc">必要な段階だけ開ける</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">確認</span>
+            <span class="concept-item-desc">詰まった場所を確認しやすい</span>
+          </li>
+          <li class="concept-item">
+            <span class="concept-item-label">自由</span>
+            <span class="concept-item-desc">自分のペースで使える</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <div class="dashboard">
-    <section class="dash-section" id="importance-difficulty" aria-labelledby="importance-difficulty-heading">
-      <h2 id="importance-difficulty-heading" class="dash-section-title">重要度と難易度</h2>
-      <p class="dash-section-lead">
-        このサイトでは、それぞれの問題を<strong>重要度</strong>と<strong>難易度</strong>の2つの軸で見ています。
-      </p>
-
-      <div class="dash-row">
-        <div class="dash-card">
-          <h3>重要度</h3>
-          <p>
-            定期試験を中心に考えたときに、
-            <strong>「この問題をどのくらい優先して身につけておきたいか」</strong>
-            を示す目安です。
-          </p>
-          <dl class="term-grid">
-            <div class="term-item">
-              <dt>土台</dt>
-              <dd>単元を越えて、高校数学として身につけておきたい内容。</dd>
-            </div>
-            <div class="term-item">
-              <dt>本命</dt>
-              <dd>その単元が定期試験範囲なら、優先して身につけたい主要問題。</dd>
-            </div>
-            <div class="term-item">
-              <dt>次点</dt>
-              <dd>定期試験でできるとよい問題。本命より優先順位は下げられます。</dd>
-            </div>
-            <div class="term-item">
-              <dt>余力</dt>
-              <dd>学校・試験範囲・自分の余力などに応じて取り組む問題。</dd>
-            </div>
-          </dl>
-        </div>
-
-        <div class="dash-card">
-          <h3>難易度</h3>
-          <p>
-            前提となる内容を学んだあと、
-            <strong>その問題を自力で解けるようになるまでの難しさ</strong>
-            を1〜4で表しています。
-          </p>
-          <ol class="level-list">
-            <li class="level-item">
-              <span class="level-num">1</span>
-              <span class="level-label">基本</span>
-              <span class="level-desc">教科書の基本的な問題</span>
-            </li>
-            <li class="level-item">
-              <span class="level-num">2</span>
-              <span class="level-label">標準</span>
-              <span class="level-desc">教科書の標準的な問題</span>
-            </li>
-            <li class="level-item">
-              <span class="level-num">3</span>
-              <span class="level-label">教科書で難しい側</span>
-              <span class="level-desc">教科書で扱われる中では難しい側の問題</span>
-            </li>
-            <li class="level-item">
-              <span class="level-num">4</span>
-              <span class="level-label">標準構造から一段以上離れる</span>
-              <span class="level-desc">教科書レベルの標準的な問題構造から、さらに一段以上離れる問題</span>
-            </li>
-          </ol>
-        </div>
-      </div>
-
-      <p class="dash-section-note">
-        <strong>重要だから難しい、簡単だから重要、と決めているわけではありません。</strong>
-        重要度と難易度は、それぞれ別に判断しています。
-      </p>
-    </section>
-
-    <section class="dash-row dash-row--top" aria-label="重要度の使い方と解説の考え方">
+    <section class="dash-section" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="dash-section-title">このサイトについて</h2>
       <div class="dash-card">
-        <h3>自分の学校に合わせて使ってください</h3>
-        <p>定期試験は、学校・先生・使っている教科書によって出題の温度感が変わります。</p>
         <p>
-          このサイトの重要度は、それらの違いをすべて無視した絶対的な評価ではなく、
-          <strong>定期試験対策の標準的な目安</strong>です。
+          高校数学ナビは、定期試験で何を優先して解くかを考えるための高校数学データベースです。
         </p>
-        <p>自分が使っている教科書や学校の問題集、授業のノートと、このサイトの問題を見比べてみてください。</p>
-        <ul class="signal-list">
-          <li>授業でかなり時間をかけていた</li>
-          <li>教科書では軽く扱われている</li>
-          <li>学校の問題集には似た問題が何問もある</li>
-        </ul>
         <p>
-          といった違いを見ることで、<strong>自分の学校ではどの問題の温度感が高いのか</strong>も判断しやすくなります。
+          問題ごとに重要度・難易度を設定し、問題の見方や解き方、ThinkingFlowをまとめています。
+          問題選定や重要度は、約20年の高校数学指導経験をもとに判断しています。
         </p>
-        <p class="dash-card-note">
-          このサイトの重要度を一つの基準にしつつ、実際に授業で扱われた内容や、学校から指定された試験範囲は優先してください。
-        </p>
-      </div>
-
-      <div class="dash-card">
-        <h3>詳しい解説を詰め込みすぎない理由</h3>
         <p>
-          詳しい解説を最初から大量に並べると、情報が増えすぎて、
-          <strong>どこを見ればよいのか、何を考えればよいのかが分かりにくくなる</strong>ことがあります。
+          現在は数学I「二次関数」54問を試作公開中です。今後、他の単元も順次追加していきます。
         </p>
-        <p>このサイトでは、問題の見方や解法の流れを整理し、必要な情報だけを段階的に確認できるようにしています。</p>
-        <p>まずは自分で手を動かし、詰まったところだけ確認する。</p>
-        <p class="dash-card-highlight">考えるための情報は残しつつ、考える邪魔になる情報は増やしすぎない。</p>
-        <p class="dash-card-note">そんな形を目指しています。問題ページでは、次のことを確認できます。</p>
-        <ul class="feature-chip-list">
-          <li>この問題をどう扱うか</li>
-          <li>解くときにどこを見るか</li>
-          <li>解法のフローチャート</li>
-          <li>最終解答</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="dash-row dash-row--top" aria-label="公開状況とサイトについて">
-      <div class="dash-card">
-        <h3>現在は試作版です</h3>
-        <ul class="status-list">
-          <li>数学I「二次関数」54問を公開中</li>
-          <li>二次方程式・二次不等式まで含む構成</li>
-          <li>他単元は順次追加予定</li>
-        </ul>
-        <a class="btn-primary" href="/app/">問題データベースへ</a>
-      </div>
-
-      <div class="dash-card dash-card--muted">
-        <h3>このサイトについて</h3>
-        <p>定期試験で必要な内容を整理しながら学びたい生徒を主な対象にしています。</p>
-        <p>
-          問題の選定や重要度、問題の扱い方については、
-          <strong>内部推薦・指定校推薦を中心に約20年間指導してきた経験</strong>をもとに判断しています。
-        </p>
-        <p><strong>「今、何をやるべきか」を考えるための一つの基準</strong>を提供することを目指しています。</p>
       </div>
     </section>
   </div>
+
+  <div class="lightbox-overlay" id="db-preview-lightbox" role="dialog" aria-modal="true" aria-label="問題データベース画面の拡大表示" hidden>
+    <div class="lightbox-content">
+      <button type="button" class="lightbox-close" data-lightbox-close aria-label="閉じる">×</button>
+      <img
+        class="lightbox-image"
+        src="/images/top-db-preview.png"
+        alt="高校数学ナビの問題データベース画面（拡大表示）。左に科目・単元、中央に問題一覧、右に選択中の問題の詳細が並ぶ3カラム構成。"
+      />
+    </div>
+  </div>
+
+  <script>
+    const trigger = document.querySelector('[data-lightbox-trigger]');
+    const overlay = document.getElementById('db-preview-lightbox');
+
+    if (trigger && overlay) {
+      const closeBtn = overlay.querySelector('[data-lightbox-close]');
+      const lightboxImage = overlay.querySelector('.lightbox-image');
+      let lastFocused: HTMLElement | null = null;
+
+      const onKeydown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') closeLightbox();
+      };
+
+      function openLightbox() {
+        lastFocused = document.activeElement as HTMLElement | null;
+        overlay!.hidden = false;
+        document.body.style.overflow = 'hidden';
+        closeBtn?.focus();
+        document.addEventListener('keydown', onKeydown);
+      }
+
+      function closeLightbox() {
+        overlay!.hidden = true;
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeydown);
+        lastFocused?.focus();
+      }
+
+      trigger.addEventListener('click', openLightbox);
+      closeBtn?.addEventListener('click', closeLightbox);
+      lightboxImage?.addEventListener('click', closeLightbox);
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) closeLightbox();
+      });
+    }
+  </script>
 </BaseLayout>

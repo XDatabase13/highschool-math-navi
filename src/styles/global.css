@@ -453,31 +453,39 @@ ul {
   color: var(--color-text);
 }
 
-/* TOP CONCEPT: 4つの特徴を白カードではなく罫線区切りの1枚パネルとして並べる
-   （PC4列／タブレット2列×2行／スマホ1列）。文字の階層はfont-weight/font-size/
-   文字色だけで作り、CONCEPT内のフォントはすべてM PLUS 2に統一する。 */
+/* TOP CONCEPT: 4つの特徴を白カードではなく罫線区切りの1枚パネルとして並べる。
+   2列×2行固定（上段＝重要度/難易度＝「何を選ぶか」、下段＝定期試験/ThinkingFlow＝
+   「どう優先するか／どう解くか」という役割差をレイアウトで示す）。
+   文字の階層はfont-weight/font-size/文字色だけで作り、CONCEPT内のフォントは
+   すべてM PLUS 2に統一する。 */
 .concept-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
   max-width: 1152px;
   margin: 0 auto;
 }
 .concept-col {
   padding: 0 1.75rem;
+  display: flex;
+  flex-direction: column;
 }
-.concept-col:first-child {
+.concept-col:nth-child(odd) {
   padding-left: 0;
 }
-.concept-col:last-child {
+.concept-col:nth-child(even) {
   padding-right: 0;
-}
-.concept-col:not(:first-child) {
   border-left: 1px solid var(--color-border);
+}
+.concept-col:nth-child(n + 3) {
+  border-top: 1px solid var(--color-border);
+  padding-top: 2rem;
+  margin-top: 2rem;
 }
 .concept-col-title {
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.35rem;
   text-align: center;
   margin: 0 0 1rem;
 }
@@ -486,77 +494,228 @@ ul {
   margin: 0;
   padding: 0;
 }
+/* 重要度・難易度：2×2化で横幅が広がった分、ラベル＋説明を同じ行に並べる
+   横組みにして密度を出す（縦積みによる間延びを解消）。 */
 .concept-item {
-  padding: 0.6rem 0;
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  column-gap: 0.75rem;
   align-items: baseline;
+  padding: 0.6rem 0;
 }
 .concept-item:not(:first-child) {
   border-top: 1px solid var(--color-border);
 }
 .concept-item-label {
-  display: block;
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   color: var(--color-primary-dark);
+  white-space: nowrap;
 }
 .concept-item-desc {
-  display: block;
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 400;
-  font-size: 0.85rem;
+  font-size: 0.98rem;
   color: var(--color-text-muted);
-  margin-top: 0.15rem;
 }
 .concept-item--numbered {
-  display: grid;
-  grid-template-columns: 1.7rem 1fr;
-  column-gap: 0.6rem;
-  row-gap: 0.15rem;
-}
-.concept-item--numbered .concept-item-desc {
-  margin-top: 0;
+  grid-template-columns: 2.05rem 3.25rem 1fr;
+  align-items: center;
 }
 .concept-item-num {
-  grid-row: 1 / span 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: center;
-  width: 1.7rem;
-  height: 1.7rem;
+  width: 2.05rem;
+  height: 2.05rem;
   border-radius: 50%;
   background: var(--color-primary);
   color: #fff;
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
-@media (min-width: 601px) and (max-width: 900px) {
-  /* タブレット2列×2行：縦罫線は2列目のみ、行の区切りは横罫線に切り替える */
-  .concept-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .concept-col {
-    border-left: none;
-    padding: 0 1.25rem;
-  }
-  .concept-col:nth-child(2n+1) {
-    padding-left: 0;
-  }
-  .concept-col:nth-child(2n) {
-    padding-right: 0;
-    border-left: 1px solid var(--color-border);
-  }
-  .concept-col:nth-child(n + 3) {
-    border-top: 1px solid var(--color-border);
-    padding-top: 1.75rem;
-    margin-top: 1.75rem;
+/* 定期試験セル：「高校数学ナビ」×「学校の情報」が下の「あなたの優先順位」へ
+   合流する図。文章の4行構成をやめ、図解主体にする。 */
+.convergence-diagram {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.convergence-sources {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.convergence-source {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+.convergence-icon {
+  width: 44px;
+  height: auto;
+  margin: 0 auto 0.5rem;
+  color: var(--color-primary);
+}
+.convergence-icon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.convergence-icon--target {
+  width: 34px;
+}
+.convergence-source-title {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+.convergence-source-sub {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 400;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin: 0.15rem 0 0;
+}
+/* 学校の情報：授業／教材／傾向の3つを小さい線画＋短いラベルで横並びに */
+.convergence-subgroup {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.convergence-subitem {
+  text-align: center;
+}
+.convergence-icon--sub {
+  width: 26px;
+  margin: 0 auto 0.25rem;
+}
+.convergence-subitem-label {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+/* 合流線：画面いっぱいのV字ではなく、短い線が小さな合流点（丸）へ集まり、
+   そこから下へ短い矢印が伸びるだけの、情報端末的でコンパクトな表現にする。 */
+.convergence-merge {
+  display: block;
+  width: 100px;
+  height: auto;
+  margin: 0.4rem auto 0;
+  color: var(--color-text-muted);
+}
+.convergence-target {
+  text-align: center;
+}
+.convergence-target-label {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+/* ThinkingFlowセル：実際のDBのThinkingFlowと同じ「見出しが並び、必要な段階だけ
+   開ける」思想を、3STEP程度のミニ実演UIとして再現する。 */
+.mini-flow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.mini-flow-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.mini-flow-step:not(:first-child) {
+  border-top: 1px solid var(--color-border);
+}
+.mini-flow-toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0.55rem 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+.mini-flow-toggle:hover .mini-flow-step-title,
+.mini-flow-toggle:focus-visible .mini-flow-step-title {
+  color: var(--color-primary);
+}
+.mini-flow-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.mini-flow-step-num {
+  flex-shrink: 0;
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+.mini-flow-step-title {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+}
+/* JSでheightを測らずに開閉できるよう、grid-template-rowsの0fr/1frで
+   アコーディオンを実装する（“ゆっくり開く”動きもtransitionだけで表現）。 */
+.mini-flow-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.5s ease, opacity 0.3s ease;
+}
+.mini-flow-content.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.mini-flow-content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.mini-flow-formula {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  margin: 0 0 0.4rem;
+}
+.mini-flow-note {
+  font-family: "M PLUS 2", var(--font-base);
+  font-weight: 400;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.9rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mini-flow-content {
+    transition: none;
   }
 }
-@media (max-width: 600px) {
-  /* スマホ1列：縦罫線は使わず、項目間はすべて横罫線で区切る */
+
+@media (max-width: 700px) {
+  /* スマホ1列：1.重要度 2.難易度 3.定期試験 4.ThinkingFlowの順で縦積み。
+     縦罫線は使わず、項目間はすべて横罫線で区切る。 */
   .concept-grid {
     grid-template-columns: 1fr;
   }
@@ -568,6 +727,36 @@ ul {
     border-top: 1px solid var(--color-border);
     padding-top: 1.75rem;
     margin-top: 1.75rem;
+  }
+  .convergence-diagram {
+    align-items: center;
+  }
+  .convergence-sources {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .convergence-source:first-child::after {
+    /* 縦積みでも「2つが並列の判断材料」であることが伝わるよう、単なる
+       縦線ではなく＋記号でつなぐ（高校数学ナビ＋学校の情報→優先順位）。 */
+    content: "＋";
+    display: block;
+    font-family: "M PLUS 2", var(--font-base);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0.75rem 0 0;
+  }
+  .convergence-merge {
+    display: none;
+  }
+  .convergence-target::before {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 20px;
+    background: var(--color-border);
+    margin: 0 auto 0.75rem;
   }
 }
 

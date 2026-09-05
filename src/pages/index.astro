@@ -107,7 +107,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <li class="concept-item concept-item--numbered">
             <span class="concept-item-num">4</span>
             <span class="concept-item-label">発展</span>
-            <span class="concept-item-desc">標準より一段難しい</span>
+            <span class="concept-item-desc">応用より一段難しい</span>
           </li>
         </ol>
       </div>
@@ -125,24 +125,79 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
         </div>
         <h3 class="concept-col-title">定期試験</h3>
-        <ul class="concept-items">
-          <li class="concept-item">
-            <span class="concept-item-label">授業</span>
-            <span class="concept-item-desc">重く扱った問題を優先</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">教材</span>
-            <span class="concept-item-desc">学校の教科書と問題集も確認</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">傾向</span>
-            <span class="concept-item-desc">先生の出題傾向も判断材料</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">目安</span>
-            <span class="concept-item-desc">サイトの重要度は一つの目安</span>
-          </li>
-        </ul>
+        <div class="convergence-diagram">
+          <div class="convergence-sources">
+            <div class="convergence-source">
+              <div class="convergence-icon" aria-hidden="true">
+                <svg viewBox="0 0 64 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="58" height="36" rx="3" />
+                  <path d="M21 4 V40" />
+                  <path d="M8 12 H16" />
+                  <path d="M8 20 H16" />
+                  <path d="M8 28 H16" />
+                  <path d="M27 12 H52" />
+                  <path d="M27 20 H46" />
+                  <rect x="27" y="27" width="16" height="7" rx="2" />
+                </svg>
+              </div>
+              <p class="convergence-source-title">高校数学ナビ</p>
+              <p class="convergence-source-sub">重要度・難易度</p>
+            </div>
+            <div class="convergence-source">
+              <p class="convergence-source-title">学校の情報</p>
+              <div class="convergence-subgroup">
+                <div class="convergence-subitem">
+                  <div class="convergence-icon convergence-icon--sub" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="20" height="14" rx="1.5" />
+                      <path d="M8 10 H18" />
+                      <path d="M8 14 H14" />
+                      <path d="M7 18 L4 26" />
+                      <path d="M19 18 L22 26" />
+                    </svg>
+                  </div>
+                  <p class="convergence-subitem-label">授業</p>
+                </div>
+                <div class="convergence-subitem">
+                  <div class="convergence-icon convergence-icon--sub" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 8 C4 8 10 6 16 9 C22 6 28 8 28 8 V24 C28 24 22 22 16 25 C10 22 4 24 4 24 Z" />
+                      <path d="M16 9 V25" />
+                    </svg>
+                  </div>
+                  <p class="convergence-subitem-label">教材</p>
+                </div>
+                <div class="convergence-subitem">
+                  <div class="convergence-icon convergence-icon--sub" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="7" y="4" width="18" height="24" rx="1.5" />
+                      <path d="M11 10 H21" />
+                      <path d="M11 15 H21" />
+                      <path d="M11 20 L14 23 L21 15" />
+                    </svg>
+                  </div>
+                  <p class="convergence-subitem-label">傾向</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <svg class="convergence-merge" viewBox="0 0 120 46" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2 L58 24" />
+            <path d="M106 2 L62 24" />
+            <circle cx="60" cy="26" r="3" />
+            <path d="M60 30 V38" />
+            <path d="M54 33 L60 40 L66 33" />
+          </svg>
+          <div class="convergence-target">
+            <div class="convergence-icon convergence-icon--target" aria-hidden="true">
+              <svg viewBox="0 0 32 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="16" cy="10" r="7" />
+                <path d="M4 40 C4 26 9 21 16 21 C23 21 28 26 28 40" />
+              </svg>
+            </div>
+            <p class="convergence-target-label">あなたの優先順位</p>
+          </div>
+        </div>
       </div>
 
       <div class="concept-col">
@@ -156,24 +211,44 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </svg>
         </div>
         <h3 class="concept-col-title">ThinkingFlow</h3>
-        <ul class="concept-items">
-          <li class="concept-item">
-            <span class="concept-item-label">全体</span>
-            <span class="concept-item-desc">解き方の全体像が見える</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">段階</span>
-            <span class="concept-item-desc">必要な段階だけ開ける</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">確認</span>
-            <span class="concept-item-desc">詰まった場所を確認しやすい</span>
-          </li>
-          <li class="concept-item">
-            <span class="concept-item-label">自由</span>
-            <span class="concept-item-desc">自分のペースで使える</span>
-          </li>
-        </ul>
+        <div class="mini-flow" data-mini-flow>
+          <ol class="mini-flow-steps">
+            <li class="mini-flow-step">
+              <button type="button" class="mini-flow-toggle" aria-expanded="false">
+                <span class="mini-flow-step-num">STEP 1</span>
+                <span class="mini-flow-step-title">式を整理する</span>
+              </button>
+              <div class="mini-flow-content">
+                <div class="mini-flow-content-inner">
+                  <p class="mini-flow-note">ax² + bx + c = 0 の形にする</p>
+                </div>
+              </div>
+            </li>
+            <li class="mini-flow-step">
+              <button type="button" class="mini-flow-toggle" aria-expanded="false">
+                <span class="mini-flow-step-num">STEP 2</span>
+                <span class="mini-flow-step-title">判別式を見る</span>
+              </button>
+              <div class="mini-flow-content">
+                <div class="mini-flow-content-inner">
+                  <p class="mini-flow-formula">D = b² − 4ac</p>
+                  <p class="mini-flow-note">D &gt; 0 を確認</p>
+                </div>
+              </div>
+            </li>
+            <li class="mini-flow-step">
+              <button type="button" class="mini-flow-toggle" aria-expanded="false">
+                <span class="mini-flow-step-num">STEP 3</span>
+                <span class="mini-flow-step-title">条件を整理する</span>
+              </button>
+              <div class="mini-flow-content">
+                <div class="mini-flow-content-inner">
+                  <p class="mini-flow-note">Dの符号で実数解の個数を判断</p>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
       </div>
     </div>
   </section>
@@ -241,6 +316,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       overlay.addEventListener('click', (event) => {
         if (event.target === overlay) closeLightbox();
       });
+    }
+  </script>
+
+  <script>
+    const miniFlow = document.querySelector<HTMLElement>('[data-mini-flow]');
+
+    if (miniFlow) {
+      const steps = Array.from(miniFlow.querySelectorAll<HTMLLIElement>('.mini-flow-step'));
+
+      function setStepOpen(step: HTMLLIElement, open: boolean) {
+        const btn = step.querySelector('.mini-flow-toggle');
+        const content = step.querySelector('.mini-flow-content');
+        btn?.setAttribute('aria-expanded', String(open));
+        content?.classList.toggle('is-open', open);
+      }
+
+      // 手動開閉はreduced motion設定に関わらず常に有効にする。
+      steps.forEach((step) => {
+        const btn = step.querySelector('.mini-flow-toggle');
+        btn?.addEventListener('click', () => {
+          const isOpen = btn.getAttribute('aria-expanded') === 'true';
+          setStepOpen(step, !isOpen);
+        });
+      });
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!prefersReducedMotion && steps.length >= 2) {
+        let hasPlayed = false;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting && !hasPlayed) {
+                hasPlayed = true;
+                observer.unobserve(miniFlow);
+                playAutoDemo();
+              }
+            }
+          },
+          { threshold: 0.4 },
+        );
+        observer.observe(miniFlow);
+
+        function playAutoDemo() {
+          // STEP1を開く→少し見せてから閉じてSTEP2を開く→STEP2を開いたまま停止する
+          // （STEP3は自動では開かない）。最終状態から先はすべて手動開閉に委ねる。
+          const [step1, step2] = steps;
+          setStepOpen(step1, true);
+          setTimeout(() => {
+            setStepOpen(step1, false);
+            setStepOpen(step2, true);
+          }, 1600);
+        }
+      }
     }
   </script>
 </BaseLayout>

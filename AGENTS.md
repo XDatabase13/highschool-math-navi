@@ -1,6 +1,10 @@
 ## プロジェクトの目的
 
-高校数学の学習ナビゲーションサイトのクローズド試作です。
+高校数学の学習ナビゲーションサイト **「高校数学ナビ」** の公開試作です。
+
+公開URL：
+
+- https://math-navi.com
 
 中心価値は、問題や詳しい解説を大量に増やすことではなく、
 
@@ -14,8 +18,12 @@
 - 教材化
 - asset生成
 - PC実画面レビュー
+- スマホ狭幅での主要導線・DB表示確認と初回レスポンシブ調整
 - Codex構造監査
-- 最終build
+- 共通3ペインDB UIへの統合
+- 各問題固有URLの静的生成
+- GitHub Pages公開
+- TOPページの独自ビジュアルデザイン（hero・DBプレビュー・CONCEPTセクション等）実装
 
 まで完了しています。
 
@@ -25,22 +33,39 @@
 - M1-QF-028〜041：二次方程式・グラフと二次方程式
 - M1-QF-042〜054：二次不等式
 
-したがって、二次方程式・二次不等式は次工程ではなく、すでに現行54問へ含まれています。
-Web側の54問完成状態はコミット `cdca842` で正式コミット済みです。
+スマートフォンは主要導線・DB表示の初回狭幅確認まで完了しています。現行レスポンシブ仕様を、明示的な依頼なしに大きく変更しないでください。
 
-スマートフォン表示の確認・調整は別Phaseです。明示的な依頼なしにスマホ向けの大規模調整へ進まないでください。
+TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポグラフィ・hero・DBプレビュー・CONCEPTセクションの構成等）も人間レビュー済みです。明示的な依頼なしに大きく変更しないでください。
 
-他分野の既存サンプルUIも存在しますが、教材コンテンツを独断で追加・拡張しないでください。
+旧6サンプルのデータ・コンポーネントは開発資産として残していますが、公開routeは生成しません。理由なく再公開しないでください。
 
 ---
 
 ## 正本と責任範囲
 
-教材データの正本は `math_db_quadratic_working/problems/` のMarkdownです。
+教材制作の正本はWeb repoの外側にあります。
 
-Astro Content Collectionsから読み込み、TypeScript等へ教材本文を手動転記して二重管理しません。
+- Markdown正本：`math_db_quadratic_working/problems/`
+- asset正本：`math_db_quadratic_working/assets/`
 
-`problem.md` の数学的固定内容には、少なくとも以下を含みます。
+Web repoでは、GitHub Actions単独でbuildできるよう公開用スナップショットを保持します。
+
+- `src/content/quadratic27/`
+- `src/content/quadratic27-assets/`
+
+**公開用スナップショットは正本ではありません。直接編集しないでください。**
+
+教材内容・assetを変更する場合は、原則として制作側の正本を変更し、その後Web repoで、
+
+```sh
+npm run sync-content
+```
+
+を実行してMarkdownとassetを同期します。
+
+`sync-content` はローカルの制作側フォルダを必要とします。GitHub Actionsでは実行せず、commit済みのスナップショットだけでbuildします。
+
+正本Markdownの数学的固定内容には、少なくとも以下を含みます。
 
 - 問題文
 - 問題メタ
@@ -59,9 +84,94 @@ Astro Content Collectionsから読み込み、TypeScript等へ教材本文を手
 
 ---
 
+## 公開URLとDB UIの契約
+
+問題表示は `ProblemDbShell.astro` を共通3ペインシェルとして使用します。
+
+基本構造：
+
+> **科目・単元 ｜ 問題一覧 ｜ 選択中の問題詳細**
+
+主要route：
+
+- `/app/`：問題DBへの入口
+- `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ
+- `/math1/quadratic/M1-QF-001/` 〜 `/math1/quadratic/M1-QF-054/`：各問題の固有URL
+
+個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
+**1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
+
+各個別URLはJavaScriptだけで問題を後付け表示するのではなく、Astroの静的生成によって、その問題固有の本文をHTML内に持たせます。
+
+中央問題一覧は、検索エンジンが辿れる通常の `<a href>` で各問題URLへリンクします。
+SPA化や複雑なクライアント状態管理を、明示的な要求なしに導入しないでください。
+
+### スマートフォン表示
+
+PC幅では現在の3ペインUIを維持します。狭幅では、同じ `ProblemDbShell.astro` を使ったまま表示順を次のように切り替えます。
+
+> **ヘッダー → 選択中の問題詳細 → 折りたたみ式問題一覧 → 科目・単元**
+
+- 個別問題URLへ直接着地した利用者が、問題本文より先に全問題一覧をスクロールする構造へ戻さない
+- 問題一覧はネイティブの `details/summary` を使い、スマホでは初期状態を閉じる
+- PC幅では問題一覧を従来どおり常時表示し、3ペインの見た目を維持する
+- DBヘッダーの「高校数学ナビ」はスマホでも1行表示を維持し、`/` へのリンクとして機能させる
+- Privacy／Disclaimer／Contact等のヘッダーリンクを狭幅で見切れさせない
+- スマホ専用の別ページや別DBを作らず、共通シェルのレスポンシブ挙動として実装する
+
+---
+
+## SEOの現行契約
+
+以下を維持してください。
+
+### `/app/`
+
+- `noindex,follow`
+- canonicalは `/app/` 自身
+- sitemapには載せない
+- robots.txtでDisallowしない
+
+### `/math1/quadratic/` と個別問題URL
+
+- index対象
+- noindexを付けない
+- 個別問題は固有title / description
+- canonicalは各URL自身
+- `/app/` へcanonical統合しない
+
+### sitemap / robots
+
+`sitemap.xml` は検索対象ページを掲載します。
+現行54問時点の内訳は、
+
+- `/`
+- `/math1/quadratic/`
+- 個別問題54URL
+- `/privacy/`
+- `/disclaimer/`
+- `/contact/`
+
+です。
+
+`/app/` と旧6サンプルrouteはsitemapへ含めません。
+
+`robots.txt` の基本形：
+
+```text
+User-agent: *
+Allow: /
+
+Sitemap: https://math-navi.com/sitemap.xml
+```
+
+問題追加時に、既存のContent Collectionベースのsitemap生成を壊さないでください。
+
+---
+
 ## 問題ページの現行構造
 
-基本構造は以下です。
+右ペインの問題詳細は基本的に以下です。
 
 1. 問題情報
 2. 問題
@@ -81,7 +191,7 @@ Astro Content Collectionsから読み込み、TypeScript等へ教材本文を手
 
 ### ThinkingFlow
 
-現行UIは逐次表示型ではなく、一覧型アコーディオンです。
+現行UIは一覧型アコーディオンです。
 
 - 初期状態：全Flowの題名を表示、本文は閉じる
 - 各Flow：個別開閉
@@ -129,20 +239,54 @@ assetの表示位置はファイル名ではなく `problem.md` のmetadataを�
 assetは必要最小限とし、数学的に意味のある視覚補助として使います。
 色・線幅・ラベル位置等は実装側で調整できますが、人間レビュー済みassetを理由なく作り直さないでください。
 
+公開用assetスナップショットだけを直接修正しないでください。正本assetを修正して再同期します。
+
+---
+
+## 公開・計測
+
+公開基盤：
+
+- Hosting：GitHub Pages
+- Deploy：GitHub Actions
+- Deploy branch：`master`
+- Node.js：24
+- 正式URL：`https://math-navi.com`
+
+GA4は `src/components/Analytics.astro` を共通利用します。
+
+- `BaseLayout.astro`
+- `ProblemDbShell.astro`
+
+の双方で利用し、1ページ内で二重読み込みしないこと。
+
+新規ページは、原則として既存のGA4対応済み共通レイアウト／シェルを利用してください。
+別レイアウトを新設する場合はGA4計測漏れを確認します。
+
+公開情報ページ：
+
+- `/privacy/`
+- `/disclaimer/`
+- `/contact/`
+
+ContactはGoogleフォームへの外部リンク方式です。
+PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変更と矛盾させないでください。
+
 ---
 
 ## 開発ルール
 
 - Astro + TypeScript を使用する
 - 教材データと表示UIを分離する
+- 制作正本とWeb公開スナップショットを分離する
 - 問題ID別の場当たり的な分岐を増やさない
 - 不要な機能を勝手に追加しない
 - ログイン・ユーザー管理を作らない
 - データベースを導入しない
 - 課金機能を作らない
 - 外部AI APIを直接接続しない
-- SEO・本番公開対応は、明示的にそのPhaseへ入るまで行わない
 - 既存の人間レビュー済みUI・asset・教材文を、リファクタリング目的だけで変更しない
+- 既存のroute・canonical・noindex・sitemap・GA4契約を、理由なく変更しない
 - 範囲外の修正が必要に見える場合は、先に報告して確認する
 
 既存の `Quadratic27...` 等の旧名称がコード上に残っていても、名称だけを理由に勝手にrenameしないでください。
@@ -153,12 +297,17 @@ assetは必要最小限とし、数学的に意味のある視覚補助として
 
 教材変更・構造変更後は、必要に応じて以下を確認します。
 
-- `npx astro build`
+- `npm run build`
 - KaTeXエラー
 - asset参照切れ
 - `part / flow` 配置不整合
 - parser上のsection / subsection / Flow欠落
 - 意図しない問題IDハードコード
+- repo外依存が復活していないか
+- 個別URLを直接開いたとき該当問題が初期選択されるか
+- 個別HTMLに固有の問題本文が含まれるか
+- title / description / canonical / noindexの意図しない変更
+- Analyticsの二重読み込み
 
 現在のM1-QF-001〜054はCodex構造監査済みで、FIX相当の構造的不整合はありません。
 

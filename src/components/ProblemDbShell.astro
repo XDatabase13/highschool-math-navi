@@ -33,6 +33,10 @@ interface Props {
   activeItemId?: string;
   centerItems: DbCenterItem[];
   centerNote?: string;
+  // /app/ は学習DBの入口として維持するが、検索対象からは外す
+  // （個別問題ページと内容が重複するため）。canonicalは自身のまま、
+  // クロール自体は妨げないよう noindex,follow を使う。
+  noindex?: boolean;
 }
 
 const {
@@ -44,6 +48,7 @@ const {
   activeItemId,
   centerItems,
   centerNote,
+  noindex = false,
 } = Astro.props;
 
 const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
@@ -57,6 +62,7 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
   </head>

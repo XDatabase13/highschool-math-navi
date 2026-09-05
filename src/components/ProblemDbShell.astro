@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import 'katex/dist/katex.min.css';
 import { publicSubjectNav } from '../data/subjects';
+import Analytics from './Analytics.astro';
 
 // 問題データベース用の共通3ペインUI。
 // /app/・/math1/quadratic/・/math1/quadratic/[slug]/ など、
@@ -65,6 +66,7 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
     {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
+    <Analytics />
   </head>
   <body>
     <div class="db-shell">

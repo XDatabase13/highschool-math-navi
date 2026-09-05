@@ -1,0 +1,17 @@
+---
+// Google Analytics 4（gtag.js、公式スニペット準拠）。
+// BaseLayout / ProblemDbShell の両head内から1回ずつ読み込む共通コンポーネント。
+// 各ページはBaseLayoutかProblemDbShellのどちらか一方しか使わないため、
+// このコンポーネント自体を複数回importしない限り二重読み込みにはならない。
+// Measurement IDは秘密情報ではないため、.env化せずここに直接書く。
+---
+
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-WFP1G4QGPX"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-WFP1G4QGPX');
+</script>

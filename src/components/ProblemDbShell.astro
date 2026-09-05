@@ -359,6 +359,17 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
         .db-pane-list > *:not(summary) {
           display: block;
         }
+        /* Chromeの新しい<details>実装は、閉じた状態の中身を
+           ::details-content という擬似要素でcontent-visibility: hiddenかつ
+           高さ0にラップする。上のdisplay上書きだけでは子要素自体の
+           displayしか変えられずこの擬似要素までは効かないため、
+           PC幅ではこちらも明示的に開いた状態相当へ上書きする。 */
+        .db-pane-list::details-content {
+          content-visibility: visible;
+          block-size: auto;
+          height: auto;
+          overflow: visible;
+        }
       }
 
       /* PCの3ペインをスマホへ無理に縮小しない。狭幅では表示優先順位を

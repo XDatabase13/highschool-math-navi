@@ -1,4 +1,6 @@
 export interface NavUnit {
+  // 3ペインDB UI（ProblemDbShell）で、現在表示中の単元をハイライトするための識別子。
+  id: string;
   name: string;
   href: string;
   // 初期検証用の6問サンプル（内部の設計・監査資産）。データは保持したまま、
@@ -19,17 +21,17 @@ export const subjectNav: NavSubject[] = [
   {
     name: '数学I',
     units: [
-      { name: '数と式', href: '/math1/suto-shiki/factorization/', sampleOnly: true },
-      { name: '二次関数', href: '/math1/quadratic/' },
-      { name: '三角比', href: '/math1/trig/cyclic-quadrilateral/', sampleOnly: true },
-      { name: 'データの分析', href: '/math1/data-analysis/correlation-coefficient/', sampleOnly: true },
+      { id: 'suto-shiki', name: '数と式', href: '/math1/suto-shiki/factorization/', sampleOnly: true },
+      { id: 'quadratic', name: '二次関数', href: '/math1/quadratic/' },
+      { id: 'trig', name: '三角比', href: '/math1/trig/cyclic-quadrilateral/', sampleOnly: true },
+      { id: 'data-analysis', name: 'データの分析', href: '/math1/data-analysis/correlation-coefficient/', sampleOnly: true },
     ],
   },
   {
     name: '数学A',
     units: [
-      { name: '場合の数と確率', href: '/mathA/probability/repeated-trials/', sampleOnly: true },
-      { name: '図形の性質', href: '/mathA/geometry/menelaus/', sampleOnly: true },
+      { id: 'probability', name: '場合の数と確率', href: '/mathA/probability/repeated-trials/', sampleOnly: true },
+      { id: 'geometry', name: '図形の性質', href: '/mathA/geometry/menelaus/', sampleOnly: true },
     ],
   },
   { name: '数学II', units: [] },

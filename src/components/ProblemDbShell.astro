@@ -1,0 +1,352 @@
+---
+import '../styles/global.css';
+import 'katex/dist/katex.min.css';
+import { publicSubjectNav } from '../data/subjects';
+
+// 問題データベース用の共通3ペインUI。
+// /app/・/math1/quadratic/・/math1/quadratic/[slug]/ など、
+// 「1問題=1固有URL」を維持しつつ同じ表示基盤を使いたいページから利用する。
+//
+// 旧app/index.astroはJavaScriptで単元・問題を切り替えるSPA的な作りだったが、
+// 検索エンジンが個別問題URLを独立ページとして辿れるようにするため、
+// 単元・問題の切り替えは通常の<a href>によるページ遷移に統一した
+// （中央ペイン・左ペインとも、選択状態は各ページの静的生成時に決める）。
+//
+// 中央ペインに表示する問題一覧（centerItems）は、呼び出し側が
+// 単元ごとのデータソースから組み立てて渡す。このコンポーネント自体は
+// 「id / href / title / chips」という共通の形しか知らないため、
+// 今後の他単元追加時もこのコンポーネントを変更せずに再利用できる。
+
+export interface DbCenterItem {
+  id: string;
+  href: string;
+  title: string;
+  chips: string[];
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  breadcrumb: string;
+  activeUnitId: string;
+  activeItemId?: string;
+  centerItems: DbCenterItem[];
+  centerNote?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  breadcrumb,
+  activeUnitId,
+  activeItemId,
+  centerItems,
+  centerNote,
+} = Astro.props;
+
+const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="db-shell">
+      <header class="db-header">
+        <span class="db-header-title">高校数学ナビ</span>
+        <span class="db-current-path">{breadcrumb}</span>
+        <a class="db-header-back" href="/">← トップへ戻る</a>
+        <nav class="db-header-info" aria-label="サイト情報">
+          <a href="/privacy/">プライバシー</a>
+          <a href="/disclaimer/">免責事項</a>
+          <a href="/contact/">お問い合わせ</a>
+        </nav>
+      </header>
+
+      <div class="db-body">
+        <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
+          <ul class="db-subject-list">
+            {publicSubjectNav
+              .filter((subject) => subject.units.length > 0)
+              .map((subject) => (
+                <li class="db-subject">
+                  <span class="db-subject-name">{subject.name}</span>
+                  <ul class="db-unit-list">
+                    {subject.units.map((unit) => (
+                      <li>
+                        <a
+                          class:list={['db-unit-btn', unit.id === activeUnitId && 'is-selected']}
+                          href={unit.href}
+                          aria-current={unit.id === activeUnitId ? 'page' : undefined}
+                        >
+                          {unit.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+          </ul>
+          <p class="db-subject-note">他の単元は順次追加予定</p>
+        </nav>
+
+        <section class="db-pane db-pane-list" aria-label="問題一覧">
+          <ul class="db-problem-list">
+            {centerItems.map((item) => (
+              <li>
+                <a
+                  class:list={['db-problem-item', item.id === activeItemId && 'is-selected']}
+                  href={item.href}
+                  aria-current={item.id === activeItemId ? 'page' : undefined}
+                >
+                  <span class="db-problem-title">{item.title}</span>
+                  <span class="db-problem-meta">
+                    {item.chips.map((chip) => (
+                      <span class="db-problem-chip">{chip}</span>
+                    ))}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {centerNote && <p class="db-list-note">{centerNote}</p>}
+        </section>
+
+        <section class="db-pane db-pane-detail" aria-label="選択中の問題の詳細">
+          <slot />
+        </section>
+      </div>
+    </div>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .db-shell {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--color-bg);
+      }
+
+      .db-header {
+        flex-shrink: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.9rem;
+        padding: 0.55rem 1rem;
+        background: var(--color-primary-dark);
+        color: #fff;
+      }
+      .db-header-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+      .db-current-path {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: #d6e3ea;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .db-header-back {
+        font-size: 0.8rem;
+        color: #bcdff0;
+        flex-shrink: 0;
+        padding: 0.3rem 0.6rem;
+        margin: -0.3rem -0.6rem -0.3rem 0;
+        border-radius: var(--radius);
+        transition: background-color 0.15s ease, color 0.15s ease;
+      }
+      .db-header-back:hover {
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        text-decoration: none;
+      }
+      .db-header-info {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        flex-shrink: 0;
+        padding-left: 0.8rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .db-header-info a {
+        font-size: 0.75rem;
+        color: #bcdff0;
+      }
+      .db-header-info a:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .db-body {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 200px 300px 1fr;
+      }
+
+      .db-pane {
+        min-height: 0;
+        overflow-y: auto;
+      }
+
+      .db-pane-subjects {
+        border-right: 1px solid var(--color-border);
+        background: var(--color-surface);
+        padding: 1rem 0.75rem;
+      }
+      .db-subject-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .db-subject {
+        margin-bottom: 1rem;
+      }
+      .db-subject-name {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        margin-bottom: 0.35rem;
+      }
+      .db-unit-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .db-unit-btn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: transparent;
+        border-radius: var(--radius);
+        padding: 0.4rem 0.6rem;
+        margin-bottom: 0.15rem;
+        font-size: 0.9rem;
+        color: var(--color-text);
+        text-decoration: none;
+      }
+      .db-unit-btn:hover {
+        background: var(--color-accent-bg);
+        text-decoration: none;
+      }
+      .db-unit-btn.is-selected {
+        background: var(--color-primary);
+        color: #fff;
+        font-weight: 700;
+      }
+      .db-subject-note {
+        margin: 1rem 0 0;
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+      }
+
+      .db-pane-list {
+        border-right: 1px solid var(--color-border);
+        background: var(--color-bg);
+        padding: 0.9rem;
+      }
+      .db-problem-list {
+        list-style: none;
+        margin: 0 0 0.75rem;
+        padding: 0;
+      }
+      .db-problem-item {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: 1px solid var(--color-border);
+        border-left: 3px solid transparent;
+        background: var(--color-surface);
+        border-radius: var(--radius);
+        padding: 0.55rem 0.7rem;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+      }
+      .db-problem-item:hover {
+        border-color: var(--color-primary);
+        text-decoration: none;
+      }
+      .db-problem-item.is-selected {
+        border-left-color: var(--color-primary);
+        border-color: var(--color-primary);
+        background: var(--color-accent-bg);
+      }
+      .db-problem-title {
+        display: block;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+        color: var(--color-text);
+      }
+      .db-problem-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+      .db-problem-chip {
+        font-size: 0.7rem;
+        color: var(--color-text-muted);
+        background: var(--color-accent-bg);
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+      }
+      .db-problem-item.is-selected .db-problem-chip {
+        background: #fff;
+      }
+      .db-list-note {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        margin: 0.5rem 0 0;
+      }
+
+      .db-pane-detail {
+        background: var(--color-surface);
+        padding: 1.5rem 1.75rem 3rem;
+      }
+      .db-pane-detail :global(h1) {
+        margin-top: 0;
+      }
+
+      /* PCの3ペインをスマホへ無理に縮小しない。狭幅では単純に縦積みにする。 */
+      @media (max-width: 900px) {
+        .db-shell {
+          height: auto;
+          min-height: 100vh;
+        }
+        .db-body {
+          grid-template-columns: 1fr;
+        }
+        .db-pane {
+          overflow-y: visible;
+        }
+        .db-pane-subjects,
+        .db-pane-list {
+          border-right: none;
+          border-bottom: 1px solid var(--color-border);
+        }
+        .db-current-path {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>

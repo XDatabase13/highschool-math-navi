@@ -1,13 +1,14 @@
 ---
-import 'katex/dist/katex.min.css';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import { getCollection } from 'astro:content';
 import { prepareQuadratic27Entry } from '../../../utils/prepareQuadratic27Entry';
+import { buildQuadraticCenterItems } from '../../../utils/quadraticDbItems';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import ProblemDbShell from '../../../components/ProblemDbShell.astro';
 
-// 正本Markdown（math_db_quadratic_working/problems/）をContent Collections経由で読み込む。
-// 表示は app/index.astro（DB型UI）と共通の Quadratic27Detail / prepareQuadratic27Entry を使う。
-// これにより、重要度・難易度の表示やThinkingFlowの強調（☆マーク）が両ページで一致する。
+// 個別問題URL（/math1/quadratic/M1-QF-xxx/）は、静的生成された独立したHTMLページとして、
+// その問題固有のtitle/description/本文を持つ。表示UIは/app/・単元トップと共通の
+// ProblemDbShell + Quadratic27Detailを再利用し、「1問題=1固有URL」かつ
+// 「表示UI=共通の3ペインDB」の両方を成立させる。
 export async function getStaticPaths() {
   const problems = await getCollection('quadratic27');
   return problems.map((problem) => ({
@@ -22,30 +23,17 @@ const prepared = await prepareQuadratic27Entry(problem);
 const allProblems = (await getCollection('quadratic27')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
-const index = allProblems.findIndex((p) => p.id === problem.id);
-const prevProblem = allProblems[index - 1];
-const nextProblem = allProblems[index + 1];
+const centerItems = buildQuadraticCenterItems(allProblems);
 ---
 
-<BaseLayout
-  title={`${problem.data.title} | 数学I 二次関数`}
-  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）の問題ページです。`}
+<ProblemDbShell
+  title={`${problem.data.title} | 数学I 二次関数 | 高校数学ナビ`}
+  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「二次関数」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+  canonicalPath={`/math1/quadratic/${problem.id}/`}
+  breadcrumb={`数学I ＞ 二次関数 ＞ ${problem.data.title}`}
+  activeUnitId="quadratic"
+  activeItemId={problem.id}
+  centerItems={centerItems}
 >
-  <p class="breadcrumb">
-    <a href="/">トップ</a> / <a href="/math1/quadratic/">二次関数</a> / {problem.data.title}
-  </p>
-
   <Quadratic27Detail prepared={prepared} />
-
-  <nav class="page-nav" aria-label="関連ページ">
-    <a href="/math1/quadratic/">← 二次関数の問題一覧へ戻る</a>
-    <div class="page-nav-links">
-      {prevProblem && (
-        <a href={`/math1/quadratic/${prevProblem.id}/`}>← {prevProblem.data.title}</a>
-      )}
-      {nextProblem && (
-        <a href={`/math1/quadratic/${nextProblem.id}/`}>{nextProblem.data.title} →</a>
-      )}
-    </div>
-  </nav>
-</BaseLayout>
+</ProblemDbShell>

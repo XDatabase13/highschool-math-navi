@@ -108,7 +108,8 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
           <p class="db-subject-note">他の単元は順次追加予定</p>
         </nav>
 
-        <section class="db-pane db-pane-list" aria-label="問題一覧">
+        <details class="db-pane db-pane-list" aria-label="問題一覧">
+          <summary class="db-list-toggle">問題一覧を開く（全{centerItems.length}問）</summary>
           <ul class="db-problem-list">
             {centerItems.map((item) => (
               <li>
@@ -128,7 +129,7 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
             ))}
           </ul>
           {centerNote && <p class="db-list-note">{centerNote}</p>}
-        </section>
+        </details>
 
         <section class="db-pane db-pane-detail" aria-label="選択中の問題の詳細">
           <slot />
@@ -164,6 +165,8 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
         font-size: 1.05rem;
         color: #fff;
         text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
       .db-header-title:hover {
         text-decoration: none;
@@ -278,6 +281,13 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
         background: var(--color-bg);
         padding: 0.9rem;
       }
+      .db-list-toggle {
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--color-primary-dark);
+        padding: 0.3rem 0.1rem;
+      }
       .db-problem-list {
         list-style: none;
         margin: 0 0 0.75rem;
@@ -340,25 +350,64 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
         margin-top: 0;
       }
 
-      /* PCの3ペインをスマホへ無理に縮小しない。狭幅では単純に縦積みにする。 */
+      /* PCでは<details>の開閉状態に関わらず問題一覧を常に展開表示し、
+         スマホ専用の開閉導線（summary）は隠す。3ペインの見た目・操作感は維持する。 */
+      @media (min-width: 901px) {
+        .db-pane-list > summary {
+          display: none;
+        }
+        .db-pane-list > *:not(summary) {
+          display: block;
+        }
+      }
+
+      /* PCの3ペインをスマホへ無理に縮小しない。狭幅では表示優先順位を
+         「ヘッダー→選択中の問題詳細→問題一覧を開く導線→問題一覧→科目・単元ナビ」
+         に組み替え、問題一覧は<details>で折りたたむ。 */
       @media (max-width: 900px) {
         .db-shell {
           height: auto;
           min-height: 100vh;
         }
         .db-body {
-          grid-template-columns: 1fr;
+          display: flex;
+          flex-direction: column;
         }
         .db-pane {
           overflow-y: visible;
         }
+        .db-pane-detail {
+          order: 1;
+        }
+        .db-pane-list {
+          order: 2;
+        }
+        .db-pane-subjects {
+          order: 3;
+        }
         .db-pane-subjects,
         .db-pane-list {
           border-right: none;
-          border-bottom: 1px solid var(--color-border);
+          border-bottom: none;
+          border-top: 1px solid var(--color-border);
         }
         .db-current-path {
           display: none;
+        }
+
+        .db-header {
+          flex-wrap: wrap;
+          row-gap: 0.35rem;
+        }
+        .db-header-back {
+          display: none;
+        }
+        .db-header-info {
+          flex: 1 1 100%;
+          margin-left: 0;
+          padding-left: 0;
+          border-left: none;
+          flex-wrap: wrap;
         }
       }
     </style>

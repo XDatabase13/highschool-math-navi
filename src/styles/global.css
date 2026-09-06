@@ -1754,14 +1754,87 @@ ul {
 .q27-detail .thinking-section {
   margin-bottom: 1rem;
 }
-.q27-detail .impression-subhead {
+/* 問題メタ／解法メタは、見出し+内容を.impression-blockでまとめている
+   （スマホ開閉のための構造）。見出し単体ではなくブロック単位で間隔を取る。 */
+.q27-detail .impression-block + .impression-block {
   margin-top: 1.1rem;
 }
-.q27-detail .impression-subhead:first-child {
+.q27-detail .impression-subhead {
   margin-top: 0;
 }
 .q27-detail .impression-subhead + p {
   margin-bottom: 0.8rem;
+}
+/* 問題メタ／解法メタの見出し：常にボタンだが、PC（min-width:901px側）では
+   常時表示・非対話に見えるよう上書きするため、ここではまず共通の見た目だけ整える。 */
+.q27-detail .impression-subhead-toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.q27-detail .impression-caret {
+  display: none;
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 0.55em;
+  height: 0.55em;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+.q27-detail .impression-subhead-toggle[aria-expanded="true"] .impression-caret {
+  transform: rotate(45deg);
+}
+.q27-detail .impression-content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* スマホ幅だけ、問題メタ／解法メタを個別開閉できるようにする。
+   ThinkingFlow（.thinking-step-content）と同じgrid-template-rows 0fr/1fr＋opacityの
+   手法をそのまま再利用する。初期状態は閉じる（マークアップ側でhidden指定）。 */
+@media (max-width: 900px) {
+  .q27-detail .impression-caret {
+    display: block;
+  }
+  .q27-detail .impression-content:not([hidden]) {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 165ms ease-out, opacity 165ms ease-out;
+  }
+  .q27-detail .impression-content:not([hidden]).is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition: grid-template-rows 200ms ease-out, opacity 190ms ease-out;
+  }
+}
+
+/* PCでは開閉状態に関わらず常に表示し、見た目・挙動を変えない
+   （JS自体は動くが、視覚的には常時展開のままになる）。 */
+@media (min-width: 901px) {
+  .q27-detail .impression-content {
+    display: block;
+  }
+  .q27-detail .impression-subhead-toggle {
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q27-detail .impression-content:not([hidden]),
+  .q27-detail .impression-content:not([hidden]).is-open {
+    transition: none;
+  }
 }
 .q27-detail .reveal-all-btn {
   margin-bottom: 0.75rem;

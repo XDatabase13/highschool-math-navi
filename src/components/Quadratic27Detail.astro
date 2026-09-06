@@ -66,16 +66,30 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
 {(problemMeta || solutionMeta) && (
   <section class="impression-section">
     {problemMeta && (
-      <>
-        <h3 class="impression-subhead">問題メタ</h3>
-        <div set:html={problemMeta.html} />
-      </>
+      <div class="impression-block" data-impression-block>
+        <h3 class="impression-subhead">
+          <button type="button" class="impression-subhead-toggle" data-impression-toggle aria-expanded="false">
+            <span>問題メタ</span>
+            <span class="impression-caret" aria-hidden="true" />
+          </button>
+        </h3>
+        <div class="impression-content" data-impression-content hidden>
+          <div class="impression-content-inner" set:html={problemMeta.html} />
+        </div>
+      </div>
     )}
     {solutionMeta && (
-      <>
-        <h3 class="impression-subhead">解法メタ</h3>
-        <div set:html={solutionMeta.html} />
-      </>
+      <div class="impression-block" data-impression-block>
+        <h3 class="impression-subhead">
+          <button type="button" class="impression-subhead-toggle" data-impression-toggle aria-expanded="false">
+            <span>解法メタ</span>
+            <span class="impression-caret" aria-hidden="true" />
+          </button>
+        </h3>
+        <div class="impression-content" data-impression-content hidden>
+          <div class="impression-content-inner" set:html={solutionMeta.html} />
+        </div>
+      </div>
     )}
   </section>
 )}
@@ -326,6 +340,52 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
           box.hidden = true;
           closeTimer = undefined;
         }, 200);
+      }
+    });
+  });
+
+  // 問題メタ／解法メタの開閉はスマホ幅だけの挙動（CSS側で制御）。
+  // JS自体は常に付けておき、PCではCSSの上書きにより見た目・挙動が変わらない。
+  // ThinkingFlow・最終解答と同じ「hidden解除→強制reflow→is-open付与」の
+  // アニメーション手法を再利用する。
+  document.querySelectorAll<HTMLElement>('[data-impression-toggle]').forEach((btn) => {
+    if (btn.dataset.impressionBound) return;
+    btn.dataset.impressionBound = 'true';
+    const block = btn.closest<HTMLElement>('[data-impression-block]');
+    const content = block?.querySelector<HTMLElement>('[data-impression-content]');
+    if (!content) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let closeTimer: number | undefined;
+
+    btn.addEventListener('click', () => {
+      if (closeTimer !== undefined) {
+        window.clearTimeout(closeTimer);
+        closeTimer = undefined;
+      }
+
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      const nextExpanded = !isExpanded;
+      btn.setAttribute('aria-expanded', String(nextExpanded));
+
+      if (nextExpanded) {
+        content.hidden = false;
+        if (prefersReducedMotion) {
+          content.classList.add('is-open');
+          return;
+        }
+        void content.offsetHeight;
+        content.classList.add('is-open');
+      } else {
+        content.classList.remove('is-open');
+        if (prefersReducedMotion) {
+          content.hidden = true;
+          return;
+        }
+        closeTimer = window.setTimeout(() => {
+          content.hidden = true;
+          closeTimer = undefined;
+        }, 220);
       }
     });
   });

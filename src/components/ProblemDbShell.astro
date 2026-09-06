@@ -3,6 +3,8 @@ import '../styles/global.css';
 import 'katex/dist/katex.min.css';
 import { publicSubjectNav } from '../data/subjects';
 import Analytics from './Analytics.astro';
+import ProblemGroupList from './ProblemGroupList.astro';
+import { groupCenterItems, type DbCenterItem } from '../utils/dbCenterList';
 
 // 問題データベース用の共通3ペインUI。
 // /app/・/math1/quadratic/・/math1/quadratic/[slug]/ など、
@@ -17,40 +19,12 @@ import Analytics from './Analytics.astro';
 // 単元ごとのデータソースから組み立てて渡す。このコンポーネント自体は
 // 「id / href / title / chips」という共通の形しか知らないため、
 // 今後の他単元追加時もこのコンポーネントを変更せずに再利用できる。
+//
+// 分類（groupCenterItems）とその表示（ProblemGroupList）はPC中央列・
+// スマホ用問題一覧ダイアログの両方で共有する唯一の実装で、ここでは
+// 別の分類ロジックを作らない。
 
-export interface DbCenterItem {
-  id: string;
-  href: string;
-  title: string;
-  chips: string[];
-  // 中央ペインで「所属範囲」ごとにアコーディオン表示するためのグループ情報。
-  // どの区分に属するかは呼び出し側（各問題データ）が正本として持ち、
-  // このコンポーネント自身は問題IDやレンジで区分を判定しない。
-  groupId: string;
-  groupLabel: string;
-}
-
-interface DbCenterGroup {
-  groupId: string;
-  groupLabel: string;
-  items: DbCenterItem[];
-}
-
-// centerItemsは呼び出し側で既に表示順（教科書ベースの順序）に並んでいる前提。
-// 同じgroupIdが連続している区間をひとまとまりのグループとして扱うだけで、
-// グループ名や境界をここでハードコードしない。
-function groupCenterItems(items: DbCenterItem[]): DbCenterGroup[] {
-  const groups: DbCenterGroup[] = [];
-  for (const item of items) {
-    const current = groups[groups.length - 1];
-    if (current && current.groupId === item.groupId) {
-      current.items.push(item);
-    } else {
-      groups.push({ groupId: item.groupId, groupLabel: item.groupLabel, items: [item] });
-    }
-  }
-  return groups;
-}
+export type { DbCenterItem };
 
 interface Props {
   title: string;
@@ -138,47 +112,7 @@ const centerGroups = groupCenterItems(centerItems);
 
         <details class="db-pane db-pane-list" aria-label="問題一覧">
           <summary class="db-list-toggle">問題一覧を開く（全{centerItems.length}問）</summary>
-          <div class="db-problem-groups">
-            {centerGroups.map((group) => {
-              const isActiveGroup = group.items.some((item) => item.id === activeItemId);
-              return (
-                <details class="db-problem-group" open={isActiveGroup}>
-                  <summary class="db-problem-group-toggle">
-                    <span class="db-problem-group-toggle-main">
-                      <span class="db-problem-group-caret" aria-hidden="true" />
-                      <span class="db-problem-group-label">{group.groupLabel}</span>
-                    </span>
-                    <span class="db-problem-group-count">{group.items.length}問</span>
-                  </summary>
-                  <ul class="db-problem-list">
-                    {group.items.map((item) => {
-                      const isSelected = item.id === activeItemId;
-                      // 表示用の3桁番号は既存ID（例: M1-QF-028）の末尾数字から取り出すだけで、
-                      // 問題データ自体は変更しない。末尾に数字が無いIDでは空文字にフォールバックする。
-                      const number = item.id.match(/(\d+)$/)?.[0] ?? '';
-                      return (
-                        <li class="db-problem-row">
-                          <a
-                            class:list={['db-problem-link', isSelected && 'is-selected']}
-                            href={item.href}
-                            aria-current={isSelected ? 'page' : undefined}
-                          >
-                            <span class="db-problem-number">{number}</span>
-                            <span class="db-problem-title">{item.title}</span>
-                            <span class="db-problem-chips">
-                              {item.chips.map((chip) => (
-                                <span class="db-problem-chip">{chip}</span>
-                              ))}
-                            </span>
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </details>
-              );
-            })}
-          </div>
+          <ProblemGroupList groups={centerGroups} activeItemId={activeItemId} />
           {centerNote && <p class="db-list-note">{centerNote}</p>}
         </details>
 
@@ -186,7 +120,71 @@ const centerGroups = groupCenterItems(centerItems);
           <slot />
         </section>
       </div>
+
+      <!-- スマホ幅専用：本文を読んでいる最中でも常に問題一覧へ移動できる導線。
+           PC幅では非表示（CSSのみで切り替え、PC側のマークアップ・挙動は変えない）。
+           一覧の中身はPC中央列と同じProblemGroupList（同じ分類・同じマークアップ）を
+           そのまま再利用し、別の分類ロジックを作らない。 -->
+      <button
+        type="button"
+        class="mobile-problem-trigger"
+        data-mobile-problem-trigger
+        aria-haspopup="dialog"
+        aria-controls="mobile-problem-dialog"
+      >
+        <svg class="mobile-problem-trigger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        問題一覧
+      </button>
+
+      <dialog
+        id="mobile-problem-dialog"
+        class="mobile-problem-dialog"
+        aria-labelledby="mobile-problem-dialog-title"
+        data-mobile-problem-dialog
+      >
+        <div class="mobile-problem-dialog-header">
+          <h2 id="mobile-problem-dialog-title" class="mobile-problem-dialog-title">問題一覧</h2>
+          <button type="button" class="mobile-problem-dialog-close" data-mobile-problem-close aria-label="問題一覧を閉じる">
+            ✕
+          </button>
+        </div>
+        <div class="mobile-problem-dialog-body">
+          <ProblemGroupList groups={centerGroups} activeItemId={activeItemId} />
+        </div>
+      </dialog>
     </div>
+
+    <script>
+      // スマホ用問題一覧ダイアログの開閉のみを担当する最小限のJS。
+      // <dialog>のshowModal()に、背景の操作不可・フォーカストラップ・
+      // Escで閉じる、をブラウザ標準機能として任せる（自前実装しない）。
+      const trigger = document.querySelector<HTMLButtonElement>('[data-mobile-problem-trigger]');
+      const dialog = document.querySelector<HTMLDialogElement>('[data-mobile-problem-dialog]');
+
+      if (trigger && dialog && typeof dialog.showModal === 'function') {
+        trigger.addEventListener('click', () => {
+          dialog.showModal();
+        });
+
+        dialog.querySelectorAll<HTMLButtonElement>('[data-mobile-problem-close]').forEach((closeBtn) => {
+          closeBtn.addEventListener('click', () => dialog.close());
+        });
+
+        // backdrop（ダイアログ自身の余白部分）をクリックしたら閉じる。
+        // 内部のリンク・ボタン等はイベントがそこで止まるため、targetが
+        // dialog自身のときだけbackdropクリックとみなせる。
+        dialog.addEventListener('click', (event) => {
+          if (event.target === dialog) {
+            dialog.close();
+          }
+        });
+
+        // 問題を選択して遷移する場合はページ遷移そのものが閉じる役割を果たすため、
+        // ここでは開閉状態の後始末は不要。
+      }
+    </script>
 
     <style>
       html,
@@ -339,140 +337,9 @@ const centerGroups = groupCenterItems(centerItems);
         color: var(--color-primary-dark);
         padding: 0.3rem 0.1rem;
       }
-      .db-problem-groups {
-        margin: 0 0 0.75rem;
-      }
-      .db-problem-group {
-        margin-bottom: 0.5rem;
-      }
-      .db-problem-group:last-child {
-        margin-bottom: 0;
-      }
-      /* 区分見出しは「開く/閉じるボタン」ではなく、ライブラリのセクションヘッダーとして
-         問題行より明確に強く見せる（C案のような濃い操作パネルにはしない）。
-         --color-accent-bgそのものだと通常行との差が弱く見えたため、同じ青灰系トーンを
-         保ったまま--color-primaryをやや濃いめの割合で重ねた背景に強める。 */
-      .db-problem-group-toggle {
-        cursor: pointer;
-        list-style: none;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.5rem 0.6rem;
-        border-radius: var(--radius) var(--radius) 0 0;
-        background: rgba(47, 95, 122, 0.14);
-        font-weight: 700;
-        font-size: 0.87rem;
-        letter-spacing: 0.01em;
-        color: var(--color-primary-dark);
-      }
-      .db-problem-group-toggle::-webkit-details-marker {
-        display: none;
-      }
-      .db-problem-group-toggle:hover {
-        background: rgba(47, 95, 122, 0.22);
-      }
-      .db-problem-group-toggle-main {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        min-width: 0;
-      }
-      /* 既存のthinking-step-caret（global.css）と同じ回転キャレットの考え方を、
-         JS無しで<details>の[open]属性だけに連動させる。 */
-      .db-problem-group-caret {
-        flex-shrink: 0;
-        width: 0.5em;
-        height: 0.5em;
-        border-right: 2px solid var(--color-primary-dark);
-        border-bottom: 2px solid var(--color-primary-dark);
-        transform: rotate(-45deg);
-        transition: transform 0.15s ease;
-      }
-      .db-problem-group[open] > .db-problem-group-toggle .db-problem-group-caret {
-        transform: rotate(45deg);
-      }
-      .db-problem-group-count {
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: var(--color-text-muted);
-        flex-shrink: 0;
-      }
-      .db-problem-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-      /* 問題行：カードではなく行リスト。強い枠・影・大きな角丸は付けず、
-         細いborder-bottomだけで区切る。 */
-      .db-problem-row {
-        border-bottom: 1px solid var(--color-border);
-      }
-      .db-problem-row:last-child {
-        border-bottom: none;
-      }
-      .db-problem-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.4rem 0.6rem;
-        border-left: 4px solid transparent;
-        color: var(--color-text);
-        text-decoration: none;
-      }
-      .db-problem-link:hover {
-        background: rgba(47, 95, 122, 0.045);
-        text-decoration: none;
-      }
-      /* 選択中行：通常行との差を「区分見出し以上」に明確にするため、背景をアクセント
-         濃度で直接指定し（--color-accent-bgより一段強い）、左アクセントも太く濃くする。 */
-      .db-problem-link.is-selected {
-        background: rgba(47, 95, 122, 0.16);
-        border-left-color: var(--color-primary-dark);
-      }
-      .db-problem-number {
-        flex-shrink: 0;
-        width: 1.9rem;
-        font-variant-numeric: tabular-nums;
-        font-size: 0.75rem;
-        color: var(--color-text-muted);
-      }
-      .db-problem-link.is-selected .db-problem-number {
-        color: var(--color-primary-dark);
-        font-weight: 700;
-      }
-      .db-problem-title {
-        flex: 1 1 auto;
-        min-width: 0;
-        font-size: 0.85rem;
-        font-weight: 500;
-        line-height: 1.35;
-        color: var(--color-text);
-      }
-      .db-problem-link.is-selected .db-problem-title {
-        font-weight: 700;
-        color: var(--color-primary-dark);
-      }
-      /* チップはタイトルより目立たせない。彩度のある青系ではなく、
-         中立トーンの弱い背景＋muted文字色にとどめる。 */
-      .db-problem-chips {
-        flex-shrink: 0;
-        display: flex;
-        gap: 0.3rem;
-      }
-      .db-problem-chip {
-        font-size: 0.68rem;
-        color: var(--color-text-muted);
-        background: rgba(35, 35, 35, 0.045);
-        border-radius: 4px;
-        padding: 0.05rem 0.4rem;
-        white-space: nowrap;
-      }
-      .db-problem-link.is-selected .db-problem-chip {
-        background: rgba(255, 255, 255, 0.55);
-        color: var(--color-text-muted);
-      }
+      /* .db-problem-groups以下の一覧本体スタイルはProblemGroupList.astro側の
+         スコープ済みCSSへ移動済み（PC中央列・スマホダイアログの両方から
+         同じコンポーネント・同じCSSを再利用するため）。 */
       .db-list-note {
         font-size: 0.75rem;
         color: var(--color-text-muted);
@@ -488,12 +355,14 @@ const centerGroups = groupCenterItems(centerItems);
       }
 
       /* PCでは<details>の開閉状態に関わらず問題一覧を常に展開表示し、
-         スマホ専用の開閉導線（summary）は隠す。3ペインの見た目・操作感は維持する。 */
+         スマホ専用の開閉導線（summary）は隠す。3ペインの見た目・操作感は維持する。
+         中身（ProblemGroupList）は別コンポーネントとしてスコープが異なるため、
+         :global()でスコープ属性に依存しない形にしておく。 */
       @media (min-width: 901px) {
         .db-pane-list > summary {
           display: none;
         }
-        .db-pane-list > *:not(summary) {
+        :global(.db-pane-list > *:not(summary)) {
           display: block;
         }
         /* Chromeの新しい<details>実装は、閉じた状態の中身を
@@ -501,11 +370,16 @@ const centerGroups = groupCenterItems(centerItems);
            高さ0にラップする。上のdisplay上書きだけでは子要素自体の
            displayしか変えられずこの擬似要素までは効かないため、
            PC幅ではこちらも明示的に開いた状態相当へ上書きする。 */
-        .db-pane-list::details-content {
+        :global(.db-pane-list::details-content) {
           content-visibility: visible;
           block-size: auto;
           height: auto;
           overflow: visible;
+        }
+        /* スマホ専用の問題一覧導線・ダイアログはPCでは常に非表示。 */
+        .mobile-problem-trigger,
+        .mobile-problem-dialog {
+          display: none !important;
         }
       }
 
@@ -556,6 +430,102 @@ const centerGroups = groupCenterItems(centerItems);
           padding-left: 0;
           border-left: none;
           flex-wrap: wrap;
+        }
+
+        /* スマホ専用：本文を読んでいる途中でも常に問題一覧へ移動できる、
+           画面右上固定のピル型ボタン。強い影・派手なアニメーションは付けない。 */
+        .mobile-problem-trigger {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.3rem;
+          position: fixed;
+          top: 0.6rem;
+          right: 0.6rem;
+          z-index: 20;
+          min-height: 44px;
+          padding: 0.5rem 0.85rem;
+          border: 1px solid var(--color-border);
+          border-radius: 999px;
+          background: var(--color-surface);
+          color: var(--color-primary-dark);
+          font-size: 0.8rem;
+          font-weight: 700;
+          box-shadow: 0 2px 6px rgba(21, 40, 54, 0.16);
+          cursor: pointer;
+        }
+        .mobile-problem-trigger-icon {
+          width: 1.05em;
+          height: 1.05em;
+          flex-shrink: 0;
+        }
+        .mobile-problem-trigger:focus-visible,
+        .mobile-problem-dialog-close:focus-visible {
+          outline: 2px solid var(--color-accent);
+          outline-offset: 2px;
+        }
+
+        /* 問題一覧ダイアログ：<dialog>のshowModal()に、背景操作の無効化・
+           フォーカストラップ・Escでの close を任せる（自前実装しない）。
+           右側からのドロワー的な配置のみCSSで調整する。 */
+        .mobile-problem-dialog {
+          position: fixed;
+          inset: 0 0 0 auto;
+          margin: 0;
+          padding: 0;
+          border: none;
+          width: min(86vw, 380px);
+          max-width: none;
+          height: 100%;
+          max-height: none;
+          background: var(--color-bg);
+          box-shadow: -6px 0 24px rgba(21, 40, 54, 0.18);
+        }
+        .mobile-problem-dialog::backdrop {
+          background: rgba(21, 40, 54, 0.45);
+        }
+        .mobile-problem-dialog[open] {
+          display: flex;
+          flex-direction: column;
+        }
+        .mobile-problem-dialog-header {
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          padding: 0.85rem 0.9rem;
+          border-bottom: 1px solid var(--color-border);
+          background: var(--color-primary-dark);
+        }
+        .mobile-problem-dialog-title {
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 700;
+          color: #fff;
+        }
+        .mobile-problem-dialog-close {
+          flex-shrink: 0;
+          width: 44px;
+          height: 44px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.14);
+          color: #fff;
+          font-size: 1.05rem;
+          line-height: 1;
+          cursor: pointer;
+        }
+        .mobile-problem-dialog-close:hover {
+          background: rgba(255, 255, 255, 0.26);
+        }
+        .mobile-problem-dialog-body {
+          flex: 1;
+          min-height: 0;
+          overflow-y: auto;
+          padding: 0.75rem 0.9rem 1.25rem;
         }
       }
     </style>

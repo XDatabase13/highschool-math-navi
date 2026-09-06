@@ -1,5 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
-import type { DbCenterItem } from '../components/ProblemDbShell.astro';
+import type { DbCenterItem } from './dbCenterList';
 
 // quadratic27の正本frontmatterには「関数とグラフ／グラフ／最大・最小／決定／
 // 二次方程式／グラフと二次方程式／二次不等式」という7種類の`section`はあるが、

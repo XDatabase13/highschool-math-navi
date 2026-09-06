@@ -22,9 +22,6 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
     <span class="label-name">難易度</span>
     <span class="label-value">{starRating(entry.data.difficulty, 4)}</span>
   </li>
-  <li class="label-item label-item--link">
-    <a href="/#importance-difficulty">重要度・難易度について</a>
-  </li>
 </ul>
 
 {problem && (
@@ -109,10 +106,12 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
                   <span class="thinking-step-caret" aria-hidden="true" />
                 </button>
                 <div class="thinking-step-content" data-step-content hidden>
-                  <div class="thinking-step-body" set:html={step.html} />
-                  {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
-                    <figure class="problem-asset-figure" set:html={svg} />
-                  ))}
+                  <div class="thinking-step-content-inner">
+                    <div class="thinking-step-body" set:html={step.html} />
+                    {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
+                      <figure class="problem-asset-figure" set:html={svg} />
+                    ))}
+                  </div>
                 </div>
               </li>
             );
@@ -148,10 +147,12 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
                       <span class="thinking-step-caret" aria-hidden="true" />
                     </button>
                     <div class="thinking-step-content" data-step-content hidden>
-                      <div class="thinking-step-body" set:html={step.html} />
-                      {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
-                        <figure class="problem-asset-figure" set:html={svg} />
-                      ))}
+                      <div class="thinking-step-content-inner">
+                        <div class="thinking-step-body" set:html={step.html} />
+                        {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
+                          <figure class="problem-asset-figure" set:html={svg} />
+                        ))}
+                      </div>
                     </div>
                   </li>
                 );
@@ -171,19 +172,21 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
       解答を見る
     </button>
     <div class="result-box" data-answer-box hidden>
-      {finalAnswer.subsections.length === 0 ? (
-        <div set:html={finalAnswer.html} />
-      ) : (
-        finalAnswer.subsections.map((part) => (
-          <div class="final-answer-part">
-            <h3 class="final-answer-part-label">{part.title}</h3>
-            <div set:html={part.html} />
-          </div>
-        ))
-      )}
-      {finalAnswerAssets.map(({ svg }) => (
-        <figure class="problem-asset-figure" set:html={svg} />
-      ))}
+      <div class="result-box-inner">
+        {finalAnswer.subsections.length === 0 ? (
+          <div set:html={finalAnswer.html} />
+        ) : (
+          finalAnswer.subsections.map((part) => (
+            <div class="final-answer-part">
+              <h3 class="final-answer-part-label">{part.title}</h3>
+              <div set:html={part.html} />
+            </div>
+          ))
+        )}
+        {finalAnswerAssets.map(({ svg }) => (
+          <figure class="problem-asset-figure" set:html={svg} />
+        ))}
+      </div>
     </div>
   </section>
 )}
@@ -196,6 +199,11 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
 
     const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
     const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // 閉じるアニメーション(CSS側は150〜200ms)が終わってからhiddenへ戻すための
+    // 予約タイマー。連続操作で開閉し直された場合に備え、要素ごとに保持し
+    // 前回分は必ずclearしてから次の状態へ進む。
+    const closeTimers = new WeakMap<HTMLElement, number>();
 
     // 各Flowは題名のみの初期状態から独立して開閉できる。「考え方を全部見る」は
     // 全Flow展開⇔全Flow閉じるのトグルとして扱う。
@@ -203,14 +211,47 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
       const toggle = stepEl.querySelector<HTMLButtonElement>('[data-step-toggle]');
       const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
       if (toggle) toggle.setAttribute('aria-expanded', String(expanded));
-      if (content) content.hidden = !expanded;
+      if (!content) return;
+
+      const pendingTimer = closeTimers.get(content);
+      if (pendingTimer !== undefined) {
+        window.clearTimeout(pendingTimer);
+        closeTimers.delete(content);
+      }
+
+      if (expanded) {
+        content.hidden = false;
+        if (prefersReducedMotion) {
+          content.classList.add('is-open');
+          return;
+        }
+        // hiddenを外した直後は:not([hidden])の初期値（0fr/opacity:0）。
+        // レイアウトを一度強制確定させてからis-openを付けることで、
+        // バックグラウンドタブ等でrequestAnimationFrameが遅延・停止する
+        // 環境でも確実にトランジションの起点が反映される。
+        void content.offsetHeight;
+        content.classList.add('is-open');
+      } else {
+        content.classList.remove('is-open');
+        if (prefersReducedMotion) {
+          content.hidden = true;
+          return;
+        }
+        // CSS側の最大想定（200ms）より少し余裕を持たせ、確実に収縮し終えてから
+        // hiddenに戻す（開閉ロジック・最終状態自体は変更しない）。
+        const timerId = window.setTimeout(() => {
+          content.hidden = true;
+          closeTimers.delete(content);
+        }, 220);
+        closeTimers.set(content, timerId);
+      }
     }
 
     function updateRevealAllLabel() {
       if (!revealAllBtn) return;
       const allExpanded = stepEls.every((stepEl) => {
-        const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
-        return content ? !content.hidden : true;
+        const toggle = stepEl.querySelector<HTMLButtonElement>('[data-step-toggle]');
+        return toggle ? toggle.getAttribute('aria-expanded') === 'true' : true;
       });
       revealAllBtn.textContent = allExpanded ? '考え方を閉じる' : '考え方を全部見る';
     }
@@ -232,8 +273,8 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
       const revealBtn = target.closest<HTMLButtonElement>('[data-reveal-all]');
       if (revealBtn) {
         const allExpanded = stepEls.every((stepEl) => {
-          const content = stepEl.querySelector<HTMLElement>('[data-step-content]');
-          return content ? !content.hidden : true;
+          const toggle = stepEl.querySelector<HTMLButtonElement>('[data-step-toggle]');
+          return toggle ? toggle.getAttribute('aria-expanded') === 'true' : true;
         });
         stepEls.forEach((stepEl) => setStepExpanded(stepEl, !allExpanded));
         updateRevealAllLabel();
@@ -243,14 +284,49 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
     updateRevealAllLabel();
   });
 
+  // 最終解答の開閉も、ThinkingFlowの各STEPと同じ手法（grid-template-rowsの
+  // 0fr/1fr切り替え）でアニメーションさせる。開閉ロジック・最終状態は変更しない。
   document.querySelectorAll<HTMLElement>('[data-answer-toggle]').forEach((btn) => {
     if (btn.dataset.answerBound) return;
     btn.dataset.answerBound = 'true';
     const box = btn.parentElement?.querySelector<HTMLElement>('[data-answer-box]');
+    if (!box) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let closeTimer: number | undefined;
+
     btn.addEventListener('click', () => {
-      const isHidden = box?.hasAttribute('hidden') ?? false;
-      box?.toggleAttribute('hidden');
-      btn.textContent = isHidden ? '解答を隠す' : '解答を見る';
+      if (closeTimer !== undefined) {
+        window.clearTimeout(closeTimer);
+        closeTimer = undefined;
+      }
+
+      const isHidden = box.hasAttribute('hidden');
+      if (isHidden) {
+        box.hidden = false;
+        btn.textContent = '解答を隠す';
+        if (prefersReducedMotion) {
+          box.classList.add('is-open');
+          return;
+        }
+        // hiddenを外した直後はCSS側の閉状態（0fr/opacity:0）。
+        // 強制的にレイアウトを確定させてからis-openを付けることで
+        // そこから滑らかにアニメーションする（rAFに頼らない）。
+        void box.offsetHeight;
+        box.classList.add('is-open');
+      } else {
+        box.classList.remove('is-open');
+        btn.textContent = '解答を見る';
+        if (prefersReducedMotion) {
+          box.hidden = true;
+          return;
+        }
+        // CSS側の閉アニメーション（150〜180ms）より少し余裕を持たせてからhiddenに戻す。
+        closeTimer = window.setTimeout(() => {
+          box.hidden = true;
+          closeTimer = undefined;
+        }, 200);
+      }
     });
   });
 

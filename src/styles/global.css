@@ -258,22 +258,75 @@ ul {
   background: var(--color-primary-dark);
   text-decoration: none;
 }
+/* TOPのヒーローCTAのみ対象（.btn-primaryは404/Contactと共有のため無変更）。
+   Uiverse「proud-goat-69」（elijahgummer作、PLAYボタン）の、押し込める立体感
+   （下端の"リップ"を表すbox-shadow＋:activeでの沈み込み）とアイコンが横に
+   スライドするhoverを参考に、ネオン系ではなく本サイトの青黒／青灰パレット
+   （--color-primary系）へ調整。テキストは常に表示したまま矢印だけがスライドする
+   形にし、CTAとしての可読性を保っている（元デザインはテキストごと隠れる）。 */
 .hero-cta-link {
-  /* TOPのヒーローCTAのみ対象（.btn-primaryは404/Contactと共有のため無変更）。
-     形は他ボタンと同じ角丸（--radius、角ばりすぎず丸すぎない）のボタンにしつつ、
-     機能・UI要素としてM PLUS 2を使う。 */
-  display: inline-block;
-  padding: 0.65rem 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1.6rem;
   background: var(--color-primary);
   color: #fff;
+  border: 1px solid var(--color-primary-dark);
   border-radius: var(--radius);
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  user-select: none;
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 3px 0 var(--color-primary-dark),
+    0 6px 14px rgba(21, 40, 54, 0.22);
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
+}
+.hero-cta-icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+  transition: transform 200ms ease-out;
 }
 .hero-cta-link:hover {
   background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 5px 0 var(--color-primary-dark),
+    0 10px 18px rgba(21, 40, 54, 0.28);
   text-decoration: none;
+}
+.hero-cta-link:hover .hero-cta-icon {
+  transform: translateX(6px);
+}
+.hero-cta-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.hero-cta-link:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 2px rgba(21, 40, 54, 0.25),
+    0 0 0 var(--color-primary-dark),
+    0 2px 6px rgba(21, 40, 54, 0.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-link,
+  .hero-cta-icon {
+    transition: none;
+  }
+  .hero-cta-link:hover,
+  .hero-cta-link:active {
+    transform: none;
+  }
+  .hero-cta-link:hover .hero-cta-icon {
+    transform: none;
+  }
 }
 .hero-link {
   font-size: 0.85rem;
@@ -927,16 +980,6 @@ ul {
   font-weight: 700;
   color: var(--color-primary-dark);
 }
-.label-item--link {
-  background: transparent;
-  padding: 0.3rem 0;
-}
-.label-item--link a {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  text-decoration: underline;
-}
-
 /* Problem statement */
 .statement-text {
   white-space: pre-line;
@@ -1099,6 +1142,33 @@ ul {
 }
 .thinking-step-content {
   padding-top: 0.05rem;
+}
+/* 開閉アニメーション：[hidden]な間（閉状態が完全に確定した後）は何もしない＝
+   UA標準の[hidden]{display:none}にそのまま任せ、アクセシビリティツリーからの
+   除外・タブ操作対象外という既存の挙動を変えない。JSがhiddenを外している
+   （開いている最中・閉じている最中）の間だけ:not([hidden])が効き、
+   grid-template-rowsの0fr/1frでheightをアニメーションさせる
+   （.mini-flow-contentと同じ手法）。 */
+.thinking-step-content:not([hidden]) {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 180ms ease-out, opacity 150ms ease-out;
+}
+.thinking-step-content:not([hidden]).is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 200ms ease-out, opacity 180ms ease-out;
+}
+.thinking-step-content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .thinking-step-content:not([hidden]),
+  .thinking-step-content:not([hidden]).is-open {
+    transition: none;
+  }
 }
 .thinking-step-note {
   margin: -0.4rem 0 0.9rem;
@@ -1651,6 +1721,36 @@ ul {
   padding: 1.05rem 1.15rem;
   margin-bottom: 1rem;
 }
+/* 「問題」カード上部の余白を約半分に詰める（下側の余白・数式まわりは変更しない）。
+   h2の上マージンも合わせて縮めるが、ThinkingFlow/最終解答のh2（共通の.q27-detail h2）
+   には影響させないよう、この見出しだけを個別に上書きする。 */
+.q27-detail .problem-section {
+  padding-top: 0.5rem;
+}
+.q27-detail .problem-section > h2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+/* 「問題メタ／解法メタ」は問題カードより一段軽い存在感にする。内容・見出し構造・
+   左アクセント線（.impression-subheadのborder-left）はそのまま、白背景の角丸ボックス
+   ではなく上下の罫線だけの「読む領域」に近い見た目へ弱める。 */
+.q27-detail .impression-section {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0.9rem 1.15rem;
+}
+/* 最終解答：閉状態（見出し＋「解答を見る」ボタンのみ）をコンパクトにする。
+   開いた際の本文側の余白（.result-box）は変更しないため、読みやすさは維持される。 */
+.q27-detail .final-answer-section {
+  padding: 0.6rem 1.15rem;
+}
+.q27-detail .final-answer-section > h2 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
 .q27-detail .thinking-section {
   margin-bottom: 1rem;
 }
@@ -1680,6 +1780,30 @@ ul {
 .q27-detail .result-box {
   margin-top: 0.45rem;
   padding: 0.65rem 0.85rem;
+}
+/* 最終解答の開閉アニメーション。.thinking-step-contentと同じ手法で、
+   .q27-detail配下だけに限定する（他5科目のThinkingFlow.astroが使う
+   .result-boxは無関係な別マークアップのため影響させない）。 */
+.q27-detail .result-box:not([hidden]) {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 165ms ease-out, opacity 165ms ease-out;
+}
+.q27-detail .result-box:not([hidden]).is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 190ms ease-out, opacity 190ms ease-out;
+}
+.q27-detail .result-box-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .q27-detail .result-box:not([hidden]),
+  .q27-detail .result-box:not([hidden]).is-open {
+    transition: none;
+  }
 }
 .q27-detail .reveal-answer-btn {
   padding: 0.42rem 0.9rem;

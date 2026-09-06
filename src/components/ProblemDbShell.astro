@@ -23,6 +23,33 @@ export interface DbCenterItem {
   href: string;
   title: string;
   chips: string[];
+  // 中央ペインで「所属範囲」ごとにアコーディオン表示するためのグループ情報。
+  // どの区分に属するかは呼び出し側（各問題データ）が正本として持ち、
+  // このコンポーネント自身は問題IDやレンジで区分を判定しない。
+  groupId: string;
+  groupLabel: string;
+}
+
+interface DbCenterGroup {
+  groupId: string;
+  groupLabel: string;
+  items: DbCenterItem[];
+}
+
+// centerItemsは呼び出し側で既に表示順（教科書ベースの順序）に並んでいる前提。
+// 同じgroupIdが連続している区間をひとまとまりのグループとして扱うだけで、
+// グループ名や境界をここでハードコードしない。
+function groupCenterItems(items: DbCenterItem[]): DbCenterGroup[] {
+  const groups: DbCenterGroup[] = [];
+  for (const item of items) {
+    const current = groups[groups.length - 1];
+    if (current && current.groupId === item.groupId) {
+      current.items.push(item);
+    } else {
+      groups.push({ groupId: item.groupId, groupLabel: item.groupLabel, items: [item] });
+    }
+  }
+  return groups;
 }
 
 interface Props {
@@ -53,6 +80,7 @@ const {
 } = Astro.props;
 
 const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
+const centerGroups = groupCenterItems(centerItems);
 ---
 
 <html lang="ja">
@@ -110,24 +138,47 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
 
         <details class="db-pane db-pane-list" aria-label="問題一覧">
           <summary class="db-list-toggle">問題一覧を開く（全{centerItems.length}問）</summary>
-          <ul class="db-problem-list">
-            {centerItems.map((item) => (
-              <li>
-                <a
-                  class:list={['db-problem-item', item.id === activeItemId && 'is-selected']}
-                  href={item.href}
-                  aria-current={item.id === activeItemId ? 'page' : undefined}
-                >
-                  <span class="db-problem-title">{item.title}</span>
-                  <span class="db-problem-meta">
-                    {item.chips.map((chip) => (
-                      <span class="db-problem-chip">{chip}</span>
-                    ))}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div class="db-problem-groups">
+            {centerGroups.map((group) => {
+              const isActiveGroup = group.items.some((item) => item.id === activeItemId);
+              return (
+                <details class="db-problem-group" open={isActiveGroup}>
+                  <summary class="db-problem-group-toggle">
+                    <span class="db-problem-group-toggle-main">
+                      <span class="db-problem-group-caret" aria-hidden="true" />
+                      <span class="db-problem-group-label">{group.groupLabel}</span>
+                    </span>
+                    <span class="db-problem-group-count">{group.items.length}問</span>
+                  </summary>
+                  <ul class="db-problem-list">
+                    {group.items.map((item) => {
+                      const isSelected = item.id === activeItemId;
+                      // 表示用の3桁番号は既存ID（例: M1-QF-028）の末尾数字から取り出すだけで、
+                      // 問題データ自体は変更しない。末尾に数字が無いIDでは空文字にフォールバックする。
+                      const number = item.id.match(/(\d+)$/)?.[0] ?? '';
+                      return (
+                        <li class="db-problem-row">
+                          <a
+                            class:list={['db-problem-link', isSelected && 'is-selected']}
+                            href={item.href}
+                            aria-current={isSelected ? 'page' : undefined}
+                          >
+                            <span class="db-problem-number">{number}</span>
+                            <span class="db-problem-title">{item.title}</span>
+                            <span class="db-problem-chips">
+                              {item.chips.map((chip) => (
+                                <span class="db-problem-chip">{chip}</span>
+                              ))}
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </details>
+              );
+            })}
+          </div>
           {centerNote && <p class="db-list-note">{centerNote}</p>}
         </details>
 
@@ -288,53 +339,139 @@ const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
         color: var(--color-primary-dark);
         padding: 0.3rem 0.1rem;
       }
+      .db-problem-groups {
+        margin: 0 0 0.75rem;
+      }
+      .db-problem-group {
+        margin-bottom: 0.5rem;
+      }
+      .db-problem-group:last-child {
+        margin-bottom: 0;
+      }
+      /* 区分見出しは「開く/閉じるボタン」ではなく、ライブラリのセクションヘッダーとして
+         問題行より明確に強く見せる（C案のような濃い操作パネルにはしない）。
+         --color-accent-bgそのものだと通常行との差が弱く見えたため、同じ青灰系トーンを
+         保ったまま--color-primaryをやや濃いめの割合で重ねた背景に強める。 */
+      .db-problem-group-toggle {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.5rem 0.6rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+        background: rgba(47, 95, 122, 0.14);
+        font-weight: 700;
+        font-size: 0.87rem;
+        letter-spacing: 0.01em;
+        color: var(--color-primary-dark);
+      }
+      .db-problem-group-toggle::-webkit-details-marker {
+        display: none;
+      }
+      .db-problem-group-toggle:hover {
+        background: rgba(47, 95, 122, 0.22);
+      }
+      .db-problem-group-toggle-main {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-width: 0;
+      }
+      /* 既存のthinking-step-caret（global.css）と同じ回転キャレットの考え方を、
+         JS無しで<details>の[open]属性だけに連動させる。 */
+      .db-problem-group-caret {
+        flex-shrink: 0;
+        width: 0.5em;
+        height: 0.5em;
+        border-right: 2px solid var(--color-primary-dark);
+        border-bottom: 2px solid var(--color-primary-dark);
+        transform: rotate(-45deg);
+        transition: transform 0.15s ease;
+      }
+      .db-problem-group[open] > .db-problem-group-toggle .db-problem-group-caret {
+        transform: rotate(45deg);
+      }
+      .db-problem-group-count {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--color-text-muted);
+        flex-shrink: 0;
+      }
       .db-problem-list {
         list-style: none;
-        margin: 0 0 0.75rem;
+        margin: 0;
         padding: 0;
       }
-      .db-problem-item {
-        display: block;
-        width: 100%;
-        text-align: left;
-        border: 1px solid var(--color-border);
-        border-left: 3px solid transparent;
-        background: var(--color-surface);
-        border-radius: var(--radius);
-        padding: 0.55rem 0.7rem;
-        margin-bottom: 0.5rem;
+      /* 問題行：カードではなく行リスト。強い枠・影・大きな角丸は付けず、
+         細いborder-bottomだけで区切る。 */
+      .db-problem-row {
+        border-bottom: 1px solid var(--color-border);
+      }
+      .db-problem-row:last-child {
+        border-bottom: none;
+      }
+      .db-problem-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.6rem;
+        border-left: 4px solid transparent;
+        color: var(--color-text);
         text-decoration: none;
       }
-      .db-problem-item:hover {
-        border-color: var(--color-primary);
+      .db-problem-link:hover {
+        background: rgba(47, 95, 122, 0.045);
         text-decoration: none;
       }
-      .db-problem-item.is-selected {
-        border-left-color: var(--color-primary);
-        border-color: var(--color-primary);
-        background: var(--color-accent-bg);
+      /* 選択中行：通常行との差を「区分見出し以上」に明確にするため、背景をアクセント
+         濃度で直接指定し（--color-accent-bgより一段強い）、左アクセントも太く濃くする。 */
+      .db-problem-link.is-selected {
+        background: rgba(47, 95, 122, 0.16);
+        border-left-color: var(--color-primary-dark);
+      }
+      .db-problem-number {
+        flex-shrink: 0;
+        width: 1.9rem;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+      }
+      .db-problem-link.is-selected .db-problem-number {
+        color: var(--color-primary-dark);
+        font-weight: 700;
       }
       .db-problem-title {
-        display: block;
-        font-weight: 700;
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 0.85rem;
+        font-weight: 500;
+        line-height: 1.35;
         color: var(--color-text);
       }
-      .db-problem-meta {
+      .db-problem-link.is-selected .db-problem-title {
+        font-weight: 700;
+        color: var(--color-primary-dark);
+      }
+      /* チップはタイトルより目立たせない。彩度のある青系ではなく、
+         中立トーンの弱い背景＋muted文字色にとどめる。 */
+      .db-problem-chips {
+        flex-shrink: 0;
         display: flex;
-        flex-wrap: wrap;
         gap: 0.3rem;
       }
       .db-problem-chip {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         color: var(--color-text-muted);
-        background: var(--color-accent-bg);
+        background: rgba(35, 35, 35, 0.045);
         border-radius: 4px;
-        padding: 0.1rem 0.4rem;
+        padding: 0.05rem 0.4rem;
+        white-space: nowrap;
       }
-      .db-problem-item.is-selected .db-problem-chip {
-        background: #fff;
+      .db-problem-link.is-selected .db-problem-chip {
+        background: rgba(255, 255, 255, 0.55);
+        color: var(--color-text-muted);
       }
       .db-list-note {
         font-size: 0.75rem;

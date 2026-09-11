@@ -55,6 +55,15 @@ const {
 
 const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
 const centerGroups = groupCenterItems(centerItems);
+
+// PC左ナビ（db-pane-subjects）・スマホ問題一覧ダイアログの「科目／単元」切り替えの
+// 両方が、この1つのフィルタ済みリストだけを情報源にする。QF/TRの名前・件数を
+// コンポーネント側へ直書きせず、今後の単元・科目追加はdbSubjectNav側の変更だけで
+// 両方のUIへ反映されるようにする。
+const dbSubjectNavPublic = dbSubjectNav.filter((subject) => subject.units.length > 0);
+const currentSubject = dbSubjectNavPublic.find((subject) =>
+  subject.units.some((unit) => unit.id === activeUnitId),
+);
 ---
 
 <html lang="ja">
@@ -86,8 +95,7 @@ const centerGroups = groupCenterItems(centerItems);
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
           <ul class="db-subject-list">
-            {dbSubjectNav
-              .filter((subject) => subject.units.length > 0)
+            {dbSubjectNavPublic
               .map((subject) => (
                 <li class="db-subject">
                   <span class="db-subject-name">{subject.name}</span>
@@ -151,10 +159,67 @@ const centerGroups = groupCenterItems(centerItems);
           </button>
         </div>
         <div class="mobile-problem-dialog-body">
+          <!-- 科目・単元の2階層ナビ。今後、数学I内の単元追加・数学A〜数学Cなど
+               科目自体の追加があっても、dbSubjectNavにデータを足すだけで
+               ここは変更不要（QF/TRの名前・件数をこのコンポーネントへ直書きしない）。
+               単元を切り替えると、その単元のトップURLへ通常のページ遷移で移動する
+               （現在の単元の問題一覧を無理にJSで動的に差し替えない）。 -->
+          <div class="mobile-unit-switcher" data-mobile-unit-switcher>
+            <label class="mobile-unit-switcher-field">
+              <span class="mobile-unit-switcher-label">科目</span>
+              <select class="mobile-unit-switcher-select" data-mobile-subject-select>
+                {dbSubjectNavPublic.map((subject) => (
+                  <option value={subject.name} selected={subject === currentSubject}>
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label class="mobile-unit-switcher-field">
+              <span class="mobile-unit-switcher-label">単元</span>
+              <select class="mobile-unit-switcher-select" data-mobile-unit-select>
+                {(currentSubject?.units ?? []).map((unit) => (
+                  <option value={unit.href} selected={unit.id === activeUnitId}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <ProblemGroupList groups={centerGroups} activeItemId={activeItemId} />
         </div>
       </dialog>
     </div>
+
+    <script define:vars={{ dbSubjectNavData: dbSubjectNavPublic }}>
+      // スマホ問題一覧ダイアログの「科目」を切り替えたら、同じdbSubjectNavデータから
+      // 「単元」側の選択肢を作り直す（ページ遷移なし）。「単元」を選ぶと、その単元の
+      // href（単元トップ）へ通常のページ遷移で移動する。QF/TRの個別名はここに出てこない。
+      const subjectSelect = document.querySelector('[data-mobile-subject-select]');
+      const unitSelect = document.querySelector('[data-mobile-unit-select]');
+
+      if (subjectSelect && unitSelect) {
+        function populateUnitOptions(subjectName, preselectHref) {
+          const subject = dbSubjectNavData.find((s) => s.name === subjectName);
+          unitSelect.innerHTML = '';
+          (subject?.units ?? []).forEach((unit) => {
+            const option = document.createElement('option');
+            option.value = unit.href;
+            option.textContent = unit.name;
+            if (unit.href === preselectHref) option.selected = true;
+            unitSelect.appendChild(option);
+          });
+        }
+
+        subjectSelect.addEventListener('change', () => {
+          populateUnitOptions(subjectSelect.value, null);
+        });
+
+        unitSelect.addEventListener('change', () => {
+          if (unitSelect.value) window.location.href = unitSelect.value;
+        });
+      }
+    </script>
 
     <script>
       // スマホ用問題一覧ダイアログの開閉のみを担当する最小限のJS。
@@ -526,6 +591,40 @@ const centerGroups = groupCenterItems(centerItems);
           min-height: 0;
           overflow-y: auto;
           padding: 0.75rem 0.9rem 1.25rem;
+        }
+
+        /* 問題一覧ダイアログ上部の「科目／単元」切り替え。将来、科目・単元が
+           増えてもレイアウトが崩れないよう、ラベル固定幅＋selectを伸縮させる
+           シンプルな2行構成にする。 */
+        .mobile-unit-switcher {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          padding-bottom: 0.85rem;
+          margin-bottom: 0.85rem;
+          border-bottom: 1px solid var(--color-border);
+        }
+        .mobile-unit-switcher-field {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+        }
+        .mobile-unit-switcher-label {
+          flex-shrink: 0;
+          width: 2.6rem;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: var(--color-text-muted);
+        }
+        .mobile-unit-switcher-select {
+          flex: 1;
+          min-width: 0;
+          padding: 0.45rem 0.6rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          background: var(--color-surface);
+          color: var(--color-text);
+          font-size: 0.9rem;
         }
       }
     </style>

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getVerifiedCollection } from '../../utils/verifiedCollection';
 import { prepareQuadratic27Entry } from '../../utils/prepareQuadratic27Entry';
 import { buildQuadraticCenterItems } from '../../utils/quadraticDbItems';
 import Quadratic27Detail from '../../components/Quadratic27Detail.astro';
@@ -9,7 +9,7 @@ import ProblemDbShell from '../../components/ProblemDbShell.astro';
 // （M1-QF-001、display_order昇順で先頭）を初期選択した状態で3ペインDBを表示する。
 // 表示内容の実体は/math1/quadratic/[slug]/と同じ prepareQuadratic27Entry +
 // Quadratic27Detail を再利用し、教材データを二重管理しない。
-const quadratic27 = (await getCollection('quadratic27')).sort(
+const quadratic27 = (await getVerifiedCollection('quadratic27')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
 const centerItems = buildQuadraticCenterItems(quadratic27);

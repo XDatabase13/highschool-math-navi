@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<path d="M180.0,130.0 A80,80 0 0 0 20.0,130.0" class="pa-curve"/>
+<line x1="15" y1="130" x2="205" y2="130" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="100" y1="130" x2="100" y2="15" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="200" y="124" class="pa-label">x</text>
+<text x="110" y="24" class="pa-label">y</text>
+<text x="92" y="146" class="pa-label-muted">O</text>
+<line x1="20" y1="60.7" x2="180" y2="60.7" class="pa-guide"/>
+<circle cx="140.0" cy="60.7" r="3.2" class="pa-dot-closed"/>
+<circle cx="60.0" cy="60.7" r="3.2" class="pa-dot-closed"/>
+<text x="128" y="79" class="pa-label">60°</text>
+<text x="72" y="79" class="pa-label">120°</text>
+<text x="26" y="38" class="pa-label" style="text-anchor:start">sinθ = </text>
+<text x="77.2" y="31" class="pa-label" text-anchor="middle" font-size="10">√3</text><line x1="68.0" y1="34" x2="86.4" y2="34" class="pa-figure-line" stroke-width="1"/><text x="77.2" y="46" class="pa-label" text-anchor="middle" font-size="10">2</text>
+</svg>

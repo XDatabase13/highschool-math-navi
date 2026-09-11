@@ -1,0 +1,38 @@
+---
+import { getVerifiedCollection } from '../../../utils/verifiedCollection';
+import { prepareTrigEntry } from '../../../utils/prepareTrigEntry';
+import { buildTrigCenterItems } from '../../../utils/trigDbItems';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+
+// 三角比の個別問題ページ。/math1/quadratic/[slug].astroと同じ構成
+// （静的生成・共通DBシェル再利用）をtrig4コレクションに対しても使う。
+// 本番のURL契約（sitemap掲載・index対象化）を適用済み（QFと同様、noindexは外す）。
+export async function getStaticPaths() {
+  const problems = await getVerifiedCollection('trig4');
+  return problems.map((problem) => ({
+    params: { slug: problem.id },
+    props: { problem },
+  }));
+}
+
+const { problem } = Astro.props;
+const prepared = await prepareTrigEntry(problem);
+
+const allProblems = (await getVerifiedCollection('trig4')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+const centerItems = buildTrigCenterItems(allProblems);
+---
+
+<ProblemDbShell
+  title={`${problem.data.title} | 数学I 三角比 | 高校数学ナビ`}
+  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「三角比」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+  canonicalPath={`/math1/trig/${problem.id}/`}
+  breadcrumb={`数学I ＞ 三角比 ＞ ${problem.data.title}`}
+  activeUnitId="trig"
+  activeItemId={problem.id}
+  centerItems={centerItems}
+>
+  <Quadratic27Detail prepared={prepared} />
+</ProblemDbShell>

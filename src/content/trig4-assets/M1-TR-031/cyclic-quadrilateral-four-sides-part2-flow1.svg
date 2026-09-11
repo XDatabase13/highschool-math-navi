@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" style="max-width:300px">
+<circle cx="170" cy="195" r="97" class="geo-circle"/>
+<polygon points="86,146.5 170,292 254,146.5 197.4,102" class="geo-triangle"/>
+<line x1="86" y1="146.5" x2="254" y2="146.5" class="geo-construction"/>
+<circle cx="86" cy="146.5" r="3.2" class="geo-point"/>
+<circle cx="170" cy="292" r="3.2" class="geo-point"/>
+<circle cx="254" cy="146.5" r="3.2" class="geo-point"/>
+<circle cx="197.4" cy="102" r="3.2" class="geo-point"/>
+<text x="72.1" y="138.5" class="geo-point-label" text-anchor="middle">A</text>
+<text x="170" y="308" class="geo-point-label" text-anchor="middle">B</text>
+<text x="267.9" y="138.5" class="geo-point-label" text-anchor="middle">C</text>
+<text x="202" y="86.6" class="geo-point-label" text-anchor="middle">D</text>
+<text x="120.2" y="227.7" class="geo-side-label" style="text-anchor:end">AB = 7</text>
+<text x="219.8" y="227.7" class="geo-side-label" style="text-anchor:start">BC = 7</text>
+<text x="234.4" y="113.2" class="geo-side-label" text-anchor="middle">CD = 3</text>
+<text x="136.5" y="111.2" class="geo-side-label" text-anchor="middle">DA = 5</text>
+<text x="170" y="132.5" class="geo-side-label" text-anchor="middle">AC = 7</text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220" role="img" style="max-width:240px">
+<polygon points="60,190 242,190 171.4,80.8" class="geo-triangle"/>
+<text x="52" y="208" class="geo-point-label" text-anchor="middle">A</text>
+<text x="256" y="208" class="geo-point-label" text-anchor="middle">B</text>
+<text x="165.4" y="68.8" class="geo-point-label" text-anchor="middle">C</text>
+<text x="151" y="205" class="geo-side-label" text-anchor="middle">c = 7</text>
+<text x="105.2" y="124.7" class="geo-side-label" text-anchor="middle">b = 6</text>
+<text x="220.2" y="126.7" class="geo-side-label" text-anchor="middle">a = 5</text>
+</svg>

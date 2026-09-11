@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getVerifiedCollection } from '../../../utils/verifiedCollection';
 import { prepareQuadratic27Entry } from '../../../utils/prepareQuadratic27Entry';
 import { buildQuadraticCenterItems } from '../../../utils/quadraticDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
@@ -7,7 +7,7 @@ import ProblemDbShell from '../../../components/ProblemDbShell.astro';
 
 // 数学I「二次関数」単元のDB表示。/app/と同じ3ペインUI・同じ54問一覧を使い、
 // 単元トップとして最初の問題（M1-QF-001）を初期選択した状態で表示する。
-const quadratic27 = (await getCollection('quadratic27')).sort(
+const quadratic27 = (await getVerifiedCollection('quadratic27')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
 const centerItems = buildQuadraticCenterItems(quadratic27);

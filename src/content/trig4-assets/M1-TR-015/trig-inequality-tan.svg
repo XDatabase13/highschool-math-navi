@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<path d="M180.0,130.0 A80,80 0 0 0 20.0,130.0" class="pa-curve"/>
+<line x1="15" y1="130" x2="205" y2="130" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="100" y1="130" x2="100" y2="15" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="200" y="124" class="pa-label">x</text>
+<text x="110" y="24" class="pa-label">y</text>
+<text x="108" y="146" class="pa-label-muted">O</text>
+<line x1="86.0" y1="154.2" x2="152.0" y2="39.9" class="pa-figure-line"/>
+<circle cx="140.0" cy="60.7" r="3.2" class="pa-dot-closed"/>
+<text x="156.0" y="35.9" class="pa-label">tanθ=√3</text>
+</svg>

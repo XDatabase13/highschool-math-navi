@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 332 162" role="img" style="max-width:332px">
+<g transform="translate(46.0,94.0)">
+<polygon points="90.1,0.0 0.0,0.0 45.0,-26.0" class="geo-triangle"/>
+<text x="106.1" y="8.0" class="geo-point-label" text-anchor="middle">A</text>
+<text x="-16.0" y="8.0" class="geo-point-label" text-anchor="middle">B</text>
+<text x="47.0" y="-38.0" class="geo-point-label" text-anchor="middle">C</text>
+<text x="14.5" y="-26.9" class="geo-side-label" text-anchor="middle">a = 2</text>
+<text x="45.0" y="34.0" class="geo-side-label" text-anchor="middle">(1) a = 2</text>
+<polygon points="240.1,0.0 150.1,0.0 240.1,-52.0" class="geo-triangle"/>
+<text x="256.1" y="8.0" class="geo-point-label" text-anchor="middle">A</text>
+<text x="134.1" y="8.0" class="geo-point-label" text-anchor="middle">B</text>
+<text x="242.1" y="-64.0" class="geo-point-label" text-anchor="middle">C</text>
+<text x="187.1" y="-39.9" class="geo-side-label" text-anchor="middle">a = 4</text>
+<text x="195.1" y="34.0" class="geo-side-label" text-anchor="middle">(2) a = 4</text>
+</g>
+</svg>

@@ -1,9 +1,40 @@
 ---
 import { starRating } from '../utils/stars';
-import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex, type PreparedQuadratic27Entry } from '../utils/prepareQuadratic27Entry';
+import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex } from '../utils/prepareQuadratic27Entry';
+import type { MarkdownSection } from '../utils/markdownSections';
+
+// PropsはPreparedQuadratic27Entryの具体型ではなく、実際にテンプレート内で使う
+// フィールドだけの構造的な型にしてある（entry.data.assetsの詳細やcollection名には
+// 依存しない）。prepared.entryの実体がquadratic27由来かどうかをこのコンポーネントは
+// 判定しないため、同じ構造を満たす他コレクション（trig4試験バッチ等）の
+// prepared結果もそのまま渡せる。JSX・CSS・スクリプトのロジックは変更していない。
+interface DetailAssetEntry {
+  svg: string;
+  // typeは「密な全表を開閉式にする／複数assetを横並びにする」といった、
+  // asset種別に応じた表示分岐にだけ使う（数式や本文の解析には使わない）。
+  asset: { type: string };
+}
 
 interface Props {
-  prepared: PreparedQuadratic27Entry;
+  prepared: {
+    entry: {
+      data: {
+        problem_id: string;
+        title: string;
+        importance_label: string;
+        difficulty: number;
+      };
+    };
+    problem: MarkdownSection | undefined;
+    paraphrase: MarkdownSection | undefined;
+    problemMeta: MarkdownSection | undefined;
+    solutionMeta: MarkdownSection | undefined;
+    thinkingFlow: MarkdownSection | undefined;
+    finalAnswer: MarkdownSection | undefined;
+    problemAssets: DetailAssetEntry[];
+    finalAnswerAssets: DetailAssetEntry[];
+    flowAssetsByKey: Map<string, DetailAssetEntry[]>;
+  };
 }
 
 const { prepared } = Astro.props;
@@ -38,9 +69,34 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
         ))}
       </div>
     )}
-    {problemAssets.map(({ svg }) => (
-      <figure class="problem-asset-figure" set:html={svg} />
-    ))}
+    {problemAssets.length > 1 ? (
+      // asset.type==='table'（密な全表）だけ開閉式＋横幅拡大にし、それ以外は
+      // 通常のfigureのまま。複数asset（現状M1-TR-003の図+抜粋表のみ）だけ
+      // 横並び用コンテナで包む。既存54問はproblemAssetsが0〜1件のためこの分岐に入らない。
+      <div class="problem-asset-row">
+        {problemAssets.map(({ asset, svg }) =>
+          asset.type === 'table' ? (
+            <details class="problem-asset-collapsible">
+              <summary class="problem-asset-collapsible-toggle">表を見る</summary>
+              <div class="problem-asset-figure problem-asset-table-scroll" set:html={svg} />
+            </details>
+          ) : (
+            <figure class="problem-asset-figure" set:html={svg} />
+          ),
+        )}
+      </div>
+    ) : (
+      problemAssets.map(({ asset, svg }) =>
+        asset.type === 'table' ? (
+          <details class="problem-asset-collapsible">
+            <summary class="problem-asset-collapsible-toggle">表を見る</summary>
+            <div class="problem-asset-figure problem-asset-table-scroll" set:html={svg} />
+          </details>
+        ) : (
+          <figure class="problem-asset-figure" set:html={svg} />
+        ),
+      )
+    )}
     {paraphrase && (
       <div class="paraphrase-box">
         <button type="button" class="paraphrase-toggle" data-paraphrase-toggle>
@@ -134,9 +190,18 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
       </div>
     ) : (
       // 小問付きFlow：(1)/(2)ごとに独立した.thinking-flowを並べる。
-      thinkingFlow.subsections.map((part) => (
+      // part.title（###見出し）も、通常Flowのstep.titleと同じ形式（"1. ☆ ..."等）で
+      // 強調マークが付くことがある（例：M1-TR-021の「1. ☆ ...」「補助Flow：...」構成）。
+      // parseStepTitleは "(1)" のような小問番号見出しにはマッチせず素通りするだけなので、
+      // ここでも同じ関数を通して☆マークを除去し★表示へ揃える（一致しない場合は無変化）。
+      thinkingFlow.subsections.map((part) => {
+        const { displayTitle: partDisplayTitle, highlighted: partHighlighted } = parseStepTitle(part.title);
+        return (
         <div class="thinking-part">
-          <h3 class="thinking-part-label">{part.title}</h3>
+          <h3 class="thinking-part-label">
+            {partDisplayTitle}
+            {partHighlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
+          </h3>
           <div class="thinking-flow" data-flow-kind="q27">
             <button type="button" class="reveal-all-btn" data-reveal-all>
               考え方を全部見る
@@ -174,7 +239,8 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
             </ol>
           </div>
         </div>
-      ))
+        );
+      })
     )}
   </section>
 )}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<path d="M100,130 L180.0,130.0 A80,80 0 0 0 100.0,50.0 Z" class="pa-figure-fill" style="fill:var(--color-primary);fill-opacity:0.12"/>
+<path d="M100,130 L100.0,50.0 A80,80 0 0 0 20.0,130.0 Z" class="pa-figure-fill" style="fill:var(--color-primary);fill-opacity:0.12"/>
+<path d="M180.0,130.0 A80,80 0 0 0 20.0,130.0" class="pa-curve"/>
+<line x1="15" y1="130" x2="205" y2="130" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="100" y1="130" x2="100" y2="15" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="200" y="124" class="pa-label">x</text>
+<text x="110" y="24" class="pa-label">y</text>
+<text x="92" y="146" class="pa-label-muted">O</text>
+<text x="131.8" y="98.2" class="pa-panel-label">第1象限</text>
+<text x="68.2" y="98.2" class="pa-panel-label">第2象限</text>
+<text x="95" y="40" class="pa-label" style="text-anchor:end">sinθ&gt;0</text>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 112" role="img">
+<line x1="4" y1="16" x2="156" y2="16" class="pa-figure-line"/>
+<text x="16" y="12" class="pa-table-header" text-anchor="middle">度</text>
+<text x="52" y="12" class="pa-table-header" text-anchor="middle">sin</text>
+<text x="92" y="12" class="pa-table-header" text-anchor="middle">cos</text>
+<text x="132" y="12" class="pa-table-header" text-anchor="middle">tan</text>
+<text x="16" y="33.6" class="pa-table-cell" text-anchor="middle">56</text><text x="52" y="33.6" class="pa-table-cell" text-anchor="middle">0.8290</text><text x="92" y="33.6" class="pa-table-cell" text-anchor="middle">0.5592</text><text x="132" y="33.6" class="pa-table-cell" text-anchor="middle">1.4826</text>
+<text x="16" y="49.6" class="pa-table-cell" text-anchor="middle">57</text><text x="52" y="49.6" class="pa-table-cell" text-anchor="middle">0.8387</text><text x="92" y="49.6" class="pa-table-cell" text-anchor="middle">0.5446</text><text x="132" y="49.6" class="pa-table-cell" text-anchor="middle">1.5399</text>
+<rect x="2" y="54" width="156" height="16" class="pa-table-highlight"/>
+<text x="16" y="65.6" class="pa-table-cell pa-table-cell-strong" text-anchor="middle">58</text><text x="52" y="65.6" class="pa-table-cell pa-table-cell-strong" text-anchor="middle">0.8480</text><text x="92" y="65.6" class="pa-table-cell pa-table-cell-strong" text-anchor="middle">0.5299</text><text x="132" y="65.6" class="pa-table-cell pa-table-cell-strong" text-anchor="middle">1.6003</text>
+<text x="16" y="81.6" class="pa-table-cell" text-anchor="middle">59</text><text x="52" y="81.6" class="pa-table-cell" text-anchor="middle">0.8572</text><text x="92" y="81.6" class="pa-table-cell" text-anchor="middle">0.5150</text><text x="132" y="81.6" class="pa-table-cell" text-anchor="middle">1.6643</text>
+<text x="16" y="97.6" class="pa-table-cell" text-anchor="middle">60</text><text x="52" y="97.6" class="pa-table-cell" text-anchor="middle">0.8660</text><text x="92" y="97.6" class="pa-table-cell" text-anchor="middle">0.5000</text><text x="132" y="97.6" class="pa-table-cell" text-anchor="middle">1.7321</text>
+</svg>

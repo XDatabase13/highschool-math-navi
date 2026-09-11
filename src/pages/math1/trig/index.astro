@@ -1,0 +1,30 @@
+---
+import { getVerifiedCollection } from '../../../utils/verifiedCollection';
+import { prepareTrigEntry } from '../../../utils/prepareTrigEntry';
+import { buildTrigCenterItems } from '../../../utils/trigDbItems';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+
+// 三角比単元トップ。既存の共通3ペインDB UI（ProblemDbShell + Quadratic27Detail）を
+// QFとそのまま共有する。本番公開契約へ昇格済みのため、QFと同様にindex対象・
+// sitemap掲載とする（noindexは外す）。TOPページのNav.astro（publicSubjectNav）への
+// 掲載可否は本件のSEO設定とは別判断のため、ここでは変更しない。
+const trig4 = (await getVerifiedCollection('trig4')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+const centerItems = buildTrigCenterItems(trig4);
+const defaultEntry = trig4[0];
+const prepared = await prepareTrigEntry(defaultEntry);
+---
+
+<ProblemDbShell
+  title="数学I 三角比 | 高校数学ナビ"
+  description="数学I「三角比」の問題データベースです。三角比の基本・拡張、平面図形、空間図形と三角比まで、全41問を収録しています。"
+  canonicalPath="/math1/trig/"
+  breadcrumb={`数学I ＞ 三角比 ＞ ${defaultEntry.data.title}`}
+  activeUnitId="trig"
+  activeItemId={defaultEntry.id}
+  centerItems={centerItems}
+>
+  <Quadratic27Detail prepared={prepared} />
+</ProblemDbShell>

@@ -1345,6 +1345,64 @@ ul {
   margin: 0 auto;
 }
 
+/* 「問題」セクションにproblem-placement assetが複数ある場合（M1-TR-003等）だけ
+   使われるラッパー。既存54問はproblem-placement assetが0〜1件のため、
+   このクラスが付く場面自体が発生せず、既存の見た目には影響しない。
+   PCでは横並び、スマホでは縦積みにする（無理に高さを揃えない）。 */
+.problem-asset-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 0.75rem 0 0;
+}
+.problem-asset-row > .problem-asset-figure,
+.problem-asset-row > .problem-asset-collapsible {
+  margin: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .problem-asset-row {
+    flex-direction: column;
+  }
+}
+
+/* type: table のうち、密な全表（M1-TR-002等）だけ初期状態を閉じ、
+   ボタンで開閉する。ネイティブdetails/summaryを使い、開閉の自前実装はしない。
+   type: table-excerpt（抜粋表、M1-TR-003等）はこの対象にせず常時表示のまま。 */
+.problem-asset-collapsible {
+  margin: 0.75rem 0 0;
+}
+.problem-asset-collapsible-toggle {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+  padding: 0.3rem 0.1rem;
+}
+.problem-asset-collapsible[open] > .problem-asset-collapsible-toggle {
+  margin-bottom: 0.5rem;
+}
+/* 展開時は420px上限を外し、横幅を十分使う（縮小しすぎない）。
+   はみ出す幅になった場合はテーブル領域だけ横スクロールを許容する。 */
+.problem-asset-table-scroll {
+  overflow-x: auto;
+}
+.problem-asset-table-scroll svg {
+  display: block;
+  width: auto;
+  max-width: none;
+  min-width: 560px;
+  height: auto;
+}
+@media (min-width: 901px) {
+  .problem-asset-table-scroll svg {
+    width: 100%;
+    max-width: 720px;
+  }
+}
+
 /* 小問(1)/(2)付きThinkingFlow：それぞれ独立した.thinking-flowを縦に並べるだけの最小限の区切り。
    （app/index.astroのDB型UIと[slug].astroの単体ページ、両方で使う共通スタイルとしてここに集約） */
 .thinking-part + .thinking-part {
@@ -1463,6 +1521,35 @@ ul {
   stroke: var(--color-primary);
   stroke-width: 1.5;
 }
+/* type: table-excerpt 用の共通クラス（M1-TR-003等の小さな抜粋表）。
+   .problem-asset-figure（max-width:420px）にそのまま収まる密度で使う。 */
+.pa-table-header {
+  font-size: 6px;
+  font-weight: 700;
+  fill: var(--color-text-muted);
+}
+.pa-table-cell {
+  font-size: 5.5px;
+  fill: var(--color-text);
+}
+/* type: table（M1-TR-002等の全表）用。.problem-asset-table-scroll側で
+   max-widthキャップを外し、横幅を十分使って表示する前提の大きめサイズ。 */
+.pa-table-header-lg {
+  font-size: 8.5px;
+  font-weight: 700;
+  fill: var(--color-text-muted);
+}
+.pa-table-cell-lg {
+  font-size: 8px;
+  fill: var(--color-text);
+}
+.pa-table-cell-strong {
+  font-weight: 700;
+  fill: var(--color-primary-dark);
+}
+.pa-table-highlight {
+  fill: var(--color-accent-bg);
+}
 .case-graph-key {
   font-weight: 700;
   color: var(--color-primary-dark);
@@ -1532,6 +1619,70 @@ ul {
   margin-top: 0.4rem;
   font-size: 0.78rem;
   color: var(--color-text-muted);
+}
+
+/* geo-* : CyclicQuadFigure.astro/MenelausFigure.astro（6問サンプル時代の手作り幾何図）の
+   設計方針を、静的SVG asset（assets: file/placement/flowで管理する現行方式）へ移植した
+   役割別クラス。pa-labelのような「全ラベル共通1種」ではなく、頂点・角度・辺で
+   太さ・サイズを分ける。M1-TR-017のsine-rule-circumcircle-1.svgから採用開始。
+   pa-*系（quadratic27・trig4の既存75問分）とは独立しており、既存asset表示に影響しない。 */
+.geo-triangle {
+  fill: rgba(47, 95, 122, 0.06);
+  stroke: var(--color-text);
+  stroke-width: 1.75;
+}
+.geo-circle {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1.5;
+}
+.geo-point {
+  fill: var(--color-text);
+}
+.geo-point-label {
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+.geo-angle-arc {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+}
+.geo-angle-label {
+  font-size: 12px;
+  fill: var(--color-primary-dark);
+  text-anchor: middle;
+}
+.geo-side-label {
+  font-size: 12px;
+  fill: var(--color-text-muted);
+  text-anchor: middle;
+}
+/* geo-construction: 内分点・角の二等分線・内心への補助線など、辺そのものではない
+   構成線に使う。geo-triangleより細く、辺と混同しないよう視覚的に一段弱くする。
+   M1-TR-022〜041（空間図形・内分点など）から採用開始。 */
+.geo-construction {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+/* geo-edge / geo-edge-hidden: 立体図形（直方体・四面体・三角錐・円錐）の稜線。
+   geo-triangleは閉じた面（塗りつき）用なので、線だけの稜線には使わない。
+   hiddenは奥に隠れる稜線用の破線。M1-TR-036〜041（空間図形と三角比）から採用開始。 */
+.geo-edge {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 1.75;
+  stroke-linejoin: round;
+}
+.geo-edge-hidden {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
 }
 
 /* Thinking table（相関係数などの計算表） */
@@ -1850,6 +2001,25 @@ ul {
 .q27-detail .thinking-step-body {
   margin-bottom: 0.6rem;
 }
+/* レビュー指摘（M1-TR-025）：短いFlow（本文1文＋数式1つ程度）でも、pの下余白
+   （基本スタイルの1rem）とKaTeX .katex-displayの既定余白（1em）が積み重なり、
+   カード全体が内容量の割に縦へ間延びして見えていた。thinking-step-body配下
+   （ThinkingFlowの本文領域）だけに絞って余白を少し圧縮する。
+   影響範囲：この段落・数式間隔の調整はq27-detail（QF・TR共通コンポーネント）
+   全体に及ぶが、変更幅は小さく、問題文・問題メタ・解法メタ・最終解答等の
+   他セクションには影響しない。 */
+.q27-detail .thinking-step-body p {
+  margin: 0 0 0.6rem;
+}
+.q27-detail .thinking-step-body p:last-child {
+  margin-bottom: 0;
+}
+.q27-detail .thinking-step-body .katex-display {
+  margin: 0.55em 0;
+}
+.q27-detail .thinking-step-body .katex-display:last-child {
+  margin-bottom: 0;
+}
 .q27-detail .result-box {
   margin-top: 0.45rem;
   padding: 0.65rem 0.85rem;
@@ -1883,4 +2053,22 @@ ul {
 }
 .q27-detail .final-answer {
   margin: 0.6rem 0 0;
+}
+/* 正本Markdownのパイプ表記（remark-gfm）から生成される素の<table>用の最小限の枠線・余白。
+   現状M1-TR-008の問題文・最終解答のみが該当（他の既存問題はパイプ表を使わない）。
+   空欄の多い表でも罫線が見えるよう border-collapseする。 */
+.q27-detail table {
+  border-collapse: collapse;
+  margin: 0.6rem 0;
+  font-size: 0.92rem;
+}
+.q27-detail th,
+.q27-detail td {
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.7rem;
+  text-align: center;
+}
+.q27-detail th {
+  background: var(--color-accent-bg);
+  color: var(--color-text-muted);
 }

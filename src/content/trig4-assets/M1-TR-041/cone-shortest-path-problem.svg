@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" role="img" style="max-width:260px">
+<path d="M74,190 A76,22 0 0 1 226,190" class="geo-edge-hidden" fill="none"/>
+<line x1="150" y1="46" x2="74" y2="190" class="geo-edge"/>
+<line x1="150" y1="46" x2="226" y2="190" class="geo-edge"/>
+<path d="M74,190 A76,22 0 0 0 226,190" class="geo-edge" fill="none"/>
+<line x1="150" y1="46" x2="212.3" y2="202.6" class="geo-edge"/>
+<line x1="150" y1="190" x2="212.3" y2="202.6" class="geo-construction"/>
+<circle cx="150" cy="190" r="2.4" class="geo-point"/>
+<circle cx="212.3" cy="202.6" r="3" class="geo-point"/>
+<text x="140" y="187" class="geo-point-label" text-anchor="middle">O</text>
+<text x="224.3" y="212.6" class="geo-point-label" text-anchor="middle">A</text>
+<text x="134" y="114" class="geo-side-label" text-anchor="middle">6</text>
+<text x="150" y="206" class="geo-side-label" text-anchor="middle">r = 2</text>
+</svg>

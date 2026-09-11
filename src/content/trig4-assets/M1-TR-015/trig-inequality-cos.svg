@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<path d="M100,130 L60.0,60.7 A80,80 0 0 0 43.4,73.4 Z" class="pa-figure-fill" style="fill:var(--color-primary);fill-opacity:0.12"/>
+<path d="M180.0,130.0 A80,80 0 0 0 20.0,130.0" class="pa-curve"/>
+<line x1="15" y1="130" x2="205" y2="130" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="100" y1="130" x2="100" y2="15" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="200" y="124" class="pa-label">x</text>
+<text x="110" y="24" class="pa-label">y</text>
+<text x="92" y="146" class="pa-label-muted">O</text>
+<line x1="60.0" y1="36" x2="60.0" y2="130" class="pa-guide"/>
+<line x1="43.4" y1="36" x2="43.4" y2="130" class="pa-guide"/>
+<circle cx="60.0" cy="60.7" r="3.2" class="pa-dot-closed"/>
+<circle cx="43.4" cy="73.4" r="3.2" class="pa-dot-open"/>
+<text x="52" y="28" class="pa-label" text-anchor="middle">cosθの範囲</text>
+</svg>

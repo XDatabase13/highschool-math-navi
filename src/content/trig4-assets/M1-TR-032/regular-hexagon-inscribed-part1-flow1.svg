@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 300" role="img" style="max-width:280px">
+<circle cx="160" cy="150" r="92" class="geo-circle"/>
+<polygon points="160,58 239.7,104 239.7,196 160,242 80.3,196 80.3,104" class="geo-triangle"/>
+<line x1="160" y1="150" x2="160" y2="58" class="geo-construction"/>
+<line x1="160" y1="150" x2="239.7" y2="104" class="geo-construction"/>
+<line x1="160" y1="150" x2="239.7" y2="196" class="geo-construction"/>
+<line x1="160" y1="150" x2="160" y2="242" class="geo-construction"/>
+<line x1="160" y1="150" x2="80.3" y2="196" class="geo-construction"/>
+<line x1="160" y1="150" x2="80.3" y2="104" class="geo-construction"/>
+<path d="M160,128 A22,22 0 0 1 179.1,139" class="geo-angle-arc"/>
+<circle cx="160" cy="150" r="2.6" class="geo-point"/>
+<text x="149" y="134" class="geo-point-label" text-anchor="middle">O</text>
+<text x="174.5" y="124.8" class="geo-angle-label" text-anchor="middle">60°</text>
+<text x="151" y="108" class="geo-side-label" text-anchor="middle">2</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<path d="M100,130 L169.3,90.0 A80,80 0 0 0 30.7,90.0 Z" class="pa-figure-fill"/>
+<path d="M180.0,130.0 A80,80 0 0 0 20.0,130.0" class="pa-curve"/>
+<line x1="15" y1="130" x2="205" y2="130" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<line x1="100" y1="130" x2="100" y2="15" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="200" y="124" class="pa-label">x</text>
+<text x="110" y="24" class="pa-label">y</text>
+<text x="92" y="146" class="pa-label-muted">O</text>
+<line x1="169.3" y1="90.0" x2="30.7" y2="90.0" class="pa-guide"/>
+<circle cx="169.3" cy="90.0" r="3.2" class="pa-dot-open"/>
+<circle cx="30.7" cy="90.0" r="3.2" class="pa-dot-open"/>
+<text x="20" y="32.0" class="pa-label" style="text-anchor:start">sinθ &gt; </text>
+<text x="67.4" y="25.0" class="pa-label" text-anchor="middle" font-size="11">1</text><line x1="61.0" y1="28.0" x2="73.8" y2="28.0" class="pa-figure-line" stroke-width="1"/><text x="67.4" y="41.0" class="pa-label" text-anchor="middle" font-size="11">2</text>
+</svg>

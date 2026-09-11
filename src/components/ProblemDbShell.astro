@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import 'katex/dist/katex.min.css';
-import { publicSubjectNav } from '../data/subjects';
+import { dbSubjectNav } from '../data/subjects';
 import Analytics from './Analytics.astro';
 import ProblemGroupList from './ProblemGroupList.astro';
 import { groupCenterItems, type DbCenterItem } from '../utils/dbCenterList';
@@ -86,7 +86,7 @@ const centerGroups = groupCenterItems(centerItems);
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
           <ul class="db-subject-list">
-            {publicSubjectNav
+            {dbSubjectNav
               .filter((subject) => subject.units.length > 0)
               .map((subject) => (
                 <li class="db-subject">

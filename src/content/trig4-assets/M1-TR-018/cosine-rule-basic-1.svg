@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 214 164" role="img" style="max-width:214px">
+<g transform="translate(48.0,110.0)">
+<polygon points="0.0,0.0 117.8,0.0 117.8,-68.0" class="geo-triangle"/>
+<path d="M30.0,0.0 A30,30 0 0 0 26.0,-15.0" class="geo-angle-arc"/>
+<text x="-18.0" y="10.0" class="geo-point-label" text-anchor="middle">A</text>
+<text x="135.8" y="10.0" class="geo-point-label" text-anchor="middle">B</text>
+<text x="129.8" y="-80.0" class="geo-point-label" text-anchor="middle">C</text>
+<text x="46.4" y="-8.4" class="geo-angle-label" text-anchor="middle">30°</text>
+<text x="49.9" y="-49.6" class="geo-side-label" text-anchor="middle">b = 4</text>
+<text x="58.9" y="18.0" class="geo-side-label" text-anchor="middle">c = 2√3</text>
+<text x="135.8" y="-34.0" class="geo-side-label" text-anchor="middle">a</text>
+</g>
+</svg>

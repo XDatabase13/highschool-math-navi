@@ -41,9 +41,28 @@ export const subjectNav: NavSubject[] = [
 ];
 
 // sampleOnly単元（6問検証サンプル）を除いた、一般公開向けのナビゲーション。
-// Nav.astro（通常Webページ側の左サイドナビ）と /app/（3ペインDB）の
-// 科目・単元ペインの両方で、この一つの定義を共有する。
+// Nav.astro（TOPページ等、通常Webページ側の左サイドナビ）で使う。
+// TOPページからのリンクはそのままクロール対象になるため、まだ本番公開contractに
+// 昇格していない単元（三角比を含む）はここには出さない。
 export const publicSubjectNav: NavSubject[] = subjectNav.map((subject) => ({
   name: subject.name,
   units: subject.units.filter((unit) => !unit.sampleOnly),
 }));
+
+// 3ペインDB UI（ProblemDbShell＝/app/・/math1/quadratic/*・/math1/trig/*）専用の単元ナビ。
+// publicSubjectNav（TOPページ等のNav.astro）とは意図的に別管理にしている：
+// 二次関数・三角比はどちらもDB UI自体は実装・レビュー済みで、個別問題ページを
+// 相互に行き来できる必要があるが、三角比はTOPページ等からの一般導線・sitemap掲載は
+// まだ行わない（CLAUDE.md「三角比の現在地」参照）。そのためpublicSubjectNavの
+// sampleOnlyフィルタとは別に、DB UI側だけで見せる単元をここに列挙する。
+// 新しい単元をDB UIへ追加するときはこの配列だけを更新すればよく、
+// QF・TR個別のroute側に単元一覧をハードコードしない。
+export const dbSubjectNav: NavSubject[] = [
+  {
+    name: '数学I',
+    units: [
+      { id: 'quadratic', name: '二次関数', href: '/math1/quadratic/' },
+      { id: 'trig', name: '三角比', href: '/math1/trig/' },
+    ],
+  },
+];

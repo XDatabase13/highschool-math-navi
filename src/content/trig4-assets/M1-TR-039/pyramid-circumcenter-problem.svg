@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 300" role="img" style="max-width:280px">
+<polygon points="90,250 180,250 255,120.1" class="geo-triangle"/>
+<line x1="141" y1="27.4" x2="90" y2="250" class="geo-edge"/>
+<line x1="141" y1="27.4" x2="180" y2="250" class="geo-edge"/>
+<line x1="141" y1="27.4" x2="255" y2="120.1" class="geo-edge"/>
+<line x1="141" y1="27.4" x2="135" y2="137.4" class="geo-construction"/>
+<line x1="119" y1="137.4" x2="151" y2="137.4" class="geo-construction"/>
+<path d="M134.6,145.4 L142.6,145.8 L143,137.9" class="geo-edge" fill="none"/>
+<circle cx="90" cy="250" r="3" class="geo-point"/><circle cx="180" cy="250" r="3" class="geo-point"/><circle cx="255" cy="120.1" r="3" class="geo-point"/><circle cx="141" cy="27.4" r="3" class="geo-point"/>
+<circle cx="135" cy="137.4" r="2.6" class="geo-point"/>
+<text x="76" y="254" class="geo-point-label" text-anchor="middle">A</text>
+<text x="190" y="264" class="geo-point-label" text-anchor="middle">B</text>
+<text x="269" y="124.1" class="geo-point-label" text-anchor="middle">C</text>
+<text x="131" y="155.4" class="geo-point-label" text-anchor="middle">H</text>
+<text x="141" y="15.4" class="geo-point-label" text-anchor="middle">P</text>
+</svg>

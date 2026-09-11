@@ -24,6 +24,11 @@ const canonicalAssets = path.join(canonicalRoot, 'assets');
 const snapshotProblems = path.join(repoRoot, 'src/content/quadratic27');
 const snapshotAssets = path.join(repoRoot, 'src/content/quadratic27-assets');
 
+// 三角比（M1-TR-001〜004）試験バッチ用スナップショット先。quadratic27とは別コレクション
+// （src/content.config.tsのtrig4）なので、格納先ディレクトリも分離する。
+const snapshotTrigProblems = path.join(repoRoot, 'src/content/trig4');
+const snapshotTrigAssets = path.join(repoRoot, 'src/content/trig4-assets');
+
 const SNAPSHOT_NOTICE =
   '# 自動生成スナップショット（編集禁止）\n\n' +
   'このディレクトリの中身は、正本 `math_db_quadratic_working/`（highschool_math_db の外）から\n' +
@@ -71,7 +76,43 @@ function copyAssets() {
   return fileCount;
 }
 
+// 三角比試験バッチ（M1-TR-001〜004）用。存在するファイルだけを対象にする
+// （量産中で正本側の問題数が増減しても、このスクリプト自体は変更不要）。
+function copyTrigMarkdown() {
+  resetDir(snapshotTrigProblems);
+  const files = readdirSync(canonicalProblems).filter((f) => /^M1-TR-\d+\.md$/.test(f));
+  for (const f of files) {
+    copyFileSync(path.join(canonicalProblems, f), path.join(snapshotTrigProblems, f));
+  }
+  writeFileSync(path.join(snapshotTrigProblems, 'README.md'), SNAPSHOT_NOTICE);
+  return files.length;
+}
+
+function copyTrigAssets() {
+  resetDir(snapshotTrigAssets);
+  if (!existsSync(canonicalAssets)) return 0;
+  const dirs = readdirSync(canonicalAssets).filter((name) => {
+    const full = path.join(canonicalAssets, name);
+    return /^M1-TR-\d+$/.test(name) && statSync(full).isDirectory();
+  });
+  let fileCount = 0;
+  for (const d of dirs) {
+    const srcDir = path.join(canonicalAssets, d);
+    const destDir = path.join(snapshotTrigAssets, d);
+    mkdirSync(destDir, { recursive: true });
+    for (const f of readdirSync(srcDir)) {
+      copyFileSync(path.join(srcDir, f), path.join(destDir, f));
+      fileCount += 1;
+    }
+  }
+  writeFileSync(path.join(snapshotTrigAssets, 'README.md'), SNAPSHOT_NOTICE);
+  return fileCount;
+}
+
 const mdCount = copyMarkdown();
 const assetCount = copyAssets();
-console.log(`同期完了: Markdown ${mdCount}件、asset ${assetCount}件`);
+const trigMdCount = copyTrigMarkdown();
+const trigAssetCount = copyTrigAssets();
+console.log(`同期完了: Markdown ${mdCount}件、asset ${assetCount}件（quadratic27）`);
+console.log(`同期完了: Markdown ${trigMdCount}件、asset ${trigAssetCount}件（trig4・試験バッチ）`);
 console.log('git status / git diff で差分を確認し、必要なら commit してください。');

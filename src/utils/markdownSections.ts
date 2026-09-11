@@ -1,7 +1,9 @@
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkRehype from 'remark-rehype';
+import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
 import rehypeStringify from 'rehype-stringify';
 import type { Root, RootContent, Heading } from 'mdast';
@@ -24,8 +26,18 @@ export interface MarkdownSection {
   partNumber?: number;
 }
 
-const mdastProcessor = unified().use(remarkParse).use(remarkMath);
-const toHtmlProcessor = unified().use(remarkRehype).use(rehypeKatex).use(rehypeStringify);
+// remarkGfm: 正本Markdown内のパイプ表記（`| ... |`）をテーブルとして解析するために必要
+//（GFM拡張。M1-TR-008の問題文・最終解答の表で使用）。他の強調記法（~~取り消し線~~等）も
+// 有効になるが、既存の正本Markdownはいずれも使用していないため影響しない。
+// rehypeRaw: 正本Markdown内に直接書かれた生HTML（M1-TR-015の警告文`<p style="...">`等）を
+// 実際のHTML要素として解析するために必要。remarkRehype/rehypeStringify側の
+// allowDangerousHtmlとセットで使う（正本側で生HTMLを使う運用は既存規約どおり）。
+const mdastProcessor = unified().use(remarkParse).use(remarkGfm).use(remarkMath);
+const toHtmlProcessor = unified()
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeRaw)
+  .use(rehypeKatex)
+  .use(rehypeStringify, { allowDangerousHtml: true });
 
 function headingText(node: Heading): string {
   let text = '';

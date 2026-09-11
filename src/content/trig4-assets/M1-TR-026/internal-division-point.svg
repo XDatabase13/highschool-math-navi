@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 210" role="img" style="max-width:280px">
+<polygon points="50,190 270,190 73.6,52" class="geo-triangle"/>
+<line x1="50" y1="190" x2="204.5" y2="144" class="geo-construction"/>
+<circle cx="204.5" cy="144" r="3" class="geo-point"/>
+<text x="38" y="196" class="geo-point-label" text-anchor="middle">A</text>
+<text x="282" y="196" class="geo-point-label" text-anchor="middle">B</text>
+<text x="89.6" y="58" class="geo-point-label" text-anchor="middle">C</text>
+<text x="204.5" y="162" class="geo-point-label" text-anchor="middle">D</text>
+<text x="160" y="205" class="geo-side-label" style="text-anchor:middle">c = 11</text>
+<text x="52.9" y="123.5" class="geo-side-label" style="text-anchor:end">b = 7</text>
+<text x="237.3" y="182" class="geo-side-label" text-anchor="middle">①</text>
+<text x="139.1" y="113" class="geo-side-label" text-anchor="middle">②</text>
+<text x="124.4" y="156.4" class="geo-side-label" style="text-anchor:middle">AD = ?</text>
+</svg>

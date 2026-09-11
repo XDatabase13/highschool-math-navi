@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 180" role="img" style="max-width:300px">
+<polygon points="40,150 225.5,150 157.6,32.4" class="geo-triangle"/>
+<path d="M64,150 A24,24 0 0 0 57,133" class="geo-angle-arc"/>
+<text x="32" y="167" class="geo-point-label" text-anchor="middle">A</text>
+<text x="239.5" y="156" class="geo-point-label" text-anchor="middle">B</text>
+<text x="157.6" y="22.4" class="geo-point-label" text-anchor="middle">C</text>
+<text x="83.5" y="140" class="geo-angle-label" text-anchor="middle">45°</text>
+<text x="92.4" y="88.8" class="geo-side-label" style="text-anchor:end">b = 2√3</text>
+<text x="199.3" y="90.7" class="geo-side-label" style="text-anchor:start">a = 2√2</text>
+<text x="132.7" y="165" class="geo-side-label" style="text-anchor:middle">c = ?</text>
+</svg>

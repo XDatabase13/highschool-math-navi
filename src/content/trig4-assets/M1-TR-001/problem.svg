@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" role="img" style="max-width:210px">
+<polygon points="40,190 160,190 160,30" class="pa-figure-fill"/>
+<path d="M146,190 L146,176 L160,176" class="pa-figure-line"/>
+<path d="M62,190 A22,22 0 0 0 53.2,172.4" class="pa-figure-line"/>
+<text x="26" y="205" class="pa-label">A</text>
+<text x="166" y="206" class="pa-label">C</text>
+<text x="166" y="26" class="pa-label">B</text>
+<text x="68.6" y="179.7" class="pa-label">θ</text>
+<text x="88.8" y="101.6" class="pa-label">AB=10</text>
+<text x="100" y="205" class="pa-label">AC=6</text>
+</svg>

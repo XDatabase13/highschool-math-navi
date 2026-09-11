@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 80 180 114" role="img" style="max-width:360px">
+<polygon points="30,170 170,170 124,104" class="pa-figure-fill"/>
+<line x1="124" y1="170" x2="124" y2="104" class="pa-guide"/>
+<path d="M114,170 L114,160 L124,160" class="pa-figure-line"/>
+<path d="M115.8,109.7 L121.5,118.0 L129.7,112.2" class="pa-figure-line"/>
+<path d="M48,170 A18,18 0 0 0 44.75,159.68" class="pa-figure-line"/>
+<circle cx="124" cy="170" r="2.6" class="pa-dot-closed"/>
+<text x="24" y="180" class="pa-label">A</text>
+<text x="176" y="180" class="pa-label">B</text>
+<text x="124" y="94" class="pa-label">C</text>
+<text x="124" y="184" class="pa-label">D</text>
+<text x="54.8" y="162.2" class="pa-label">θ</text>
+<text x="70" y="184" class="pa-label">AB=k</text>
+</svg>

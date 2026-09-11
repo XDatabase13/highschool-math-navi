@@ -7,7 +7,13 @@ import path from 'node:path';
 // （npm run sync-content で正本から再生成。ここでは一切書き換えない）。
 // プロジェクトルート（cwd）からの相対で解決する
 // （import.meta.url はビルド時のバンドル移動で位置がずれる可能性があるため使わない）。
-export function readProblemAssetSvg(problemId: string, file: string): string {
-  const filePath = path.resolve(process.cwd(), 'src/content/quadratic27-assets', problemId, file);
+// assetsRootは既定でquadratic27-assets。他コレクション（trig4-assets等）を読む場合のみ
+// 呼び出し側が明示的に指定する（既定値なので既存呼び出し側の挙動は変わらない）。
+export function readProblemAssetSvg(
+  problemId: string,
+  file: string,
+  assetsRoot = 'src/content/quadratic27-assets',
+): string {
+  const filePath = path.resolve(process.cwd(), assetsRoot, problemId, file);
   return readFileSync(filePath, 'utf-8');
 }

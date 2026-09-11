@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 260" role="img" style="max-width:340px">
+<polygon points="190,228 292,228 88,51.3" class="geo-triangle"/>
+<line x1="190" y1="228" x2="224" y2="169.1" class="geo-construction"/>
+<circle cx="224" cy="169.1" r="3" class="geo-point"/>
+<path d="M214,228 A24,24 0 0 0 202,207.2" class="geo-angle-arc"/>
+<path d="M202,207.2 A24,24 0 0 0 178,207.2" class="geo-angle-arc"/>
+<text x="186" y="248" class="geo-point-label" text-anchor="middle">A</text>
+<text x="308" y="232" class="geo-point-label" text-anchor="middle">B</text>
+<text x="82" y="35.3" class="geo-point-label" text-anchor="middle">C</text>
+<text x="224" y="187.1" class="geo-point-label" text-anchor="middle">D</text>
+<text x="229.5" y="208.5" class="geo-angle-label" text-anchor="middle">60°</text>
+<text x="190" y="186" class="geo-angle-label" text-anchor="middle">60°</text>
+<text x="241" y="243" class="geo-side-label" text-anchor="middle">AB = 6</text>
+<text x="131.2" y="148.2" class="geo-side-label" style="text-anchor:end">AC = 12</text>
+</svg>

@@ -41,6 +41,20 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ---
 
+## 三角比（試験バッチ）の現在地
+
+数学I「三角比」M1-TR-001〜041（41問）について、独立検算・教材化・asset生成・実画面レビュー・Opus横断レビュー・Codex構造監査まで完了しています。本番公開はまだです。
+
+- 正本・同期先はQFと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-TR-*ファイル、スナップショット`src/content/trig4/`・`src/content/trig4-assets/`（`npm run sync-content`が両方を同期）。
+- 対応するContent Collectionは`trig4`（`src/content.config.ts`）、表示は`prepareTrigEntry.ts`経由でQFと同じ`Quadratic27Detail.astro`を再利用します。
+- 中央一覧の4区分（三角比の基本（0〜90°）／三角比の拡張（0〜180°）／平面図形と三角比／空間図形と三角比）は`src/utils/trigDbItems.ts`の`SECTION_TO_GROUP`で判定し、QFの`quadraticDbItems.ts`と同じ方式（section値ベース、問題IDレンジではない）です。
+- ルートは`/math1/trig/`・`/math1/trig/M1-TR-001/`〜`/math1/trig/M1-TR-041/`ですが、**すべてnoindexの試験用ページで、sitemapには含めません**。人間レビュー・構造監査・本番公開判断が済むまで、QFと同格の公開contractへ昇格させないでください。
+- 三角比masterは`trigonometric_ratio_problem_master.xlsx`（`problem_master/`配下、QFのmasterと同じフォルダ）です。
+- M1-TR-008の問題文・最終解答の表、M1-TR-015の警告文表示のため、共通parser（`src/utils/markdownSections.ts`）にremark-gfm・rehype-rawを追加済みです。既存54問はパイプ表・生HTMLを使っていないため表示への影響はありません。
+- M1-TR-017〜020の幾何asset（正弦定理・余弦定理の三角形図）は、`pa-*`とは別の役割別CSSクラス`geo-*`（頂点・角度・辺でサイズ/太さを分ける）を使っています。新しい三角比幾何assetを作る場合はこの方式を踏襲し、`pa-*`と混在させないでください。
+
+---
+
 ## 正本と責任範囲
 
 教材制作の正本はWeb repoの外側にあります。
@@ -106,6 +120,14 @@ npm run sync-content
 中央問題一覧は、検索エンジンが辿れる通常の `<a href>` で各問題URLへリンクします。
 SPA化や複雑なクライアント状態管理を、明示的な要求なしに導入しないでください。
 
+### 中央問題一覧の分類・共有コンポーネント
+
+中央問題一覧は、数学Iでは「二次関数／二次方程式／二次不等式」の3区分アコーディオン＋行リストで表示します。
+
+- 3区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`src/utils/quadraticDbItems.ts` の `SECTION_TO_GROUP`）で行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
+- 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
+- 新しい単元を追加する場合や表示を調整する場合も、この対応表とコンポーネントを流用してください。`ProblemDbShell.astro` 側や別コンポーネントに、もう一つ別の分類ロジックを増やさないでください。
+
 ### スマートフォン表示
 
 PC幅では現在の3ペインUIを維持します。狭幅では、同じ `ProblemDbShell.astro` を使ったまま表示順を次のように切り替えます。
@@ -118,6 +140,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - DBヘッダーの「高校数学ナビ」はスマホでも1行表示を維持し、`/` へのリンクとして機能させる
 - Privacy／Disclaimer／Contact等のヘッダーリンクを狭幅で見切れさせない
 - スマホ専用の別ページや別DBを作らず、共通シェルのレスポンシブ挙動として実装する
+- 問題本文・ThinkingFlow・最終解答を読んでいる最中でも問題一覧へ移動できるよう、画面右上固定のピルボタン（「問題一覧」）からネイティブ `<dialog>`（`showModal()`）を開き、中央列と同じ `ProblemGroupList` を表示します。背景操作の無効化・フォーカストラップ・Escでの close はブラウザ標準の `<dialog>` 機能に任せ、自前実装を増やさないでください。PC幅ではこのボタン・ダイアログは表示しません。
 
 ---
 
@@ -176,10 +199,12 @@ Sitemap: https://math-navi.com/sitemap.xml
 1. 問題情報
 2. 問題
 3. 必要な場合のみ「問題の言い換え」
-4. 問題メタ
-5. 解法メタ
+4. 問題メタ（スマホでは開閉式、初期状態は閉じる）
+5. 解法メタ（スマホでは開閉式、初期状態は閉じる。問題メタとは独立して開閉）
 6. ThinkingFlow
 7. 最終解答
+
+問題メタ・解法メタの開閉はスマホ幅だけの挙動です。PC幅では従来どおり常時展開のままにしてください。
 
 ### 問題の言い換え
 
@@ -222,6 +247,8 @@ Flow数は固定しません。
 ```
 
 小問構造・Flow構造を問題IDで特別扱いしないでください。
+
+開閉には軽いアニメーション（CSS Gridの `grid-template-rows: 0fr → 1fr` ＋ opacity、`prefers-reduced-motion` では即時開閉）を使っています。最終解答、およびスマホの問題メタ／解法メタの開閉も同じ手法を再利用しているため、新しい開閉アニメーション実装を増やさないでください。
 
 ---
 

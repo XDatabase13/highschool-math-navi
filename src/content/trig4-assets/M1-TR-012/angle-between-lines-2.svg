@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 30 220 120" role="img">
+<defs>
+  <marker id="pa-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+</defs>
+<line x1="15" y1="100" x2="185" y2="100" class="pa-axis" marker-end="url(#pa-arrow)"/>
+<text x="178" y="94" class="pa-label">x</text>
+<text x="92" y="116" class="pa-label-muted">O</text>
+<line x1="30.7" y1="140.0" x2="169.3" y2="60.0" class="pa-figure-line"/>
+<line x1="169.3" y1="140.0" x2="30.7" y2="60.0" class="pa-figure-line"/>
+<path d="M129.4,83.0 A34,34 0 0 0 70.6,83.0" class="pa-curve-highlight"/>
+<text x="100.0" y="50.0" class="pa-label">120°</text>
+<path d="M77.5,87.0 A26,26 0 0 0 77.5,113.0" class="pa-figure-line"/>
+<text x="56" y="94" class="pa-label">60°</text>
+</svg>

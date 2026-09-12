@@ -39,6 +39,17 @@ interface Props {
 
 const { prepared } = Astro.props;
 const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
+
+// ThinkingFlowの表示順に振る通し番号（"f1","f2",...）。AI-context JSON側
+// （src/utils/aiContext.ts）のcontext_keyと同じ「part/flowに関係なく表示順で採番」
+// というルールで、DOM側にも非視覚属性data-context-keyとして付与する。
+// 通常Flow・小問付きFlowのどちらも、このコンポーネント内で1回だけ順にレンダリングされる
+// ため、単純なクロージャ変数のインクリメントで表示順と一致させられる。
+let contextKeyCounter = 0;
+function nextContextKey(): string {
+  contextKeyCounter += 1;
+  return `f${contextKeyCounter}`;
+}
 ---
 
 <div class="q27-detail">
@@ -165,10 +176,12 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
           {thinkingFlow.subsections.map((step, index) => {
             verifyStepNumberMatchesIndex(entry.data.problem_id, '通常Flow', step.title, index + 1);
             const { displayTitle, highlighted } = parseStepTitle(step.title);
+            const contextKey = nextContextKey();
             return (
               <li
                 class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
                 data-step-index={index}
+                data-context-key={contextKey}
               >
                 <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
                   <span class="thinking-step-label">{displayTitle}</span>
@@ -246,10 +259,12 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
                   index + 1,
                 );
                 const { displayTitle, highlighted } = parseStepTitle(step.title);
+                const contextKey = nextContextKey();
                 return (
                   <li
                     class:list={['thinking-step', highlighted && 'thinking-step--highlight']}
                     data-step-index={index}
+                    data-context-key={contextKey}
                   >
                     <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
                       <span class="thinking-step-label">{displayTitle}</span>

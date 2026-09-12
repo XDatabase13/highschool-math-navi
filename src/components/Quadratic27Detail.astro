@@ -52,7 +52,7 @@ function nextContextKey(): string {
 }
 ---
 
-<div class="q27-detail">
+<div class="q27-detail" data-problem-id={entry.data.problem_id}>
 <h1>{entry.data.title}</h1>
 
 <ul class="label-list">
@@ -207,7 +207,7 @@ function nextContextKey(): string {
                               </button>
                             </li>
                             <li>
-                              <button type="button" class="ai-ask-option-btn" data-ai-ask-option="background">
+                              <button type="button" class="ai-ask-option-btn" data-ai-ask-option="knowledge">
                                 ここで使っている知識を教えて
                               </button>
                             </li>
@@ -290,7 +290,7 @@ function nextContextKey(): string {
                                   </button>
                                 </li>
                                 <li>
-                                  <button type="button" class="ai-ask-option-btn" data-ai-ask-option="background">
+                                  <button type="button" class="ai-ask-option-btn" data-ai-ask-option="knowledge">
                                     ここで使っている知識を教えて
                                   </button>
                                 </li>
@@ -350,9 +350,92 @@ function nextContextKey(): string {
 </div>
 
 <script>
+  import renderMathInElement from 'katex/contrib/auto-render';
+
+  // ThinkingFlow AI質問機能：ローカルプロトタイプとして、この問題IDだけ実通信を有効化する。
+  // 実際の許可判定はCloudflare Worker側（ENABLED_PROBLEM_IDS）でも行っており、
+  // ここでの判定はUXのための事前ガード（不要な通信・「考え中…」表示を避ける）に過ぎない。
+  // 95問へ開放する際はこの配列を置き換える想定で、表示・解析ロジック自体には手を入れない。
+  const AI_LIVE_PROBLEM_IDS = ['M1-QF-001'];
+  const AI_WORKER_URL = import.meta.env.PUBLIC_AI_WORKER_URL || 'http://127.0.0.1:8787';
+
+  type AiQuestionType = 'detail' | 'knowledge' | 'custom';
+
+  function escapeHtml(text: string): string {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Gemini回答（プレーンテキスト＋簡易Markdown＋$...$/$$...$$のLaTeX）を、
+  // 生HTMLとして無条件にinnerHTMLへ流さずに表示する。まずHTMLエスケープしてから、
+  // 自前で許可した最低限の記法（**太字**、段落・改行）だけを安全なタグへ変換し、
+  // 最後に既存サイトと同じKaTeX（katex/contrib/auto-render）で数式を描画する。
+  function renderAiAnswerText(container: HTMLElement, rawText: string): void {
+    const escaped = escapeHtml(rawText);
+    const withBold = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const html = withBold
+      .split(/\n{2,}/)
+      .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+      .join('');
+    container.innerHTML = html;
+    renderMathInElement(container, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+
+  async function askAi(
+    ask: HTMLElement,
+    note: HTMLElement,
+    problemId: string,
+    contextKey: string,
+    questionType: AiQuestionType,
+    freeText: string | null,
+  ): Promise<void> {
+    // 通信中の二重送信だけ防ぎ、終了後（成功・失敗いずれも）は
+    // 必ず全ボタンを再利用可能な状態へ戻す（finallyで解除）。
+    if (ask.dataset.aiAskPending === 'true') return;
+    ask.dataset.aiAskPending = 'true';
+    const buttons = Array.from(ask.querySelectorAll<HTMLButtonElement>('.ai-ask-option-btn, .ai-ask-submit'));
+    buttons.forEach((btn) => (btn.disabled = true));
+    note.classList.add('ai-ask-answer');
+    renderAiAnswerText(note, '考え中…');
+    try {
+      const res = await fetch(AI_WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          problem_id: problemId,
+          context_key: contextKey,
+          question_type: questionType,
+          free_text: freeText,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || typeof data.answer !== 'string') {
+        renderAiAnswerText(
+          note,
+          data && typeof data.error === 'string' ? data.error : 'AIからの回答取得に失敗しました。',
+        );
+        return;
+      }
+      renderAiAnswerText(note, data.answer);
+    } catch {
+      renderAiAnswerText(note, '通信に失敗しました。もう一度お試しください。');
+    } finally {
+      ask.dataset.aiAskPending = 'false';
+      buttons.forEach((btn) => (btn.disabled = false));
+    }
+  }
+
   document.querySelectorAll<HTMLElement>('.thinking-flow[data-flow-kind="q27"]').forEach((flow) => {
     if (flow.dataset.q27Bound) return;
     flow.dataset.q27Bound = 'true';
+
+    const problemId = flow.closest<HTMLElement>('.q27-detail')?.dataset.problemId ?? '';
+    const isAiLive = AI_LIVE_PROBLEM_IDS.includes(problemId);
 
     const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
     const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
@@ -474,19 +557,30 @@ function nextContextKey(): string {
         return;
       }
 
-      // 3択のうちどれを選んでも、現段階では通信を行わず「次工程で実装予定」の
-      // 案内文を出すだけにする（API・context生成・認証・ログ保存は一切なし）。
+      // 3択のうち「もう少し詳しく説明して」「ここで使っている知識を教えて」は、
+      // M1-QF-001（isAiLive）だけ即座にWorkerへ実通信する。それ以外の問題では
+      // 従来どおり通信を行わず、markup側の固定文言（「次工程で実装予定」）を
+      // 表示するだけにする（API・context生成・認証・ログ保存は一切なし）。
       const aiAskOption = target.closest<HTMLButtonElement>('[data-ai-ask-option]');
       if (aiAskOption) {
         const ask = aiAskOption.closest<HTMLElement>('[data-ai-ask]');
         const custom = ask?.querySelector<HTMLElement>('[data-ai-ask-custom]');
         const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
-        if (aiAskOption.dataset.aiAskOption === 'custom') {
+        const optionType = aiAskOption.dataset.aiAskOption;
+        if (optionType === 'custom') {
           custom?.removeAttribute('hidden');
           note?.setAttribute('hidden', '');
         } else {
           custom?.setAttribute('hidden', '');
           if (note) note.hidden = false;
+
+          if (isAiLive && ask && note && (optionType === 'detail' || optionType === 'knowledge')) {
+            const stepEl = aiAskOption.closest<HTMLElement>('.thinking-step');
+            const contextKey = stepEl?.dataset.contextKey;
+            if (contextKey) {
+              void askAi(ask, note, problemId, contextKey, optionType, null);
+            }
+          }
         }
         return;
       }
@@ -496,6 +590,18 @@ function nextContextKey(): string {
         const ask = aiAskSubmit.closest<HTMLElement>('[data-ai-ask]');
         const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
         if (note) note.hidden = false;
+
+        // 「自分で質問する」はテキスト入力後の送信時だけ通信する
+        // （選択肢クリック時点では送信しない）。
+        if (isAiLive && ask && note) {
+          const stepEl = aiAskSubmit.closest<HTMLElement>('.thinking-step');
+          const contextKey = stepEl?.dataset.contextKey;
+          const textarea = ask.querySelector<HTMLTextAreaElement>('[data-ai-ask-input]');
+          const freeText = textarea?.value.trim();
+          if (contextKey && freeText) {
+            void askAi(ask, note, problemId, contextKey, 'custom', freeText);
+          }
+        }
         return;
       }
 

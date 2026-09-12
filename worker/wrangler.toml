@@ -1,0 +1,27 @@
+name = "highschool-math-db-ai-worker"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+# ThinkingFlow単位のAI質問機能用serverless proxy（ローカルプロトタイプ）。
+# 現行Astro/GitHub Pages本体とは分離しており、本番deployはまだ行わない。
+
+[vars]
+# AI-context JSON（/ai-context/<problem_id>.json）の取得元。
+# ローカル：Astro dev server。将来の本番切り替えは、ここを
+# "https://math-navi.com" に変更するだけでよい（コード側はハードコードしない）。
+AI_CONTEXT_BASE_URL = "http://localhost:4321"
+
+# 実通信を許可する問題IDのホワイトリスト（カンマ区切り）。
+# 今回はプロトタイプとしてM1-QF-001だけを対象にする。95問へ開放する際は
+# ここを変更するだけでよく、コード側に問題IDをハードコードしない。
+ENABLED_PROBLEM_IDS = "M1-QF-001"
+
+# CORSで許可するOrigin（カンマ区切り）。ローカルのAstro dev serverと、
+# 将来の本番ドメインを想定する。
+ALLOWED_ORIGINS = "http://localhost:4321,https://math-navi.com"
+
+GEMINI_MODEL = "gemini-3.6-flash"
+
+# GEMINI_API_KEYはvarsに書かない（secretとして別管理）。
+# ローカル開発：worker/.dev.vars（Git管理外）にGEMINI_API_KEY=...を設定する。
+# 本番：`wrangler secret put GEMINI_API_KEY` で設定する（今回はまだ行わない）。

@@ -2182,10 +2182,33 @@ ul {
 .q27-detail .ai-ask-submit:hover {
   background: var(--color-primary-dark);
 }
+.q27-detail .ai-ask-option-btn:disabled,
+.q27-detail .ai-ask-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .q27-detail .ai-ask-note {
   margin: 0.6rem 0 0;
   font-size: 0.8rem;
   color: var(--color-text-muted);
+}
+/* 実際にAIから回答が返ってきた状態（M1-QF-001のみ）は、「次工程で実装予定です」の
+   ような補足注記ではなく本文として読ませたいため、ThinkingFlow本文
+   （.thinking-step-body、baseのfont-size:16px/line-height:1.8を継承）と
+   同程度の大きさ・通常の文字色へ引き上げる。他の問題のnote（固定文言）は
+   このクラスを付与しないため、見た目は変わらない。 */
+.q27-detail .ai-ask-note.ai-ask-answer {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+.q27-detail .ai-ask-answer p {
+  margin: 0 0 0.6rem;
+}
+.q27-detail .ai-ask-answer p:last-child {
+  margin-bottom: 0;
+}
+.q27-detail .ai-ask-answer .katex-display {
+  margin: 0.55em 0;
 }
 
 /* 正本Markdownのパイプ表記（remark-gfm）から生成される素の<table>用の最小限の枠線・余白。

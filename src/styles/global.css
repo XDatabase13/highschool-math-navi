@@ -2065,6 +2065,129 @@ ul {
 .q27-detail .final-answer {
   margin: 0.6rem 0 0;
 }
+
+/* ThinkingFlow内「AIに聞く」UI（試作・API未接続）。Flowを開いたとき、本文・数式・
+   assetの後ろにだけ現れる補助導線として置く（Flow自体が閉じている間は
+   .thinking-step-content ごとhiddenになるため、この配下も自動的に非表示になる）。
+   開閉アニメーションは他のThinkingFlow内トグルと同じgrid-template-rows 0fr/1fr
+   （setPanelExpanded、Quadratic27Detail.astro側）を再利用し、新しい実装は増やさない。
+   現段階ではUIのみで、外部AI API・context生成・認証・ログ保存は行わない。 */
+.q27-detail .ai-ask {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--color-border);
+}
+.q27-detail .ai-ask-btn {
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text-muted);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.q27-detail .ai-ask-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.q27-detail .ai-ask-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.q27-detail .ai-ask-panel:not([hidden]) {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 165ms ease-out, opacity 165ms ease-out;
+}
+.q27-detail .ai-ask-panel:not([hidden]).is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 190ms ease-out, opacity 190ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .q27-detail .ai-ask-panel:not([hidden]),
+  .q27-detail .ai-ask-panel:not([hidden]).is-open {
+    transition: none;
+  }
+}
+.q27-detail .ai-ask-options {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.q27-detail .ai-ask-option-btn {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--color-border);
+  background: var(--color-accent-bg);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.q27-detail .ai-ask-option-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+/* PC幅（.q27-detail .impression-content等と同じ既存の900px基準）では3択を横並びにし、
+   ThinkingFlow本文より目立ちすぎないよう、内容に応じた自然な幅＋控えめなpaddingにする。
+   幅が足りない中間幅ではflex-wrapで自然に折り返し、無理に1行へ収めない。 */
+@media (min-width: 901px) {
+  .q27-detail .ai-ask-options {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .q27-detail .ai-ask-option-btn {
+    width: auto;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.82rem;
+  }
+}
+.q27-detail .ai-ask-custom {
+  margin-top: 0.5rem;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+/* [hidden]属性の既定display:noneより後にauthor側のdisplay:flexが評価されると
+   隠したはずのtextareaが表示され続けるため、:not([hidden])の場合だけ有効にする。 */
+.q27-detail .ai-ask-custom:not([hidden]) {
+  display: flex;
+}
+.q27-detail .ai-ask-input {
+  width: 100%;
+  resize: vertical;
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+.q27-detail .ai-ask-submit {
+  align-self: flex-end;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.q27-detail .ai-ask-submit:hover {
+  background: var(--color-primary-dark);
+}
+.q27-detail .ai-ask-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
 /* 正本Markdownのパイプ表記（remark-gfm）から生成される素の<table>用の最小限の枠線・余白。
    現状M1-TR-008の問題文・最終解答のみが該当（他の既存問題はパイプ表を使わない）。
    空欄の多い表でも罫線が見えるよう border-collapseする。 */

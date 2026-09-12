@@ -181,6 +181,37 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
                     {(flowAssetsByKey.get(flowAssetKey(undefined, index + 1)) ?? []).map(({ svg }) => (
                       <figure class="problem-asset-figure" set:html={svg} />
                     ))}
+                    <div class="ai-ask" data-ai-ask>
+                      <button type="button" class="ai-ask-btn" data-ai-ask-toggle aria-expanded="false">
+                        AIに聞く
+                      </button>
+                      <div class="ai-ask-panel" data-ai-ask-panel hidden>
+                        <div class="ai-ask-panel-inner">
+                          <ul class="ai-ask-options">
+                            <li>
+                              <button type="button" class="ai-ask-option-btn" data-ai-ask-option="detail">
+                                もう少し詳しく説明して
+                              </button>
+                            </li>
+                            <li>
+                              <button type="button" class="ai-ask-option-btn" data-ai-ask-option="background">
+                                ここで使っている知識を教えて
+                              </button>
+                            </li>
+                            <li>
+                              <button type="button" class="ai-ask-option-btn" data-ai-ask-option="custom">
+                                自分で質問する
+                              </button>
+                            </li>
+                          </ul>
+                          <div class="ai-ask-custom" data-ai-ask-custom hidden>
+                            <textarea class="ai-ask-input" data-ai-ask-input rows="2" placeholder="質問を入力"></textarea>
+                            <button type="button" class="ai-ask-submit" data-ai-ask-submit>送信</button>
+                          </div>
+                          <p class="ai-ask-note" data-ai-ask-note hidden>AI接続は次工程で実装予定です。</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -231,6 +262,37 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
                         {(flowAssetsByKey.get(flowAssetKey(part.partNumber, index + 1)) ?? []).map(({ svg }) => (
                           <figure class="problem-asset-figure" set:html={svg} />
                         ))}
+                        <div class="ai-ask" data-ai-ask>
+                          <button type="button" class="ai-ask-btn" data-ai-ask-toggle aria-expanded="false">
+                            AIに聞く
+                          </button>
+                          <div class="ai-ask-panel" data-ai-ask-panel hidden>
+                            <div class="ai-ask-panel-inner">
+                              <ul class="ai-ask-options">
+                                <li>
+                                  <button type="button" class="ai-ask-option-btn" data-ai-ask-option="detail">
+                                    もう少し詳しく説明して
+                                  </button>
+                                </li>
+                                <li>
+                                  <button type="button" class="ai-ask-option-btn" data-ai-ask-option="background">
+                                    ここで使っている知識を教えて
+                                  </button>
+                                </li>
+                                <li>
+                                  <button type="button" class="ai-ask-option-btn" data-ai-ask-option="custom">
+                                    自分で質問する
+                                  </button>
+                                </li>
+                              </ul>
+                              <div class="ai-ask-custom" data-ai-ask-custom hidden>
+                                <textarea class="ai-ask-input" data-ai-ask-input rows="2" placeholder="質問を入力"></textarea>
+                                <button type="button" class="ai-ask-submit" data-ai-ask-submit>送信</button>
+                              </div>
+                              <p class="ai-ask-note" data-ai-ask-note hidden>AI接続は次工程で実装予定です。</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -327,6 +389,40 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
       }
     }
 
+    // 「AIに聞く」パネルの開閉も、ThinkingFlowの各STEPと同じgrid-template-rows
+    // 0fr/1fr切り替えを再利用する（新しい開閉アニメーション実装を増やさない）。
+    // 現段階ではUI試作のみで、外部AI APIへの通信は一切行わない。
+    function setPanelExpanded(toggle: HTMLButtonElement, content: HTMLElement, expanded: boolean) {
+      toggle.setAttribute('aria-expanded', String(expanded));
+
+      const pendingTimer = closeTimers.get(content);
+      if (pendingTimer !== undefined) {
+        window.clearTimeout(pendingTimer);
+        closeTimers.delete(content);
+      }
+
+      if (expanded) {
+        content.hidden = false;
+        if (prefersReducedMotion) {
+          content.classList.add('is-open');
+          return;
+        }
+        void content.offsetHeight;
+        content.classList.add('is-open');
+      } else {
+        content.classList.remove('is-open');
+        if (prefersReducedMotion) {
+          content.hidden = true;
+          return;
+        }
+        const timerId = window.setTimeout(() => {
+          content.hidden = true;
+          closeTimers.delete(content);
+        }, 220);
+        closeTimers.set(content, timerId);
+      }
+    }
+
     function updateRevealAllLabel() {
       if (!revealAllBtn) return;
       const allExpanded = stepEls.every((stepEl) => {
@@ -347,6 +443,44 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
           setStepExpanded(stepEl, !isExpanded);
           updateRevealAllLabel();
         }
+        return;
+      }
+
+      const aiAskToggle = target.closest<HTMLButtonElement>('[data-ai-ask-toggle]');
+      if (aiAskToggle) {
+        const ask = aiAskToggle.closest<HTMLElement>('[data-ai-ask]');
+        const panel = ask?.querySelector<HTMLElement>('[data-ai-ask-panel]');
+        if (panel) {
+          const isExpanded = aiAskToggle.getAttribute('aria-expanded') === 'true';
+          const nextExpanded = !isExpanded;
+          setPanelExpanded(aiAskToggle, panel, nextExpanded);
+          aiAskToggle.textContent = nextExpanded ? 'AIを閉じる' : 'AIに聞く';
+        }
+        return;
+      }
+
+      // 3択のうちどれを選んでも、現段階では通信を行わず「次工程で実装予定」の
+      // 案内文を出すだけにする（API・context生成・認証・ログ保存は一切なし）。
+      const aiAskOption = target.closest<HTMLButtonElement>('[data-ai-ask-option]');
+      if (aiAskOption) {
+        const ask = aiAskOption.closest<HTMLElement>('[data-ai-ask]');
+        const custom = ask?.querySelector<HTMLElement>('[data-ai-ask-custom]');
+        const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
+        if (aiAskOption.dataset.aiAskOption === 'custom') {
+          custom?.removeAttribute('hidden');
+          note?.setAttribute('hidden', '');
+        } else {
+          custom?.setAttribute('hidden', '');
+          if (note) note.hidden = false;
+        }
+        return;
+      }
+
+      const aiAskSubmit = target.closest<HTMLButtonElement>('[data-ai-ask-submit]');
+      if (aiAskSubmit) {
+        const ask = aiAskSubmit.closest<HTMLElement>('[data-ai-ask]');
+        const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
+        if (note) note.hidden = false;
         return;
       }
 

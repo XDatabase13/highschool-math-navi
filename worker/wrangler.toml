@@ -11,10 +11,11 @@ compatibility_date = "2025-01-01"
 # "https://math-navi.com" に変更するだけでよい（コード側はハードコードしない）。
 AI_CONTEXT_BASE_URL = "http://localhost:4321"
 
-# 実通信を許可する問題IDのホワイトリスト（カンマ区切り）。
-# 今回はプロトタイプとしてM1-QF-001だけを対象にする。95問へ開放する際は
-# ここを変更するだけでよく、コード側に問題IDをハードコードしない。
-ENABLED_PROBLEM_IDS = "M1-QF-001"
+# AI質問機能の対象問題は、許可リストの手動管理ではなく「AI_CONTEXT_BASE_URL上に
+# 対応するAI-context JSONが実在するか」で判定する（src/index.tsのfetchAiContext）。
+# npm run build時に生成される95件のJSON（quadratic27 54件・trig4 41件、
+# いずれもverification_status: 独立検算済みのみ）と常に1:1で一致するため、
+# 問題が増減してもここを手動で更新する必要がない。
 
 # CORSで許可するOrigin（カンマ区切り）。ローカルのAstro dev serverと、
 # 将来の本番ドメインを想定する。

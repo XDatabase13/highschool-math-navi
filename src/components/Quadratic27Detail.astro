@@ -352,12 +352,19 @@ function nextContextKey(): string {
 <script>
   import renderMathInElement from 'katex/contrib/auto-render';
 
-  // ThinkingFlow AI質問機能：ローカルプロトタイプとして、この問題IDだけ実通信を有効化する。
-  // 実際の許可判定はCloudflare Worker側（ENABLED_PROBLEM_IDS）でも行っており、
-  // ここでの判定はUXのための事前ガード（不要な通信・「考え中…」表示を避ける）に過ぎない。
-  // 95問へ開放する際はこの配列を置き換える想定で、表示・解析ロジック自体には手を入れない。
-  const AI_LIVE_PROBLEM_IDS = ['M1-QF-001'];
+  // ThinkingFlow AI質問機能：全95問（QF/TR）共通で同じWorkerエンドポイントへ通信する。
+  // 問題ごとの個別実装は持たず、data-problem-id・data-context-keyだけで対象を特定する。
+  // 実際に受け付けるかどうか（対象のAI-context JSONが存在するか）の判定はWorker側で行う。
+  //
+  // 本番公開の準備が整うまでAI機能全体を一括で止められるよう、feature flagを2つの
+  // 環境変数のANDで判定する。片方でも欠けていれば必ず無効側（実通信しない）に倒す。
+  //   PUBLIC_AI_ENABLED=true かつ PUBLIC_AI_WORKER_URL設定済み → 有効
+  //   それ以外（false／未設定、またはURL未設定） → 無効
+  // URL側にフォールバック値があるのは「有効時にどのURLへ送るか」のためだけで、
+  // フォールバックの存在自体が「設定済み」とはみなさない（生の環境変数の有無で判定する）。
+  const AI_ENABLED = import.meta.env.PUBLIC_AI_ENABLED === 'true' && !!import.meta.env.PUBLIC_AI_WORKER_URL;
   const AI_WORKER_URL = import.meta.env.PUBLIC_AI_WORKER_URL || 'http://127.0.0.1:8787';
+  const AI_DISABLED_MESSAGE = 'AI機能は現在準備中です。';
 
   type AiQuestionType = 'detail' | 'knowledge' | 'custom';
 
@@ -369,13 +376,33 @@ function nextContextKey(): string {
   // 生HTMLとして無条件にinnerHTMLへ流さずに表示する。まずHTMLエスケープしてから、
   // 自前で許可した最低限の記法（**太字**、段落・改行）だけを安全なタグへ変換し、
   // 最後に既存サイトと同じKaTeX（katex/contrib/auto-render）で数式を描画する。
+  //
+  // 数式ブロックはGeminiが "$$\n...\n$$" のように内部に改行を含めて返すことが多い。
+  // 段落・改行変換を先に行うと、その改行が<br>に変わって$$...$$の開始/終了が
+  // 別々のテキストノードに分断され、auto-renderが検出できなくなる
+  // （$$が生表示されたまま残る不具合の原因だった）。そのため数式部分を
+  // 一時的なプレースホルダに退避し、段落・改行変換は数式の外側にだけ適用してから
+  // 数式を元の生テキストのまま戻す。
+  const MATH_SPAN_PATTERN = /\$\$[\s\S]+?\$\$|\$[^$]+?\$/g;
+
   function renderAiAnswerText(container: HTMLElement, rawText: string): void {
     const escaped = escapeHtml(rawText);
     const withBold = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    const html = withBold
+
+    const mathSpans: string[] = [];
+    const placeholderPattern = (i: number) => ` MATH${i} `;
+    const withPlaceholders = withBold.replace(MATH_SPAN_PATTERN, (match) => {
+      mathSpans.push(match);
+      return placeholderPattern(mathSpans.length - 1);
+    });
+
+    const htmlWithPlaceholders = withPlaceholders
       .split(/\n{2,}/)
       .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
       .join('');
+
+    const html = htmlWithPlaceholders.replace(/ MATH(\d+) /g, (_, i) => mathSpans[Number(i)]);
+
     container.innerHTML = html;
     renderMathInElement(container, {
       delimiters: [
@@ -435,7 +462,6 @@ function nextContextKey(): string {
     flow.dataset.q27Bound = 'true';
 
     const problemId = flow.closest<HTMLElement>('.q27-detail')?.dataset.problemId ?? '';
-    const isAiLive = AI_LIVE_PROBLEM_IDS.includes(problemId);
 
     const stepEls = Array.from(flow.querySelectorAll<HTMLElement>('.thinking-step'));
     const revealAllBtn = flow.querySelector<HTMLButtonElement>('[data-reveal-all]');
@@ -553,14 +579,27 @@ function nextContextKey(): string {
           const nextExpanded = !isExpanded;
           setPanelExpanded(aiAskToggle, panel, nextExpanded);
           aiAskToggle.textContent = nextExpanded ? 'AIを閉じる' : 'AIに聞く';
+
+          // feature flagがOFFの間は、質問選択UI（3択・自由入力欄）は出さず、
+          // 「準備中」の案内だけをそのFlow内に表示する。Worker通信には一切進まない。
+          if (nextExpanded && !AI_ENABLED) {
+            const options = ask?.querySelector<HTMLElement>('.ai-ask-options');
+            const custom = ask?.querySelector<HTMLElement>('[data-ai-ask-custom]');
+            const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
+            options?.setAttribute('hidden', '');
+            custom?.setAttribute('hidden', '');
+            if (note) {
+              note.classList.remove('ai-ask-answer');
+              note.hidden = false;
+              note.textContent = AI_DISABLED_MESSAGE;
+            }
+          }
         }
         return;
       }
 
       // 3択のうち「もう少し詳しく説明して」「ここで使っている知識を教えて」は、
-      // M1-QF-001（isAiLive）だけ即座にWorkerへ実通信する。それ以外の問題では
-      // 従来どおり通信を行わず、markup側の固定文言（「次工程で実装予定」）を
-      // 表示するだけにする（API・context生成・認証・ログ保存は一切なし）。
+      // 即座にWorkerへ実通信する（全95問共通。問題ごとの分岐は持たない）。
       const aiAskOption = target.closest<HTMLButtonElement>('[data-ai-ask-option]');
       if (aiAskOption) {
         const ask = aiAskOption.closest<HTMLElement>('[data-ai-ask]');
@@ -574,7 +613,7 @@ function nextContextKey(): string {
           custom?.setAttribute('hidden', '');
           if (note) note.hidden = false;
 
-          if (isAiLive && ask && note && (optionType === 'detail' || optionType === 'knowledge')) {
+          if (AI_ENABLED && ask && note && (optionType === 'detail' || optionType === 'knowledge')) {
             const stepEl = aiAskOption.closest<HTMLElement>('.thinking-step');
             const contextKey = stepEl?.dataset.contextKey;
             if (contextKey) {
@@ -593,7 +632,7 @@ function nextContextKey(): string {
 
         // 「自分で質問する」はテキスト入力後の送信時だけ通信する
         // （選択肢クリック時点では送信しない）。
-        if (isAiLive && ask && note) {
+        if (AI_ENABLED && ask && note) {
           const stepEl = aiAskSubmit.closest<HTMLElement>('.thinking-step');
           const contextKey = stepEl?.dataset.contextKey;
           const textarea = ask.querySelector<HTMLTextAreaElement>('[data-ai-ask-input]');

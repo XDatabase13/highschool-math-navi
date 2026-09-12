@@ -2115,9 +2115,14 @@ ul {
   list-style: none;
   margin: 0.6rem 0 0;
   padding: 0;
-  display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+/* [hidden]属性の既定display:noneより後にauthor側のdisplay:flexが評価されると
+   AI機能OFF時に隠したはずの3択が表示され続けるため、:not([hidden])の場合だけ有効にする
+   （.ai-ask-customで踏んだのと同じ問題の再発防止）。 */
+.q27-detail .ai-ask-options:not([hidden]) {
+  display: flex;
 }
 .q27-detail .ai-ask-option-btn {
   width: 100%;

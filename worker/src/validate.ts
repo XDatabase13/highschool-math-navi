@@ -57,8 +57,3 @@ export function validateAskRequestBody(input: unknown): ValidationResult {
     },
   };
 }
-
-export function isProblemEnabled(problemId: string, env: { ENABLED_PROBLEM_IDS: string }): boolean {
-  const enabled = env.ENABLED_PROBLEM_IDS.split(',').map((s) => s.trim());
-  return enabled.includes(problemId);
-}

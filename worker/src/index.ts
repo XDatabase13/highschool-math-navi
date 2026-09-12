@@ -1,6 +1,6 @@
 import type { AiContext, Env } from './types';
 import { corsHeaders, resolveAllowedOrigin } from './cors';
-import { isProblemEnabled, validateAskRequestBody } from './validate';
+import { validateAskRequestBody } from './validate';
 import { buildPrompt } from './prompt';
 import { generateWithGemini, GeminiApiError } from './providers/gemini';
 
@@ -15,13 +15,33 @@ function jsonResponse(body: unknown, status: number, extraHeaders: HeadersInit =
   });
 }
 
-async function fetchAiContext(problemId: string, env: Env): Promise<AiContext> {
+type FetchAiContextResult =
+  | { status: 'ok'; context: AiContext }
+  | { status: 'not_found' }
+  | { status: 'error'; message: string };
+
+// problem_idは事前にvalidate.tsの正規表現（M1-(QF|TR)-数字3桁）を通過済み。
+// AI_CONTEXT_BASE_URLは固定のserver側設定値（クライアント入力の影響を受けない）で、
+// problem_idはこの形式チェック済みの値だけをパス末尾に連結するため、
+// 任意の外部URLへfetchできる構造にはならない。
+// 「どの問題をAI質問機能の対象にするか」は許可リストの手動管理ではなく、
+// このURL上に対応するAI-context JSONが実在するかどうかで判定する
+// （npm run buildで生成される95件のJSONと常に1:1で一致する）。
+async function fetchAiContext(problemId: string, env: Env): Promise<FetchAiContextResult> {
   const url = `${env.AI_CONTEXT_BASE_URL}/ai-context/${problemId}.json`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`AI-context取得失敗（status=${res.status}）: ${url}`);
+  let res: Response;
+  try {
+    res = await fetch(url);
+  } catch (e) {
+    return { status: 'error', message: (e as Error).message };
   }
-  return (await res.json()) as AiContext;
+  if (res.status === 404) {
+    return { status: 'not_found' };
+  }
+  if (!res.ok) {
+    return { status: 'error', message: `AI-context取得失敗（status=${res.status}）` };
+  }
+  return { status: 'ok', context: (await res.json()) as AiContext };
 }
 
 export default {
@@ -57,22 +77,20 @@ export default {
     }
     const { problem_id, context_key, question_type, free_text } = validation.value;
 
-    if (!isProblemEnabled(problem_id, env)) {
+    const fetchResult = await fetchAiContext(problem_id, env);
+    if (fetchResult.status === 'not_found') {
       return jsonResponse(
-        { error: `problem_id=${problem_id} は現在AI質問機能の対象外です（プロトタイプ段階）` },
-        403,
+        { error: `problem_id=${problem_id} はAI質問機能の対象外です` },
+        404,
         cors,
       );
     }
-
-    let context: AiContext;
-    try {
-      context = await fetchAiContext(problem_id, env);
-    } catch (e) {
+    if (fetchResult.status === 'error') {
       // 自由質問本文（free_text）はログへ出さない。エラー内容自体にも含めない。
-      console.error('AI-context取得失敗', { problem_id, message: (e as Error).message });
+      console.error('AI-context取得失敗', { problem_id, message: fetchResult.message });
       return jsonResponse({ error: 'AI-contextの取得に失敗しました' }, 502, cors);
     }
+    const context = fetchResult.context;
 
     const targetFlow = context.thinking_flow.find((f) => f.context_key === context_key);
     if (!targetFlow) {

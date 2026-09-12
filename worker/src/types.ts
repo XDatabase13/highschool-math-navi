@@ -1,6 +1,5 @@
 export interface Env {
   AI_CONTEXT_BASE_URL: string;
-  ENABLED_PROBLEM_IDS: string;
   ALLOWED_ORIGINS: string;
   GEMINI_MODEL: string;
   GEMINI_API_KEY: string;

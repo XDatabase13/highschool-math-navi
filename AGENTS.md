@@ -311,7 +311,10 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - ログイン・ユーザー管理を作らない
 - データベースを導入しない
 - 課金機能を作らない
-- 外部AI APIを直接接続しない
+- ブラウザから外部AI APIへ直接接続しない
+- 外部AI APIを利用する場合、APIキーや認証情報をクライアントへ露出させない
+- 外部AI APIへの通信は、Cloudflare Workers等のserverless proxyなど、管理された中継層を経由する
+- 中継層では、Origin制限・レート制限・payload上限等の濫用対策を行う
 - 既存の人間レビュー済みUI・asset・教材文を、リファクタリング目的だけで変更しない
 - 既存のroute・canonical・noindex・sitemap・GA4契約を、理由なく変更しない
 - 範囲外の修正が必要に見える場合は、先に報告して確認する

@@ -47,6 +47,14 @@
 
 数学I「三角比」M1-TR-001〜041（41問）も、独立検算・教材化・asset生成・実画面レビュー・Opus横断レビュー・Codex構造監査まで完了しています。QFと同じ正本・同期の仕組み（`math_db_quadratic_working/`・`npm run sync-content`）とDB UI（`Quadratic27Detail.astro`）を共有し、3ペインDB UIの単元ナビから二次関数と相互に行き来できますが、`/math1/trig/`以下のページは**すべてnoindexの試験用**で、TOPページの導線・sitemapへはまだ載せていません。本番公開はこれからです。
 
+## AI質問機能・外部追加演習リンク
+
+ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています（Cloudflare本番Worker自体はdeploy済み）。
+
+公開95問のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです。
+
+詳細は`math_service_design_summary.md`第36節・第37節を参照してください。
+
 ## 公開UIとURL
 
 PCの基本UIは、

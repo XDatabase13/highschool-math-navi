@@ -55,6 +55,14 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ---
 
+## AI質問機能・外部追加演習リンクの現在地
+
+ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
+
+公開95問のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。詳細は同文書第37節を正本としてください。
+
+---
+
 ## 正本と責任範囲
 
 教材制作の正本はWeb repoの外側にあります。

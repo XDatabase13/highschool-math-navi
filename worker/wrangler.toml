@@ -2,13 +2,13 @@ name = "highschool-math-db-ai-worker"
 main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
-# ThinkingFlow単位のAI質問機能用serverless proxy（ローカルプロトタイプ）。
-# 現行Astro/GitHub Pages本体とは分離しており、本番deployはまだ行わない。
+# ThinkingFlow単位のAI質問機能用serverless proxy。
+# 現行Astro/GitHub Pages本体とは分離している。
+# デフォルト（環境指定なし）はローカル開発用設定。本番は下記[env.production]を使う。
 
 [vars]
 # AI-context JSON（/ai-context/<problem_id>.json）の取得元。
-# ローカル：Astro dev server。将来の本番切り替えは、ここを
-# "https://math-navi.com" に変更するだけでよい（コード側はハードコードしない）。
+# ローカル：Astro dev server。本番設定は[env.production.vars]を参照。
 AI_CONTEXT_BASE_URL = "http://localhost:4321"
 
 # AI質問機能の対象問題は、許可リストの手動管理ではなく「AI_CONTEXT_BASE_URL上に
@@ -25,4 +25,13 @@ GEMINI_MODEL = "gemini-3.6-flash"
 
 # GEMINI_API_KEYはvarsに書かない（secretとして別管理）。
 # ローカル開発：worker/.dev.vars（Git管理外）にGEMINI_API_KEY=...を設定する。
-# 本番：`wrangler secret put GEMINI_API_KEY` で設定する（今回はまだ行わない）。
+# 本番：`wrangler secret put GEMINI_API_KEY --env production` で設定する。
+
+[env.production.vars]
+# 本番はAstro本番サイトが生成するAI-context JSONを参照する。
+AI_CONTEXT_BASE_URL = "https://math-navi.com"
+
+# 既存の許可Origin設定をそのまま踏襲する（ここで新規に絞り込まない）。
+ALLOWED_ORIGINS = "http://localhost:4321,https://math-navi.com"
+
+GEMINI_MODEL = "gemini-3.6-flash"

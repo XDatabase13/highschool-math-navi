@@ -24,6 +24,13 @@ jobs:
         uses: withastro/action@v6
         with:
           node-version: 24
+        env:
+          # ThinkingFlow AI質問機能のfeature flag。公開用build-time変数であり
+          # Secretではないため、リポジトリのActions Variables（vars）から渡す。
+          # 未設定の場合はどちらも空文字列になり、既存のAND判定により安全側
+          # （AI機能OFF）に倒れる（src/components/Quadratic27Detail.astro）。
+          PUBLIC_AI_ENABLED: ${{ vars.PUBLIC_AI_ENABLED }}
+          PUBLIC_AI_WORKER_URL: ${{ vars.PUBLIC_AI_WORKER_URL }}
 
   deploy:
     needs: build

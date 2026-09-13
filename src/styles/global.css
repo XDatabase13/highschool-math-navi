@@ -1048,6 +1048,54 @@ ul {
   color: var(--color-text-muted);
 }
 
+/* 外部追加演習リンク（FTEXT等）。問題文＋asset＋言い換えのまとまりの最後に、
+   軽いアクセント背景の小さな領域として置く（問題メタ等の別カードにはしない）。
+   データが無い問題では丸ごと描画されないため、ここは常にリンクがある状態専用。 */
+.external-practice {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--color-accent-bg);
+  border-radius: var(--radius);
+}
+.external-practice-heading {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+.external-practice-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.external-practice-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  overflow-wrap: break-word;
+}
+.external-practice-link:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+/* inline-flexだと折り返し時に矢印だけ独立した行になりうるため、通常のinline要素に
+   戻し、直前の非改行スペース（テンプレート側）だけで文字列と矢印をくっつける。 */
+.external-practice-arrow {
+  display: inline-block;
+  margin-left: 0.3rem;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.external-practice-note {
+  margin: 0.45rem 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
 /* Impression */
 .impression-section {
   background: var(--color-surface);

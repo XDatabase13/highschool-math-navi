@@ -2216,6 +2216,70 @@ ul {
   margin: 0.55em 0;
 }
 
+/* AI回答の直下に常設する注意書き。「AIに聞く」を一度も使っていない段階（.ai-ask-note
+   がai-ask-answerクラスを持たない、または非表示の間）は出さず、実際に回答（読み込み中・
+   エラーを含む）を表示している間だけ隣接セレクタで出す。新しい開閉JSは増やさない。 */
+.q27-detail .ai-ask-disclaimer {
+  display: none;
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.q27-detail .ai-ask-note.ai-ask-answer:not([hidden]) + .ai-ask-disclaimer {
+  display: block;
+}
+
+/* AI初回利用時の確認モーダル（<dialog>のshowModal/closeに開閉を任せる）。
+   中央配置はブラウザ既定のdialogセンタリングをそのまま使い、見た目だけ調整する。 */
+.ai-consent-dialog {
+  width: min(90vw, 420px);
+  max-width: none;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  background: var(--color-surface);
+  box-shadow: 0 8px 32px rgba(21, 40, 54, 0.28);
+}
+.ai-consent-dialog::backdrop {
+  background: rgba(21, 40, 54, 0.45);
+}
+.ai-consent-body {
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+.ai-consent-title {
+  margin: 0 0 0.7rem;
+  font-size: 1.05rem;
+  color: var(--color-primary-dark);
+}
+.ai-consent-body p {
+  margin: 0 0 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+.ai-consent-tip {
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius);
+  background: var(--color-accent-bg);
+  font-weight: 600;
+}
+.ai-consent-confirm-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+}
+.ai-consent-confirm-btn:hover {
+  background: var(--color-primary-dark);
+}
+
 /* 正本Markdownのパイプ表記（remark-gfm）から生成される素の<table>用の最小限の枠線・余白。
    現状M1-TR-008の問題文・最終解答のみが該当（他の既存問題はパイプ表を使わない）。
    空欄の多い表でも罫線が見えるよう border-collapseする。 */

@@ -222,6 +222,9 @@ function nextContextKey(): string {
                             <button type="button" class="ai-ask-submit" data-ai-ask-submit>送信</button>
                           </div>
                           <p class="ai-ask-note" data-ai-ask-note hidden>AI接続は次工程で実装予定です。</p>
+                          <p class="ai-ask-disclaimer" data-ai-ask-disclaimer>
+                            AIの回答には誤りが含まれる場合があります。ThinkingFlowの確認済み結果・最終解答と照合してください。
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -305,6 +308,9 @@ function nextContextKey(): string {
                                 <button type="button" class="ai-ask-submit" data-ai-ask-submit>送信</button>
                               </div>
                               <p class="ai-ask-note" data-ai-ask-note hidden>AI接続は次工程で実装予定です。</p>
+                              <p class="ai-ask-disclaimer" data-ai-ask-disclaimer>
+                                AIの回答には誤りが含まれる場合があります。ThinkingFlowの確認済み結果・最終解答と照合してください。
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -347,6 +353,16 @@ function nextContextKey(): string {
     </div>
   </section>
 )}
+
+<dialog class="ai-consent-dialog" aria-labelledby="ai-consent-title" data-ai-consent-dialog>
+  <div class="ai-consent-body">
+    <h2 id="ai-consent-title" class="ai-consent-title">AIによる説明について</h2>
+    <p>この機能の回答は生成AIによって作成されるため、誤りを含む可能性があります。</p>
+    <p>問題の最終解答や各ThinkingFlowの確認結果は別途検算済みですが、AIによる説明そのものの正確性は保証できません。</p>
+    <p class="ai-consent-tip">おかしいと感じた場合は、確認済み結果との照合や、他のAI・教材でも確認してください。</p>
+    <button type="button" class="ai-consent-confirm-btn" data-ai-consent-confirm>確認して使う</button>
+  </div>
+</dialog>
 </div>
 
 <script>
@@ -365,6 +381,43 @@ function nextContextKey(): string {
   const AI_ENABLED = import.meta.env.PUBLIC_AI_ENABLED === 'true' && !!import.meta.env.PUBLIC_AI_WORKER_URL;
   const AI_WORKER_URL = import.meta.env.PUBLIC_AI_WORKER_URL || 'http://127.0.0.1:8787';
   const AI_DISABLED_MESSAGE = 'AI機能は現在準備中です。';
+
+  // 「AIに聞く」を初めて実際に使おうとしたとき（AI_ENABLED時のみ）だけ、
+  // 生成AIの回答が誤りを含みうる旨の確認モーダルを表示する。確認後は同一ブラウザの
+  // localStorageに記録し、以後は再表示しない。未確認の間はAI質問UI（3択・自由入力）
+  // へ進ませず、モーダルの「確認して使う」を押した時点で、元々開こうとしていた
+  // パネルを続けて開く。開閉自体は<dialog>のshowModal/closeに任せる。
+  const AI_CONSENT_STORAGE_KEY = 'mathNaviAiAskConsent';
+  const consentDialog = document.querySelector<HTMLDialogElement>('[data-ai-consent-dialog]');
+  const consentConfirmBtn = consentDialog?.querySelector<HTMLButtonElement>('[data-ai-consent-confirm]');
+  let pendingAiAskOpen: (() => void) | null = null;
+
+  function hasAiConsent(): boolean {
+    try {
+      return window.localStorage.getItem(AI_CONSENT_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  function grantAiConsent(): void {
+    try {
+      window.localStorage.setItem(AI_CONSENT_STORAGE_KEY, 'true');
+    } catch {
+      // localStorageが使えない環境では記録できないが、このクリック自体は
+      // 通常どおり続行する（次回また確認モーダルが出るだけで、機能自体は止めない）。
+    }
+  }
+
+  if (consentConfirmBtn && consentDialog) {
+    consentConfirmBtn.addEventListener('click', () => {
+      grantAiConsent();
+      consentDialog.close();
+      const resume = pendingAiAskOpen;
+      pendingAiAskOpen = null;
+      resume?.();
+    });
+  }
 
   type AiQuestionType = 'detail' | 'knowledge' | 'custom';
 
@@ -577,22 +630,34 @@ function nextContextKey(): string {
         if (panel) {
           const isExpanded = aiAskToggle.getAttribute('aria-expanded') === 'true';
           const nextExpanded = !isExpanded;
-          setPanelExpanded(aiAskToggle, panel, nextExpanded);
-          aiAskToggle.textContent = nextExpanded ? 'AIを閉じる' : 'AIに聞く';
 
-          // feature flagがOFFの間は、質問選択UI（3択・自由入力欄）は出さず、
-          // 「準備中」の案内だけをそのFlow内に表示する。Worker通信には一切進まない。
-          if (nextExpanded && !AI_ENABLED) {
-            const options = ask?.querySelector<HTMLElement>('.ai-ask-options');
-            const custom = ask?.querySelector<HTMLElement>('[data-ai-ask-custom]');
-            const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
-            options?.setAttribute('hidden', '');
-            custom?.setAttribute('hidden', '');
-            if (note) {
-              note.classList.remove('ai-ask-answer');
-              note.hidden = false;
-              note.textContent = AI_DISABLED_MESSAGE;
+          const openPanel = () => {
+            setPanelExpanded(aiAskToggle, panel, nextExpanded);
+            aiAskToggle.textContent = nextExpanded ? 'AIを閉じる' : 'AIに聞く';
+
+            // feature flagがOFFの間は、質問選択UI（3択・自由入力欄）は出さず、
+            // 「準備中」の案内だけをそのFlow内に表示する。Worker通信には一切進まない。
+            if (nextExpanded && !AI_ENABLED) {
+              const options = ask?.querySelector<HTMLElement>('.ai-ask-options');
+              const custom = ask?.querySelector<HTMLElement>('[data-ai-ask-custom]');
+              const note = ask?.querySelector<HTMLElement>('[data-ai-ask-note]');
+              options?.setAttribute('hidden', '');
+              custom?.setAttribute('hidden', '');
+              if (note) {
+                note.classList.remove('ai-ask-answer');
+                note.hidden = false;
+                note.textContent = AI_DISABLED_MESSAGE;
+              }
             }
+          };
+
+          // AI機能が実際に有効な場合だけ、初回利用時に確認モーダルで止める。
+          // 確認済み（localStorage記録あり）なら、以降は毎回素通りする。
+          if (nextExpanded && AI_ENABLED && !hasAiConsent() && consentDialog) {
+            pendingAiAskOpen = openPanel;
+            consentDialog.showModal();
+          } else {
+            openPanel();
           }
         }
         return;

@@ -16,42 +16,34 @@
 
 ## 現在地
 
-数学I「二次関数」を上位区分として、M1-QF-001〜054の54問について以下まで完了しています。
+数学I「二次関数」「三角比」「データの分析」の3単元・計118問を本番公開しています。
 
-内訳：
+- M1-QF-001〜054（二次関数）
+  - M1-QF-001〜027：二次関数
+  - M1-QF-028〜041：二次方程式・グラフと二次方程式
+  - M1-QF-042〜054：二次不等式
+- M1-TR-001〜041（三角比、本番公開commit `90cb5c5`）
+  - M1-TR-001〜015：三角比の基本・拡張
+  - M1-TR-016〜035：平面図形と三角比
+  - M1-TR-036〜041：空間図形と三角比
+- M1-DA-001〜023（データの分析、本番公開commit `13fce88`）
+  - M1-DA-001〜005：代表値と度数分布
+  - M1-DA-006〜009：四分位数と箱ひげ図
+  - M1-DA-010〜015：分散と標準偏差
+  - M1-DA-016〜019：散布図と相関
+  - M1-DA-020〜023：仮説検定
 
-- M1-QF-001〜027：二次関数
-- M1-QF-028〜041：二次方程式・グラフと二次方程式
-- M1-QF-042〜054：二次不等式
+3単元とも、正本Markdown作成・独立検算・教材化・asset生成・配置・共通3ペインDB UIへの統合・各問題固有URLの静的HTML生成・GitHub Pagesでの公開まで完了しています。QF/TRはPC実画面レビュー・Codex構造監査まで完了済み（TRはさらにOpus asset横断レビューも実施）。**DAは実画面レビュー・レビュー後修正までは完了していますが、Opus asset横断レビュー・Codex構造監査は未実施のまま本番公開しています。**
 
-完了済み：
-
-- 正本Markdown作成
-- 独立検算
-- 教材化
-- asset生成・配置
-- PC実画面レビュー
-- スマホ狭幅での主要導線・DB表示確認と初回レスポンシブ調整
-- Codex構造監査
-- 共通3ペインDB UIへの統合
-- 各問題固有URLの静的HTML生成
-- GitHub Pagesでの公開
-- HTTPS
-- Search Console / sitemap / robots
-- Google Analytics 4
-- TOPページの独自ビジュアルデザイン（hero・DBプレビュー・CONCEPTセクション等）
-
-スマートフォンは主要導線・DB表示の初回狭幅確認まで完了しています。TOPページの現行ビジュアルデザインも人間レビュー済みです。
-
-### 三角比（試験バッチ）
-
-数学I「三角比」M1-TR-001〜041（41問）も、独立検算・教材化・asset生成・実画面レビュー・Opus横断レビュー・Codex構造監査まで完了しています。QFと同じ正本・同期の仕組み（`math_db_quadratic_working/`・`npm run sync-content`）とDB UI（`Quadratic27Detail.astro`）を共有し、3ペインDB UIの単元ナビから二次関数と相互に行き来できますが、`/math1/trig/`以下のページは**すべてnoindexの試験用**で、TOPページの導線・sitemapへはまだ載せていません。本番公開はこれからです。
+スマートフォンは主要導線・DB表示の初回狭幅確認まで完了しています。TOPページの現行ビジュアルデザインも人間レビュー済みです（TOPページのDBプレビュー画像は3単元公開前のスクリーンショットのままで、更新は別判断としています）。
 
 ## AI質問機能・外部追加演習リンク
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています（Cloudflare本番Worker自体はdeploy済み）。
 
-公開95問のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです。
+AI質問機能・外部追加演習リンクはいずれも対象がQF・TRの95問のみで、**データの分析（M1-DA-001〜023）はまだ対象外**です（AI-context JSON生成・外部リンクデータともに未拡張）。
+
+公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです。
 
 詳細は`math_service_design_summary.md`第36節・第37節を参照してください。
 
@@ -66,13 +58,16 @@ PCの基本UIは、
 主要URL：
 
 - `/app/`：問題DBへの入口。検索インデックス対象外（`noindex,follow`）
-- `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ
-- `/math1/quadratic/M1-QF-001/` 〜 `/math1/quadratic/M1-QF-054/`：各問題の固有URL
+- `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ、`/math1/quadratic/M1-QF-001/`〜`/M1-QF-054/`
+- `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/`〜`/M1-TR-041/`
+- `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/`〜`/M1-DA-023/`
+
+3単元とも同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。
 
 個別問題URLもブログ型ページではなく、共通DB UIを表示します。
 各URLはAstroで独立した静的HTMLとして生成され、固有のtitle / description / canonical / 問題本文を持ちます。
 
-中央問題一覧は「二次関数／二次方程式／二次不等式」の3区分アコーディオン＋行リストです。分類は問題IDのレンジではなく正本frontmatterの`section`値から決めており（`src/utils/dbCenterList.ts` / `quadraticDbItems.ts`）、一覧のマークアップは`ProblemGroupList`コンポーネントとしてPC・スマホ共通で再利用しています。
+中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分）。分類は問題IDのレンジではなく正本frontmatterの`section`値から決めており（`src/utils/dbCenterList.ts` / `quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts`）、一覧のマークアップは`ProblemGroupList`コンポーネントとしてPC・スマホ共通・全単元共通で再利用しています。
 
 スマートフォンでは同じ `ProblemDbShell` を使い、表示順を次のように切り替えます。
 
@@ -91,8 +86,9 @@ PCの基本UIは、
 
 GitHub Pagesのbuildでは、Web repo内の公開用スナップショットを使用します。
 
-- `src/content/quadratic27/`：公開用Markdown
-- `src/content/quadratic27-assets/`：公開用asset
+- `src/content/quadratic27/`：二次関数の公開用Markdown、`src/content/quadratic27-assets/`：対応asset
+- `src/content/trig4/`：三角比の公開用Markdown、`src/content/trig4-assets/`：対応asset
+- `src/content/dataAnalysis/`：データの分析の公開用Markdown、`src/content/dataAnalysis-assets/`：対応asset
 
 公開用スナップショットは**派生データであり正本ではありません。直接編集しません。**
 
@@ -167,6 +163,6 @@ GitHub Actionsではcommit済みの公開スナップショットだけを使用
 - `math_service_design_summary.md`
 - `problem_authoring_workflow.md`
 - `_TEMPLATE_for_page_generation.md`
-- `quadratic_function_problem_master.xlsx`
+- `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx`）
 
 READMEは概要のみを持ち、詳細仕様を重複して抱えません。

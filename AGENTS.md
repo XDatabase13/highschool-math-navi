@@ -12,7 +12,9 @@
 
 です。
 
-現在、数学I「二次関数」を上位区分として、M1-QF-001〜054の54問について、
+現在、数学I「二次関数」「三角比」「データの分析」の3単元・計118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析の詳細は後述の各節を参照してください。
+
+まず二次関数（M1-QF-001〜054の54問）について、
 
 - 独立検算
 - 教材化
@@ -73,7 +75,9 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
 
-公開95問のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。詳細は同文書第37節を正本としてください。
+**AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）はQF・TRの95問のみ対象で、データの分析（M1-DA-001〜023）は未拡張です。** DA問題で「AIに聞く」を有効化しても、AI-contextが存在せずWorker側でエラーになります。対象を広げる場合は同ファイルへ`dataAnalysis`コレクションを追加してください。
+
+公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析はこの対応調査自体が未実施です。詳細は同文書第37節を正本としてください。
 
 ---
 
@@ -86,8 +90,9 @@ ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実�
 
 Web repoでは、GitHub Actions単独でbuildできるよう公開用スナップショットを保持します。
 
-- `src/content/quadratic27/`
-- `src/content/quadratic27-assets/`
+- `src/content/quadratic27/`・`src/content/quadratic27-assets/`（二次関数）
+- `src/content/trig4/`・`src/content/trig4-assets/`（三角比）
+- `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
 
@@ -131,8 +136,9 @@ npm run sync-content
 主要route：
 
 - `/app/`：問題DBへの入口
-- `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ
-- `/math1/quadratic/M1-QF-001/` 〜 `/math1/quadratic/M1-QF-054/`：各問題の固有URL
+- `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ、`/math1/quadratic/M1-QF-001/` 〜 `/M1-QF-054/`
+- `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/` 〜 `/M1-TR-041/`
+- `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -144,9 +150,9 @@ SPA化や複雑なクライアント状態管理を、明示的な要求なし�
 
 ### 中央問題一覧の分類・共有コンポーネント
 
-中央問題一覧は、数学Iでは「二次関数／二次方程式／二次不等式」の3区分アコーディオン＋行リストで表示します。
+中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分）。
 
-- 3区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`src/utils/quadraticDbItems.ts` の `SECTION_TO_GROUP`）で行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
+- 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
 - 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
 - 新しい単元を追加する場合や表示を調整する場合も、この対応表とコンポーネントを流用してください。`ProblemDbShell.astro` 側や別コンポーネントに、もう一つ別の分類ロジックを増やさないでください。
 
@@ -177,8 +183,9 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - sitemapには載せない
 - robots.txtでDisallowしない
 
-### `/math1/quadratic/` と個別問題URL
+### 各単元トップ・個別問題URL（QF/TR/DA共通）
 
+- `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`と各個別問題URL
 - index対象
 - noindexを付けない
 - 個別問題は固有title / description
@@ -187,17 +194,18 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 
 ### sitemap / robots
 
-`sitemap.xml` は検索対象ページを掲載します。
-現行54問時点の内訳は、
+`sitemap.xml` は検索対象ページを掲載します（`src/pages/sitemap.xml.ts`）。
+現行118問（QF54・TR41・DA23）時点の内訳は、
 
 - `/`
-- `/math1/quadratic/`
-- 個別問題54URL
+- `/math1/quadratic/` ＋ 個別問題54URL
+- `/math1/trig/` ＋ 個別問題41URL
+- `/math1/data-analysis/` ＋ 個別問題23URL
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-です。
+の計125 URLです。
 
 `/app/` と旧6サンプルrouteはsitemapへ含めません。
 
@@ -361,9 +369,10 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
 
-現在のM1-QF-001〜054はCodex構造監査済みで、FIX相当の構造的不整合はありません。
+M1-QF-001〜054・M1-TR-001〜041はCodex構造監査済みで、FIX相当の構造的不整合はありません。
+**M1-DA-001〜023は本番公開済みですが、Codex構造監査・Opus asset横断レビューは未実施のまま残っています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
 
-既存54問を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。
+既存問題を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。
 純粋なUI・余白・asset描画調整等は、数学的固定内容を変えない限り原則として再独立検算対象ではありません。
 
 ---
@@ -375,6 +384,6 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - `math_service_design_summary.md`
 - `problem_authoring_workflow.md`
 - `_TEMPLATE_for_page_generation.md`
-- `quadratic_function_problem_master.xlsx`
+- `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx`）
 
 README / AGENTS.mdには概要と作業境界を置き、正本文書と同じ細則を過剰に重複させないでください。

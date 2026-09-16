@@ -59,7 +59,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## データの分析の現在地
 
-数学I「データの分析」M1-DA-001〜023（23問）について、独立検算・教材化・asset生成・実画面レビュー・レビュー後修正まで完了し、本番公開済みです（2026-09-17）。
+数学I「データの分析」M1-DA-001〜023（23問）について、独立検算・教材化・asset生成・実画面レビュー・レビュー後修正・Codex構造監査まで完了し、本番公開済みです（2026-09-17）。**Opus asset横断レビューのみ未実施です。**
 
 - 正本・同期先はQF/TRと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-DA-*ファイル、スナップショット`src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（`npm run sync-content`が3コレクションまとめて同期）。
 - 対応するContent Collectionは`dataAnalysis`（`src/content.config.ts`）、表示は`prepareDataAnalysisEntry.ts`経由でQF/TRと同じ`Quadratic27Detail.astro`を再利用します。
@@ -369,8 +369,8 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
 
-M1-QF-001〜054・M1-TR-001〜041はCodex構造監査済みで、FIX相当の構造的不整合はありません。
-**M1-DA-001〜023は本番公開済みですが、Codex構造監査・Opus asset横断レビューは未実施のまま残っています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
+M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし）。
+**M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
 
 既存問題を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。
 純粋なUI・余白・asset描画調整等は、数学的固定内容を変えない限り原則として再独立検算対象ではありません。

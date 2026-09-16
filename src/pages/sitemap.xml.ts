@@ -14,6 +14,9 @@ export const GET: APIRoute = async () => {
   const trig4 = (await getVerifiedCollection('trig4')).sort(
     (a, b) => a.data.display_order - b.data.display_order,
   );
+  const dataAnalysis = (await getVerifiedCollection('dataAnalysis')).sort(
+    (a, b) => a.data.display_order - b.data.display_order,
+  );
 
   const paths = [
     '/',
@@ -21,6 +24,8 @@ export const GET: APIRoute = async () => {
     ...quadratic27.map((entry) => `/math1/quadratic/${entry.id}/`),
     '/math1/trig/',
     ...trig4.map((entry) => `/math1/trig/${entry.id}/`),
+    '/math1/data-analysis/',
+    ...dataAnalysis.map((entry) => `/math1/data-analysis/${entry.id}/`),
     '/privacy/',
     '/disclaimer/',
     '/contact/',

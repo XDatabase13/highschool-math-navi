@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 150" role="img">
+<line x1="26" y1="116" x2="97.33" y2="116" class="pa-axis"/>
+<line x1="26" y1="116" x2="26" y2="26" class="pa-axis"/>
+<line x1="26" y1="116" x2="26" y2="119" class="pa-axis"/>
+<line x1="97.33" y1="116" x2="97.33" y2="119" class="pa-axis"/>
+<line x1="23" y1="116" x2="26" y2="116" class="pa-axis"/>
+<text x="20" y="119" class="pa-label-muted" text-anchor="end" font-size="7">0</text>
+<line x1="23" y1="26" x2="26" y2="26" class="pa-axis"/>
+<text x="20" y="29" class="pa-label-muted" text-anchor="end" font-size="7">9</text>
+<text x="26" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">0</text>
+<text x="97.33" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">13</text>
+<text x="61.67" y="140" class="pa-label-muted" text-anchor="middle" font-size="7.5">x</text>
+<text x="6" y="22" class="pa-label-muted" text-anchor="middle" font-size="7.5">y</text>
+<circle cx="31.49" cy="50" r="2.6" class="pa-dot-closed"/>
+<circle cx="36.97" cy="82" r="2.6" class="pa-dot-closed"/>
+<circle cx="42.46" cy="85" r="2.6" class="pa-dot-closed"/>
+<circle cx="47.95" cy="40" r="2.6" class="pa-dot-closed"/>
+<circle cx="53.44" cy="108" r="2.6" class="pa-dot-closed"/>
+<circle cx="58.92" cy="67" r="2.6" class="pa-dot-closed"/>
+<circle cx="64.41" cy="33" r="2.6" class="pa-dot-closed"/>
+<circle cx="69.9" cy="58" r="2.6" class="pa-dot-closed"/>
+<circle cx="75.38" cy="63" r="2.6" class="pa-dot-closed"/>
+<circle cx="80.87" cy="60" r="2.6" class="pa-dot-closed"/>
+<circle cx="86.36" cy="62" r="2.6" class="pa-dot-closed"/>
+<circle cx="91.85" cy="84" r="2.6" class="pa-dot-closed"/>
+<text x="61.67" y="12" class="pa-panel-label">①</text>
+<line x1="143.33" y1="116" x2="214.67" y2="116" class="pa-axis"/>
+<line x1="143.33" y1="116" x2="143.33" y2="26" class="pa-axis"/>
+<line x1="143.33" y1="116" x2="143.33" y2="119" class="pa-axis"/>
+<line x1="214.67" y1="116" x2="214.67" y2="119" class="pa-axis"/>
+<line x1="140.33" y1="116" x2="143.33" y2="116" class="pa-axis"/>
+<text x="137.33" y="119" class="pa-label-muted" text-anchor="end" font-size="7">0</text>
+<line x1="140.33" y1="26" x2="143.33" y2="26" class="pa-axis"/>
+<text x="137.33" y="29" class="pa-label-muted" text-anchor="end" font-size="7">9</text>
+<text x="143.33" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">0</text>
+<text x="214.67" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">13</text>
+<text x="179" y="140" class="pa-label-muted" text-anchor="middle" font-size="7.5">x</text>
+<text x="123.33" y="22" class="pa-label-muted" text-anchor="middle" font-size="7.5">y</text>
+<circle cx="148.82" cy="48" r="2.6" class="pa-dot-closed"/>
+<circle cx="154.31" cy="39" r="2.6" class="pa-dot-closed"/>
+<circle cx="159.79" cy="51" r="2.6" class="pa-dot-closed"/>
+<circle cx="165.28" cy="72" r="2.6" class="pa-dot-closed"/>
+<circle cx="170.77" cy="83" r="2.6" class="pa-dot-closed"/>
+<circle cx="176.26" cy="47" r="2.6" class="pa-dot-closed"/>
+<circle cx="181.74" cy="59" r="2.6" class="pa-dot-closed"/>
+<circle cx="187.23" cy="47" r="2.6" class="pa-dot-closed"/>
+<circle cx="192.72" cy="73" r="2.6" class="pa-dot-closed"/>
+<circle cx="198.21" cy="77" r="2.6" class="pa-dot-closed"/>
+<circle cx="203.69" cy="88" r="2.6" class="pa-dot-closed"/>
+<circle cx="209.18" cy="108" r="2.6" class="pa-dot-closed"/>
+<text x="179" y="12" class="pa-panel-label">②</text>
+<line x1="260.67" y1="116" x2="332" y2="116" class="pa-axis"/>
+<line x1="260.67" y1="116" x2="260.67" y2="26" class="pa-axis"/>
+<line x1="260.67" y1="116" x2="260.67" y2="119" class="pa-axis"/>
+<line x1="332" y1="116" x2="332" y2="119" class="pa-axis"/>
+<line x1="257.67" y1="116" x2="260.67" y2="116" class="pa-axis"/>
+<text x="254.67" y="119" class="pa-label-muted" text-anchor="end" font-size="7">0</text>
+<line x1="257.67" y1="26" x2="260.67" y2="26" class="pa-axis"/>
+<text x="254.67" y="29" class="pa-label-muted" text-anchor="end" font-size="7">9</text>
+<text x="260.67" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">0</text>
+<text x="332" y="130" class="pa-label-muted" text-anchor="middle" font-size="7">13</text>
+<text x="296.33" y="140" class="pa-label-muted" text-anchor="middle" font-size="7.5">x</text>
+<text x="240.67" y="22" class="pa-label-muted" text-anchor="middle" font-size="7.5">y</text>
+<circle cx="266.15" cy="89" r="2.6" class="pa-dot-closed"/>
+<circle cx="271.64" cy="102" r="2.6" class="pa-dot-closed"/>
+<circle cx="277.13" cy="86" r="2.6" class="pa-dot-closed"/>
+<circle cx="282.62" cy="83" r="2.6" class="pa-dot-closed"/>
+<circle cx="288.1" cy="63" r="2.6" class="pa-dot-closed"/>
+<circle cx="293.59" cy="59" r="2.6" class="pa-dot-closed"/>
+<circle cx="299.08" cy="61" r="2.6" class="pa-dot-closed"/>
+<circle cx="304.56" cy="54" r="2.6" class="pa-dot-closed"/>
+<circle cx="310.05" cy="58" r="2.6" class="pa-dot-closed"/>
+<circle cx="315.54" cy="43" r="2.6" class="pa-dot-closed"/>
+<circle cx="321.03" cy="65" r="2.6" class="pa-dot-closed"/>
+<circle cx="326.51" cy="28" r="2.6" class="pa-dot-closed"/>
+<text x="296.33" y="12" class="pa-panel-label">③</text>
+</svg>

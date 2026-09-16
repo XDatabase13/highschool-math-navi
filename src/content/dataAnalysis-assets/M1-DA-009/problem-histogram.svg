@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img">
+<line x1="34" y1="166" x2="304" y2="166" class="pa-guide"/>
+<text x="26" y="169" class="pa-label-muted" text-anchor="end">0</text>
+<line x1="34" y1="128.5" x2="304" y2="128.5" class="pa-guide"/>
+<text x="26" y="131.5" class="pa-label-muted" text-anchor="end">2</text>
+<line x1="34" y1="91" x2="304" y2="91" class="pa-guide"/>
+<text x="26" y="94" class="pa-label-muted" text-anchor="end">4</text>
+<line x1="34" y1="53.5" x2="304" y2="53.5" class="pa-guide"/>
+<text x="26" y="56.5" class="pa-label-muted" text-anchor="end">6</text>
+<line x1="34" y1="16" x2="304" y2="16" class="pa-guide"/>
+<text x="26" y="19" class="pa-label-muted" text-anchor="end">8</text>
+<rect x="35" y="147.25" width="31.75" height="18.75" class="pa-figure-fill"/>
+<rect x="68.75" y="147.25" width="31.75" height="18.75" class="pa-figure-fill"/>
+<rect x="102.5" y="91" width="31.75" height="75" class="pa-figure-fill"/>
+<rect x="136.25" y="91" width="31.75" height="75" class="pa-figure-fill"/>
+<rect x="170" y="53.5" width="31.75" height="112.5" class="pa-figure-fill"/>
+<rect x="203.75" y="34.75" width="31.75" height="131.25" class="pa-figure-fill"/>
+<rect x="237.5" y="91" width="31.75" height="75" class="pa-figure-fill"/>
+<rect x="271.25" y="109.75" width="31.75" height="56.25" class="pa-figure-fill"/>
+<line x1="34" y1="166" x2="304" y2="166" class="pa-axis"/>
+<line x1="34" y1="166" x2="34" y2="12" class="pa-axis"/>
+<text x="34" y="182" class="pa-label-muted" text-anchor="middle">4</text>
+<text x="67.75" y="182" class="pa-label-muted" text-anchor="middle">6</text>
+<text x="101.5" y="182" class="pa-label-muted" text-anchor="middle">8</text>
+<text x="135.25" y="182" class="pa-label-muted" text-anchor="middle">10</text>
+<text x="169" y="182" class="pa-label-muted" text-anchor="middle">12</text>
+<text x="202.75" y="182" class="pa-label-muted" text-anchor="middle">14</text>
+<text x="236.5" y="182" class="pa-label-muted" text-anchor="middle">16</text>
+<text x="270.25" y="182" class="pa-label-muted" text-anchor="middle">18</text>
+<text x="304" y="182" class="pa-label-muted" text-anchor="middle">20</text>
+<text x="169" y="194" class="pa-label">最高気温（℃）</text>
+<text x="6" y="13" class="pa-label-muted" font-size="9">日数</text>
+</svg>

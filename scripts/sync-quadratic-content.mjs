@@ -29,6 +29,11 @@ const snapshotAssets = path.join(repoRoot, 'src/content/quadratic27-assets');
 const snapshotTrigProblems = path.join(repoRoot, 'src/content/trig4');
 const snapshotTrigAssets = path.join(repoRoot, 'src/content/trig4-assets');
 
+// データの分析（M1-DA-001〜023）試験バッチ用スナップショット先。quadratic27・trig4とは
+// 別コレクション（src/content.config.tsのdataAnalysis）なので、格納先ディレクトリも分離する。
+const snapshotDataAnalysisProblems = path.join(repoRoot, 'src/content/dataAnalysis');
+const snapshotDataAnalysisAssets = path.join(repoRoot, 'src/content/dataAnalysis-assets');
+
 const SNAPSHOT_NOTICE =
   '# 自動生成スナップショット（編集禁止）\n\n' +
   'このディレクトリの中身は、正本 `math_db_quadratic_working/`（highschool_math_db の外）から\n' +
@@ -109,10 +114,46 @@ function copyTrigAssets() {
   return fileCount;
 }
 
+// データの分析試験バッチ（M1-DA-001〜023）用。三角比試験バッチと同じ考え方
+// （存在するファイルだけを対象にする）を踏襲する。
+function copyDataAnalysisMarkdown() {
+  resetDir(snapshotDataAnalysisProblems);
+  const files = readdirSync(canonicalProblems).filter((f) => /^M1-DA-\d+\.md$/.test(f));
+  for (const f of files) {
+    copyFileSync(path.join(canonicalProblems, f), path.join(snapshotDataAnalysisProblems, f));
+  }
+  writeFileSync(path.join(snapshotDataAnalysisProblems, 'README.md'), SNAPSHOT_NOTICE);
+  return files.length;
+}
+
+function copyDataAnalysisAssets() {
+  resetDir(snapshotDataAnalysisAssets);
+  if (!existsSync(canonicalAssets)) return 0;
+  const dirs = readdirSync(canonicalAssets).filter((name) => {
+    const full = path.join(canonicalAssets, name);
+    return /^M1-DA-\d+$/.test(name) && statSync(full).isDirectory();
+  });
+  let fileCount = 0;
+  for (const d of dirs) {
+    const srcDir = path.join(canonicalAssets, d);
+    const destDir = path.join(snapshotDataAnalysisAssets, d);
+    mkdirSync(destDir, { recursive: true });
+    for (const f of readdirSync(srcDir)) {
+      copyFileSync(path.join(srcDir, f), path.join(destDir, f));
+      fileCount += 1;
+    }
+  }
+  writeFileSync(path.join(snapshotDataAnalysisAssets, 'README.md'), SNAPSHOT_NOTICE);
+  return fileCount;
+}
+
 const mdCount = copyMarkdown();
 const assetCount = copyAssets();
 const trigMdCount = copyTrigMarkdown();
 const trigAssetCount = copyTrigAssets();
+const dataAnalysisMdCount = copyDataAnalysisMarkdown();
+const dataAnalysisAssetCount = copyDataAnalysisAssets();
 console.log(`同期完了: Markdown ${mdCount}件、asset ${assetCount}件（quadratic27）`);
 console.log(`同期完了: Markdown ${trigMdCount}件、asset ${trigAssetCount}件（trig4・試験バッチ）`);
+console.log(`同期完了: Markdown ${dataAnalysisMdCount}件、asset ${dataAnalysisAssetCount}件（dataAnalysis・試験バッチ）`);
 console.log('git status / git diff で差分を確認し、必要なら commit してください。');

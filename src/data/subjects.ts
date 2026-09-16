@@ -14,9 +14,9 @@ export interface NavSubject {
 }
 
 // Phase 5: 6分野6問検証が完了。数学Iの4単元と数学Aの2単元、計6問分のみ実ページを持つ。
-// このうち二次関数はM1-QF-001〜054（54問）へ差し替え済みの一般公開対象。
-// 他5単元は6問検証サンプルのまま（sampleOnly: true）で、一般公開の通常導線には出さない。
-// 他科目・他単元は今後の拡張を見越したプレースホルダー（表示のみ）。
+// このうち二次関数はM1-QF-001〜054（54問）、データの分析はM1-DA-001〜023（23問）へ
+// 差し替え済みの一般公開対象。他4単元は6問検証サンプルのまま（sampleOnly: true）で、
+// 一般公開の通常導線には出さない。他科目・他単元は今後の拡張を見越したプレースホルダー（表示のみ）。
 export const subjectNav: NavSubject[] = [
   {
     name: '数学I',
@@ -24,7 +24,7 @@ export const subjectNav: NavSubject[] = [
       { id: 'suto-shiki', name: '数と式', href: '/math1/suto-shiki/factorization/', sampleOnly: true },
       { id: 'quadratic', name: '二次関数', href: '/math1/quadratic/' },
       { id: 'trig', name: '三角比', href: '/math1/trig/cyclic-quadrilateral/', sampleOnly: true },
-      { id: 'data-analysis', name: 'データの分析', href: '/math1/data-analysis/correlation-coefficient/', sampleOnly: true },
+      { id: 'data-analysis', name: 'データの分析', href: '/math1/data-analysis/' },
     ],
   },
   {
@@ -49,20 +49,21 @@ export const publicSubjectNav: NavSubject[] = subjectNav.map((subject) => ({
   units: subject.units.filter((unit) => !unit.sampleOnly),
 }));
 
-// 3ペインDB UI（ProblemDbShell＝/app/・/math1/quadratic/*・/math1/trig/*）専用の単元ナビ。
-// publicSubjectNav（TOPページ等のNav.astro）とは意図的に別管理にしている：
-// 二次関数・三角比はどちらもDB UI自体は実装・レビュー済みで、個別問題ページを
-// 相互に行き来できる必要があるが、三角比はTOPページ等からの一般導線・sitemap掲載は
-// まだ行わない（CLAUDE.md「三角比の現在地」参照）。そのためpublicSubjectNavの
-// sampleOnlyフィルタとは別に、DB UI側だけで見せる単元をここに列挙する。
+// 3ペインDB UI（ProblemDbShell＝/app/・/math1/quadratic/*・/math1/trig/*・
+// /math1/data-analysis/*）専用の単元ナビ。publicSubjectNav（TOPページ等のNav.astro）
+// とは意図的に別管理にしている：三角比はDB UI自体は実装済みだがTOPページ等からの
+// 一般導線にはまだ出していない（本番公開契約はURL側のみ昇格済み、Nav掲載は別判断）。
+// データの分析はpublicSubjectNavにも追加済み（本番公開・2026-09-17）。そのため
+// publicSubjectNavのsampleOnlyフィルタとは別に、DB UI側だけで見せる単元をここに列挙する。
 // 新しい単元をDB UIへ追加するときはこの配列だけを更新すればよく、
-// QF・TR個別のroute側に単元一覧をハードコードしない。
+// QF・TR・DA個別のroute側に単元一覧をハードコードしない。
 export const dbSubjectNav: NavSubject[] = [
   {
     name: '数学I',
     units: [
       { id: 'quadratic', name: '二次関数', href: '/math1/quadratic/' },
       { id: 'trig', name: '三角比', href: '/math1/trig/' },
+      { id: 'data-analysis', name: 'データの分析', href: '/math1/data-analysis/' },
     ],
   },
 ];

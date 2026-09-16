@@ -41,17 +41,31 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ---
 
-## 三角比（試験バッチ）の現在地
+## 三角比の現在地
 
-数学I「三角比」M1-TR-001〜041（41問）について、独立検算・教材化・asset生成・実画面レビュー・Opus横断レビュー・Codex構造監査まで完了しています。本番公開はまだです。
+数学I「三角比」M1-TR-001〜041（41問）について、独立検算・教材化・asset生成・実画面レビュー・Opus横断レビュー・Codex構造監査まで完了し、本番公開済みです（コミット90cb5c5「Add trigonometry database and publish 95 math problems」、2026-09-12）。
 
 - 正本・同期先はQFと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-TR-*ファイル、スナップショット`src/content/trig4/`・`src/content/trig4-assets/`（`npm run sync-content`が両方を同期）。
 - 対応するContent Collectionは`trig4`（`src/content.config.ts`）、表示は`prepareTrigEntry.ts`経由でQFと同じ`Quadratic27Detail.astro`を再利用します。
 - 中央一覧の4区分（三角比の基本（0〜90°）／三角比の拡張（0〜180°）／平面図形と三角比／空間図形と三角比）は`src/utils/trigDbItems.ts`の`SECTION_TO_GROUP`で判定し、QFの`quadraticDbItems.ts`と同じ方式（section値ベース、問題IDレンジではない）です。
-- ルートは`/math1/trig/`・`/math1/trig/M1-TR-001/`〜`/math1/trig/M1-TR-041/`ですが、**すべてnoindexの試験用ページで、sitemapには含めません**。人間レビュー・構造監査・本番公開判断が済むまで、QFと同格の公開contractへ昇格させないでください。
+- ルートは`/math1/trig/`・`/math1/trig/M1-TR-001/`〜`/math1/trig/M1-TR-041/`で、QFと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。既存契約を理由なく変更しないでください。
 - 三角比masterは`trigonometric_ratio_problem_master.xlsx`（`problem_master/`配下、QFのmasterと同じフォルダ）です。
 - M1-TR-008の問題文・最終解答の表、M1-TR-015の警告文表示のため、共通parser（`src/utils/markdownSections.ts`）にremark-gfm・rehype-rawを追加済みです。既存54問はパイプ表・生HTMLを使っていないため表示への影響はありません。
 - M1-TR-017〜020の幾何asset（正弦定理・余弦定理の三角形図）は、`pa-*`とは別の役割別CSSクラス`geo-*`（頂点・角度・辺でサイズ/太さを分ける）を使っています。新しい三角比幾何assetを作る場合はこの方式を踏襲し、`pa-*`と混在させないでください。
+
+---
+
+## データの分析の現在地
+
+数学I「データの分析」M1-DA-001〜023（23問）について、独立検算・教材化・asset生成・実画面レビュー・レビュー後修正まで完了し、本番公開済みです（2026-09-17）。
+
+- 正本・同期先はQF/TRと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-DA-*ファイル、スナップショット`src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（`npm run sync-content`が3コレクションまとめて同期）。
+- 対応するContent Collectionは`dataAnalysis`（`src/content.config.ts`）、表示は`prepareDataAnalysisEntry.ts`経由でQF/TRと同じ`Quadratic27Detail.astro`を再利用します。
+- 中央一覧の5区分（代表値と度数分布／四分位数と箱ひげ図／分散と標準偏差／散布図と相関／仮説検定）は`src/utils/dataAnalysisDbItems.ts`の`SECTION_TO_GROUP`で判定し、QF/TRと同じ方式（section値ベース、問題IDレンジではない）です。
+- ルートは`/math1/data-analysis/`・`/math1/data-analysis/M1-DA-001/`〜`/math1/data-analysis/M1-DA-023/`で、QF/TRと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`publicSubjectNav`（TOPページのNav.astro）・`dbSubjectNav`（DB UI）の両方に掲載済みです。既存契約を理由なく変更しないでください。
+- データ分析masterは`problem_master/data_analysis_problem_master.xlsx`です（QF/TRのmasterと同じフォルダ）。独立検算後の資産のみ変更（数学的内容に影響しない）の経緯は`math_db_quadratic_working/verification/post_review_addenda.md`に追記する運用です。
+- ヒストグラム・箱ひげ図・散布図は本単元で新規追加したasset typeで、既存の`pa-*`共通クラス（`pa-axis`・`pa-figure-line`・`pa-figure-fill`・`pa-guide`・`pa-label`・`pa-label-muted`・`pa-panel-label`・`pa-axis-highlight`）の組み合わせのみで表現し、新しいCSSクラスは追加していません。
+- ThinkingFlow見出しにTeX記法を生表示させず、変数＋Unicode上付き文字（`x²`等）またはUnicode丸数字＋`\text{\textcircled{}}`（本文数式・最終解答内）を使う方式はQF/TRと共通の規約です。新しい問題でも踏襲してください。
 
 ---
 

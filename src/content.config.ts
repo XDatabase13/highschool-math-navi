@@ -91,7 +91,35 @@ const trig4 = defineCollection({
   }),
 });
 
+// データの分析（M1-DA-001〜023）の試験バッチ用コレクション。quadratic27・trig4と
+// 完全に分離しており、このコレクションを増やしても既存の公開契約・build・sitemap・
+// 中央ペイン分類には一切影響しない。本番公開・sitemap掲載は行わない
+// （教材化・表示検証のみの試験用。AGENTS.md「データの分析の現在地」参照）。
+const dataAnalysis = defineCollection({
+  loader: glob({
+    pattern: 'M1-DA-*.md',
+    base: './src/content/dataAnalysis',
+    generateId: ({ data }) => String(data.problem_id),
+  }),
+  schema: z.object({
+    problem_id: z.string(),
+    version: z.number(),
+    subject: z.string(),
+    unit: z.string(),
+    section: z.string(),
+    display_order: z.number(),
+    title: z.string(),
+    difficulty: z.number().min(1).max(4),
+    importance: z.number().min(1).max(4),
+    importance_label: z.string(),
+    reference_problem: z.string(),
+    verification_status: z.string(),
+    assets: problemAssetSchema,
+  }),
+});
+
 export const collections = {
   quadratic27,
   trig4,
+  dataAnalysis,
 };

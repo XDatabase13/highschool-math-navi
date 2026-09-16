@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 230" role="img">
+<line x1="46" y1="10" x2="46" y2="208" class="pa-guide"/>
+<text x="46" y="222" class="pa-label-muted" text-anchor="middle">4</text>
+<line x1="78.25" y1="10" x2="78.25" y2="208" class="pa-guide"/>
+<text x="78.25" y="222" class="pa-label-muted" text-anchor="middle">6</text>
+<line x1="110.5" y1="10" x2="110.5" y2="208" class="pa-guide"/>
+<text x="110.5" y="222" class="pa-label-muted" text-anchor="middle">8</text>
+<line x1="142.75" y1="10" x2="142.75" y2="208" class="pa-guide"/>
+<text x="142.75" y="222" class="pa-label-muted" text-anchor="middle">10</text>
+<line x1="175" y1="10" x2="175" y2="208" class="pa-guide"/>
+<text x="175" y="222" class="pa-label-muted" text-anchor="middle">12</text>
+<line x1="207.25" y1="10" x2="207.25" y2="208" class="pa-guide"/>
+<text x="207.25" y="222" class="pa-label-muted" text-anchor="middle">14</text>
+<line x1="239.5" y1="10" x2="239.5" y2="208" class="pa-guide"/>
+<text x="239.5" y="222" class="pa-label-muted" text-anchor="middle">16</text>
+<line x1="271.75" y1="10" x2="271.75" y2="208" class="pa-guide"/>
+<text x="271.75" y="222" class="pa-label-muted" text-anchor="middle">18</text>
+<line x1="304" y1="10" x2="304" y2="208" class="pa-guide"/>
+<text x="304" y="222" class="pa-label-muted" text-anchor="middle">20</text>
+<line x1="62.13" y1="27" x2="126.63" y2="27" class="pa-figure-line"/>
+<line x1="223.38" y1="27" x2="287.88" y2="27" class="pa-figure-line"/>
+<line x1="62.13" y1="16" x2="62.13" y2="38" class="pa-figure-line"/>
+<line x1="287.88" y1="16" x2="287.88" y2="38" class="pa-figure-line"/>
+<rect x="126.63" y="16" width="96.75" height="22" class="pa-figure-fill"/>
+<line x1="191.13" y1="16" x2="191.13" y2="38" class="pa-axis-highlight"/>
+<text x="36" y="31" class="pa-label" text-anchor="end">①</text>
+<line x1="62.13" y1="69" x2="158.88" y2="69" class="pa-figure-line"/>
+<line x1="223.38" y1="69" x2="287.88" y2="69" class="pa-figure-line"/>
+<line x1="62.13" y1="58" x2="62.13" y2="80" class="pa-figure-line"/>
+<line x1="287.88" y1="58" x2="287.88" y2="80" class="pa-figure-line"/>
+<rect x="158.88" y="58" width="64.5" height="22" class="pa-figure-fill"/>
+<line x1="191.13" y1="58" x2="191.13" y2="80" class="pa-axis-highlight"/>
+<text x="36" y="73" class="pa-label" text-anchor="end">②</text>
+<line x1="62.13" y1="111" x2="158.88" y2="111" class="pa-figure-line"/>
+<line x1="255.63" y1="111" x2="287.88" y2="111" class="pa-figure-line"/>
+<line x1="62.13" y1="100" x2="62.13" y2="122" class="pa-figure-line"/>
+<line x1="287.88" y1="100" x2="287.88" y2="122" class="pa-figure-line"/>
+<rect x="158.88" y="100" width="96.75" height="22" class="pa-figure-fill"/>
+<line x1="191.13" y1="100" x2="191.13" y2="122" class="pa-axis-highlight"/>
+<text x="36" y="115" class="pa-label" text-anchor="end">③</text>
+<line x1="94.38" y1="153" x2="158.88" y2="153" class="pa-figure-line"/>
+<line x1="223.38" y1="153" x2="287.88" y2="153" class="pa-figure-line"/>
+<line x1="94.38" y1="142" x2="94.38" y2="164" class="pa-figure-line"/>
+<line x1="287.88" y1="142" x2="287.88" y2="164" class="pa-figure-line"/>
+<rect x="158.88" y="142" width="64.5" height="22" class="pa-figure-fill"/>
+<line x1="191.13" y1="142" x2="191.13" y2="164" class="pa-axis-highlight"/>
+<text x="36" y="157" class="pa-label" text-anchor="end">④</text>
+</svg>

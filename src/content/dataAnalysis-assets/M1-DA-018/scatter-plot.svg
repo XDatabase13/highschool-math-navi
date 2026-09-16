@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 230" role="img">
+<text x="130" y="28" class="pa-label-muted" font-size="8">縦軸：50m走のタイム（秒）</text>
+<text x="130" y="39" class="pa-label-muted" font-size="8">横軸：漢字テストの得点（点）</text>
+<line x1="26" y1="190" x2="252" y2="190" class="pa-axis"/>
+<line x1="26" y1="190" x2="26" y2="46" class="pa-axis"/>
+<line x1="26" y1="190" x2="26" y2="193" class="pa-axis"/>
+<line x1="63.67" y1="190" x2="63.67" y2="193" class="pa-axis"/>
+<line x1="101.33" y1="190" x2="101.33" y2="193" class="pa-axis"/>
+<line x1="139" y1="190" x2="139" y2="193" class="pa-axis"/>
+<line x1="176.67" y1="190" x2="176.67" y2="193" class="pa-axis"/>
+<line x1="214.33" y1="190" x2="214.33" y2="193" class="pa-axis"/>
+<line x1="252" y1="190" x2="252" y2="193" class="pa-axis"/>
+<line x1="23" y1="190" x2="26" y2="190" class="pa-axis"/>
+<text x="20" y="193" class="pa-label-muted" text-anchor="end" font-size="7">7</text>
+<line x1="23" y1="166" x2="26" y2="166" class="pa-axis"/>
+<text x="20" y="169" class="pa-label-muted" text-anchor="end" font-size="7">7.5</text>
+<line x1="23" y1="142" x2="26" y2="142" class="pa-axis"/>
+<text x="20" y="145" class="pa-label-muted" text-anchor="end" font-size="7">8</text>
+<line x1="23" y1="118" x2="26" y2="118" class="pa-axis"/>
+<text x="20" y="121" class="pa-label-muted" text-anchor="end" font-size="7">8.5</text>
+<line x1="23" y1="94" x2="26" y2="94" class="pa-axis"/>
+<text x="20" y="97" class="pa-label-muted" text-anchor="end" font-size="7">9</text>
+<line x1="23" y1="70" x2="26" y2="70" class="pa-axis"/>
+<text x="20" y="73" class="pa-label-muted" text-anchor="end" font-size="7">9.5</text>
+<line x1="23" y1="46" x2="26" y2="46" class="pa-axis"/>
+<text x="20" y="49" class="pa-label-muted" text-anchor="end" font-size="7">10</text>
+<text x="26" y="204" class="pa-label-muted" text-anchor="middle" font-size="7">40</text>
+<text x="252" y="204" class="pa-label-muted" text-anchor="middle" font-size="7">100</text>
+<circle cx="44.83" cy="55.6" r="2.6" class="pa-dot-closed"/>
+<circle cx="63.67" cy="74.8" r="2.6" class="pa-dot-closed"/>
+<circle cx="82.5" cy="65.2" r="2.6" class="pa-dot-closed"/>
+<circle cx="101.33" cy="89.2" r="2.6" class="pa-dot-closed"/>
+<circle cx="108.87" cy="98.8" r="2.6" class="pa-dot-closed"/>
+<circle cx="120.17" cy="94" r="2.6" class="pa-dot-closed"/>
+<circle cx="131.47" cy="108.4" r="2.6" class="pa-dot-closed"/>
+<circle cx="139" cy="103.6" r="2.6" class="pa-dot-closed"/>
+<circle cx="146.53" cy="118" r="2.6" class="pa-dot-closed"/>
+<circle cx="157.83" cy="127.6" r="2.6" class="pa-dot-closed"/>
+<circle cx="169.13" cy="113.2" r="2.6" class="pa-dot-closed"/>
+<circle cx="176.67" cy="132.4" r="2.6" class="pa-dot-closed"/>
+<circle cx="195.5" cy="142" r="2.6" class="pa-dot-closed"/>
+<circle cx="214.33" cy="156.4" r="2.6" class="pa-dot-closed"/>
+<circle cx="233.17" cy="166" r="2.6" class="pa-dot-closed"/>
+</svg>

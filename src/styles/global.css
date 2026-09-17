@@ -1986,8 +1986,8 @@ ul {
 .q27-detail .thinking-section {
   margin-bottom: 1rem;
 }
-/* 問題メタ／解法メタは、見出し+内容を.impression-blockでまとめている
-   （スマホ開閉のための構造）。見出し単体ではなくブロック単位で間隔を取る。 */
+/* 問題メタ／解法メタは、開いたパネル内で.impression-blockごとにまとめている。
+   見出し単体ではなくブロック単位で間隔を取る。 */
 .q27-detail .impression-block + .impression-block {
   margin-top: 1.1rem;
 }
@@ -1997,74 +1997,102 @@ ul {
 .q27-detail .impression-subhead + p {
   margin-bottom: 0.8rem;
 }
-/* 問題メタ／解法メタの見出し：常にボタンだが、PC（min-width:901px側）では
-   常時表示・非対話に見えるよう上書きするため、ここではまず共通の見た目だけ整える。 */
-.q27-detail .impression-subhead-toggle {
-  width: 100%;
+
+/* 「元講師の独り言」上位見出し。問題メタ／解法メタの実体は変えず、
+   人間の所感であることを伝えるための見出しだけを追加する。既存h2の
+   アクセント線（左ボーダー）は流用しつつ、色とイタリックで少しだけ
+   個性を出す（過度な装飾は避ける）。 */
+.q27-detail .impression-master-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* 問題メタ本文は複製せず、同じDOM（.impression-clamp）を
+   line-clamp解除の有無だけで「冒頭2行のプレビュー」⇔「全文」に切り替える。
+   本文（problemMeta.html）自体は一切加工しない。このファイルは（Astro
+   コンポーネントのscoped <style>ではなく）プレーンなCSSとして読み込まれる
+   ため:global()は使わず、通常のセレクタで子孫のpに当てる。 */
+.q27-detail .impression-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  color: var(--color-text-muted);
+}
+.q27-detail .impression-clamp p {
+  margin: 0;
+}
+.q27-detail .impression-clamp.is-expanded {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+  color: var(--color-text);
+}
+.q27-detail .impression-clamp.is-expanded p {
+  margin: 0 0 0.8rem;
+}
+.q27-detail .impression-clamp.is-expanded p:last-child {
+  margin-bottom: 0;
+}
+
+/* 開閉ボタン。PC・スマホ共通で同じ挙動にする（幅による分岐なし）。 */
+.q27-detail .impression-master-toggle {
+  margin-top: 0.5rem;
   border: none;
   background: transparent;
   text-align: left;
   padding: 0;
   font: inherit;
-  color: inherit;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
+}
+.q27-detail .impression-master-toggle:hover {
+  text-decoration: underline;
 }
 .q27-detail .impression-caret {
-  display: none;
-  margin-left: auto;
   flex-shrink: 0;
-  width: 0.55em;
-  height: 0.55em;
-  border-right: 2px solid var(--color-text-muted);
-  border-bottom: 2px solid var(--color-text-muted);
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
   transform: rotate(-45deg);
   transition: transform 0.15s ease;
 }
-.q27-detail .impression-subhead-toggle[aria-expanded="true"] .impression-caret {
+.q27-detail .impression-master-toggle[aria-expanded="true"] .impression-caret {
   transform: rotate(45deg);
 }
-.q27-detail .impression-content-inner {
+
+/* 開いたパネルの中身。ThinkingFlow・最終解答・スマホ問題メタ旧実装と同じ
+   grid-template-rows 0fr/1fr＋opacityの手法をそのまま再利用する
+   （新しい開閉アニメーション実装は増やさない）。PC・スマホで挙動を分けない。 */
+.q27-detail .impression-panel:not([hidden]) {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  transition: grid-template-rows 165ms ease-out, opacity 165ms ease-out, margin-top 165ms ease-out;
+}
+.q27-detail .impression-panel:not([hidden]).is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 0.9rem;
+  transition: grid-template-rows 200ms ease-out, opacity 190ms ease-out, margin-top 200ms ease-out;
+}
+.q27-detail .impression-panel-inner {
   overflow: hidden;
   min-height: 0;
 }
-
-/* スマホ幅だけ、問題メタ／解法メタを個別開閉できるようにする。
-   ThinkingFlow（.thinking-step-content）と同じgrid-template-rows 0fr/1fr＋opacityの
-   手法をそのまま再利用する。初期状態は閉じる（マークアップ側でhidden指定）。 */
-@media (max-width: 900px) {
-  .q27-detail .impression-caret {
-    display: block;
-  }
-  .q27-detail .impression-content:not([hidden]) {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition: grid-template-rows 165ms ease-out, opacity 165ms ease-out;
-  }
-  .q27-detail .impression-content:not([hidden]).is-open {
-    grid-template-rows: 1fr;
-    opacity: 1;
-    transition: grid-template-rows 200ms ease-out, opacity 190ms ease-out;
-  }
-}
-
-/* PCでは開閉状態に関わらず常に表示し、見た目・挙動を変えない
-   （JS自体は動くが、視覚的には常時展開のままになる）。 */
-@media (min-width: 901px) {
-  .q27-detail .impression-content {
-    display: block;
-  }
-  .q27-detail .impression-subhead-toggle {
-    cursor: default;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .q27-detail .impression-content:not([hidden]),
-  .q27-detail .impression-content:not([hidden]).is-open {
+  .q27-detail .impression-panel:not([hidden]),
+  .q27-detail .impression-panel:not([hidden]).is-open {
     transition: none;
   }
 }

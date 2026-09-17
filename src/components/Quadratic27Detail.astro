@@ -184,30 +184,47 @@ function nextContextKey(): string {
 )}
 
 {(problemMeta || solutionMeta) && (
-  <section class="impression-section">
+  <section class="impression-section" data-impression-block>
+    <h2 class="impression-master-title">元講師の独り言</h2>
+
     {problemMeta && (
-      <div class="impression-block" data-impression-block>
-        <h3 class="impression-subhead">
-          <button type="button" class="impression-subhead-toggle" data-impression-toggle aria-expanded="false">
-            <span>問題メタ</span>
-            <span class="impression-caret" aria-hidden="true" />
-          </button>
-        </h3>
-        <div class="impression-content" data-impression-content hidden>
-          <div class="impression-content-inner" set:html={problemMeta.html} />
-        </div>
+      <div class="impression-block" id={`impression-problem-${entry.data.problem_id}`}>
+        <h3 class="impression-subhead" data-impression-problem-heading hidden>問題メタ</h3>
+        {/* 閉状態・開状態のいずれもこの1つのDOMだけを使う（複製しない）。
+            見せ方の切り替えはdata-impression-clampへのis-expanded付与という
+            CSS/状態切替のみで行う（本文自体は一切加工しない）。 */}
+        <div class="impression-clamp" data-impression-clamp set:html={problemMeta.html} />
       </div>
     )}
+
+    <button
+      type="button"
+      class="impression-master-toggle"
+      data-impression-toggle
+      aria-expanded="false"
+      aria-controls={[
+        problemMeta ? `impression-problem-${entry.data.problem_id}` : null,
+        solutionMeta ? `impression-solution-${entry.data.problem_id}` : null,
+      ]
+        .filter((id): id is string => id !== null)
+        .join(' ')}
+    >
+      <span data-impression-toggle-label>続きを読む</span>
+      <span class="impression-caret" aria-hidden="true" />
+    </button>
+
     {solutionMeta && (
-      <div class="impression-block" data-impression-block>
-        <h3 class="impression-subhead">
-          <button type="button" class="impression-subhead-toggle" data-impression-toggle aria-expanded="false">
-            <span>解法メタ</span>
-            <span class="impression-caret" aria-hidden="true" />
-          </button>
-        </h3>
-        <div class="impression-content" data-impression-content hidden>
-          <div class="impression-content-inner" set:html={solutionMeta.html} />
+      <div
+        class="impression-panel"
+        data-impression-content
+        id={`impression-solution-${entry.data.problem_id}`}
+        hidden
+      >
+        <div class="impression-panel-inner">
+          <div class="impression-block">
+            <h3 class="impression-subhead">解法メタ</h3>
+            <div set:html={solutionMeta.html} />
+          </div>
         </div>
       </div>
     )}
@@ -822,16 +839,19 @@ function nextContextKey(): string {
     });
   });
 
-  // 問題メタ／解法メタの開閉はスマホ幅だけの挙動（CSS側で制御）。
-  // JS自体は常に付けておき、PCではCSSの上書きにより見た目・挙動が変わらない。
-  // ThinkingFlow・最終解答と同じ「hidden解除→強制reflow→is-open付与」の
-  // アニメーション手法を再利用する。
+  // 「元講師の独り言」（問題メタ／解法メタ）の開閉。PC・スマホで挙動を分けず、
+  // 初期状態は常に閉じる。ThinkingFlow・最終解答と同じ「hidden解除→強制reflow→
+  // is-open付与」のアニメーション手法を再利用する（新しい開閉実装を増やさない）。
   document.querySelectorAll<HTMLElement>('[data-impression-toggle]').forEach((btn) => {
     if (btn.dataset.impressionBound) return;
     btn.dataset.impressionBound = 'true';
     const block = btn.closest<HTMLElement>('[data-impression-block]');
+    // 問題メタは複製せず同一DOM（clamp）をline-clamp解除で全文表示に切り替える。
+    // 解法メタは従来通り別要素（content）をhidden解除して表示する。
+    const clamp = block?.querySelector<HTMLElement>('[data-impression-clamp]');
+    const problemHeading = block?.querySelector<HTMLElement>('[data-impression-problem-heading]');
     const content = block?.querySelector<HTMLElement>('[data-impression-content]');
-    if (!content) return;
+    const label = btn.querySelector<HTMLElement>('[data-impression-toggle-label]');
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let closeTimer: number | undefined;
@@ -845,6 +865,11 @@ function nextContextKey(): string {
       const isExpanded = btn.getAttribute('aria-expanded') === 'true';
       const nextExpanded = !isExpanded;
       btn.setAttribute('aria-expanded', String(nextExpanded));
+      if (label) label.textContent = nextExpanded ? '閉じる' : '続きを読む';
+      if (clamp) clamp.classList.toggle('is-expanded', nextExpanded);
+      if (problemHeading) problemHeading.hidden = !nextExpanded;
+
+      if (!content) return;
 
       if (nextExpanded) {
         content.hidden = false;

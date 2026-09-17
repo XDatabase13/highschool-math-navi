@@ -468,5 +468,125 @@
       "match_level": "EXACT",
       "verified_at": "2026-09-13"
     }
+  ],
+  "M1-DA-001": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1502",
+      "display_label": "教科書より詳しい高校数学「平均値・中央値・最頻値」を解く",
+      "url": "https://yorikuwa.com/rm1502-deta-heikinchi-chuochi-saihinchi/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-005": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1507",
+      "display_label": "教科書より詳しい高校数学「データの修正と平均値」を解く",
+      "url": "https://yorikuwa.com/rm1507-deta-shusei-heikinchi/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-007": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1506",
+      "display_label": "教科書より詳しい高校数学「四分位範囲と外れ値」を解く",
+      "url": "https://yorikuwa.com/rm1506-shibunihani-hazurechi/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-008": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1505",
+      "display_label": "教科書より詳しい高校数学「ヒストグラムと箱ひげ図の比較」を解く",
+      "url": "https://yorikuwa.com/rm1505-hisutoguramu-hakohigezu/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-009": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1505",
+      "display_label": "教科書より詳しい高校数学「ヒストグラムと箱ひげ図の比較」を解く",
+      "url": "https://yorikuwa.com/rm1505-hisutoguramu-hakohigezu/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-010": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1509",
+      "display_label": "教科書より詳しい高校数学「偏差を用いた分散・標準偏差」を解く",
+      "url": "https://yorikuwa.com/rm1509-hensa-bunsan-hyojunhensa/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-011": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1510",
+      "display_label": "教科書より詳しい高校数学「データの2乗の値と分散・標準偏差」を解く",
+      "url": "https://yorikuwa.com/rm1510-2jo-bunsan-hyojunhensa/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-012": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1512",
+      "display_label": "教科書より詳しい高校数学「2つのグループと全体の平均値・分散」を解く",
+      "url": "https://yorikuwa.com/rm1512-2gurupu-zentai-heikinchi-bunsan/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-016": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1514",
+      "display_label": "教科書より詳しい高校数学「2つのデータの共分散と相関係数」を解く",
+      "url": "https://yorikuwa.com/rm1514-2deta-kyobunsan-sokankeisu/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-021": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1517",
+      "display_label": "教科書より詳しい高校数学「仮説検定による判断」を解く",
+      "url": "https://yorikuwa.com/rm1517-kasetsukentei-handan/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-022": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1517",
+      "display_label": "教科書より詳しい高校数学「仮説検定による判断」を解く",
+      "url": "https://yorikuwa.com/rm1517-kasetsukentei-handan/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
+  ],
+  "M1-DA-023": [
+    {
+      "source": "YORIKUWA",
+      "source_id": "rm1518",
+      "display_label": "教科書より詳しい高校数学「反復試行の確率と仮説検定」を解く",
+      "url": "https://yorikuwa.com/rm1518-hampukushiko-kakuritsu-kasetsukentei/",
+      "match_level": "EXACT",
+      "verified_at": "2026-09-17"
+    }
   ]
 }

@@ -13,7 +13,10 @@
   /* 補助アクセント。現時点ではTOPページ限定の配色（.top-theme）でのみ使用。 */
   --color-accent: #5f93a8;
   --font-base: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
-  --radius: 8px;
+  /* UIブラッシュアップ第一段階（2026-09）で8px→2pxへ縮小。カード・ボタン・チップ等
+     このサイト全体で共有する唯一の角丸変数で、強い丸みによる「AI生成UIっぽさ」を
+     抑えるための単一の変更点にしている（個別要素ごとの上書きを増やさない）。 */
+  --radius: 2px;
   --max-width: 1080px;
 }
 
@@ -48,9 +51,8 @@ h1 {
 }
 h2 {
   font-size: 1.15rem;
+  font-weight: 700;
   margin: 2rem 0 0.75rem;
-  border-left: 4px solid var(--color-primary);
-  padding-left: 0.6rem;
 }
 
 p {
@@ -99,13 +101,6 @@ ul {
   background-color: var(--color-bg);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
-}
-/* データ画面らしい極薄グリッド。ページ全面ではなくhero・CONCEPTの2か所に限定。 */
-.top-theme .hero,
-.top-theme .features-section {
-  background-image:
-    repeating-linear-gradient(to right, rgba(21, 40, 54, 0.05) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(to bottom, rgba(21, 40, 54, 0.05) 0 1px, transparent 1px 40px);
 }
 
 .site-header {
@@ -215,7 +210,7 @@ ul {
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
 }
 .badge-status {
   /* このサイトでは赤を主要アクセントにしないため、警告色ではなく
@@ -270,11 +265,9 @@ ul {
   text-decoration: none;
 }
 /* TOPのヒーローCTAのみ対象（.btn-primaryは404/Contactと共有のため無変更）。
-   Uiverse「proud-goat-69」（elijahgummer作、PLAYボタン）の、押し込める立体感
-   （下端の"リップ"を表すbox-shadow＋:activeでの沈み込み）とアイコンが横に
-   スライドするhoverを参考に、ネオン系ではなく本サイトの青黒／青灰パレット
-   （--color-primary系）へ調整。テキストは常に表示したまま矢印だけがスライドする
-   形にし、CTAとしての可読性を保っている（元デザインはテキストごと隠れる）。 */
+   UIブラッシュアップ第一段階（2026-09）で、押し込み立体感のbox-shadowと
+   hover時のtranslateY浮き上がりを撤去し、背景色の変化だけに単純化した
+   （文言・配色・矢印スライドのhoverは維持）。 */
 .hero-cta-link {
   display: inline-flex;
   align-items: center;
@@ -290,12 +283,7 @@ ul {
   letter-spacing: 0.01em;
   cursor: pointer;
   user-select: none;
-  transform: translateY(0);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 3px 0 var(--color-primary-dark),
-    0 6px 14px rgba(21, 40, 54, 0.22);
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
+  transition: background-color 150ms ease-out;
 }
 .hero-cta-icon {
   width: 1.15em;
@@ -305,11 +293,6 @@ ul {
 }
 .hero-cta-link:hover {
   background: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 5px 0 var(--color-primary-dark),
-    0 10px 18px rgba(21, 40, 54, 0.28);
   text-decoration: none;
 }
 .hero-cta-link:hover .hero-cta-icon {
@@ -320,20 +303,12 @@ ul {
   outline-offset: 2px;
 }
 .hero-cta-link:active {
-  transform: translateY(2px);
-  box-shadow:
-    inset 0 1px 2px rgba(21, 40, 54, 0.25),
-    0 0 0 var(--color-primary-dark),
-    0 2px 6px rgba(21, 40, 54, 0.2);
+  background: var(--color-primary-dark);
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-cta-link,
   .hero-cta-icon {
     transition: none;
-  }
-  .hero-cta-link:hover,
-  .hero-cta-link:active {
-    transform: none;
   }
   .hero-cta-link:hover .hero-cta-icon {
     transform: none;
@@ -357,7 +332,6 @@ ul {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 1px 3px rgba(35, 35, 35, 0.06);
   cursor: zoom-in;
   overflow: hidden;
 }
@@ -492,12 +466,13 @@ ul {
   height: 100%;
 }
 
+/* 「このサイトについて」の本文。外枠のカード化はやめ、.dash-sectionの
+   上側罫線（border-top）だけで前後のセクションと区切る。 */
 .dash-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.4rem 1.5rem;
   height: 100%;
+}
+.dash-card p {
+  max-width: 760px;
 }
 
 /* 「授業でかなり時間をかけていた」等：文中に埋めず、視認しやすい小カードとして見せる
@@ -1109,8 +1084,6 @@ ul {
   font-size: 1rem;
   font-weight: 700;
   color: var(--color-text);
-  border-left: 4px solid var(--color-primary);
-  padding-left: 0.6rem;
 }
 .impression-subhead:first-child {
   margin-top: 0;
@@ -1963,9 +1936,9 @@ ul {
   margin-top: 0.5rem;
   margin-bottom: 0.25rem;
 }
-/* 「問題メタ／解法メタ」は問題カードより一段軽い存在感にする。内容・見出し構造・
-   左アクセント線（.impression-subheadのborder-left）はそのまま、白背景の角丸ボックス
-   ではなく上下の罫線だけの「読む領域」に近い見た目へ弱める。 */
+/* 「問題メタ／解法メタ」は問題カードより一段軽い存在感にする。内容・見出し構造は
+   そのまま、白背景の角丸ボックスではなく上下の罫線だけの「読む領域」に近い
+   見た目へ弱める。 */
 .q27-detail .impression-section {
   background: transparent;
   border: none;
@@ -1974,9 +1947,14 @@ ul {
   border-radius: 0;
   padding: 0.9rem 1.15rem;
 }
-/* 最終解答：閉状態（見出し＋「解答を見る」ボタンのみ）をコンパクトにする。
-   開いた際の本文側の余白（.result-box）は変更しないため、読みやすさは維持される。 */
+/* 最終解答も同様に白背景の角丸ボックスをやめ、上側の罫線＋余白だけで区切る
+   （閉状態＝見出し＋「解答を見る」ボタンのみ、をコンパクトにする従来の意図は
+   そのまま）。開いた際の本文側の余白（.result-box）は変更しない。 */
 .q27-detail .final-answer-section {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
   padding: 0.6rem 1.15rem;
 }
 .q27-detail .final-answer-section > h2 {
@@ -1999,14 +1977,13 @@ ul {
 }
 
 /* 「元講師の独り言」上位見出し。問題メタ／解法メタの実体は変えず、
-   人間の所感であることを伝えるための見出しだけを追加する。既存h2の
-   アクセント線（左ボーダー）は流用しつつ、色とイタリックで少しだけ
-   個性を出す（過度な装飾は避ける）。 */
+   人間の所感であることを伝えるための見出しだけを追加する。
+   「人間らしさ」は書体ではなく文章そのもので示す方針のため、斜体は使わず
+   通常の正体＋控えめな文字色だけで他の見出しよりわずかに軽い扱いにする。 */
 .q27-detail .impression-master-title {
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--color-text-muted);
-  font-style: italic;
 }
 
 /* 問題メタ本文は複製せず、同じDOM（.impression-clamp）を
@@ -2021,6 +1998,7 @@ ul {
   line-clamp: 2;
   overflow: hidden;
   color: var(--color-text-muted);
+  max-width: 760px;
 }
 .q27-detail .impression-clamp p {
   margin: 0;
@@ -2031,6 +2009,9 @@ ul {
   line-clamp: unset;
   overflow: visible;
   color: var(--color-text);
+  /* 全文表示時は横に長くなりすぎないよう読みやすい行長に留める
+     （問題文・数式・assetは対象外、この本文だけの可読性調整）。 */
+  max-width: 760px;
 }
 .q27-detail .impression-clamp.is-expanded p {
   margin: 0 0 0.8rem;
@@ -2089,6 +2070,8 @@ ul {
 .q27-detail .impression-panel-inner {
   overflow: hidden;
   min-height: 0;
+  /* 解法メタも問題メタ全文（.impression-clamp.is-expanded）と同じ行長に揃える。 */
+  max-width: 760px;
 }
 @media (prefers-reduced-motion: reduce) {
   .q27-detail .impression-panel:not([hidden]),
@@ -2109,6 +2092,9 @@ ul {
 }
 .q27-detail .thinking-step-body {
   margin-bottom: 0.6rem;
+  /* STEPカード自体の構造は変えず、本文テキストだけ広い画面での行長を抑える
+     （数式askや図はこのmax-widthの影響を受けない範囲で別途はみ出せる）。 */
+  max-width: 760px;
 }
 /* レビュー指摘（M1-TR-025）：短いFlow（本文1文＋数式1つ程度）でも、pの下余白
    （基本スタイルの1rem）とKaTeX .katex-displayの既定余白（1em）が積み重なり、

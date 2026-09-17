@@ -19,10 +19,10 @@ const prepared = await prepareQuadratic27Entry(defaultEntry);
   title="数学I 二次関数 | 高校数学ナビ"
   description="数学I「二次関数」の問題データベースです（二次関数・二次方程式・二次不等式、54問）。重要度・難易度を目安に、まず何をやるか考えられます。"
   canonicalPath="/math1/quadratic/"
-  breadcrumb={`数学I ＞ 二次関数 ＞ ${defaultEntry.data.title}`}
+  breadcrumbItems={[{ label: '数学I' }, { label: '二次関数' }]}
   activeUnitId="quadratic"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
 >
-  <Quadratic27Detail prepared={prepared} />
+  <Quadratic27Detail prepared={prepared} unitHeading="数学I 二次関数" />
 </ProblemDbShell>

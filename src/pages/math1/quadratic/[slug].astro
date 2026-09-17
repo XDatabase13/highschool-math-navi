@@ -30,7 +30,11 @@ const centerItems = buildQuadraticCenterItems(allProblems);
   title={`${problem.data.title} | 数学I 二次関数 | 高校数学ナビ`}
   description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「二次関数」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
   canonicalPath={`/math1/quadratic/${problem.id}/`}
-  breadcrumb={`数学I ＞ 二次関数 ＞ ${problem.data.title}`}
+  breadcrumbItems={[
+    { label: '数学I' },
+    { label: '二次関数', href: '/math1/quadratic/' },
+    { label: problem.data.title },
+  ]}
   activeUnitId="quadratic"
   activeItemId={problem.id}
   centerItems={centerItems}

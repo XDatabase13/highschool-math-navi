@@ -21,7 +21,11 @@ const prepared = await prepareQuadratic27Entry(defaultEntry);
   title="問題データベース（試作） | 高校数学ナビ"
   description="高校数学ナビの問題データベースです。数学I「二次関数」など、単元ごとに問題を選んで解法の流れを確認できます。"
   canonicalPath="/app/"
-  breadcrumb={`数学I ＞ 二次関数 ＞ ${defaultEntry.data.title}`}
+  breadcrumbItems={[
+    { label: '数学I' },
+    { label: '二次関数', href: '/math1/quadratic/' },
+    { label: defaultEntry.data.title },
+  ]}
   activeUnitId="quadratic"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}

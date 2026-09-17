@@ -30,7 +30,11 @@ const centerItems = buildDataAnalysisCenterItems(allProblems);
   title={`${problem.data.title} | 数学I データの分析 | 高校数学ナビ`}
   description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「データの分析」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
   canonicalPath={`/math1/data-analysis/${problem.id}/`}
-  breadcrumb={`数学I ＞ データの分析 ＞ ${problem.data.title}`}
+  breadcrumbItems={[
+    { label: '数学I' },
+    { label: 'データの分析', href: '/math1/data-analysis/' },
+    { label: problem.data.title },
+  ]}
   activeUnitId="data-analysis"
   activeItemId={problem.id}
   centerItems={centerItems}

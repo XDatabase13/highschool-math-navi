@@ -21,10 +21,10 @@ const prepared = await prepareTrigEntry(defaultEntry);
   title="数学I 三角比 | 高校数学ナビ"
   description="数学I「三角比」の問題データベースです。三角比の基本・拡張、平面図形、空間図形と三角比まで、全41問を収録しています。"
   canonicalPath="/math1/trig/"
-  breadcrumb={`数学I ＞ 三角比 ＞ ${defaultEntry.data.title}`}
+  breadcrumbItems={[{ label: '数学I' }, { label: '三角比' }]}
   activeUnitId="trig"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
 >
-  <Quadratic27Detail prepared={prepared} />
+  <Quadratic27Detail prepared={prepared} unitHeading="数学I 三角比" />
 </ProblemDbShell>

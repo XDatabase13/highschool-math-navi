@@ -29,7 +29,11 @@ const centerItems = buildTrigCenterItems(allProblems);
   title={`${problem.data.title} | 数学I 三角比 | 高校数学ナビ`}
   description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「三角比」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
   canonicalPath={`/math1/trig/${problem.id}/`}
-  breadcrumb={`数学I ＞ 三角比 ＞ ${problem.data.title}`}
+  breadcrumbItems={[
+    { label: '数学I' },
+    { label: '三角比', href: '/math1/trig/' },
+    { label: problem.data.title },
+  ]}
   activeUnitId="trig"
   activeItemId={problem.id}
   centerItems={centerItems}

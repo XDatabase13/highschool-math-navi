@@ -26,11 +26,20 @@ import { groupCenterItems, type DbCenterItem } from '../utils/dbCenterList';
 
 export type { DbCenterItem };
 
+// パンくずの各項目。hrefを省略した項目（「数学I」など対応する固有URLが
+// 存在しない階層や、現在地そのものの階層）はリンクにせずテキストのみ表示する。
+// 画面表示用のnav/olと、headに出力するBreadcrumbList JSON-LDの両方を
+// この同じ配列から生成するため、表示内容と構造化データが常に一致する。
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
 interface Props {
   title: string;
   description: string;
   canonicalPath: string;
-  breadcrumb: string;
+  breadcrumbItems: BreadcrumbItem[];
   activeUnitId: string;
   activeItemId?: string;
   centerItems: DbCenterItem[];
@@ -45,7 +54,7 @@ const {
   title,
   description,
   canonicalPath,
-  breadcrumb,
+  breadcrumbItems,
   activeUnitId,
   activeItemId,
   centerItems,
@@ -54,6 +63,35 @@ const {
 } = Astro.props;
 
 const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
+
+// BreadcrumbList構造化データ。Googleの仕様上、itemを省略できるのは最後の
+// ListItemだけのため、hrefを持たない中間項目（「数学I」など対応URLが存在しない
+// 階層）はJSON-LD側では丸ごと除外する（架空のURLは作らない。画面上のパンくず
+// 表示にはこの項目を残したままにする＝表示とJSON-LDを完全一致させる必要はなく、
+// JSON-LDは「実在するURLを持つ階層＋現在地」だけの安全な部分集合にする）。
+// 除外後に2階層未満（＝現在地1件だけ）になる場合はBreadcrumbList自体を
+// 出力しない（単元トップは「数学I」に対応URLが無く、単元名も現在地のため
+// リンクを持たず、有効な2階層を構成できないため）。
+const jsonLdBreadcrumbItems = breadcrumbItems.filter(
+  (item, index) => item.href || index === breadcrumbItems.length - 1,
+);
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: jsonLdBreadcrumbItems.map((item, index) => {
+    const listItem: Record<string, unknown> = {
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.label,
+    };
+    if (item.href) {
+      listItem.item = new URL(item.href, Astro.site).toString();
+    }
+    return listItem;
+  }),
+};
+const breadcrumbJsonLdString = JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c');
+const shouldRenderBreadcrumbJsonLd = !noindex && jsonLdBreadcrumbItems.length >= 2;
 const centerGroups = groupCenterItems(centerItems);
 
 // PC左ナビ（db-pane-subjects）・スマホ問題一覧ダイアログの「科目／単元」切り替えの
@@ -77,13 +115,32 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
     {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
     <title>{title}</title>
+    {shouldRenderBreadcrumbJsonLd && (
+      <script type="application/ld+json" set:html={breadcrumbJsonLdString} />
+    )}
     <Analytics />
   </head>
   <body>
     <div class="db-shell">
       <header class="db-header">
         <a class="db-header-title" href="/">高校数学ナビ</a>
-        <span class="db-current-path">{breadcrumb}</span>
+        <nav class="db-current-path" aria-label="パンくずリスト">
+          <ol class="db-breadcrumb-list">
+            {breadcrumbItems.map((item, index) => {
+              const isLast = index === breadcrumbItems.length - 1;
+              return (
+                <li class="db-breadcrumb-item">
+                  {item.href ? (
+                    <a href={item.href}>{item.label}</a>
+                  ) : (
+                    <span aria-current={isLast ? 'page' : undefined}>{item.label}</span>
+                  )}
+                  {!isLast && <span class="db-breadcrumb-sep" aria-hidden="true">＞</span>}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
         <a class="db-header-back" href="/">← トップへ戻る</a>
         <nav class="db-header-info" aria-label="サイト情報">
           <a href="/privacy/">プライバシー</a>
@@ -293,6 +350,28 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        min-width: 0;
+      }
+      .db-breadcrumb-list {
+        display: flex;
+        align-items: baseline;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 0.3rem;
+      }
+      .db-breadcrumb-item {
+        display: flex;
+        align-items: baseline;
+        gap: 0.3rem;
+      }
+      .db-current-path a {
+        color: #bcdff0;
+        text-decoration: none;
+      }
+      .db-current-path a:hover {
+        color: #fff;
+        text-decoration: underline;
       }
       .db-header-back {
         font-size: 0.8rem;

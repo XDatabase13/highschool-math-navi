@@ -20,10 +20,10 @@ const prepared = await prepareDataAnalysisEntry(defaultEntry);
   title="数学I データの分析 | 高校数学ナビ"
   description="数学I「データの分析」の問題データベースです。代表値と度数分布、四分位数と箱ひげ図、分散と標準偏差、散布図と相関、仮説検定まで、全23問を収録しています。"
   canonicalPath="/math1/data-analysis/"
-  breadcrumb={`数学I ＞ データの分析 ＞ ${defaultEntry.data.title}`}
+  breadcrumbItems={[{ label: '数学I' }, { label: 'データの分析' }]}
   activeUnitId="data-analysis"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
 >
-  <Quadratic27Detail prepared={prepared} />
+  <Quadratic27Detail prepared={prepared} unitHeading="数学I データの分析" />
 </ProblemDbShell>

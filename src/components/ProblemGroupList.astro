@@ -42,8 +42,15 @@ const { groups, activeItemId } = Astro.props;
                   <span class="db-problem-number">{number}</span>
                   <span class="db-problem-title">{item.title}</span>
                   <span class="db-problem-chips">
-                    {item.chips.map((chip) => (
-                      <span class="db-problem-chip">{chip}</span>
+                    {item.chips.map((chip, chipIndex) => (
+                      // chips[0]は常にimportance_label（重要度）、chips[1]はdifficulty
+                      // （難易度、数字文字列）という呼び出し側の組み立て順（*DbItems.ts）に
+                      // 依存する。重要度チップだけにdata-importanceを付け、個別問題ページ・
+                      // TOPページのCONCEPT説明と同じ色ルール（global.cssの[data-importance]）
+                      // に乗せる。難易度チップは付けず、既存の控えめな見た目のまま。
+                      <span class="db-problem-chip" data-importance={chipIndex === 0 ? chip : undefined}>
+                        {chip}
+                      </span>
                     ))}
                   </span>
                 </a>
@@ -172,8 +179,11 @@ const { groups, activeItemId } = Astro.props;
     font-weight: 700;
     color: var(--color-primary-dark);
   }
-  /* チップはタイトルより目立たせない。彩度のある青系ではなく、
-     中立トーンの弱い背景＋muted文字色にとどめる。 */
+  /* 難易度チップ（data-importanceなし）はタイトルより目立たせない、中立トーンの
+     弱い背景のままにしつつ、数字が薄く見えすぎないよう文字色だけ濃くする。
+     重要度チップ（data-importanceあり）はglobal.cssの[data-importance]共通
+     ルールに配色を任せるため、ここでは背景・文字色を指定しない
+     （:not([data-importance])で明示的に除外する）。 */
   .db-problem-chips {
     flex-shrink: 0;
     display: flex;
@@ -181,14 +191,16 @@ const { groups, activeItemId } = Astro.props;
   }
   .db-problem-chip {
     font-size: 0.68rem;
-    color: var(--color-text-muted);
-    background: rgba(35, 35, 35, 0.045);
-    border-radius: 4px;
+    border-radius: var(--radius);
     padding: 0.05rem 0.4rem;
     white-space: nowrap;
   }
-  .db-problem-link.is-selected .db-problem-chip {
+  .db-problem-chip:not([data-importance]) {
+    color: var(--color-text);
+    background: rgba(35, 35, 35, 0.045);
+  }
+  .db-problem-link.is-selected .db-problem-chip:not([data-importance]) {
     background: rgba(255, 255, 255, 0.55);
-    color: var(--color-text-muted);
+    color: var(--color-text);
   }
 </style>

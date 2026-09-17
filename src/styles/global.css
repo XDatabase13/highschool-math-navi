@@ -12,8 +12,17 @@
   --color-highlight: #c0392b;
   /* 補助アクセント。現時点ではTOPページ限定の配色（.top-theme）でのみ使用。 */
   --color-accent: #5f93a8;
+  /* 重要度タグ（土台・本命・次点）専用の配色（ユーザー指定）。全てブルー系に統一し、
+     濃さ・色味だけで「ネイビーブルー／ロイヤルブルー／ラグーンブルー」の3段階を
+     作る。余力は色トークンを増やさず既存の--color-borderを使う（グレーのまま）。 */
+  --color-importance-navy: #234a60;
+  --color-importance-royal: #33569c;
+  --color-importance-lagoon: #1c7089;
   --font-base: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Segoe UI", system-ui, sans-serif;
-  --radius: 8px;
+  /* UIブラッシュアップ第一段階（2026-09）で8px→2pxへ縮小。カード・ボタン・チップ等
+     このサイト全体で共有する唯一の角丸変数で、強い丸みによる「AI生成UIっぽさ」を
+     抑えるための単一の変更点にしている（個別要素ごとの上書きを増やさない）。 */
+  --radius: 2px;
   --max-width: 1080px;
 }
 
@@ -48,9 +57,8 @@ h1 {
 }
 h2 {
   font-size: 1.15rem;
+  font-weight: 700;
   margin: 2rem 0 0.75rem;
-  border-left: 4px solid var(--color-primary);
-  padding-left: 0.6rem;
 }
 
 p {
@@ -99,13 +107,6 @@ ul {
   background-color: var(--color-bg);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
-}
-/* データ画面らしい極薄グリッド。ページ全面ではなくhero・CONCEPTの2か所に限定。 */
-.top-theme .hero,
-.top-theme .features-section {
-  background-image:
-    repeating-linear-gradient(to right, rgba(21, 40, 54, 0.05) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(to bottom, rgba(21, 40, 54, 0.05) 0 1px, transparent 1px 40px);
 }
 
 .site-header {
@@ -215,13 +216,14 @@ ul {
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
-  border-radius: 999px;
+  border-radius: var(--radius);
 }
 .badge-status {
-  /* このサイトでは赤を主要アクセントにしないため、警告色ではなく
-     控えめな補助アクセント（--color-accent）を使う。 */
-  background: var(--color-accent);
-  color: #fff;
+  /* ピル型の塗りバッジをやめ、細い枠＋文字色だけの静かな小ラベルにする
+     （影なし・強い角丸なし・派手な塗りなし）。 */
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
 }
 .hero-title {
   font-size: 1.85rem;
@@ -236,8 +238,10 @@ ul {
   /* TOPページのメインコピーのみ対象（他ページのhero-titleは短文のため対象外）。
      2行固定（マークアップ側の<br />）を前提に、vw基準で滑らかにスケールさせる。
      現行比で約2倍を目安にしつつ、狭幅では行の文字数に対して確実に収まる
-     範囲（下限1.5rem）にとどめ、横スクロールが発生しないようにする。 */
-  font-family: "Zen Maru Gothic", var(--font-base);
+     範囲（下限1.5rem）にとどめ、横スクロールが発生しないようにする。
+     UIブラッシュアップ（トップページ、2026-09）で丸ゴシック（Zen Maru Gothic）
+     の装飾フォントをやめ、本文と同じ--font-baseへ揃えた。 */
+  font-family: var(--font-base);
   font-weight: 700;
   font-size: clamp(1.2rem, 6vw, 3.6rem);
   line-height: 1.4;
@@ -245,7 +249,8 @@ ul {
 .hero-tagline {
   color: var(--color-text-muted);
   font-family: "M PLUS 2", var(--font-base);
-  font-weight: 600;
+  /* 主見出しより一段静かに見せるため、600（半太字）から通常ウェイトへ。 */
+  font-weight: 400;
   font-size: clamp(1rem, 4vw, 2rem);
   margin: 0 0 0.9rem;
 }
@@ -270,11 +275,10 @@ ul {
   text-decoration: none;
 }
 /* TOPのヒーローCTAのみ対象（.btn-primaryは404/Contactと共有のため無変更）。
-   Uiverse「proud-goat-69」（elijahgummer作、PLAYボタン）の、押し込める立体感
-   （下端の"リップ"を表すbox-shadow＋:activeでの沈み込み）とアイコンが横に
-   スライドするhoverを参考に、ネオン系ではなく本サイトの青黒／青灰パレット
-   （--color-primary系）へ調整。テキストは常に表示したまま矢印だけがスライドする
-   形にし、CTAとしての可読性を保っている（元デザインはテキストごと隠れる）。 */
+   UIブラッシュアップ第一段階（2026-09）で、押し込み立体感のbox-shadowと
+   hover時のtranslateY浮き上がりを撤去し、背景色の変化だけに単純化した。
+   トップページのブラッシュアップ（2026-09）で、矢印スライドのhoverアニメーションも
+   撤去し、hoverは背景色の変化のみにした。 */
 .hero-cta-link {
   display: inline-flex;
   align-items: center;
@@ -290,53 +294,27 @@ ul {
   letter-spacing: 0.01em;
   cursor: pointer;
   user-select: none;
-  transform: translateY(0);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 3px 0 var(--color-primary-dark),
-    0 6px 14px rgba(21, 40, 54, 0.22);
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out, background-color 150ms ease-out;
+  transition: background-color 150ms ease-out;
 }
 .hero-cta-icon {
   width: 1.15em;
   height: 1.15em;
   flex-shrink: 0;
-  transition: transform 200ms ease-out;
 }
 .hero-cta-link:hover {
   background: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 5px 0 var(--color-primary-dark),
-    0 10px 18px rgba(21, 40, 54, 0.28);
   text-decoration: none;
-}
-.hero-cta-link:hover .hero-cta-icon {
-  transform: translateX(6px);
 }
 .hero-cta-link:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 .hero-cta-link:active {
-  transform: translateY(2px);
-  box-shadow:
-    inset 0 1px 2px rgba(21, 40, 54, 0.25),
-    0 0 0 var(--color-primary-dark),
-    0 2px 6px rgba(21, 40, 54, 0.2);
+  background: var(--color-primary-dark);
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-cta-link,
-  .hero-cta-icon {
+  .hero-cta-link {
     transition: none;
-  }
-  .hero-cta-link:hover,
-  .hero-cta-link:active {
-    transform: none;
-  }
-  .hero-cta-link:hover .hero-cta-icon {
-    transform: none;
   }
 }
 .hero-link {
@@ -357,7 +335,6 @@ ul {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 1px 3px rgba(35, 35, 35, 0.06);
   cursor: zoom-in;
   overflow: hidden;
 }
@@ -463,15 +440,6 @@ ul {
   margin: 0 auto;
   text-align: center;
 }
-.features-eyebrow {
-  /* メインブルーとは濃淡を変え、補助アクセントで小見出し感を出す */
-  color: var(--color-accent);
-  font-family: "M PLUS 2", var(--font-base);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  margin: 0 0 0.4rem;
-}
 .features-heading {
   border-left: none;
   padding-left: 0;
@@ -480,24 +448,14 @@ ul {
   font-size: 1.5rem;
   text-align: center;
 }
-.feature-icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 0.9rem;
-  color: var(--color-primary);
-}
-.feature-icon svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 
+/* 「このサイトについて」の本文。外枠のカード化はやめ、.dash-sectionの
+   上側罫線（border-top）だけで前後のセクションと区切る。 */
 .dash-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.4rem 1.5rem;
   height: 100%;
+}
+.dash-card p {
+  max-width: 760px;
 }
 
 /* 「授業でかなり時間をかけていた」等：文中に埋めず、視認しやすい小カードとして見せる
@@ -578,6 +536,15 @@ ul {
   color: var(--color-primary-dark);
   white-space: nowrap;
 }
+/* 重要度説明（土台／本命／次点／余力）だけ、個別問題ページ・問題一覧と同じ
+   重要度タグ（下の[data-importance]共通ルール）で色を揃える。難易度列
+   （基本／標準／応用／発展）にはdata-importanceを付けていないため、この
+   セレクタには掛からず上のプレーンな文字色のまま（新しい4色システムを
+   難易度側には作らない）。 */
+.concept-item-label[data-importance] {
+  padding: 0.15rem 0.55rem;
+  font-size: 0.95rem;
+}
 .concept-item-desc {
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 400;
@@ -585,21 +552,25 @@ ul {
   color: var(--color-text-muted);
 }
 .concept-item--numbered {
-  grid-template-columns: 2.05rem 3.25rem 1fr;
+  grid-template-columns: 1.6rem 3.25rem 1fr;
   align-items: center;
 }
+/* 単なる装飾だった大きな塗りつぶし丸数字をやめ、ThinkingFlowのSTEP番号
+   （.thinking-step-number／.mini-flow-step-num）と同じ、小さく控えめな
+   アウトライン円に揃える（難易度は重要度ほど色を主張させない現行方針を維持）。 */
 .concept-item-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.05rem;
-  height: 2.05rem;
+  width: 1.6rem;
+  height: 1.6rem;
   border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
-  font-family: "M PLUS 2", var(--font-base);
-  font-weight: 600;
-  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: 0.75rem;
 }
 
 /* 定期試験セル：「高校数学ナビ」×「学校の情報」が下の「あなたの優先順位」へ
@@ -704,13 +675,29 @@ ul {
   padding: 0;
   width: 100%;
 }
+/* 実際のThinkingFlow（.thinking-step／.thinking-step-number）と同じ
+   「縦レール＋番号マーカー＋★」という視覚言語を、小さな説明図として再現する
+   （トップページ専用の新コンポーネントは作らず、この最小限のCSSだけで寄せる）。 */
+.mini-flow-step {
+  position: relative;
+  padding-left: 2.2rem;
+}
 .mini-flow-step:not(:first-child) {
   border-top: 1px solid var(--color-border);
+}
+.mini-flow-step::before {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-border);
 }
 .mini-flow-toggle {
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
+  gap: 0.5rem;
   width: 100%;
   border: none;
   background: none;
@@ -729,18 +716,32 @@ ul {
   outline-offset: 2px;
 }
 .mini-flow-step-num {
-  flex-shrink: 0;
-  font-family: "M PLUS 2", var(--font-base);
-  font-weight: 600;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  color: var(--color-accent);
+  position: absolute;
+  left: 0;
+  top: 0.65rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-base);
+  font-weight: 700;
+  font-size: 0.75rem;
 }
 .mini-flow-step-title {
   font-family: "M PLUS 2", var(--font-base);
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--color-primary-dark);
+}
+.mini-flow-step-star {
+  color: var(--color-primary);
+  font-size: 0.85rem;
 }
 /* JSでheightを測らずに開閉できるよう、grid-template-rowsの0fr/1frで
    アコーディオンを実装する（“ゆっくり開く”動きもtransitionだけで表現）。 */
@@ -979,18 +980,66 @@ ul {
   display: flex;
   align-items: baseline;
   gap: 0.35rem;
-  background: var(--color-accent-bg);
-  border-radius: var(--radius);
-  padding: 0.3rem 0.7rem;
   font-size: 0.85rem;
 }
 .label-name {
   color: var(--color-text-muted);
 }
+/* 難易度（★表示）のデフォルト色。重要度（[data-importance]）の場合はこの下の
+   共通ルールが上書きする。ピル型の箱は使わず、文字色だけの控えめな表現にする。 */
 .label-value {
   font-weight: 700;
   color: var(--color-primary-dark);
 }
+
+/* ============================================================
+   重要度タグの共通ルール（UIブラッシュアップ第二段階B、2026-09）。
+   「土台／本命／次点／余力」というデータ・意味は変更せず、表示だけを統一する。
+   - 個別問題タイトル下（.label-value、ここ）
+   - PC/スマホ問題一覧（ProblemGroupList.astroの.db-problem-chip、スコープ付き
+     styleのため[data-importance]を持つ場合だけ背景色を外す形で連携）
+   - TOPページのCONCEPT重要度説明（.concept-item-label）
+   の3箇所すべてが、同じdata-importance属性値からこの1つのルール群だけで
+   色を決める（場所ごとに配色をハードコードしない）。サイズ（padding/font-size）は
+   用途ごとに各コンポーネント側で個別調整してよいが、色・形状はここに一本化する。
+   形状は影・強いグラデーション・過剰な枠線を使わない、0〜2px角丸の平たいラベル。
+   ============================================================ */
+[data-importance] {
+  display: inline-block;
+  border-radius: 2px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+/* 土台：ネイビーブルー・白文字（ユーザー指定）。土台・本命・次点は全てブルー系で
+   統一し、枠線など形状差は付けない（濃さ・色味の違いだけで区別する）。 */
+[data-importance="土台"] {
+  background: var(--color-importance-navy);
+  color: #fff;
+}
+/* 本命：ロイヤルブルー・白文字。土台と上下関係は無いため、枠や太さ等の形状は
+   土台と完全に同格にする。 */
+[data-importance="本命"] {
+  background: var(--color-importance-royal);
+  color: #fff;
+}
+/* 次点：ラグーンブルー・白文字。土台／本命とは一段違うグループだと分かる程度の
+   色味の違いに留め、警告色（赤・黄）は使わない。 */
+[data-importance="次点"] {
+  background: var(--color-importance-lagoon);
+  color: #fff;
+}
+/* 余力：グレー系。4段階中もっとも主張を弱くするため、白文字の塗りつぶしではなく
+   薄いグレー背景＋控えめな文字色にする（「不要」に見えない程度の存在感は残す）。 */
+[data-importance="余力"] {
+  background: var(--color-border);
+  color: var(--color-text-subtle);
+}
+.label-value[data-importance] {
+  padding: 0.15rem 0.55rem;
+  font-size: 0.85rem;
+}
+
 /* Problem statement */
 .statement-text {
   white-space: pre-line;
@@ -1109,8 +1158,6 @@ ul {
   font-size: 1rem;
   font-weight: 700;
   color: var(--color-text);
-  border-left: 4px solid var(--color-primary);
-  padding-left: 0.6rem;
 }
 .impression-subhead:first-child {
   margin-top: 0;
@@ -1963,9 +2010,9 @@ ul {
   margin-top: 0.5rem;
   margin-bottom: 0.25rem;
 }
-/* 「問題メタ／解法メタ」は問題カードより一段軽い存在感にする。内容・見出し構造・
-   左アクセント線（.impression-subheadのborder-left）はそのまま、白背景の角丸ボックス
-   ではなく上下の罫線だけの「読む領域」に近い見た目へ弱める。 */
+/* 「問題メタ／解法メタ」は問題カードより一段軽い存在感にする。内容・見出し構造は
+   そのまま、白背景の角丸ボックスではなく上下の罫線だけの「読む領域」に近い
+   見た目へ弱める。 */
 .q27-detail .impression-section {
   background: transparent;
   border: none;
@@ -1974,9 +2021,14 @@ ul {
   border-radius: 0;
   padding: 0.9rem 1.15rem;
 }
-/* 最終解答：閉状態（見出し＋「解答を見る」ボタンのみ）をコンパクトにする。
-   開いた際の本文側の余白（.result-box）は変更しないため、読みやすさは維持される。 */
+/* 最終解答も同様に白背景の角丸ボックスをやめ、上側の罫線＋余白だけで区切る
+   （閉状態＝見出し＋「解答を見る」ボタンのみ、をコンパクトにする従来の意図は
+   そのまま）。開いた際の本文側の余白（.result-box）は変更しない。 */
 .q27-detail .final-answer-section {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
   padding: 0.6rem 1.15rem;
 }
 .q27-detail .final-answer-section > h2 {
@@ -1999,14 +2051,13 @@ ul {
 }
 
 /* 「元講師の独り言」上位見出し。問題メタ／解法メタの実体は変えず、
-   人間の所感であることを伝えるための見出しだけを追加する。既存h2の
-   アクセント線（左ボーダー）は流用しつつ、色とイタリックで少しだけ
-   個性を出す（過度な装飾は避ける）。 */
+   人間の所感であることを伝えるための見出しだけを追加する。
+   「人間らしさ」は書体ではなく文章そのもので示す方針のため、斜体は使わず
+   通常の正体＋控えめな文字色だけで他の見出しよりわずかに軽い扱いにする。 */
 .q27-detail .impression-master-title {
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: var(--color-text-muted);
-  font-style: italic;
 }
 
 /* 問題メタ本文は複製せず、同じDOM（.impression-clamp）を
@@ -2021,6 +2072,7 @@ ul {
   line-clamp: 2;
   overflow: hidden;
   color: var(--color-text-muted);
+  max-width: 760px;
 }
 .q27-detail .impression-clamp p {
   margin: 0;
@@ -2031,6 +2083,9 @@ ul {
   line-clamp: unset;
   overflow: visible;
   color: var(--color-text);
+  /* 全文表示時は横に長くなりすぎないよう読みやすい行長に留める
+     （問題文・数式・assetは対象外、この本文だけの可読性調整）。 */
+  max-width: 760px;
 }
 .q27-detail .impression-clamp.is-expanded p {
   margin: 0 0 0.8rem;
@@ -2089,6 +2144,8 @@ ul {
 .q27-detail .impression-panel-inner {
   overflow: hidden;
   min-height: 0;
+  /* 解法メタも問題メタ全文（.impression-clamp.is-expanded）と同じ行長に揃える。 */
+  max-width: 760px;
 }
 @media (prefers-reduced-motion: reduce) {
   .q27-detail .impression-panel:not([hidden]),
@@ -2096,19 +2153,130 @@ ul {
     transition: none;
   }
 }
+/* 「考え方を全部見る」：枠付きボタンではなく、テキスト操作に近い控えめなリンク表現へ
+   （UIブラッシュアップ第二段階A、2026-09）。機能・挙動（全開⇔全閉トグル）は無変更。 */
 .q27-detail .reveal-all-btn {
-  margin-bottom: 0.75rem;
-  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.9rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary-dark);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.q27-detail .reveal-all-btn:hover {
+  border-color: transparent;
+  color: var(--color-primary);
+}
+
+/* ThinkingFlowを「白カードの列（FAQアコーディオン）」から「思考の流れ」に見せる。
+   STEPの順番・タイトル・本文・開閉ロジック・aria属性は一切変更せず、各<li>の
+   見た目（カード化）と、番号マーカー・縦レールの追加だけをCSSで行う。 */
+.q27-detail .thinking-steps {
+  position: relative;
 }
 .q27-detail .thinking-step {
-  padding: 0.7rem 0.95rem;
-  margin-bottom: 0.55rem;
+  position: relative;
+  padding: 0.7rem 0.5rem 0.7rem 2.35rem;
+  margin-bottom: 0;
+  background: none;
+  border: none;
+  border-left: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.q27-detail .thinking-steps > .thinking-step:last-child {
+  border-bottom: none;
+}
+/* 縦レール：各STEPの高さぶんだけ線を引き、隣接するSTEP同士で連続した1本の線に見せる。 */
+.q27-detail .thinking-step::before {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-border);
+}
+/* 「★（人間による重要判断）」の水平ベタ塗り強調はやめる。代わりに番号マーカー自体を
+   塗りつぶし、★本体（.thinking-step-star）はそのまま残して視認性を落とさない。 */
+.q27-detail .thinking-step--highlight {
+  background: none;
+  border-left: none;
 }
 .q27-detail .thinking-step-header {
   margin-bottom: 0.35rem;
 }
+/* 番号マーカー：レール上に乗る小さな円。★付きSTEPだけ塗りつぶして目立たせる。 */
+.q27-detail .thinking-step-number {
+  position: absolute;
+  left: 0.15rem;
+  top: 0.65rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.q27-detail .thinking-step--highlight .thinking-step-number {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
 .q27-detail .thinking-step-body {
   margin-bottom: 0.6rem;
+  /* STEPカード自体の構造は変えず、本文テキストだけ広い画面での行長を抑える
+     （数式askや図はこのmax-widthの影響を受けない範囲で別途はみ出せる）。 */
+  max-width: 760px;
+}
+/* 右端のシェブロン（斜線2本）をやめ、＋／−の静かな表現に置き換える。
+   開閉ロジック・aria-expandedの更新自体はJS側で無変更のまま。 */
+.q27-detail .thinking-step-caret,
+.q27-detail .thinking-step-toggle[aria-expanded="true"] .thinking-step-caret {
+  border: none;
+  transform: none;
+}
+.q27-detail .thinking-step-caret {
+  position: relative;
+  width: 0.7em;
+  height: 0.7em;
+}
+.q27-detail .thinking-step-caret::before,
+.q27-detail .thinking-step-caret::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--color-text-muted);
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.q27-detail .thinking-step-caret::before {
+  width: 100%;
+  height: 2px;
+}
+.q27-detail .thinking-step-caret::after {
+  width: 2px;
+  height: 100%;
+}
+.q27-detail .thinking-step-toggle[aria-expanded="true"] .thinking-step-caret::after {
+  transform: translate(-50%, -50%) scaleY(0);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .q27-detail .thinking-step-caret::before,
+  .q27-detail .thinking-step-caret::after {
+    transition: none;
+  }
 }
 /* レビュー指摘（M1-TR-025）：短いFlow（本文1文＋数式1つ程度）でも、pの下余白
    （基本スタイルの1rem）とKaTeX .katex-displayの既定余白（1em）が積み重なり、

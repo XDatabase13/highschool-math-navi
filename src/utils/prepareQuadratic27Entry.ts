@@ -92,6 +92,21 @@ export function parseStepTitle(title: string): { displayTitle: string; highlight
   return { displayTitle: `${prefix}${rest}`, highlighted: true };
 }
 
+// ThinkingFlow表示のUIブラッシュアップ（第二段階A）：STEP見出し左に小さな番号マーカーを
+// 独立表示するため、displayTitle先頭の"N. "部分をテキスト本体と分離するだけの関数
+// （見出しの文字自体は変更しない）。verifyStepNumberMatchesIndexにより「先頭が数字+
+// ピリオド」であることはbuild時に既に保証されているため通常は必ずマッチするが、
+// 何らかの理由でマッチしない場合は番号マーカーなし（displayTitle全体をtextへ）に
+// フォールバックする。
+const STEP_LABEL_PATTERN = /^(\d+)\.\s*(.*)$/;
+
+export function splitStepNumber(displayTitle: string): { number: string; text: string } {
+  const match = displayTitle.match(STEP_LABEL_PATTERN);
+  if (!match) return { number: '', text: displayTitle };
+  const [, number, text] = match;
+  return { number, text };
+}
+
 // asset配置（flowAssetKey）は「配列位置（index + 1）」をFlow番号として扱っている。
 // これはThinkingFlow見出しの番号（例："2. ☆ グラフ化"の"2"）と一致している前提に依存する。
 // 前提が崩れた（見出しの並び順とFlow番号がずれた）場合に asset が静かに誤配置されるのを防ぐため、

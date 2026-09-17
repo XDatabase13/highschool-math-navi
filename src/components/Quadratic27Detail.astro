@@ -1,6 +1,6 @@
 ---
 import { starRating } from '../utils/stars';
-import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex } from '../utils/prepareQuadratic27Entry';
+import { flowAssetKey, parseStepTitle, splitStepNumber, verifyStepNumberMatchesIndex } from '../utils/prepareQuadratic27Entry';
 import type { MarkdownSection } from '../utils/markdownSections';
 import externalPracticeLinksData from '../data/external-practice-links.json';
 
@@ -246,6 +246,7 @@ function nextContextKey(): string {
           {thinkingFlow.subsections.map((step, index) => {
             verifyStepNumberMatchesIndex(entry.data.problem_id, '通常Flow', step.title, index + 1);
             const { displayTitle, highlighted } = parseStepTitle(step.title);
+            const { number: stepNumber, text: stepText } = splitStepNumber(displayTitle);
             const contextKey = nextContextKey();
             return (
               <li
@@ -254,7 +255,8 @@ function nextContextKey(): string {
                 data-context-key={contextKey}
               >
                 <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
-                  <span class="thinking-step-label">{displayTitle}</span>
+                  {stepNumber && <span class="thinking-step-number">{stepNumber}</span>}
+                  <span class="thinking-step-label">{stepText}</span>
                   {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
                   <span class="thinking-step-caret" aria-hidden="true" />
                 </button>
@@ -332,6 +334,7 @@ function nextContextKey(): string {
                   index + 1,
                 );
                 const { displayTitle, highlighted } = parseStepTitle(step.title);
+                const { number: stepNumber, text: stepText } = splitStepNumber(displayTitle);
                 const contextKey = nextContextKey();
                 return (
                   <li
@@ -340,7 +343,8 @@ function nextContextKey(): string {
                     data-context-key={contextKey}
                   >
                     <button type="button" class="thinking-step-header thinking-step-toggle" data-step-toggle aria-expanded="false">
-                      <span class="thinking-step-label">{displayTitle}</span>
+                      {stepNumber && <span class="thinking-step-number">{stepNumber}</span>}
+                      <span class="thinking-step-label">{stepText}</span>
                       {highlighted && <span class="thinking-step-star" aria-hidden="true">★</span>}
                       <span class="thinking-step-caret" aria-hidden="true" />
                     </button>

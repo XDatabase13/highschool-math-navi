@@ -20,6 +20,13 @@ export interface DbCenterGroup {
   items: DbCenterItem[];
 }
 
+// 中央一覧・問題詳細タイトルの両方で使う3桁表示番号。内部ID（例: "M1-QF-017"）を
+// そのまま表示せず、末尾の数字部分だけを抜き出す。中央一覧（ProblemGroupList.astro）と
+// 問題詳細（Quadratic27Detail.astro）が別々に同じ正規表現を持たないよう、ここに一本化する。
+export function displayProblemNumber(id: string): string {
+  return id.match(/(\d+)$/)?.[0] ?? '';
+}
+
 // centerItemsは呼び出し側で既に表示順（教科書ベースの順序）に並んでいる前提。
 // 同じgroupIdが連続している区間をひとまとまりのグループとして扱うだけで、
 // グループ名や境界をここでハードコードしない。

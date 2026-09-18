@@ -1,13 +1,26 @@
 :root {
-  --color-bg: #f7f7f4;
+  /* UIブラッシュアップ第2弾（2026-09、配色・面の色温度統一）で、TOP/DBの背景・罫線・
+     本文色・ブランドネイビーを「暖かい無彩色＋白＋濃いネイビー＋既存ブルー系アクセント」
+     の1系統へ統一した。--color-primary（ブルー系アクセント）・重要度専用トークン
+     （--color-importance-*）はこの改修の対象外で、値も据え置き。 */
+  --color-bg: #f7f6f3;
   --color-surface: #ffffff;
-  --color-border: #e3e2de;
-  --color-text: #232323;
+  /* PC左サイドバー・中央の問題一覧など、白い問題詳細面より1段沈めるナビゲーション面専用。
+     ProblemDbShell.astroの.db-pane-subjects・.db-pane-listが参照する。 */
+  --color-surface-sunken: #f1f0ec;
+  --color-border: #dad8d2;
+  --color-text: #1c2229;
   --color-text-muted: #767672;
   /* mutedより濃く、textより控えめ。「控えめだが普通に読める」トーンが必要な場所（このサイトについて等）用。 */
   --color-text-subtle: #55534f;
   --color-primary: #2f5f7a;
-  --color-primary-dark: #234a60;
+  --color-primary-dark: #1f3347;
+  /* ヘッダー帯（.site-header／.db-header／.mobile-problem-dialog-header）専用の
+     背景色。--color-primary-dark（ボタン・見出し文字色など本文側でも広く使う
+     トークン）とは独立させ、ヘッダーの色味だけを本文側の配色に影響させず
+     調整できるようにしている（2026-09、ヘッダー色温度調整）。ユーザー確認の結果、
+     元のTOPヘッダー色（--color-primary-darkと同値）へ戻している。 */
+  --color-header-bg: #1f3347;
   --color-accent-bg: #eef4f7;
   --color-highlight: #c0392b;
   /* 補助アクセント。現時点ではTOPページ限定の配色（.top-theme）でのみ使用。 */
@@ -88,21 +101,18 @@ ul {
   flex-direction: column;
 }
 
-/* TOP限定配色「Cool Paper × Digital Blue」。既存のCSS変数を.app配下だけで
-   上書きするので、このクラスを持たない他ページ・問題DB本体は既存配色のまま。
+/* TOP限定配色。UIブラッシュアップ第2弾（2026-09）で、背景・罫線・本文色・
+   ブランドネイビーは:root側の統一トークンへ揃え、TOP固有の上書きは
+   ブルー系アクセント（--color-primary・--color-accent-bg）だけに絞った。
+   このクラスを持たない他ページ・問題DB本体は既存配色のまま。
    背景はごく薄いノイズ（feTurbulence、画像素材なし）を重ねた紙のような質感にする。 */
 .app.top-theme {
-  --color-bg: #f4f5f2;
   --color-primary: #416d88;
-  --color-primary-dark: #152836;
   --color-accent-bg: #e2e8e8;
-  --color-border: #b6c4c8;
-  --color-text: #33454f;
-  --color-text-muted: #5a6e76;
   /* colorは継承プロパティだが、bodyがこのクラスの外側（祖先）にあるため
-     bodyのcolor:var(--color-text)経由では新しい値が伝わらない。ここで
-     明示的に再設定し、配下の無指定テキスト（このサイトについて等）にも
-     新しい本文色を継承させる。 */
+     bodyのcolor:var(--color-text)経由では新しい値が伝わらない。値自体は
+     :root側の統一トークンと同じだが、配下の無指定テキスト（このサイトに
+     ついて等）へ確実に継承させるため明示的に再設定しておく。 */
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -110,7 +120,7 @@ ul {
 }
 
 .site-header {
-  background: var(--color-primary-dark);
+  background: var(--color-header-bg);
   color: #fff;
   padding: 0.9rem 1.5rem;
 }
@@ -1981,6 +1991,16 @@ ul {
   margin: 0 0 0.7rem;
   border-left: none;
   padding-left: 0;
+}
+/* 問題詳細タイトル冒頭の3桁表示番号（中央一覧のdisplayProblemNumberと同じ情報源）。
+   主役はタイトルなので、絶対サイズ（1rem、タイトルの1.6remより明確に小さい）・
+   通常ウェイト・muted文字色にとどめ、チップ化（背景・枠）はしない。 */
+.q27-detail .problem-title-number {
+  margin-right: 0.6rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 /* 単元トップだけに出す小さな単元見出し（例：「数学I 二次関数」）。
    問題タイトルの上に1行添えるだけで、レイアウト・余白は増やさない。 */

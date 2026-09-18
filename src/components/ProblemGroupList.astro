@@ -1,5 +1,5 @@
 ---
-import type { DbCenterGroup } from '../utils/dbCenterList';
+import { displayProblemNumber, type DbCenterGroup } from '../utils/dbCenterList';
 
 // PC中央列（ProblemDbShell.astro）とスマホ用の問題一覧ダイアログの両方から
 // 同じマークアップ・同じCSSで使う「3区分アコーディオン＋行リスト」本体。
@@ -30,8 +30,9 @@ const { groups, activeItemId } = Astro.props;
           {group.items.map((item) => {
             const isSelected = item.id === activeItemId;
             // 表示用の3桁番号は既存ID（例: M1-QF-028）の末尾数字から取り出すだけで、
-            // 問題データ自体は変更しない。末尾に数字が無いIDでは空文字にフォールバックする。
-            const number = item.id.match(/(\d+)$/)?.[0] ?? '';
+            // 問題データ自体は変更しない。問題詳細タイトル側（Quadratic27Detail.astro）
+            // と同じdisplayProblemNumberを使い、表示番号の情報源を一本化する。
+            const number = displayProblemNumber(item.id);
             return (
               <li class="db-problem-row">
                 <a
@@ -137,9 +138,13 @@ const { groups, activeItemId } = Astro.props;
   .db-problem-row:last-child {
     border-bottom: none;
   }
+  /* 番号・タイトル・チップの横位置は元々flex-grow（.db-problem-title）で
+     行ごとに揃っていたが、align-items:centerだとタイトルの折り返し行数
+     （1〜3行）ごとに縦位置が変わり、番号・チップが行によってバラついて見えていた。
+     flex-startにして「1行目の高さ」に全項目を揃え、表としての安定感を出す。 */
   .db-problem-link {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
     padding: 0.4rem 0.6rem;
     border-left: 4px solid transparent;
@@ -197,7 +202,7 @@ const { groups, activeItemId } = Astro.props;
   }
   .db-problem-chip:not([data-importance]) {
     color: var(--color-text);
-    background: rgba(35, 35, 35, 0.045);
+    background: rgba(28, 34, 41, 0.045);
   }
   .db-problem-link.is-selected .db-problem-chip:not([data-importance]) {
     background: rgba(255, 255, 255, 0.55);

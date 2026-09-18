@@ -1,6 +1,7 @@
 ---
 import { starRating } from '../utils/stars';
 import { flowAssetKey, parseStepTitle, splitStepNumber, verifyStepNumberMatchesIndex } from '../utils/prepareQuadratic27Entry';
+import { displayProblemNumber } from '../utils/dbCenterList';
 import type { MarkdownSection } from '../utils/markdownSections';
 import externalPracticeLinksData from '../data/external-practice-links.json';
 
@@ -62,6 +63,10 @@ const { entry, problem, paraphrase, problemMeta, solutionMeta, thinkingFlow, fin
 
 const externalPracticeLinks = externalPracticeLinksMap[entry.data.problem_id] ?? [];
 
+// 中央一覧（ProblemGroupList.astro）が使っている表示番号（例: "017"）と
+// 同じ情報源（displayProblemNumber）から取り出す。内部ID自体は表示しない。
+const displayNumber = displayProblemNumber(entry.data.problem_id);
+
 // ThinkingFlowの表示順に振る通し番号（"f1","f2",...）。AI-context JSON側
 // （src/utils/aiContext.ts）のcontext_keyと同じ「part/flowに関係なく表示順で採番」
 // というルールで、DOM側にも非視覚属性data-context-keyとして付与する。
@@ -78,10 +83,10 @@ function nextContextKey(): string {
 {unitHeading ? (
   <>
     <h1 class="unit-top-heading">{unitHeading}</h1>
-    <h2 class="problem-title">{entry.data.title}</h2>
+    <h2 class="problem-title">{displayNumber && <span class="problem-title-number">{displayNumber}</span>}{entry.data.title}</h2>
   </>
 ) : (
-  <h1 class="problem-title">{entry.data.title}</h1>
+  <h1 class="problem-title">{displayNumber && <span class="problem-title-number">{displayNumber}</span>}{entry.data.title}</h1>
 )}
 
 <ul class="label-list">

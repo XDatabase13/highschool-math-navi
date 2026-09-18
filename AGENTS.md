@@ -289,9 +289,9 @@ Flow数は固定しません。
 
 ---
 
-## UIブラッシュアップ（2026-09、`ui-cleanup-experiment`ブランチ）
+## UIブラッシュアップ（2026-09）
 
-「AIが作ったSaaSテンプレのような視覚表現」を弱める目的で、TOPページ・個別問題ページの装飾を段階的に整理しています。baseline tag `ui-before-ai-look-cleanup`（commit `0aa8707`）から分岐した`ui-cleanup-experiment`ブランチ上にcommit済みです。**2026-09-17時点でmasterへは未マージ・未pushです。** マージされるまでは、この節の内容は同ブランチをcheckoutした場合にのみ有効です。
+「AIが作ったSaaSテンプレのような視覚表現」を弱める目的で、TOPページ・個別問題ページの装飾を段階的に整理しています。baseline tag `ui-before-ai-look-cleanup`（commit `0aa8707`）から分岐した`ui-cleanup-experiment`ブランチ上で第一段階〜TOPページの見た目まで（下記4節）を実施し、2026-09-17にmasterへマージ済みです（コミット`e30e570`）。以下の内容はmaster上の現行仕様です。
 
 ### 第一段階：装飾の削減
 - 共有の角丸変数`--radius`を8px→2pxへ縮小（カード・ボタン・チップ等サイト全体に連動する唯一の変数）。
@@ -334,6 +334,29 @@ Flow数は固定しません。
 - DBプレビュー画像（`public/images/top-db-preview.png`）を最新UIのスクリーンショットに差し替え。
 
 情報構造・セクション順・文章内容（上記の明示した文言変更を除く）・レスポンシブのブレークポイント・AI導線・SEO関連（title/description/canonical/BreadcrumbList/単元トップ構造）は変更していません。各段階とも実機確認のうえ、ユーザーの明示的な承認を得て順にcommitしています。
+
+### 配色・面の色温度統一（2026-09-18）
+
+上記の第一〜第四段階に続く追加調整です。TOPとDBでやや異なって見えていた色温度を、「暖かい無彩色＋白＋濃いネイビー＋既存ブルー系アクセント」の1系統へ揃えました。
+
+- 主要design token（`src/styles/global.css`）：`--color-bg: #f7f6f3`／`--color-border: #dad8d2`／`--color-text: #1c2229`。新規`--color-surface-sunken: #f1f0ec`を追加し、PC左サイドバー・中央問題一覧（`ProblemDbShell.astro`の`.db-pane-subjects`・`.db-pane-list`）とスマホ問題一覧ドロワーの背景に使用（白い問題詳細面より1段沈めるナビゲーション面）。
+- TOP専用配色`.app.top-theme`（`index.astro`のみ）から`--color-bg`・`--color-border`・`--color-text`・`--color-text-muted`・`--color-primary-dark`の個別上書きを削除し、:root側の統一トークンへ委譲。`--color-primary`（TOP限定のミッドブルー）・`--color-accent-bg`はTOP固有のブルー系アクセントとして維持（意図的に残した差分）。
+- 重要度専用トークン（`--color-importance-navy`/`royal`/`lagoon`）・重要度の配色ルールは無変更。
+- TOPページのDBプレビュー画像（`public/images/top-db-preview.png`）を、新配色反映後の実画面スクリーンショットに再差し替え。
+
+### ヘッダー色の調整（2026-09-18）
+
+ヘッダー背景専用のdesign token `--color-header-bg` を新設しました。`.site-header`（TOP、`global.css`）・`.db-header`（PC/スマホ共通のDBヘッダー、`ProblemDbShell.astro`）がこれを参照し、`--color-primary-dark`（ボタン・見出し文字色など本文側でも広く使うトークン）とは独立してヘッダーの色味だけを調整できるようにしています。
+
+検討の過程で、薄い青灰色や白背景＋罫線も試しましたが、最終的には元の濃いネイビー `#1f3347`（`--color-header-bg`の値も同じ）で確定しています。TOP・DBヘッダーは背景・ブランド文字色・右側リンク色・hover挙動まで完全に同一です。
+
+スマホ問題一覧ドロワーのヘッダー（`.mobile-problem-dialog-header`）は、モーダル／ドロワー系floating UI（第一段階で影・浮き上がりを維持する対象とした要素群）として扱い、常設の上部ヘッダー（`.site-header`/`.db-header`）とは意図的に区別しています。今回の調整対象外です。
+
+### DB問題詳細・中央一覧の整理（2026-09-18）
+
+- 問題詳細タイトル（`Quadratic27Detail.astro`）に、中央一覧と同じ3桁表示番号を追加しました。内部ID（`M1-QF-017`等）をそのまま表示せず、末尾数字を取り出す`displayProblemNumber()`（`src/utils/dbCenterList.ts`）を中央一覧（`ProblemGroupList.astro`）と共有し、表示番号の情報源を一本化しています。見た目はタイトルより明確に弱く（絶対サイズ1rem・通常ウェイト・muted文字色、チップ化なし）。
+- 中央問題一覧の行（`ProblemGroupList.astro`の`.db-problem-link`）は`align-items: center`から`flex-start`へ変更しました。番号・タイトル・重要度・難易度チップの横位置はflex-growで元から安定していましたが、タイトルが1〜3行に折り返すたびに縦位置がずれていたため、常に1行目の高さで揃うようにしています。横方向のレイアウト自体（flexboxの構造）は作り直していません。
+- 問題詳細内（問題→元講師の独り言→ThinkingFlow→最終解答）の縦余白を`getBoundingClientRect`による実測で監査した結果、いずれも11〜18px程度で既に揃っていたため、変更していません。
 
 ---
 

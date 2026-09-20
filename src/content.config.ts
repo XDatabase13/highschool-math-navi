@@ -118,8 +118,35 @@ const dataAnalysis = defineCollection({
   }),
 });
 
+// 数と式「式の計算」（M1-EC-001〜003）用コレクション。quadratic27・trig4・dataAnalysisと
+// 完全に分離しており、このコレクションを増やしても既存の公開契約・build・sitemap・
+// 中央ペイン分類には一切影響しない。
+const expressionCalculation = defineCollection({
+  loader: glob({
+    pattern: 'M1-EC-*.md',
+    base: './src/content/expressionCalculation',
+    generateId: ({ data }) => String(data.problem_id),
+  }),
+  schema: z.object({
+    problem_id: z.string(),
+    version: z.number(),
+    subject: z.string(),
+    unit: z.string(),
+    section: z.string(),
+    display_order: z.number(),
+    title: z.string(),
+    difficulty: z.number().min(1).max(4),
+    importance: z.number().min(1).max(4),
+    importance_label: z.string(),
+    reference_problem: z.string(),
+    verification_status: z.string(),
+    assets: problemAssetSchema,
+  }),
+});
+
 export const collections = {
   quadratic27,
   trig4,
   dataAnalysis,
+  expressionCalculation,
 };

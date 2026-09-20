@@ -1,0 +1,42 @@
+---
+import { getVerifiedCollection } from '../../../utils/verifiedCollection';
+import { prepareExpressionCalculationEntry } from '../../../utils/prepareExpressionCalculationEntry';
+import { buildExpressionCalculationCenterItems } from '../../../utils/expressionCalculationDbItems';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+
+// 数と式「式の計算」の個別問題ページ。/math1/data-analysis/[slug].astroと同じ構成
+// （静的生成・共通DBシェル再利用）をexpressionCalculationコレクションに対しても使う。
+// QF/TR/DAと同格の公開contract（index対象・sitemap掲載・canonicalは自身のURL）とする。
+export async function getStaticPaths() {
+  const problems = await getVerifiedCollection('expressionCalculation');
+  return problems.map((problem) => ({
+    params: { slug: problem.id },
+    props: { problem },
+  }));
+}
+
+const { problem } = Astro.props;
+const prepared = await prepareExpressionCalculationEntry(problem);
+
+const allProblems = (await getVerifiedCollection('expressionCalculation')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+const centerItems = buildExpressionCalculationCenterItems(allProblems);
+---
+
+<ProblemDbShell
+  title={`${problem.data.title} | 数学I 数と式 | 高校数学ナビ`}
+  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「数と式」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+  canonicalPath={`/math1/suto-shiki/${problem.id}/`}
+  breadcrumbItems={[
+    { label: '数学I' },
+    { label: '数と式', href: '/math1/suto-shiki/' },
+    { label: problem.data.title },
+  ]}
+  activeUnitId="suto-shiki"
+  activeItemId={problem.id}
+  centerItems={centerItems}
+>
+  <Quadratic27Detail prepared={prepared} />
+</ProblemDbShell>

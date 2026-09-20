@@ -61,6 +61,7 @@ export const dbSubjectNav: NavSubject[] = [
   {
     name: '数学I',
     units: [
+      { id: 'suto-shiki', name: '数と式', href: '/math1/suto-shiki/' },
       { id: 'quadratic', name: '二次関数', href: '/math1/quadratic/' },
       { id: 'trig', name: '三角比', href: '/math1/trig/' },
       { id: 'data-analysis', name: 'データの分析', href: '/math1/data-analysis/' },

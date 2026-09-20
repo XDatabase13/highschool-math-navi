@@ -34,6 +34,11 @@ const snapshotTrigAssets = path.join(repoRoot, 'src/content/trig4-assets');
 const snapshotDataAnalysisProblems = path.join(repoRoot, 'src/content/dataAnalysis');
 const snapshotDataAnalysisAssets = path.join(repoRoot, 'src/content/dataAnalysis-assets');
 
+// 数と式「式の計算」（M1-EC-001〜）用スナップショット先。quadratic27・trig4・dataAnalysisとは
+// 別コレクション（src/content.config.tsのexpressionCalculation）なので、格納先ディレクトリも分離する。
+const snapshotExpressionCalculationProblems = path.join(repoRoot, 'src/content/expressionCalculation');
+const snapshotExpressionCalculationAssets = path.join(repoRoot, 'src/content/expressionCalculation-assets');
+
 const SNAPSHOT_NOTICE =
   '# 自動生成スナップショット（編集禁止）\n\n' +
   'このディレクトリの中身は、正本 `math_db_quadratic_working/`（highschool_math_db の外）から\n' +
@@ -147,13 +152,49 @@ function copyDataAnalysisAssets() {
   return fileCount;
 }
 
+// 数と式「式の計算」（M1-EC-001〜）用。他バッチと同じ考え方
+// （存在するファイルだけを対象にする）を踏襲する。
+function copyExpressionCalculationMarkdown() {
+  resetDir(snapshotExpressionCalculationProblems);
+  const files = readdirSync(canonicalProblems).filter((f) => /^M1-EC-\d+\.md$/.test(f));
+  for (const f of files) {
+    copyFileSync(path.join(canonicalProblems, f), path.join(snapshotExpressionCalculationProblems, f));
+  }
+  writeFileSync(path.join(snapshotExpressionCalculationProblems, 'README.md'), SNAPSHOT_NOTICE);
+  return files.length;
+}
+
+function copyExpressionCalculationAssets() {
+  resetDir(snapshotExpressionCalculationAssets);
+  if (!existsSync(canonicalAssets)) return 0;
+  const dirs = readdirSync(canonicalAssets).filter((name) => {
+    const full = path.join(canonicalAssets, name);
+    return /^M1-EC-\d+$/.test(name) && statSync(full).isDirectory();
+  });
+  let fileCount = 0;
+  for (const d of dirs) {
+    const srcDir = path.join(canonicalAssets, d);
+    const destDir = path.join(snapshotExpressionCalculationAssets, d);
+    mkdirSync(destDir, { recursive: true });
+    for (const f of readdirSync(srcDir)) {
+      copyFileSync(path.join(srcDir, f), path.join(destDir, f));
+      fileCount += 1;
+    }
+  }
+  writeFileSync(path.join(snapshotExpressionCalculationAssets, 'README.md'), SNAPSHOT_NOTICE);
+  return fileCount;
+}
+
 const mdCount = copyMarkdown();
 const assetCount = copyAssets();
 const trigMdCount = copyTrigMarkdown();
 const trigAssetCount = copyTrigAssets();
 const dataAnalysisMdCount = copyDataAnalysisMarkdown();
 const dataAnalysisAssetCount = copyDataAnalysisAssets();
+const expressionCalculationMdCount = copyExpressionCalculationMarkdown();
+const expressionCalculationAssetCount = copyExpressionCalculationAssets();
 console.log(`同期完了: Markdown ${mdCount}件、asset ${assetCount}件（quadratic27）`);
 console.log(`同期完了: Markdown ${trigMdCount}件、asset ${trigAssetCount}件（trig4・試験バッチ）`);
 console.log(`同期完了: Markdown ${dataAnalysisMdCount}件、asset ${dataAnalysisAssetCount}件（dataAnalysis・試験バッチ）`);
+console.log(`同期完了: Markdown ${expressionCalculationMdCount}件、asset ${expressionCalculationAssetCount}件（expressionCalculation・数と式）`);
 console.log('git status / git diff で差分を確認し、必要なら commit してください。');

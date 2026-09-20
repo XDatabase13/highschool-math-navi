@@ -14,6 +14,8 @@
 
 現在、数学I「二次関数」「三角比」「データの分析」の3単元・計118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析の詳細は後述の各節を参照してください。
 
+数学I「数と式」M1-EC-001〜013（式の計算、13問）は技術実装・build確認・commitまで完了していますが、2026-09-20時点でまだpush・本番deployは行っていません。詳細は「数と式「式の計算」の現在地」節を参照してください。
+
 まず二次関数（M1-QF-001〜054の54問）について、
 
 - 独立検算
@@ -71,6 +73,36 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ---
 
+## 数と式「式の計算」の現在地
+
+数学I「数と式」M1-EC-001〜013（式の計算、13問）について、独立検算・教材化・技術実装（ページ生成・DB統合・新セクション「事前知識・使用公式」の初回実装）・build確認・commitまで完了していますが、**2026-09-20時点でまだpush・本番deployは行っていません**。Codex構造監査・Opus横断レビュー・公開可否判断はまだです。
+
+- 全13問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開の応用度に応じて難易度2〜4・重要度1〜3）。master xlsx（`expression_calculation_problem_master.xlsx`公開問題管理シート）の全問PASS判定と一致しています。
+- 正本・同期先はQF/TR/DAと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-EC-*ファイル、スナップショット`src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（`npm run sync-content`が4コレクションまとめて同期するよう拡張済み）。
+- 対応するContent Collectionは`expressionCalculation`（`src/content.config.ts`）、表示は`prepareExpressionCalculationEntry.ts`経由でQF/TR/DAと同じ`Quadratic27Detail.astro`を再利用します。
+- 中央一覧の区分（現状「式の計算」の1区分のみ）は`src/utils/expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`で判定し、他単元と同じ方式（section値ベース）です。「数と式」単元に他区分（因数分解・実数等）が今後増えた場合もこの対応表へ追記するだけで対応できます。
+- ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-013/`です。**slug「suto-shiki」は、既存の開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
+- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みです。**`publicSubjectNav`（TOPページNav.astro）には未追加**（三角比と同様、TOPページ導線への掲載は別判断として保留）。
+- 数と式masterは`problem_master/expression_calculation_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。
+- ThinkingFlow見出しにTeX記法（`$a^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜013にも踏襲しています。M1-EC-008・009・012で一度混入していましたが、Unicode上付き文字（例：`a²-a`）へ修正済みです。
+- push・本番deployする際は、「SEOの現行契約」節のsitemap内訳（現行125 URL）を139 URL（`/math1/suto-shiki/`単元トップ1＋個別問題13）へ更新してください。
+
+---
+
+## 「事前知識・使用公式」（任意セクション、2026-09追加）
+
+正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜013でも踏襲しています。既存118問（QF/TR/DA）には存在せず、影響もありません。
+
+- 見出しは`## 事前知識・使用公式`。パーサー（`markdownSections.ts`）自体は無変更で、既存の`##`見出し分割の汎用ロジックが処理します。各`prepare*Entry.ts`（QF/TR/DA/EC全4コレクション）に`findSection(sections, '事前知識・使用公式')`を追加し、値の有無だけで表示可否を判定します。
+- 表示位置：問題 → **事前知識・使用公式** → 元講師の独り言 → ThinkingFlow → 最終解答。
+- 初期状態は閉じています（progressive disclosure）。存在する問題だけ見出し・ボタンを表示し、存在しない問題には何も出しません。
+- 開閉ロジック・アニメーションは最終解答の開閉（`data-answer-toggle`/`.result-box`、`grid-template-rows` 0fr/1fr手法）をそのまま複製しています。ボタン文言が異なるため別data属性（`data-prior-knowledge-toggle`/`data-prior-knowledge-box`）を使いますが、ロジック自体は複製元と同一です。新しい開閉アニメーション実装は増やしていません。
+- CSS（`global.css`の`.prior-knowledge-section`）も最終解答の外枠処理（`.final-answer-section`と同じ上罫線＋transparent、白カード外枠・shadow・pill・左色バーなし）を複製しています。新しいカードUIは作っていません。
+- 数式内に日本語テキストを直接書く場合（例：`(x\text{の指数})`）は、既存規約通り`\text{}`で囲んでください。囲まずに書くとKaTeX build時に`unicodeTextInMathMode`警告が出ます（KaTeXが自動でCJKフォールバック表示するため見た目自体は同じですが、警告は避けられます）。
+- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は今回未実施です（QF・TRの95問のみ対象のまま）。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加してください。
+
+---
+
 ## AI質問機能・外部追加演習リンクの現在地
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
@@ -93,6 +125,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/quadratic27/`・`src/content/quadratic27-assets/`（二次関数）
 - `src/content/trig4/`・`src/content/trig4-assets/`（三角比）
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
+- `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式「式の計算」。2026-09-20時点で未push。詳細は「数と式「式の計算」の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
 
@@ -139,6 +172,7 @@ npm run sync-content
 - `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ、`/math1/quadratic/M1-QF-001/` 〜 `/M1-QF-054/`
 - `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/` 〜 `/M1-TR-041/`
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
+- `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-013/`（2026-09-20時点で未push。詳細は「数と式「式の計算」の現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -229,9 +263,10 @@ Sitemap: https://math-navi.com/sitemap.xml
 1. 問題情報
 2. 問題
 3. 必要な場合のみ「問題の言い換え」
-4. 「元講師の独り言」（問題メタ・解法メタ。PC・スマホ共通で初期状態は閉じる）
-5. ThinkingFlow
-6. 最終解答
+4. 必要な場合のみ「事前知識・使用公式」（2026-09追加の任意セクション。詳細は該当節を参照。PC・スマホ共通で初期状態は閉じる）
+5. 「元講師の独り言」（問題メタ・解法メタ。PC・スマホ共通で初期状態は閉じる）
+6. ThinkingFlow
+7. 最終解答
 
 ### 元講師の独り言（問題メタ・解法メタ）
 

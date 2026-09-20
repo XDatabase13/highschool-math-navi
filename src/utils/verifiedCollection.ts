@@ -5,7 +5,9 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 // 入りうるため、quadratic27・trig4を読むすべての箇所はこのヘルパー経由に統一する。
 const VERIFICATION_STATUS_PUBLISHED = '独立検算済み';
 
-export async function getVerifiedCollection<C extends 'quadratic27' | 'trig4' | 'dataAnalysis'>(
+export async function getVerifiedCollection<
+  C extends 'quadratic27' | 'trig4' | 'dataAnalysis' | 'expressionCalculation',
+>(
   collection: C,
 ): Promise<CollectionEntry<C>[]> {
   return getCollection(collection, ({ data }) => data.verification_status === VERIFICATION_STATUS_PUBLISHED);

@@ -17,9 +17,14 @@ export const GET: APIRoute = async () => {
   const dataAnalysis = (await getVerifiedCollection('dataAnalysis')).sort(
     (a, b) => a.data.display_order - b.data.display_order,
   );
+  const expressionCalculation = (await getVerifiedCollection('expressionCalculation')).sort(
+    (a, b) => a.data.display_order - b.data.display_order,
+  );
 
   const paths = [
     '/',
+    '/math1/suto-shiki/',
+    ...expressionCalculation.map((entry) => `/math1/suto-shiki/${entry.id}/`),
     '/math1/quadratic/',
     ...quadratic27.map((entry) => `/math1/quadratic/${entry.id}/`),
     '/math1/trig/',

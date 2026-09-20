@@ -17,6 +17,8 @@ export type DataAnalysisAssetEntry = {
 export interface PreparedDataAnalysisEntry {
   entry: CollectionEntry<'dataAnalysis'>;
   problem: MarkdownSection | undefined;
+  // 「## 事前知識・使用公式」は任意セクション（M1-EC-*で新設）。既存23問には存在しないためundefined。
+  priorKnowledge: MarkdownSection | undefined;
   paraphrase: MarkdownSection | undefined;
   problemMeta: MarkdownSection | undefined;
   solutionMeta: MarkdownSection | undefined;
@@ -68,6 +70,7 @@ export async function prepareDataAnalysisEntry(
   return {
     entry,
     problem: findSection(sections, '問題'),
+    priorKnowledge: findSection(sections, '事前知識・使用公式'),
     paraphrase: findSection(sections, '問題の言い換え'),
     problemMeta: findSection(sections, '問題メタ'),
     solutionMeta: findSection(sections, '解法メタ'),

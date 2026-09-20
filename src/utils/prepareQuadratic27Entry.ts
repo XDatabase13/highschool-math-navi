@@ -14,6 +14,9 @@ export type AssetEntry = {
 export interface PreparedQuadratic27Entry {
   entry: CollectionEntry<'quadratic27'>;
   problem: MarkdownSection | undefined;
+  // 「## 事前知識・使用公式」も任意セクション（M1-EC-*で新設）。存在する問題だけ
+  // 問題の直後・元講師の独り言の前に表示する。既存118問には存在しないためundefined。
+  priorKnowledge: MarkdownSection | undefined;
   // 「## 問題の言い換え」は任意セクション。存在する問題だけUI上に
   // 「言い換えを見る」ボタンを出す（セクションの有無で判定する。frontmatterフラグは使わない）。
   paraphrase: MarkdownSection | undefined;
@@ -69,6 +72,7 @@ export async function prepareQuadratic27Entry(
   return {
     entry,
     problem: findSection(sections, '問題'),
+    priorKnowledge: findSection(sections, '事前知識・使用公式'),
     paraphrase: findSection(sections, '問題の言い換え'),
     problemMeta: findSection(sections, '問題メタ'),
     solutionMeta: findSection(sections, '解法メタ'),

@@ -3,47 +3,47 @@ import { parseMarkdownSections, findSection, type MarkdownSection } from './mark
 import { readProblemAssetSvg } from './readProblemAsset';
 import { flowAssetKey } from './prepareQuadratic27Entry';
 
-// trig4（M1-TR-001〜004、三角比の試験バッチ）1件分を、Web表示に必要な形へ分解する処理。
-// prepareQuadratic27Entry.tsと同じ構造の分解ロジックだが、Astroのコレクション型
-// （CollectionEntry<'quadratic27'> / CollectionEntry<'trig4'>）は別ものなので、
-// asset振り分けの薄いswitch部分だけをこのファイルに複製している。
-// 見出しパーサー（parseMarkdownSections/findSection）・flowAssetKey・
+// expressionCalculation（M1-EC-001〜、数と式「式の計算」）1件分を、Web表示に必要な形へ
+// 分解する処理。prepareDataAnalysisEntry.ts等と同じ構造の分解ロジックだが、Astroの
+// コレクション型（CollectionEntry<'expressionCalculation'>）は別ものなので、asset振り分けの
+// 薄いswitch部分だけをこのファイルに複製している。見出しパーサー・flowAssetKey・
 // parseStepTitle・verifyStepNumberMatchesIndexは複製せず、既存の汎用実装をそのまま使う。
 
-export type TrigAssetEntry = {
-  asset: CollectionEntry<'trig4'>['data']['assets'][number];
+export type ExpressionCalculationAssetEntry = {
+  asset: CollectionEntry<'expressionCalculation'>['data']['assets'][number];
   svg: string;
 };
 
-export interface PreparedTrigEntry {
-  entry: CollectionEntry<'trig4'>;
+export interface PreparedExpressionCalculationEntry {
+  entry: CollectionEntry<'expressionCalculation'>;
   problem: MarkdownSection | undefined;
-  // 「## 事前知識・使用公式」は任意セクション（M1-EC-*で新設）。既存41問には存在しないためundefined。
   priorKnowledge: MarkdownSection | undefined;
   paraphrase: MarkdownSection | undefined;
   problemMeta: MarkdownSection | undefined;
   solutionMeta: MarkdownSection | undefined;
   thinkingFlow: MarkdownSection | undefined;
   finalAnswer: MarkdownSection | undefined;
-  problemAssets: TrigAssetEntry[];
-  finalAnswerAssets: TrigAssetEntry[];
-  flowAssetsByKey: Map<string, TrigAssetEntry[]>;
+  problemAssets: ExpressionCalculationAssetEntry[];
+  finalAnswerAssets: ExpressionCalculationAssetEntry[];
+  flowAssetsByKey: Map<string, ExpressionCalculationAssetEntry[]>;
 }
 
-const TRIG_ASSETS_ROOT = 'src/content/trig4-assets';
+const EXPRESSION_CALCULATION_ASSETS_ROOT = 'src/content/expressionCalculation-assets';
 
-export async function prepareTrigEntry(entry: CollectionEntry<'trig4'>): Promise<PreparedTrigEntry> {
+export async function prepareExpressionCalculationEntry(
+  entry: CollectionEntry<'expressionCalculation'>,
+): Promise<PreparedExpressionCalculationEntry> {
   const sections = await parseMarkdownSections(entry.body ?? '');
   const assets = entry.data.assets;
 
-  const problemAssets: TrigAssetEntry[] = [];
-  const finalAnswerAssets: TrigAssetEntry[] = [];
-  const flowAssetsByKey = new Map<string, TrigAssetEntry[]>();
+  const problemAssets: ExpressionCalculationAssetEntry[] = [];
+  const finalAnswerAssets: ExpressionCalculationAssetEntry[] = [];
+  const flowAssetsByKey = new Map<string, ExpressionCalculationAssetEntry[]>();
 
   for (const asset of assets) {
     const resolved = {
       asset,
-      svg: readProblemAssetSvg(entry.data.problem_id, asset.file, TRIG_ASSETS_ROOT),
+      svg: readProblemAssetSvg(entry.data.problem_id, asset.file, EXPRESSION_CALCULATION_ASSETS_ROOT),
     };
     switch (asset.placement) {
       case 'final_answer':

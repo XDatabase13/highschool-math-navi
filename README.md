@@ -35,6 +35,8 @@
 
 3単元とも、正本Markdown作成・独立検算・教材化・asset生成・配置・共通3ペインDB UIへの統合・各問題固有URLの静的HTML生成・GitHub Pagesでの公開・Codex構造監査まで完了しています（TRはさらにOpus asset横断レビューも実施）。**DAはOpus asset横断レビューのみ未実施のまま本番公開しています。**
 
+数学I「数と式」M1-EC-001〜013（式の計算、全13問独立検算済み）は、正本作成・教材化・技術実装（ページ生成・DB統合・新設の任意セクション「事前知識・使用公式」の初回実装）・build確認・commitまで完了していますが、2026-09-20時点でまだpush・本番公開前です。詳細は`AGENTS.md`「数と式「式の計算」の現在地」「事前知識・使用公式」節を参照してください。
+
 スマートフォンは主要導線・DB表示の初回狭幅確認まで完了しています。TOPページの現行ビジュアルデザインも人間レビュー済みです。2026-09に、TOPページ・個別問題ページの装飾を整理するUIブラッシュアップを実施し、masterへマージ済みです（詳細は`AGENTS.md`「UIブラッシュアップ」節を参照）。続けて2026-09-18に、TOP/DBの配色・面の色温度統一、ヘッダー色の調整、DB問題詳細への表示番号追加・中央一覧の整列調整も行っています（同節に追記）。TOPページのDBプレビュー画像も、その都度最新UIのスクリーンショットへ差し替えています。
 
 ## AI質問機能・外部追加演習リンク
@@ -64,6 +66,8 @@ PCの基本UIは、
 
 3単元とも同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。
 
+`/math1/suto-shiki/`（数学I「数と式」、`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-013/`）も同じ設計で実装済みですが、2026-09-20時点で未push・未公開です。
+
 個別問題URLもブログ型ページではなく、共通DB UIを表示します。
 各URLはAstroで独立した静的HTMLとして生成され、固有のtitle / description / canonical / 問題本文を持ちます。
 
@@ -89,6 +93,7 @@ GitHub Pagesのbuildでは、Web repo内の公開用スナップショットを�
 - `src/content/quadratic27/`：二次関数の公開用Markdown、`src/content/quadratic27-assets/`：対応asset
 - `src/content/trig4/`：三角比の公開用Markdown、`src/content/trig4-assets/`：対応asset
 - `src/content/dataAnalysis/`：データの分析の公開用Markdown、`src/content/dataAnalysis-assets/`：対応asset
+- `src/content/expressionCalculation/`：数と式（式の計算）の公開用Markdown、`src/content/expressionCalculation-assets/`：対応asset（2026-09-19時点で未commit）
 
 公開用スナップショットは**派生データであり正本ではありません。直接編集しません。**
 

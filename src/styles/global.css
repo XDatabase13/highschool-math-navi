@@ -1356,7 +1356,8 @@ ul {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
-.reveal-answer-btn {
+.reveal-answer-btn,
+.reveal-prior-knowledge-btn {
   border: none;
   background: var(--color-primary);
   color: #fff;
@@ -1365,7 +1366,8 @@ ul {
   font-size: 0.9rem;
   cursor: pointer;
 }
-.reveal-answer-btn:hover {
+.reveal-answer-btn:hover,
+.reveal-prior-knowledge-btn:hover {
   background: var(--color-primary-dark);
 }
 .final-answer {
@@ -2016,7 +2018,8 @@ ul {
 }
 .q27-detail .problem-section,
 .q27-detail .impression-section,
-.q27-detail .final-answer-section {
+.q27-detail .final-answer-section,
+.q27-detail .prior-knowledge-section {
   padding: 1.05rem 1.15rem;
   margin-bottom: 1rem;
 }
@@ -2054,6 +2057,29 @@ ul {
 .q27-detail .final-answer-section > h2 {
   margin-top: 0.4rem;
   margin-bottom: 0.4rem;
+}
+/* 「事前知識・使用公式」（M1-EC-*で新設の任意セクション）も最終解答と同じ、
+   白背景の角丸ボックスではなく上側の罫線＋余白だけで区切る扱いにする
+   （閉状態＝見出し＋開閉ボタンのみ。新しいカードUIは作らない）。 */
+.q27-detail .prior-knowledge-section {
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0.6rem 1.15rem;
+}
+.q27-detail .prior-knowledge-section > h2 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+.q27-detail .prior-knowledge-part + .prior-knowledge-part {
+  margin-top: 0.7rem;
+}
+.q27-detail .prior-knowledge-part-label {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
 }
 .q27-detail .thinking-section {
   margin-bottom: 1rem;
@@ -2345,7 +2371,8 @@ ul {
     transition: none;
   }
 }
-.q27-detail .reveal-answer-btn {
+.q27-detail .reveal-answer-btn,
+.q27-detail .reveal-prior-knowledge-btn {
   padding: 0.42rem 0.9rem;
 }
 .q27-detail .final-answer {

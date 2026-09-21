@@ -10,7 +10,8 @@ import { glob } from 'astro/loaders';
 
 // 正本Markdownのasset仕様をそのまま受け取る共通スキーマ。placement/part/flow/typeが表示制御の正本。
 // ファイル名からは何も推測しない。purpose/must_show/must_not_showは未記載でよい。
-// placementは 'problem' | 'flow' | 'final_answer' の3値のみ許可する。
+// placementは 'problem' | 'flow' | 'final_answer' | 'prior_knowledge' の4値のみ許可する。
+// prior_knowledgeは「事前知識・使用公式」セクション内へのasset配置専用（M1-EC-016で初採用）。
 // これ以外の値や必須項目の欠落はここで弾き、prepare*Entry側で
 // 問題文assetへ暗黙フォールバックさせない（不正データはビルド時エラーにする）。
 // quadratic27・trig4（三角比試験バッチ）で共通利用する。
@@ -18,7 +19,7 @@ const problemAssetSchema = z
   .array(
     z.object({
       file: z.string(),
-      placement: z.enum(['problem', 'flow', 'final_answer']),
+      placement: z.enum(['problem', 'flow', 'final_answer', 'prior_knowledge']),
       // 小問(1)(2)...内のFlowを指すときのみ存在する。
       part: z.number().optional(),
       flow: z.number().optional(),

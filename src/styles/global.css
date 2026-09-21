@@ -1622,6 +1622,14 @@ ul {
   fill: var(--color-text-muted);
   text-anchor: middle;
 }
+/* 数式そのものが主役になるasset（たすき掛け図等）専用。pa-labelより大きく、
+   本文中のKaTeX数式と同程度の見た目になるよう、420px表示幅を前提に調整してある。
+   グラフの座標軸ラベル等（pa-label）とは用途が異なるため既存クラスは変更しない。 */
+.pa-label-eq {
+  font-size: 22px;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
 /* 複数グラフ比較図の(1)(2)(3)識別ラベル。長いキャプションの代わりに使う。 */
 .pa-panel-label {
   font-size: 15px;

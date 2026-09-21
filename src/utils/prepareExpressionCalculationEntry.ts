@@ -25,6 +25,7 @@ export interface PreparedExpressionCalculationEntry {
   finalAnswer: MarkdownSection | undefined;
   problemAssets: ExpressionCalculationAssetEntry[];
   finalAnswerAssets: ExpressionCalculationAssetEntry[];
+  priorKnowledgeAssets: ExpressionCalculationAssetEntry[];
   flowAssetsByKey: Map<string, ExpressionCalculationAssetEntry[]>;
 }
 
@@ -38,6 +39,7 @@ export async function prepareExpressionCalculationEntry(
 
   const problemAssets: ExpressionCalculationAssetEntry[] = [];
   const finalAnswerAssets: ExpressionCalculationAssetEntry[] = [];
+  const priorKnowledgeAssets: ExpressionCalculationAssetEntry[] = [];
   const flowAssetsByKey = new Map<string, ExpressionCalculationAssetEntry[]>();
 
   for (const asset of assets) {
@@ -59,6 +61,9 @@ export async function prepareExpressionCalculationEntry(
       case 'problem':
         problemAssets.push(resolved);
         break;
+      case 'prior_knowledge':
+        priorKnowledgeAssets.push(resolved);
+        break;
       default:
         throw new Error(
           `[${entry.data.problem_id}] asset (${asset.file}) の placement が不正です: ${asset.placement}`,
@@ -77,6 +82,7 @@ export async function prepareExpressionCalculationEntry(
     finalAnswer: findSection(sections, '最終解答'),
     problemAssets,
     finalAnswerAssets,
+    priorKnowledgeAssets,
     flowAssetsByKey,
   };
 }

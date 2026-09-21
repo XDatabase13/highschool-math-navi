@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 250" role="img">
+<defs>
+  <marker id="f3-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-axis-fill"/>
+  </marker>
+  <marker id="f3-highlight" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" class="pa-dot-highlight"/>
+  </marker>
+</defs>
+<line x1="62" y1="58" x2="150" y2="145" class="pa-axis-highlight" marker-end="url(#f3-highlight)"/>
+<line x1="62" y1="145" x2="150" y2="58" class="pa-axis-highlight" marker-end="url(#f3-highlight)"/>
+<line x1="280" y1="52" x2="350" y2="52" class="pa-axis" marker-end="url(#f3-muted)"/>
+<line x1="280" y1="153" x2="350" y2="153" class="pa-axis" marker-end="url(#f3-muted)"/>
+<text x="38" y="60" class="pa-label-eq">x</text>
+<text x="205" y="60" class="pa-label-eq">(3y-4)</text>
+<text x="406" y="60" class="pa-label-eq pa-table-cell-strong">x(3y-4)</text>
+<text x="38" y="161" class="pa-label-eq">x</text>
+<text x="205" y="161" class="pa-label-eq">(y+2)</text>
+<text x="406" y="161" class="pa-label-eq pa-table-cell-strong">x(y+2)</text>
+<line x1="12" y1="197" x2="468" y2="197" class="pa-figure-line"/>
+<text x="38" y="232" class="pa-label-eq pa-table-cell-strong">x²</text>
+<text x="205" y="232" class="pa-label-eq pa-table-cell-strong">(3y-4)(y+2)</text>
+<text x="406" y="232" class="pa-label-eq pa-table-cell-strong">(4y-2)x</text>
+</svg>

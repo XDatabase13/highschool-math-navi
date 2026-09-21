@@ -57,12 +57,16 @@ interface Props {
     finalAnswer: MarkdownSection | undefined;
     problemAssets: DetailAssetEntry[];
     finalAnswerAssets: DetailAssetEntry[];
+    // 「事前知識・使用公式」内へのasset配置（M1-EC-016で初採用）。QF/TR/DAのprepare*Entry.ts
+    // はこのフィールドを返さないため、未定義の場合は空配列として扱う（既存118問には影響しない）。
+    priorKnowledgeAssets?: DetailAssetEntry[];
     flowAssetsByKey: Map<string, DetailAssetEntry[]>;
   };
 }
 
 const { prepared, unitHeading } = Astro.props;
 const { entry, problem, priorKnowledge, paraphrase, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
+const priorKnowledgeAssets = prepared.priorKnowledgeAssets ?? [];
 
 const externalPracticeLinks = externalPracticeLinksMap[entry.data.problem_id] ?? [];
 
@@ -219,6 +223,16 @@ function nextContextKey(): string {
               <div set:html={part.html} />
             </div>
           ))
+        )}
+        {priorKnowledgeAssets.map(({ asset, svg }) =>
+          asset.type === 'table' ? (
+            <details class="problem-asset-collapsible">
+              <summary class="problem-asset-collapsible-toggle">表を見る</summary>
+              <div class="problem-asset-figure problem-asset-table-scroll" set:html={svg} />
+            </details>
+          ) : (
+            <figure class="problem-asset-figure" set:html={svg} />
+          ),
         )}
       </div>
     </div>

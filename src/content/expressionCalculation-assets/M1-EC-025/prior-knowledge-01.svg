@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" role="img">
 <rect x="20" y="24" width="440" height="234" class="pa-figure-fill"/>
-<text x="240" y="46" class="pa-panel-label">実数</text>
+<rect x="213" y="15" width="54" height="18" fill="var(--color-accent-bg)"/>
+<text x="240" y="29" class="pa-panel-label">実数</text>
 <text x="380" y="145" class="pa-panel-label">無理数</text>
 <rect x="40" y="58" width="250" height="180" fill="var(--color-surface)" class="pa-figure-line"/>
 <text x="165" y="78" class="pa-panel-label">有理数</text>

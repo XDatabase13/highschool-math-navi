@@ -66,7 +66,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 正本・同期先はQF/TRと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-DA-*ファイル、スナップショット`src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（`npm run sync-content`が3コレクションまとめて同期）。
 - 対応するContent Collectionは`dataAnalysis`（`src/content.config.ts`）、表示は`prepareDataAnalysisEntry.ts`経由でQF/TRと同じ`Quadratic27Detail.astro`を再利用します。
 - 中央一覧の5区分（代表値と度数分布／四分位数と箱ひげ図／分散と標準偏差／散布図と相関／仮説検定）は`src/utils/dataAnalysisDbItems.ts`の`SECTION_TO_GROUP`で判定し、QF/TRと同じ方式（section値ベース、問題IDレンジではない）です。
-- ルートは`/math1/data-analysis/`・`/math1/data-analysis/M1-DA-001/`〜`/math1/data-analysis/M1-DA-023/`で、QF/TRと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`publicSubjectNav`（TOPページのNav.astro）・`dbSubjectNav`（DB UI）の両方に掲載済みです。既存契約を理由なく変更しないでください。
+- ルートは`/math1/data-analysis/`・`/math1/data-analysis/M1-DA-001/`〜`/math1/data-analysis/M1-DA-023/`で、QF/TRと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`publicSubjectNav`（`Nav.astro`）・`dbSubjectNav`（DB UI）の両方に掲載済みです（ただし`publicSubjectNav`は現在どの公開ページにも表示されていません。「数と式の現在地」節を参照）。既存契約を理由なく変更しないでください。
 - データ分析masterは`problem_master/data_analysis_problem_master.xlsx`です（QF/TRのmasterと同じフォルダ）。独立検算後の資産のみ変更（数学的内容に影響しない）の経緯は`math_db_quadratic_working/verification/post_review_addenda.md`に追記する運用です。
 - ヒストグラム・箱ひげ図・散布図は本単元で新規追加したasset typeで、既存の`pa-*`共通クラス（`pa-axis`・`pa-figure-line`・`pa-figure-fill`・`pa-guide`・`pa-label`・`pa-label-muted`・`pa-panel-label`・`pa-axis-highlight`）の組み合わせのみで表現し、新しいCSSクラスは追加していません。
 - ThinkingFlow見出しにTeX記法を生表示させず、変数＋Unicode上付き文字（`x²`等）またはUnicode丸数字＋`\text{\textcircled{}}`（本文数式・最終解答内）を使う方式はQF/TRと共通の規約です。新しい問題でも踏襲してください。
@@ -80,7 +80,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 全44問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全44問PASS判定と一致しています。（同ファイルの別シート「式と計算マスタ」冒頭サマリ欄の「独立検算は未実施」という古いメモは2026-09-23に修正済みです。）**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
 - 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。中央一覧は2026-09-23に、`section`値ベースで4区分（式の計算：M1-EC-001〜013／因数分解：M1-EC-014〜023／実数・平方根：M1-EC-024〜036／一次不等式：M1-EC-037〜044）へ分割しました。正本`problem.md`の`section`値・`SECTION_TO_GROUP`・master xlsx（「式と計算マスタ」「公開問題管理」両シートの問題区分列）の3箇所を一致させてください。
 - ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-044/`です。**slug「suto-shiki」は、既存の開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
-- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みです。**`publicSubjectNav`（TOPページNav.astro）には未追加**（三角比と同様、TOPページ導線への掲載は別判断として保留）。
+- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みで、TOPから「問題データベースを見る」で`/app/`へ移ると数と式を含む全4単元が表示されます。`publicSubjectNav`（`Nav.astro`の左サイドナビ）には数と式（および三角比）は入っていませんが、`Nav.astro`を描画する`BaseLayout.astro`の利用ページ（TOP・Privacy・Disclaimer・Contact）はすべて`showNav={false}`のため、2026-09-23時点で`publicSubjectNav`はどの公開ページにも表示されていません。したがって公開導線上の欠落はありません。将来`showNav`を有効にするページを作る場合は、先に`publicSubjectNav`の中身（三角比・数と式の`sampleOnly`・旧サンプルhref）を見直してください。
 - 数と式masterは`problem_master/expression_calculation_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。
 - ThinkingFlow見出しにTeX記法（`$x^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜044にも踏襲しています。M1-EC-008・009・012（展開）、M1-EC-017・018・019（因数分解）、M1-EC-026・028・030・031・034（実数・平方根、`\sqrt{...}`混入）で混入が見つかりましたが、いずれもUnicode表記（例：`x²`・`(a-b)³`・`√18`）へ修正済みです。新しい問題を追加する際は、ThinkingFlow見出し内に生の`^`・`\sqrt`を残さないよう特に注意してください。
 - **M1-EC-014〜023（因数分解10問）・M1-EC-024〜036（実数・平方根13問）の正本には、独立検算とは無関係にThinkingFlow見出し階層の技術的な不整合が複数見つかり、2026-09に修正済みです**（文言・数式・ThinkingFlowの結論・順序はいずれも無変更のため再独立検算対象外。コミット`ee196d3`）。
@@ -104,7 +104,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 開閉ロジック・アニメーションは最終解答の開閉（`data-answer-toggle`/`.result-box`、`grid-template-rows` 0fr/1fr手法）をそのまま複製しています。ボタン文言が異なるため別data属性（`data-prior-knowledge-toggle`/`data-prior-knowledge-box`）を使いますが、ロジック自体は複製元と同一です。新しい開閉アニメーション実装は増やしていません。
 - CSS（`global.css`の`.prior-knowledge-section`）も最終解答の外枠処理（`.final-answer-section`と同じ上罫線＋transparent、白カード外枠・shadow・pill・左色バーなし）を複製しています。新しいカードUIは作っていません。
 - 数式内に日本語テキストを直接書く場合（例：`(x\text{の指数})`）は、既存規約通り`\text{}`で囲んでください。囲まずに書くとKaTeX build時に`unicodeTextInMathMode`警告が出ます（KaTeXが自動でCJKフォールバック表示するため見た目自体は同じですが、警告は避けられます）。
-- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は今回未実施です（QF・TRの95問のみ対象のまま）。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加してください。
+- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は未実施です（QF・TRの95問のみ対象のまま）。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加し、あわせてWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（現在`/^M1-(QF|TR)-\d{3}$/`）も拡張・再deployしてください。
 - asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しており、既存118問には影響しません。
 
 ### 「たすき掛け」交差図asset（2026-09追加）
@@ -129,7 +129,7 @@ M1-EC-025（「事前知識・使用公式」）専用。自然数⊂整数⊂�
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
 
-**AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）はQF・TRの95問のみ対象で、データの分析（M1-DA-001〜023）は未拡張です。** DA問題で「AIに聞く」を有効化しても、AI-contextが存在せずWorker側でエラーになります。対象を広げる場合は同ファイルへ`dataAnalysis`コレクションを追加してください。
+**AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）はQF・TRの95問のみ対象で、データの分析（M1-DA-001〜023）・数と式（M1-EC-001〜044）は未拡張です。** 「AIに聞く」ボタン自体は単元で絞っていないためDA/ECページにも表示されますが、有効化してもWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（`/^M1-(QF|TR)-\d{3}$/`）で400エラーになり、AI-contextも存在しません。対象を広げる場合は、同ファイルへ`dataAnalysis`／`expressionCalculation`コレクションを追加し、Workerの正規表現も拡張・再deployしてください。
 
 公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析はこの対応調査自体が未実施です。詳細は同文書第37節を正本としてください。
 

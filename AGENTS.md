@@ -12,9 +12,9 @@
 
 です。
 
-現在、数学I「二次関数」「三角比」「データの分析」の3単元・計118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析の詳細は後述の各節を参照してください。
+現在、数学I「数と式」「二次関数」「三角比」「データの分析」の4単元・計162問（M1-EC-001〜044・M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析・数と式の詳細は後述の各節を参照してください。
 
-数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、公開対象です。教材化・技術実装・build確認・commitまで完了していますが、2026-09-23時点でまだpush・本番deployは行っていません。詳細は「数と式の現在地」節を参照してください。
+数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
 
 まず二次関数（M1-QF-001〜054の54問）について、
 
@@ -75,7 +75,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## 数と式の現在地
 
-数学I「数と式」M1-EC-001〜044（全44問。M1-EC-001〜013：式の計算（展開）、M1-EC-014〜023：因数分解、M1-EC-024〜036：実数・平方根、M1-EC-037〜044：一次不等式）について、全問独立検算・教材化・技術実装（ページ生成・DB統合・新セクション「事前知識・使用公式」の初回実装）・build確認まで完了しています。2026-09-23に44問すべてを公開対象と決定しました。単元としてはこの44問で大きな追加・変更は予定していません。44問・4区分化ともcommit済み（コミット`9f67faf`）ですが、**2026-09-23時点でまだpush・本番deployは行っていません**。Codex構造監査・Opus横断レビュー・人間実画面レビューはまだです。
+数学I「数と式」M1-EC-001〜044（全44問。M1-EC-001〜013：式の計算（展開）、M1-EC-014〜023：因数分解、M1-EC-024〜036：実数・平方根、M1-EC-037〜044：一次不等式）について、全問独立検算・教材化・技術実装（ページ生成・DB統合・新セクション「事前知識・使用公式」の初回実装）・build確認まで完了しています。2026-09-23に44問すべてを公開対象と決定しました。単元としてはこの44問で大きな追加・変更は予定していません。44問・4区分化ともcommit済み（コミット`9f67faf`）です。その後、人間による全44ページSSレビューと、Codex公開前最終構造監査（基準commit `d3f2e32`、PASS WITH REVIEW・BLOCKERなし）を完了し、監査指摘の軽微修正（master検算batch名・M1-EC-038/039のSVG marker ID重複・単元トップdescription・現在地文書）を反映し、2026-09-23に本番公開しました（push・GitHub Actions deploy）。Opus asset横断レビューは未実施のまま公開しています。
 
 - 全44問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全44問PASS判定と一致しています。（同ファイルの別シート「式と計算マスタ」冒頭サマリ欄の「独立検算は未実施」という古いメモは2026-09-23に修正済みです。）**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
 - 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。中央一覧は2026-09-23に、`section`値ベースで4区分（式の計算：M1-EC-001〜013／因数分解：M1-EC-014〜023／実数・平方根：M1-EC-024〜036／一次不等式：M1-EC-037〜044）へ分割しました。正本`problem.md`の`section`値・`SECTION_TO_GROUP`・master xlsx（「式と計算マスタ」「公開問題管理」両シートの問題区分列）の3箇所を一致させてください。
@@ -90,7 +90,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
   - M1-EC-032：本文の数式中（`$...$`内）に生のUnicode丸数字（①②）が直接書かれ、KaTeXの`unknownSymbol`build警告の原因になっていました。既存規約（M1-DA-008等で使用）の`\text{\textcircled{1}}`表記へ修正。
   - 13問すべてで正本`problem.md`の`verification_status`が`未検算`のまま更新漏れになっており、master xlsx「公開問題管理」シートの全問PASS判定と不一致でした。`独立検算済み`へ更新（この不一致を放置すると`getVerifiedCollection`のフィルタで全問非公開のままビルドされます）。
 - M1-EC-016（「事前知識・使用公式」・ThinkingFlow 1）とM1-EC-021（ThinkingFlow 3）に「たすき掛け」の交差図assetを追加しています。M1-EC-025（「事前知識・使用公式」）には実数の分類（自然数⊂整数⊂有理数⊂実数、無理数）を示すネスト矩形図assetを追加しました。M1-EC-038・039・041・043・044（一次不等式）には、ThinkingFlow内（`placement: flow`）に解の範囲・共通範囲・場合分けを示す数直線asset（`type: number`）を配置しています。他の問題は`assets: []`のままです。詳細は次節「事前知識・使用公式」の追記、および下記asset規約を参照してください。
-- push・本番deployする際は、「SEOの現行契約」節のsitemap内訳（現行125 URL）を170 URL（`/math1/suto-shiki/`単元トップ1＋個別問題44）へ更新してください（2026-09-23のローカルbuildで`dist/sitemap.xml`が170 URLになることを確認済み）。
+- 「SEOの現行契約」節のsitemap内訳は、2026-09-23に170 URL（`/math1/suto-shiki/`単元トップ1＋個別問題44を追加）へ更新済みです。数と式の単元トップ・個別問題URLは他単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）で、ローカルbuildで45URLすべて確認済みです。
 
 ---
 
@@ -147,7 +147,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/quadratic27/`・`src/content/quadratic27-assets/`（二次関数）
 - `src/content/trig4/`・`src/content/trig4-assets/`（三角比）
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
-- `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23時点で未push。詳細は「数と式の現在地」節を参照）
+- `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
 
@@ -194,7 +194,7 @@ npm run sync-content
 - `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ、`/math1/quadratic/M1-QF-001/` 〜 `/M1-QF-054/`
 - `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/` 〜 `/M1-TR-041/`
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
-- `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23時点で未push。詳細は「数と式の現在地」節を参照）
+- `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -239,9 +239,9 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - sitemapには載せない
 - robots.txtでDisallowしない
 
-### 各単元トップ・個別問題URL（QF/TR/DA共通）
+### 各単元トップ・個別問題URL（QF/TR/DA/EC共通）
 
-- `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`と各個別問題URL
+- `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`・`/math1/suto-shiki/`と各個別問題URL
 - index対象
 - noindexを付けない
 - 個別問題は固有title / description
@@ -251,17 +251,18 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 ### sitemap / robots
 
 `sitemap.xml` は検索対象ページを掲載します（`src/pages/sitemap.xml.ts`）。
-現行118問（QF54・TR41・DA23）時点の内訳は、
+現行162問（QF54・TR41・DA23・EC44）時点の内訳は、
 
 - `/`
 - `/math1/quadratic/` ＋ 個別問題54URL
 - `/math1/trig/` ＋ 個別問題41URL
 - `/math1/data-analysis/` ＋ 個別問題23URL
+- `/math1/suto-shiki/` ＋ 個別問題44URL
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-の計125 URLです。
+の計170 URLです（2026-09-23のローカルbuildで`dist/sitemap.xml`の件数・内訳を確認済み）。
 
 `/app/` と旧6サンプルrouteはsitemapへ含めません。
 
@@ -504,7 +505,7 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
 
-M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし）。
+M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。
 **M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
 
 既存問題を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。

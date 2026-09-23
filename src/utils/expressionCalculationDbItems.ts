@@ -4,10 +4,12 @@ import type { DbCenterItem } from './dbCenterList';
 // expressionCalculation（M1-EC-001〜、数と式「式の計算」）の正本frontmatterに実在する
 // section値を中央ペインの区分見出しへ対応させる表。dataAnalysisDbItems.ts・trigDbItems.ts・
 // quadraticDbItems.tsと同じ方式（section値をキーにした対応表・未知のsectionはエラーで止める）を
-// 踏襲する。現状は「式の計算」の1区分のみだが、今後「数と式」単元内に他区分が
-// 増えた場合もここへ追記するだけでよい。
+// 踏襲する。「数と式」単元内に区分が増えた場合もここへ追記するだけでよい。
 const SECTION_TO_GROUP: Record<string, { groupId: string; groupLabel: string }> = {
   式の計算: { groupId: 'ec-expression-calculation', groupLabel: '式の計算' },
+  因数分解: { groupId: 'ec-factorization', groupLabel: '因数分解' },
+  実数・平方根: { groupId: 'ec-real-numbers', groupLabel: '実数・平方根' },
+  一次不等式: { groupId: 'ec-linear-inequality', groupLabel: '一次不等式' },
 };
 
 function resolveGroup(section: string): { groupId: string; groupLabel: string } {

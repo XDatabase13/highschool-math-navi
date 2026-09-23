@@ -14,7 +14,7 @@
 
 現在、数学I「二次関数」「三角比」「データの分析」の3単元・計118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析の詳細は後述の各節を参照してください。
 
-数学I「数と式」M1-EC-001〜036（式の計算、36問）は全問独立検算済みで、教材化・技術実装・build確認・commitまで完了していますが、2026-09-22時点でまだpush・本番deployは行っていません。詳細は「数と式「式の計算」の現在地」節を参照してください。
+数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、公開対象です。教材化・技術実装・build確認まで完了していますが、2026-09-23時点でまだpush・本番deployは行っていません（M1-EC-037〜044は未commit）。詳細は「数と式の現在地」節を参照してください。
 
 まず二次関数（M1-QF-001〜054の54問）について、
 
@@ -73,30 +73,30 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ---
 
-## 数と式「式の計算」の現在地
+## 数と式の現在地
 
-数学I「数と式」M1-EC-001〜036（式の計算、全36問。M1-EC-001〜013：展開、M1-EC-014〜023：因数分解、M1-EC-024〜036：実数・平方根）について、全問独立検算・教材化・技術実装（ページ生成・DB統合・新セクション「事前知識・使用公式」の初回実装）・build確認・commitまで完了していますが、**2026-09-22時点でまだpush・本番deployは行っていません**。Codex構造監査・Opus横断レビュー・人間実画面レビュー・公開可否判断はまだです。
+数学I「数と式」M1-EC-001〜044（全44問。M1-EC-001〜013：式の計算（展開）、M1-EC-014〜023：因数分解、M1-EC-024〜036：実数・平方根、M1-EC-037〜044：一次不等式）について、全問独立検算・教材化・技術実装（ページ生成・DB統合・新セクション「事前知識・使用公式」の初回実装）・build確認まで完了しています。2026-09-23に44問すべてを公開対象と決定しました。単元としてはこの44問で大きな追加・変更は予定していません。M1-EC-001〜036はcommit済み、M1-EC-037〜044と区分分割（4区分化）は未commitで、**2026-09-23時点でまだpush・本番deployは行っていません**。Codex構造監査・Opus横断レビュー・人間実画面レビューはまだです。
 
-- 全36問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全36問PASS判定と一致しています。同ファイルの別シート「式と計算マスタ」冒頭サマリ欄には「独立検算は未実施」という古いメモが残っていますが更新漏れです。**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
-- 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。M1-EC-014〜023・M1-EC-024〜036追加時もこの対応表・コンポーネントの変更は不要でした（既存の「式の計算」区分1つに収まる）。
-- ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-036/`です。**slug「suto-shiki」は、既存の開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
+- 全44問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全44問PASS判定と一致しています。（同ファイルの別シート「式と計算マスタ」冒頭サマリ欄の「独立検算は未実施」という古いメモは2026-09-23に修正済みです。）**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
+- 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。中央一覧は2026-09-23に、`section`値ベースで4区分（式の計算：M1-EC-001〜013／因数分解：M1-EC-014〜023／実数・平方根：M1-EC-024〜036／一次不等式：M1-EC-037〜044）へ分割しました。正本`problem.md`の`section`値・`SECTION_TO_GROUP`・master xlsx（「式と計算マスタ」「公開問題管理」両シートの問題区分列）の3箇所を一致させてください。
+- ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-044/`です。**slug「suto-shiki」は、既存の開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
 - `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みです。**`publicSubjectNav`（TOPページNav.astro）には未追加**（三角比と同様、TOPページ導線への掲載は別判断として保留）。
 - 数と式masterは`problem_master/expression_calculation_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。
-- ThinkingFlow見出しにTeX記法（`$x^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜036にも踏襲しています。M1-EC-008・009・012（展開）、M1-EC-017・018・019（因数分解）、M1-EC-026・028・030・031・034（実数・平方根、`\sqrt{...}`混入）で混入が見つかりましたが、いずれもUnicode表記（例：`x²`・`(a-b)³`・`√18`）へ修正済みです。新しい問題を追加する際は、ThinkingFlow見出し内に生の`^`・`\sqrt`を残さないよう特に注意してください。
+- ThinkingFlow見出しにTeX記法（`$x^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜044にも踏襲しています。M1-EC-008・009・012（展開）、M1-EC-017・018・019（因数分解）、M1-EC-026・028・030・031・034（実数・平方根、`\sqrt{...}`混入）で混入が見つかりましたが、いずれもUnicode表記（例：`x²`・`(a-b)³`・`√18`）へ修正済みです。新しい問題を追加する際は、ThinkingFlow見出し内に生の`^`・`\sqrt`を残さないよう特に注意してください。
 - **M1-EC-014〜023（因数分解10問）・M1-EC-024〜036（実数・平方根13問）の正本には、独立検算とは無関係にThinkingFlow見出し階層の技術的な不整合が複数見つかり、2026-09に修正済みです**（文言・数式・ThinkingFlowの結論・順序はいずれも無変更のため再独立検算対象外。コミット`ee196d3`）。
   - M1-EC-021：ThinkingFlow見出しが`####`になっていました（他の単独Flow問題はすべて`###`）。放置するとThinkingFlowの各Flowが個別Flowとして認識されず空表示になる不具合だったため`###`へ修正。
   - M1-EC-036：小問(2)内2番目のFlow見出しが`###`のままで、`####`であるべきところが1レベル浅くなっていました（他のFlowとの深さ不整合）。放置すると`markdownSections.ts`のパーサーが(2)の子ではなく孤立した見出しとして分割してしまう不具合だったため`####`へ修正。
   - M1-EC-016・017・018・019・020・022・023・025・026・027：見出し内の強調マーク☆と番号の順序が「☆ N. 見出し」のように逆転していました（正しい順序は「N. ☆ 見出し」。`prepareQuadratic27Entry.ts`の`MARKER_PATTERN`・`verifyStepNumberMatchesIndex`が要求する順序で、崩れるとbuildエラーになります）。順序を修正。
   - M1-EC-032：本文の数式中（`$...$`内）に生のUnicode丸数字（①②）が直接書かれ、KaTeXの`unknownSymbol`build警告の原因になっていました。既存規約（M1-DA-008等で使用）の`\text{\textcircled{1}}`表記へ修正。
   - 13問すべてで正本`problem.md`の`verification_status`が`未検算`のまま更新漏れになっており、master xlsx「公開問題管理」シートの全問PASS判定と不一致でした。`独立検算済み`へ更新（この不一致を放置すると`getVerifiedCollection`のフィルタで全問非公開のままビルドされます）。
-- M1-EC-016（「事前知識・使用公式」・ThinkingFlow 1）とM1-EC-021（ThinkingFlow 3）に「たすき掛け」の交差図assetを追加しています。M1-EC-025（「事前知識・使用公式」）には実数の分類（自然数⊂整数⊂有理数⊂実数、無理数）を示すネスト矩形図assetを追加しました。他の問題は`assets: []`のままです。詳細は次節「事前知識・使用公式」の追記、および下記asset規約を参照してください。
-- push・本番deployする際は、「SEOの現行契約」節のsitemap内訳（現行125 URL）を162 URL（`/math1/suto-shiki/`単元トップ1＋個別問題36）へ更新してください。
+- M1-EC-016（「事前知識・使用公式」・ThinkingFlow 1）とM1-EC-021（ThinkingFlow 3）に「たすき掛け」の交差図assetを追加しています。M1-EC-025（「事前知識・使用公式」）には実数の分類（自然数⊂整数⊂有理数⊂実数、無理数）を示すネスト矩形図assetを追加しました。M1-EC-038・039・041・043・044（一次不等式）には、ThinkingFlow内（`placement: flow`）に解の範囲・共通範囲・場合分けを示す数直線asset（`type: number`）を配置しています。他の問題は`assets: []`のままです。詳細は次節「事前知識・使用公式」の追記、および下記asset規約を参照してください。
+- push・本番deployする際は、「SEOの現行契約」節のsitemap内訳（現行125 URL）を170 URL（`/math1/suto-shiki/`単元トップ1＋個別問題44）へ更新してください（2026-09-23のローカルbuildで`dist/sitemap.xml`が170 URLになることを確認済み）。
 
 ---
 
 ## 「事前知識・使用公式」（任意セクション、2026-09追加）
 
-正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜036でも踏襲しています。既存118問（QF/TR/DA）には存在せず、影響もありません。
+正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。既存118問（QF/TR/DA）には存在せず、影響もありません。
 
 - 見出しは`## 事前知識・使用公式`。パーサー（`markdownSections.ts`）自体は無変更で、既存の`##`見出し分割の汎用ロジックが処理します。各`prepare*Entry.ts`（QF/TR/DA/EC全4コレクション）に`findSection(sections, '事前知識・使用公式')`を追加し、値の有無だけで表示可否を判定します。
 - 表示位置：問題 → **事前知識・使用公式** → 元講師の独り言 → ThinkingFlow → 最終解答。
@@ -147,7 +147,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/quadratic27/`・`src/content/quadratic27-assets/`（二次関数）
 - `src/content/trig4/`・`src/content/trig4-assets/`（三角比）
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
-- `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式「式の計算」、M1-EC-001〜036。2026-09-22時点で未push。詳細は「数と式「式の計算」の現在地」節を参照）
+- `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23時点で未push。詳細は「数と式の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
 
@@ -194,7 +194,7 @@ npm run sync-content
 - `/math1/quadratic/`：数学I「二次関数」上位区分の単元トップ、`/math1/quadratic/M1-QF-001/` 〜 `/M1-QF-054/`
 - `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/` 〜 `/M1-TR-041/`
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
-- `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-036/`（2026-09-22時点で未push。詳細は「数と式「式の計算」の現在地」節を参照）
+- `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23時点で未push。詳細は「数と式の現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -206,9 +206,9 @@ SPA化や複雑なクライアント状態管理を、明示的な要求なし�
 
 ### 中央問題一覧の分類・共有コンポーネント
 
-中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分）。
+中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分、数と式＝4区分）。
 
-- 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
+- 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` / `expressionCalculationDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
 - 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
 - 新しい単元を追加する場合や表示を調整する場合も、この対応表とコンポーネントを流用してください。`ProblemDbShell.astro` 側や別コンポーネントに、もう一つ別の分類ロジックを増やさないでください。
 

@@ -136,7 +136,7 @@ ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実�
 
 **AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）はQF・TRの95問のみ対象で、データの分析（M1-DA-001〜023）・数と式（M1-EC-001〜044）は未拡張です。** 「AIに聞く」ボタン自体は単元で絞っていないためDA/ECページにも表示されますが、有効化してもWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（`/^M1-(QF|TR)-\d{3}$/`）で400エラーになり、AI-contextも存在しません。対象を広げる場合は、同ファイルへ`dataAnalysis`／`expressionCalculation`コレクションを追加し、Workerの正規表現も拡張・再deployしてください。
 
-公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析はこの対応調査自体が未実施です。詳細は同文書第37節を正本としてください。
+公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析（M1-DA-001〜023）も、EXACT判定の12問に外部サイト「教科書より詳しい高校数学」（yorikuwa.com）への同じ「追加で練習する」リンクを追加し、本番公開済みです（コミット`c0b7d45`、同じ`external-practice-links.json`に追記。表示ロジックは共通）。同ファイルの登録は計59問（QF26・TR21・DA12）です。数と式（M1-EC-001〜044）はリンク未登録です。詳細は同文書第37節を正本としてください。
 
 ---
 
@@ -438,6 +438,13 @@ assetは必要最小限とし、数学的に意味のある視覚補助として
 色・線幅・ラベル位置等は実装側で調整できますが、人間レビュー済みassetを理由なく作り直さないでください。
 
 公開用assetスナップショットだけを直接修正しないでください。正本assetを修正して再同期します。
+
+### SVG内部IDの命名規則
+
+SVGはインラインで埋め込まれるため、複数assetが同じ内部ID（`<marker>`・`clipPath`・`mask`・gradient等の`id`）を持つと同一ページ内で衝突します。閉じたFlow（`hidden`＝`display:none`）内の定義が先に現れると、別Flowの`url(#…)`参照が描画されません（2026-09に`pa-arrow`でQF/TRの15問の矢尻消失として発生し修正済み）。
+
+- 内部IDは `<用途>-<問題ID>-<ファイル名由来>` の形で、assetファイル単位で一意にしてください（例：`pa-arrow-qf002-flow-01`、`pa-arrow-tr015-trig-inequality-sin`）。`id`定義と対応する`url(#…)`参照は必ずセットで変更します。
+- 同じSVGファイルを同一ページの複数箇所へ配置すると、内部IDもそのまま重複します。その場合は必要に応じてasset自体を別ファイル化してください（例：M1-QF-002はFlow2用`problem.svg`と最終解答用`final-answer.svg`に分離）。
 
 ---
 

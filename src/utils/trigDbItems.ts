@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { DbCenterItem } from './dbCenterList';
 
-// trig4（M1-TR-001〜021、三角比試験バッチ）の正本frontmatterに実在するsection値を
+// trig4（M1-TR-001〜041、数学I「三角比」）の正本frontmatterに実在するsection値を
 // 中央ペインの区分見出しへ対応させる表。quadraticDbItems.tsのSECTION_TO_GROUPと
 // 同じ方式（section値をキーにした対応表・未知のsectionはエラーで止める）を踏襲する。
 const SECTION_TO_GROUP: Record<string, { groupId: string; groupLabel: string }> = {

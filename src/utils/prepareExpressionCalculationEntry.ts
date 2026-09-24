@@ -3,7 +3,7 @@ import { parseMarkdownSections, findSection, type MarkdownSection } from './mark
 import { readProblemAssetSvg } from './readProblemAsset';
 import { flowAssetKey } from './prepareQuadratic27Entry';
 
-// expressionCalculation（M1-EC-001〜、数と式「式の計算」）1件分を、Web表示に必要な形へ
+// expressionCalculation（M1-EC-001〜044、数学I「数と式」）1件分を、Web表示に必要な形へ
 // 分解する処理。prepareDataAnalysisEntry.ts等と同じ構造の分解ロジックだが、Astroの
 // コレクション型（CollectionEntry<'expressionCalculation'>）は別ものなので、asset振り分けの
 // 薄いswitch部分だけをこのファイルに複製している。見出しパーサー・flowAssetKey・

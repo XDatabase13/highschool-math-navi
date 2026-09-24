@@ -14,7 +14,7 @@ import { glob } from 'astro/loaders';
 // prior_knowledgeは「事前知識・使用公式」セクション内へのasset配置専用（M1-EC-016で初採用）。
 // これ以外の値や必須項目の欠落はここで弾き、prepare*Entry側で
 // 問題文assetへ暗黙フォールバックさせない（不正データはビルド時エラーにする）。
-// quadratic27・trig4（三角比試験バッチ）で共通利用する。
+// quadratic27・trig4・dataAnalysis・expressionCalculationの4コレクションで共通利用する。
 const problemAssetSchema = z
   .array(
     z.object({
@@ -41,6 +41,12 @@ const problemAssetSchema = z
     });
   });
 
+// verification_statusの許可値。公開対象の判定（verifiedCollection.ts）は「独立検算済み」だけを使う。
+// 任意文字列を通すと、誤字や更新漏れがあってもbuildは成功し、その問題が一覧・個別ページ・
+// sitemapから黙って消えるため、想定外の値はここでビルド時エラーにする。
+// 「未検算」は正本で実際に使われる値（検算前・更新漏れ時）なので許可し、非公開として扱う。
+const verificationStatusSchema = z.enum(['独立検算済み', '未検算']);
+
 const quadratic27 = defineCollection({
   loader: glob({
     pattern: 'M1-QF-*.md',
@@ -60,15 +66,14 @@ const quadratic27 = defineCollection({
     importance: z.number().min(1).max(4),
     importance_label: z.string(),
     reference_problem: z.string(),
-    verification_status: z.string(),
+    verification_status: verificationStatusSchema,
     assets: problemAssetSchema,
   }),
 });
 
-// 三角比（M1-TR-001〜004）の試験バッチ用コレクション。数学I「二次関数」の
-// 公開契約（quadratic27）とは完全に分離し、このコレクションを増やしても
-// 既存54問のbuild・sitemap・中央ペイン分類には一切影響しない。
-// 本番公開・sitemap掲載は行わない（教材化・表示検証のみの試験用）。
+// 数学I「三角比」（M1-TR-001〜041）用コレクション。quadratic27とはコレクションを分離しているが、
+// 公開契約（index対象・sitemap掲載・canonicalは各URL自身）はquadratic27と同格
+// （AGENTS.md「三角比の現在地」参照）。
 const trig4 = defineCollection({
   loader: glob({
     pattern: 'M1-TR-*.md',
@@ -87,15 +92,14 @@ const trig4 = defineCollection({
     importance: z.number().min(1).max(4),
     importance_label: z.string(),
     reference_problem: z.string(),
-    verification_status: z.string(),
+    verification_status: verificationStatusSchema,
     assets: problemAssetSchema,
   }),
 });
 
-// データの分析（M1-DA-001〜023）の試験バッチ用コレクション。quadratic27・trig4と
-// 完全に分離しており、このコレクションを増やしても既存の公開契約・build・sitemap・
-// 中央ペイン分類には一切影響しない。本番公開・sitemap掲載は行わない
-// （教材化・表示検証のみの試験用。AGENTS.md「データの分析の現在地」参照）。
+// 数学I「データの分析」（M1-DA-001〜023）用コレクション。quadratic27・trig4とは
+// コレクションを分離しているが、公開契約（index対象・sitemap掲載・canonicalは各URL自身）は
+// 同格（AGENTS.md「データの分析の現在地」参照）。
 const dataAnalysis = defineCollection({
   loader: glob({
     pattern: 'M1-DA-*.md',
@@ -114,14 +118,14 @@ const dataAnalysis = defineCollection({
     importance: z.number().min(1).max(4),
     importance_label: z.string(),
     reference_problem: z.string(),
-    verification_status: z.string(),
+    verification_status: verificationStatusSchema,
     assets: problemAssetSchema,
   }),
 });
 
-// 数と式「式の計算」（M1-EC-001〜003）用コレクション。quadratic27・trig4・dataAnalysisと
-// 完全に分離しており、このコレクションを増やしても既存の公開契約・build・sitemap・
-// 中央ペイン分類には一切影響しない。
+// 数学I「数と式」（M1-EC-001〜044）用コレクション。quadratic27・trig4・dataAnalysisとは
+// コレクションを分離しているが、公開契約（index対象・sitemap掲載・canonicalは各URL自身）は
+// 同格（AGENTS.md「数と式の現在地」参照）。
 const expressionCalculation = defineCollection({
   loader: glob({
     pattern: 'M1-EC-*.md',
@@ -140,7 +144,7 @@ const expressionCalculation = defineCollection({
     importance: z.number().min(1).max(4),
     importance_label: z.string(),
     reference_problem: z.string(),
-    verification_status: z.string(),
+    verification_status: verificationStatusSchema,
     assets: problemAssetSchema,
   }),
 });

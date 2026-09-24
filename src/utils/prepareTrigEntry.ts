@@ -3,7 +3,7 @@ import { parseMarkdownSections, findSection, type MarkdownSection } from './mark
 import { readProblemAssetSvg } from './readProblemAsset';
 import { flowAssetKey } from './prepareQuadratic27Entry';
 
-// trig4（M1-TR-001〜004、三角比の試験バッチ）1件分を、Web表示に必要な形へ分解する処理。
+// trig4（M1-TR-001〜041、数学I「三角比」）1件分を、Web表示に必要な形へ分解する処理。
 // prepareQuadratic27Entry.tsと同じ構造の分解ロジックだが、Astroのコレクション型
 // （CollectionEntry<'quadratic27'> / CollectionEntry<'trig4'>）は別ものなので、
 // asset振り分けの薄いswitch部分だけをこのファイルに複製している。

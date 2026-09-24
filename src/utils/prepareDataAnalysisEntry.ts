@@ -3,7 +3,7 @@ import { parseMarkdownSections, findSection, type MarkdownSection } from './mark
 import { readProblemAssetSvg } from './readProblemAsset';
 import { flowAssetKey } from './prepareQuadratic27Entry';
 
-// dataAnalysis（M1-DA-001〜023、データの分析の試験バッチ）1件分を、Web表示に必要な形へ
+// dataAnalysis（M1-DA-001〜023、数学I「データの分析」）1件分を、Web表示に必要な形へ
 // 分解する処理。prepareTrigEntry.tsと同じ構造の分解ロジックだが、Astroのコレクション型
 // （CollectionEntry<'dataAnalysis'>）は別ものなので、asset振り分けの薄いswitch部分だけを
 // このファイルに複製している。見出しパーサー・flowAssetKey・parseStepTitle・

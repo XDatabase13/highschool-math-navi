@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { DbCenterItem } from './dbCenterList';
 
-// expressionCalculation（M1-EC-001〜、数と式「式の計算」）の正本frontmatterに実在する
+// expressionCalculation（M1-EC-001〜044、数学I「数と式」）の正本frontmatterに実在する
 // section値を中央ペインの区分見出しへ対応させる表。dataAnalysisDbItems.ts・trigDbItems.ts・
 // quadraticDbItems.tsと同じ方式（section値をキーにした対応表・未知のsectionはエラーで止める）を
 // 踏襲する。「数と式」単元内に区分が増えた場合もここへ追記するだけでよい。

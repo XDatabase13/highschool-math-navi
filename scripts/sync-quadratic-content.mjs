@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // 正本（隣接フォルダ math_db_quadratic_working/）から、Web公開用スナップショット
-// （src/content/quadratic27, src/content/quadratic27-assets）へコピーするだけの単純なスクリプト。
+// （src/content/{quadratic27,trig4,dataAnalysis,expressionCalculation} と各 *-assets）へ
+// コピーするだけの単純なスクリプト。
 //
 // - 正本ファイルは一切書き換えない（読み込むだけ）。
 // - スナップショット側は毎回作り直す（削除→コピー）ので、正本から消えたファイルが
@@ -24,17 +25,17 @@ const canonicalAssets = path.join(canonicalRoot, 'assets');
 const snapshotProblems = path.join(repoRoot, 'src/content/quadratic27');
 const snapshotAssets = path.join(repoRoot, 'src/content/quadratic27-assets');
 
-// 三角比（M1-TR-001〜004）試験バッチ用スナップショット先。quadratic27とは別コレクション
+// 三角比（M1-TR-001〜041）用スナップショット先。quadratic27とは別コレクション
 // （src/content.config.tsのtrig4）なので、格納先ディレクトリも分離する。
 const snapshotTrigProblems = path.join(repoRoot, 'src/content/trig4');
 const snapshotTrigAssets = path.join(repoRoot, 'src/content/trig4-assets');
 
-// データの分析（M1-DA-001〜023）試験バッチ用スナップショット先。quadratic27・trig4とは
+// データの分析（M1-DA-001〜023）用スナップショット先。quadratic27・trig4とは
 // 別コレクション（src/content.config.tsのdataAnalysis）なので、格納先ディレクトリも分離する。
 const snapshotDataAnalysisProblems = path.join(repoRoot, 'src/content/dataAnalysis');
 const snapshotDataAnalysisAssets = path.join(repoRoot, 'src/content/dataAnalysis-assets');
 
-// 数と式「式の計算」（M1-EC-001〜）用スナップショット先。quadratic27・trig4・dataAnalysisとは
+// 数と式（M1-EC-001〜044）用スナップショット先。quadratic27・trig4・dataAnalysisとは
 // 別コレクション（src/content.config.tsのexpressionCalculation）なので、格納先ディレクトリも分離する。
 const snapshotExpressionCalculationProblems = path.join(repoRoot, 'src/content/expressionCalculation');
 const snapshotExpressionCalculationAssets = path.join(repoRoot, 'src/content/expressionCalculation-assets');
@@ -86,8 +87,8 @@ function copyAssets() {
   return fileCount;
 }
 
-// 三角比試験バッチ（M1-TR-001〜004）用。存在するファイルだけを対象にする
-// （量産中で正本側の問題数が増減しても、このスクリプト自体は変更不要）。
+// 三角比（M1-TR-*）用。存在するファイルだけを対象にする
+// （正本側の問題数が増減しても、このスクリプト自体は変更不要）。
 function copyTrigMarkdown() {
   resetDir(snapshotTrigProblems);
   const files = readdirSync(canonicalProblems).filter((f) => /^M1-TR-\d+\.md$/.test(f));
@@ -119,7 +120,7 @@ function copyTrigAssets() {
   return fileCount;
 }
 
-// データの分析試験バッチ（M1-DA-001〜023）用。三角比試験バッチと同じ考え方
+// データの分析（M1-DA-*）用。三角比と同じ考え方
 // （存在するファイルだけを対象にする）を踏襲する。
 function copyDataAnalysisMarkdown() {
   resetDir(snapshotDataAnalysisProblems);
@@ -152,7 +153,7 @@ function copyDataAnalysisAssets() {
   return fileCount;
 }
 
-// 数と式「式の計算」（M1-EC-001〜）用。他バッチと同じ考え方
+// 数と式（M1-EC-*）用。他単元と同じ考え方
 // （存在するファイルだけを対象にする）を踏襲する。
 function copyExpressionCalculationMarkdown() {
   resetDir(snapshotExpressionCalculationProblems);

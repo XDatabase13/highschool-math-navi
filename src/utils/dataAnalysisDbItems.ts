@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { DbCenterItem } from './dbCenterList';
 
-// dataAnalysis（M1-DA-001〜023、データの分析試験バッチ）の正本frontmatterに実在する
+// dataAnalysis（M1-DA-001〜023、数学I「データの分析」）の正本frontmatterに実在する
 // section値を中央ペインの区分見出しへ対応させる表。trigDbItems.ts・quadraticDbItems.tsと
 // 同じ方式（section値をキーにした対応表・未知のsectionはエラーで止める）を踏襲する。
 const SECTION_TO_GROUP: Record<string, { groupId: string; groupLabel: string }> = {

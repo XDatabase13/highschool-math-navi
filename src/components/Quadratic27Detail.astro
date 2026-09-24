@@ -573,7 +573,7 @@ function nextContextKey(): string {
     const withBold = escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
     const mathSpans: string[] = [];
-    const placeholderPattern = (i: number) => ` MATH${i} `;
+    const placeholderPattern = (i: number) => `\u0000MATH${i}\u0000`;
     const withPlaceholders = withBold.replace(MATH_SPAN_PATTERN, (match) => {
       mathSpans.push(match);
       return placeholderPattern(mathSpans.length - 1);
@@ -584,7 +584,7 @@ function nextContextKey(): string {
       .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
       .join('');
 
-    const html = htmlWithPlaceholders.replace(/ MATH(\d+) /g, (_, i) => mathSpans[Number(i)]);
+    const html = htmlWithPlaceholders.replace(/\u0000MATH(\d+)\u0000/g, (_, i) => mathSpans[Number(i)]);
 
     container.innerHTML = html;
     renderMathInElement(container, {

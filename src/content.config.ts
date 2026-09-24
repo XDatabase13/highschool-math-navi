@@ -1,5 +1,7 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+// astro:content の z は非推奨（同じzod/v4をastro/zodから直接importする形が現行の推奨）。
+import { z } from 'astro/zod';
 
 // 正本Markdownは highschool_math_db の外、隣接フォルダ math_db_quadratic_working/problems/ にある
 // （唯一の正本。ここでは一切書き換えない）。
@@ -33,7 +35,7 @@ const problemAssetSchema = z
     assets.forEach((asset, index) => {
       if (asset.placement === 'flow' && asset.flow === undefined) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           path: [index, 'flow'],
           message: `placement: flow の asset (${asset.file}) には flow が必須です。`,
         });

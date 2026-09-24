@@ -260,7 +260,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const overlay = document.getElementById('db-preview-lightbox');
 
     if (trigger && overlay) {
-      const closeBtn = overlay.querySelector('[data-lightbox-close]');
+      const closeBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-close]');
       const lightboxImage = overlay.querySelector('.lightbox-image');
       let lastFocused: HTMLElement | null = null;
 

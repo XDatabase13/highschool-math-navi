@@ -33,6 +33,38 @@ export function flowAssetKey(part: number | undefined, flow: number): string {
   return part !== undefined ? `${part}:${flow}` : `${flow}`;
 }
 
+// placement: flow のassetが指す part/flow が、実際に描画されるFlowに存在するかを確認する。
+// 描画側（Quadratic27Detail.astro）はflowAssetsByKey.get(key)で引くだけなので、
+// 存在しないFlow番号を指すassetは何もしなければ黙って表示されない。
+// 描画と同じ分岐（全見出しが末端なら通常Flow、そうでなければ小問付きFlow）でキー集合を作り、
+// どのキーにも当たらないassetがあればビルドを止める。
+export function verifyFlowAssetTargetsExist(
+  problemId: string,
+  thinkingFlow: MarkdownSection | undefined,
+  flowAssetsByKey: ReadonlyMap<string, readonly unknown[]>,
+): void {
+  const renderedKeys = new Set<string>();
+  if (thinkingFlow) {
+    if (thinkingFlow.subsections.every((s) => s.subsections.length === 0)) {
+      thinkingFlow.subsections.forEach((_, index) => renderedKeys.add(flowAssetKey(undefined, index + 1)));
+    } else {
+      for (const part of thinkingFlow.subsections) {
+        part.subsections.forEach((_, index) => renderedKeys.add(flowAssetKey(part.partNumber, index + 1)));
+      }
+    }
+  }
+  for (const [key, entries] of flowAssetsByKey) {
+    if (!renderedKeys.has(key)) {
+      // 呼び出し側ごとにasset型の絞り込みが異なるため、ファイル名はエラーメッセージ用に実行時に読む。
+      const files = entries.map((e) => (e as { asset?: { file?: string } }).asset?.file ?? '?').join(', ');
+      throw new Error(
+        `[${problemId}] placement: flow のasset (${files}) が指すFlow（part:flow = ${key}）が` +
+          `ThinkingFlowに存在しません。assetが表示されないため停止しました。`,
+      );
+    }
+  }
+}
+
 export async function prepareQuadratic27Entry(
   entry: CollectionEntry<'quadratic27'>,
 ): Promise<PreparedQuadratic27Entry> {

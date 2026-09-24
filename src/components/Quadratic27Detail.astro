@@ -1,6 +1,12 @@
 ---
 import { starRating } from '../utils/stars';
-import { flowAssetKey, parseStepTitle, splitStepNumber, verifyStepNumberMatchesIndex } from '../utils/prepareQuadratic27Entry';
+import {
+  flowAssetKey,
+  parseStepTitle,
+  splitStepNumber,
+  verifyFlowAssetTargetsExist,
+  verifyStepNumberMatchesIndex,
+} from '../utils/prepareQuadratic27Entry';
 import { displayProblemNumber } from '../utils/dbCenterList';
 import type { MarkdownSection } from '../utils/markdownSections';
 import externalPracticeLinksData from '../data/external-practice-links.json';
@@ -67,6 +73,10 @@ interface Props {
 const { prepared, unitHeading } = Astro.props;
 const { entry, problem, priorKnowledge, paraphrase, problemMeta, solutionMeta, thinkingFlow, finalAnswer, problemAssets, finalAnswerAssets, flowAssetsByKey } = prepared;
 const priorKnowledgeAssets = prepared.priorKnowledgeAssets ?? [];
+
+// 存在しないFlow番号を指すflow assetは黙って表示されなくなるため、描画前にビルドを止める
+// （QF/TR/DA/ECの4コレクションすべてがこのコンポーネントを通る）。
+verifyFlowAssetTargetsExist(entry.data.problem_id, thinkingFlow, flowAssetsByKey);
 
 const externalPracticeLinks = externalPracticeLinksMap[entry.data.problem_id] ?? [];
 

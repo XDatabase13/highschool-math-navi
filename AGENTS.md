@@ -96,7 +96,12 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## 「事前知識・使用公式」（任意セクション、2026-09追加）
 
-正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。既存118問（QF/TR/DA）には存在せず、影響もありません。
+正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。2026-09-24に、QF/TR/DAの118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）にも追加し、**公開162問すべてにこのセクションがあります**。
+
+- QF/TR/DAへの追加は、単元ごとに「正本から問題文・ThinkingFlow題名を抽出（`review/M1-*_prior_knowledge_materials.md`）→GPTと人間による本文作成→Codexの監査・再監査→監査済み確定ファイル（`M1-*_prior_knowledge_audit_fixed_v2.md`。抽出ファイルとともにuntrackedの作業用ファイル）の本文を正本へそのまま挿入→`npm run sync-content`」の手順で行いました（コミット：DA`714e8b1`・TR`9c6237c`・QF`9980ee4`）。監査済み本文は言い換えずに挿入し、問題文・問題メタ・解法メタ・ThinkingFlow・最終解答・frontmatter・assetは無変更です。数学的固定内容を変えていないため、再独立検算の対象外です。
+- 正本内の配置は「`## 問題`（→`## 問題の言い換え`がある場合はその後）→`## 事前知識・使用公式`→`## 問題メタ`」です。「問題の言い換え」があるのはM1-QF-047・048・049・053・054です。
+- QF/TR/DAの事前知識は箇条書きのテキスト・数式だけで、`placement: prior_knowledge`のassetはありません（このassetを使っているのは下記のM1-EC-016・025だけです）。
+- 正本の改行コードは単元・問題ごとに異なります（M1-TR-005・006・009〜021の15ファイルはCRLF、他はLF）。スクリプトで一括編集する場合は、ファイルごとの改行コードを維持してください。
 
 - 見出しは`## 事前知識・使用公式`。パーサー（`markdownSections.ts`）自体は無変更で、既存の`##`見出し分割の汎用ロジックが処理します。各`prepare*Entry.ts`（QF/TR/DA/EC全4コレクション）に`findSection(sections, '事前知識・使用公式')`を追加し、値の有無だけで表示可否を判定します。
 - 表示位置：問題 → **事前知識・使用公式** → 元講師の独り言 → ThinkingFlow → 最終解答。
@@ -104,8 +109,8 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 開閉ロジック・アニメーションは最終解答の開閉（`data-answer-toggle`/`.result-box`、`grid-template-rows` 0fr/1fr手法）をそのまま複製しています。ボタン文言が異なるため別data属性（`data-prior-knowledge-toggle`/`data-prior-knowledge-box`）を使いますが、ロジック自体は複製元と同一です。新しい開閉アニメーション実装は増やしていません。
 - CSS（`global.css`の`.prior-knowledge-section`）も最終解答の外枠処理（`.final-answer-section`と同じ上罫線＋transparent、白カード外枠・shadow・pill・左色バーなし）を複製しています。新しいカードUIは作っていません。
 - 数式内に日本語テキストを直接書く場合（例：`(x\text{の指数})`）は、既存規約通り`\text{}`で囲んでください。囲まずに書くとKaTeX build時に`unicodeTextInMathMode`警告が出ます（KaTeXが自動でCJKフォールバック表示するため見た目自体は同じですが、警告は避けられます）。
-- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は未実施です（QF・TRの95問のみ対象のまま）。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加し、あわせてWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（現在`/^M1-(QF|TR)-\d{3}$/`）も拡張・再deployしてください。
-- asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しており、既存118問には影響しません。
+- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は未実施です（QF・TRの95問のみ対象のまま）。なお`src/utils/aiContext.ts`は「問題」とThinkingFlowを参照し、QF・TRに追加した事前知識はAI-contextに含まれません。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加し、あわせてWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（現在`/^M1-(QF|TR)-\d{3}$/`）も拡張・再deployしてください。
+- asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しています。QF/TR/DAの118問は事前知識のテキストは持ちますが、事前知識内のassetは表示されません。QF/TR/DAの事前知識にassetを置く場合は、先に該当する`prepare*Entry.ts`へ同じ分岐を追加してください。
 
 ### 「たすき掛け」交差図asset（2026-09追加）
 

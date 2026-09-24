@@ -146,13 +146,13 @@ ul {
 .layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 220px 1fr;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
   gap: 2rem;
 }
-/* トップページ等、左サイドナビを出さないページ用。科目選択は/app/側に集約する。
+/* BaseLayoutの全ページ（TOP・Privacy・Disclaimer・Contact・404）が使う1カラム幅。
+   科目選択は/app/側に集約する（旧左サイドナビ用の2カラム指定は2026-09-24に削除）。
    960px→1040pxへ広げたダッシュボードのカード行が、内側のpaddingを差し引いても
    窮屈にならないよう、このレイアウトだけ全体の最大幅を少し広げる。 */
 .layout--no-nav {
@@ -166,45 +166,10 @@ ul {
 }
 
 .main-content {
-  padding: 2rem 1.5rem 4rem 0;
   min-width: 0;
 }
 .layout--no-nav .main-content {
   padding: 2rem 1.5rem 4rem;
-}
-
-/* Nav */
-.side-nav {
-  border-right: 1px solid var(--color-border);
-  padding: 1.5rem 1rem 1.5rem 0;
-}
-.nav-toggle-btn {
-  display: none;
-}
-.nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.nav-subject {
-  margin-bottom: 1rem;
-}
-.nav-subject-name {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 0.3rem;
-}
-.nav-subject--empty .nav-subject-name {
-  color: var(--color-text-muted);
-  font-weight: 400;
-}
-.nav-units {
-  list-style: none;
-  margin: 0;
-  padding-left: 0.75rem;
-}
-.nav-units li {
-  margin-bottom: 0.2rem;
 }
 
 /* Top page: first view（説明を詰め込みすぎず、CTAへ素早く到達させる） */
@@ -836,145 +801,13 @@ ul {
   }
 }
 
-/* Breadcrumb */
-.breadcrumb {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  margin: 0 0 1rem;
-}
-.breadcrumb a {
-  color: var(--color-text-muted);
-}
-
-/* Problem list */
-.section-lead {
-  color: var(--color-text-muted);
-}
-.problem-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-.problem-card {
-  display: block;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  padding: 1rem 1.25rem;
-  color: var(--color-text);
-}
-.problem-card:hover {
-  border-color: var(--color-primary);
-  text-decoration: none;
-}
-.problem-card-header {
-  display: flex;
-  gap: 0.6rem;
-  align-items: baseline;
-  margin-bottom: 0.4rem;
-}
-.problem-card-title {
-  font-weight: 700;
-}
-.problem-card-meta {
-  display: flex;
-  gap: 1.2rem;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
 /* Problem detail */
-.problem-section,
-.problem-meta-section,
-.answer-flow-section {
+.problem-section {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-}
-.meta-line {
-  font-weight: 700;
-}
-.note {
-  color: var(--color-text-muted);
-}
-
-/* Answer flow */
-.answer-flow {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.answer-step {
-  padding: 0.9rem 0;
-  border-top: 1px solid var(--color-border);
-}
-.answer-step:first-child {
-  border-top: none;
-}
-.answer-step-header {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  flex-wrap: wrap;
-}
-.answer-step-index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 50%;
-  background: var(--color-accent-bg);
-  color: var(--color-primary-dark);
-  font-size: 0.85rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.answer-step-label {
-  flex: 1;
-  min-width: 10em;
-}
-.ask-btn {
-  border: 1px solid var(--color-primary);
-  background: #fff;
-  color: var(--color-primary);
-  border-radius: var(--radius);
-  padding: 0.35rem 0.8rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-.ask-btn:hover {
-  background: var(--color-accent-bg);
-}
-
-.prompt-box {
-  margin-top: 0.75rem;
-  margin-left: 2.3rem;
-  padding: 1rem;
-  background: var(--color-accent-bg);
-  border-left: 3px solid var(--color-primary);
-  border-radius: 0 var(--radius) var(--radius) 0;
-}
-.prompt-text {
-  white-space: pre-wrap;
-  font-family: inherit;
-  font-size: 0.9rem;
-  margin: 0 0 0.75rem;
-}
-.copy-btn {
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 0.4rem 0.9rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-.copy-btn:hover {
-  background: var(--color-primary-dark);
 }
 
 /* Labels (優先度・難易度・位置づけ等) */
@@ -1048,12 +881,6 @@ ul {
 .label-value[data-importance] {
   padding: 0.15rem 0.55rem;
   font-size: 0.85rem;
-}
-
-/* Problem statement */
-.statement-text {
-  white-space: pre-line;
-  font-weight: 700;
 }
 
 /* 問題文内の小問(1)/(2)/(3)（M1-QF-032/035/042など） */
@@ -1286,66 +1113,12 @@ ul {
     transition: none;
   }
 }
-.thinking-step-note {
-  margin: -0.4rem 0 0.9rem;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-.thinking-step-action {
-  margin-bottom: 0.6rem;
-}
-.thinking-step-action:last-of-type {
-  margin-bottom: 0.9rem;
-}
-.toggle-btn,
-.ai-btn {
-  border: 1px solid var(--color-primary);
-  background: #fff;
-  color: var(--color-primary);
-  border-radius: var(--radius);
-  padding: 0.35rem 0.8rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-.toggle-btn:hover,
-.ai-btn:hover {
-  background: var(--color-accent-bg);
-}
 .result-box {
   margin-top: 0.6rem;
   padding: 0.9rem 1rem;
   background: var(--color-accent-bg);
   border-left: 3px solid var(--color-primary);
   border-radius: 0 var(--radius) var(--radius) 0;
-}
-.result-text {
-  white-space: pre-wrap;
-  font-family: inherit;
-  font-size: 0.95rem;
-  margin: 0;
-}
-.ai-placeholder {
-  margin: 0.6rem 0 0;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-.next-step-btn {
-  display: block;
-  width: 100%;
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 0.55rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-.next-step-btn:hover {
-  background: var(--color-primary-dark);
-}
-.next-step-btn[hidden] {
-  display: none;
 }
 
 /* Final answer */
@@ -1369,85 +1142,6 @@ ul {
 .reveal-answer-btn:hover,
 .reveal-prior-knowledge-btn:hover {
   background: var(--color-primary-dark);
-}
-.final-answer {
-  margin: 0.9rem 0 0;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-}
-.answer-branch-list {
-  list-style: none;
-  margin: 0.9rem 0 0;
-  padding: 0;
-}
-.answer-branch-item {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  align-items: baseline;
-  padding: 0.4rem 0;
-  border-top: 1px solid var(--color-border);
-}
-.answer-branch-item:first-child {
-  border-top: none;
-}
-.answer-branch-condition {
-  color: var(--color-text-muted);
-  min-width: 9em;
-}
-.answer-branch-result {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--color-primary-dark);
-}
-
-/* Case graph comparison（グラフによる場合分け比較） */
-.case-graph-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.9rem;
-}
-.case-graph-card {
-  margin: 0;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  padding: 0.6rem 0.6rem 0.8rem;
-}
-.case-graph-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.case-graph-curve {
-  fill: none;
-  stroke: var(--color-border);
-  stroke-width: 2;
-}
-.case-graph-curve--domain {
-  stroke: var(--color-primary);
-  stroke-width: 3;
-}
-.case-graph-guide {
-  stroke: var(--color-text-muted);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
-}
-.case-graph-guide-label {
-  font-size: 11px;
-  fill: var(--color-text-muted);
-  text-anchor: middle;
-}
-.case-graph-vertex {
-  fill: var(--color-primary-dark);
-}
-.case-graph-caption {
-  margin-top: 0.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  font-size: 0.78rem;
 }
 
 /* 静的に生成するproblem asset SVG（graph/figure/graph-compare）共通のクラス。
@@ -1676,76 +1370,6 @@ ul {
 .pa-table-highlight {
   fill: var(--color-accent-bg);
 }
-.case-graph-key {
-  font-weight: 700;
-  color: var(--color-primary-dark);
-}
-.case-graph-label {
-  color: var(--color-text);
-}
-.case-graph-condition {
-  color: var(--color-text-muted);
-}
-
-/* Cyclic quadrilateral figure（円に内接する四角形の問題図） */
-.circle-figure {
-  margin: 0 0 1.25rem;
-  max-width: 320px;
-}
-.circle-figure-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.circle-figure-circle {
-  fill: none;
-  stroke: var(--color-border);
-  stroke-width: 1.5;
-}
-.circle-figure-quad {
-  fill: rgba(47, 95, 122, 0.06);
-  stroke: var(--color-text);
-  stroke-width: 1.75;
-}
-.circle-figure-diagonal {
-  stroke: var(--color-primary);
-  stroke-width: 3;
-  stroke-dasharray: 6 4;
-}
-.circle-figure-diagonal-label {
-  font-size: 13px;
-  font-weight: 700;
-  fill: var(--color-primary-dark);
-}
-.circle-figure-point {
-  fill: var(--color-text);
-}
-.circle-figure-point-label {
-  font-size: 14px;
-  font-weight: 700;
-  fill: var(--color-text);
-  text-anchor: middle;
-}
-.circle-figure-side-label {
-  font-size: 12px;
-  fill: var(--color-text-muted);
-  text-anchor: middle;
-}
-.circle-figure-angle-arc {
-  fill: none;
-  stroke: var(--color-primary);
-  stroke-width: 1.5;
-}
-.circle-figure-angle-label {
-  font-size: 12px;
-  fill: var(--color-primary-dark);
-  text-anchor: middle;
-}
-.circle-figure-caption {
-  margin-top: 0.4rem;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
 
 /* geo-* : CyclicQuadFigure.astro/MenelausFigure.astro（6問サンプル時代の手作り幾何図）の
    設計方針を、静的SVG asset（assets: file/placement/flowで管理する現行方式）へ移植した
@@ -1811,88 +1435,6 @@ ul {
   stroke-dasharray: 4 3;
 }
 
-/* Thinking table（相関係数などの計算表） */
-.thinking-table-wrap {
-  overflow-x: auto;
-}
-.thinking-table {
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-.thinking-table th,
-.thinking-table td {
-  border: 1px solid var(--color-border);
-  padding: 0.4rem 0.7rem;
-  text-align: center;
-}
-.thinking-table thead th {
-  background: var(--color-accent-bg);
-  color: var(--color-text-muted);
-  font-weight: 700;
-}
-.thinking-table tbody th {
-  background: var(--color-accent-bg);
-  color: var(--color-primary-dark);
-  text-align: left;
-  font-weight: 700;
-}
-.thinking-table-corner {
-  background: var(--color-surface);
-}
-
-/* Menelaus figure（メネラウスの定理の問題図） */
-.menelaus-figure {
-  margin: 0 0 1.25rem;
-  max-width: 480px;
-}
-.menelaus-figure-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.menelaus-triangle {
-  fill: rgba(47, 95, 122, 0.06);
-  stroke: var(--color-text);
-  stroke-width: 1.75;
-}
-.menelaus-extension {
-  stroke: var(--color-text-muted);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 4;
-}
-.menelaus-transversal {
-  stroke: var(--color-primary-dark);
-  stroke-width: 1.5;
-  stroke-dasharray: 2 3;
-}
-.menelaus-route {
-  stroke: var(--color-primary);
-  stroke-width: 3;
-  opacity: 0.85;
-}
-.menelaus-route-arrowhead {
-  fill: var(--color-primary);
-}
-.menelaus-point {
-  fill: var(--color-text);
-}
-.menelaus-point-label {
-  font-size: 14px;
-  font-weight: 700;
-  fill: var(--color-text);
-  text-anchor: middle;
-}
-.menelaus-ratio-label {
-  font-size: 12px;
-  fill: var(--color-text-muted);
-}
-.menelaus-figure-caption {
-  margin-top: 0.4rem;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
 /* Site footer（プライバシー／免責事項／お問い合わせへの控えめな導線） */
 .site-footer {
   border-top: 1px solid var(--color-border);
@@ -1912,56 +1454,13 @@ ul {
   color: var(--color-primary);
 }
 
-/* Prev/next & related page nav */
-.page-nav {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.9rem;
-}
-.page-nav-links {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
-
 /* Responsive */
 @media (max-width: 767px) {
   .layout {
-    grid-template-columns: 1fr;
     gap: 0;
-  }
-  .side-nav {
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
-    padding: 0.75rem 1rem;
-  }
-  .nav-toggle-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 0.6rem 0.9rem;
-    font-weight: 700;
-    color: var(--color-text);
-    cursor: pointer;
-  }
-  .nav-list {
-    display: none;
-    margin-top: 0.75rem;
-  }
-  .nav-list.is-open {
-    display: block;
   }
   .main-content {
     padding: 1.5rem 1rem 3rem;
-  }
-  .prompt-box {
-    margin-left: 0;
   }
   .features-section {
     /* main-contentの水平paddingがこの幅から1remになるため、相殺量も合わせる */
@@ -1977,9 +1476,9 @@ ul {
    .problem-section / .impression-section / .thinking-section /
    .final-answer-section / .thinking-step / .reveal-all-btn /
    .reveal-answer-btn / .result-box / .final-answer / h1 / h2 /
-   .label-list は他5科目のサンプルページ（ThinkingFlow.astro等）
-   とクラス名を共有しているため、.q27-detail 配下だけに絞って
-   上書きする（他5科目の見た目には影響させない）。
+   .label-list は共通スタイルとクラス名を共有しているため、
+   .q27-detail 配下だけに絞って上書きする（旧サンプルページとの
+   共有が理由だったが、旧サンプルは2026-09-24に削除済み）。
    文字サイズ・行間・KaTeX数式の余白は変更せず、padding/marginの
    無駄な空白だけを削る方針。
    ============================================================ */
@@ -2356,8 +1855,7 @@ ul {
   padding: 0.65rem 0.85rem;
 }
 /* 最終解答の開閉アニメーション。.thinking-step-contentと同じ手法で、
-   .q27-detail配下だけに限定する（他5科目のThinkingFlow.astroが使う
-   .result-boxは無関係な別マークアップのため影響させない）。 */
+   .q27-detail配下だけに限定する。 */
 .q27-detail .result-box:not([hidden]) {
   display: grid;
   grid-template-rows: 0fr;
@@ -2382,9 +1880,6 @@ ul {
 .q27-detail .reveal-answer-btn,
 .q27-detail .reveal-prior-knowledge-btn {
   padding: 0.42rem 0.9rem;
-}
-.q27-detail .final-answer {
-  margin: 0.6rem 0 0;
 }
 
 /* ThinkingFlow内「AIに聞く」UI（試作・API未接続）。Flowを開いたとき、本文・数式・

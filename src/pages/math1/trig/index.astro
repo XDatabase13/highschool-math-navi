@@ -7,8 +7,7 @@ import ProblemDbShell from '../../../components/ProblemDbShell.astro';
 
 // 三角比単元トップ。既存の共通3ペインDB UI（ProblemDbShell + Quadratic27Detail）を
 // QFとそのまま共有する。本番公開契約へ昇格済みのため、QFと同様にindex対象・
-// sitemap掲載とする（noindexは外す）。TOPページのNav.astro（publicSubjectNav）への
-// 掲載可否は本件のSEO設定とは別判断のため、ここでは変更しない。
+// sitemap掲載とする（noindexは外す）。
 const trig4 = (await getVerifiedCollection('trig4')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );

@@ -2,8 +2,8 @@ import type { APIRoute } from 'astro';
 import { getVerifiedCollection } from '../utils/verifiedCollection';
 
 // 正式な検索対象のみを掲載する、手書きの最小限のsitemap。
-// /app/（学習DBの入口だがnoindex）と旧6サンプルroute（非公開）は含めない。
-// 個別問題はquadratic27・trig4コレクションから毎回組み立てるため、
+// /app/（学習DBの入口だがnoindex）は含めない。
+// 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculationコレクションから毎回組み立てるため、
 // npm run sync-content で問題が増減しても手作業でsitemapを更新する必要がない。
 const SITE = 'https://math-navi.com';
 

@@ -41,7 +41,7 @@
 
 TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポグラフィ・hero・DBプレビュー・CONCEPTセクションの構成等）も人間レビュー済みです。明示的な依頼なしに大きく変更しないでください。2026-09に装飾面のブラッシュアップ（詳細は「UIブラッシュアップ」節）を行っており、以後はその状態が「現行」の基準です。
 
-旧6サンプルのデータ・コンポーネントは開発資産として残していますが、公開routeは生成しません。理由なく再公開しないでください。
+旧6サンプル（6分野の初期検証用ページ・データ・コンポーネント。公開routeは生成していなかった）は、2026-09-24の不要ファイル整理で削除しました（git履歴には残っています）。公開routeとして復活させないでください。
 
 ---
 
@@ -66,7 +66,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 正本・同期先はQF/TRと同じ枠組みを共有します：正本`math_db_quadratic_working/problems/`・`assets/`のM1-DA-*ファイル、スナップショット`src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（`npm run sync-content`が3コレクションまとめて同期）。
 - 対応するContent Collectionは`dataAnalysis`（`src/content.config.ts`）、表示は`prepareDataAnalysisEntry.ts`経由でQF/TRと同じ`Quadratic27Detail.astro`を再利用します。
 - 中央一覧の5区分（代表値と度数分布／四分位数と箱ひげ図／分散と標準偏差／散布図と相関／仮説検定）は`src/utils/dataAnalysisDbItems.ts`の`SECTION_TO_GROUP`で判定し、QF/TRと同じ方式（section値ベース、問題IDレンジではない）です。
-- ルートは`/math1/data-analysis/`・`/math1/data-analysis/M1-DA-001/`〜`/math1/data-analysis/M1-DA-023/`で、QF/TRと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`publicSubjectNav`（`Nav.astro`）・`dbSubjectNav`（DB UI）の両方に掲載済みです（ただし`publicSubjectNav`は現在どの公開ページにも表示されていません。「数と式の現在地」節を参照）。既存契約を理由なく変更しないでください。
+- ルートは`/math1/data-analysis/`・`/math1/data-analysis/M1-DA-001/`〜`/math1/data-analysis/M1-DA-023/`で、QF/TRと同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`dbSubjectNav`（DB UI）に掲載済みです（旧左サイドナビ`publicSubjectNav`は2026-09-24に削除。「数と式の現在地」節を参照）。既存契約を理由なく変更しないでください。
 - データ分析masterは`problem_master/data_analysis_problem_master.xlsx`です（QF/TRのmasterと同じフォルダ）。独立検算後の資産のみ変更（数学的内容に影響しない）の経緯は`math_db_quadratic_working/verification/post_review_addenda.md`に追記する運用です。
 - ヒストグラム・箱ひげ図・散布図は本単元で新規追加したasset typeで、既存の`pa-*`共通クラス（`pa-axis`・`pa-figure-line`・`pa-figure-fill`・`pa-guide`・`pa-label`・`pa-label-muted`・`pa-panel-label`・`pa-axis-highlight`）の組み合わせのみで表現し、新しいCSSクラスは追加していません。
 - ThinkingFlow見出しにTeX記法を生表示させず、変数＋Unicode上付き文字（`x²`等）またはUnicode丸数字＋`\text{\textcircled{}}`（本文数式・最終解答内）を使う方式はQF/TRと共通の規約です。新しい問題でも踏襲してください。
@@ -79,8 +79,8 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 - 全44問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全44問PASS判定と一致しています。（同ファイルの別シート「式と計算マスタ」冒頭サマリ欄の「独立検算は未実施」という古いメモは2026-09-23に修正済みです。）**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
 - 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。中央一覧は2026-09-23に、`section`値ベースで4区分（式の計算：M1-EC-001〜013／因数分解：M1-EC-014〜023／実数・平方根：M1-EC-024〜036／一次不等式：M1-EC-037〜044）へ分割しました。正本`problem.md`の`section`値・`SECTION_TO_GROUP`・master xlsx（「式と計算マスタ」「公開問題管理」両シートの問題区分列）の3箇所を一致させてください。
-- ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-044/`です。**slug「suto-shiki」は、既存の開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
-- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みで、TOPから「問題データベースを見る」で`/app/`へ移ると数と式を含む全4単元が表示されます。`publicSubjectNav`（`Nav.astro`の左サイドナビ）には数と式（および三角比）は入っていませんが、`Nav.astro`を描画する`BaseLayout.astro`の公開ページ（TOP・Privacy・Disclaimer・Contact・404）はすべて`showNav={false}`のため、`publicSubjectNav`はどの公開ページにも表示されていません（404は2026-09-24まで`showNav`未指定＝既定値`true`で古いナビが出ていたため、`showNav={false}`に揃えました）。したがって公開導線上の欠落はありません。`Nav.astro`・`publicSubjectNav`は、`showNav`未指定のまま`BaseLayout`を使う旧6サンプルページ（`_`付き、公開routeなし）だけが参照している状態で、旧サンプルとあわせて不要ファイル整理で扱う予定です。将来`showNav`を有効にするページを作る場合は、先に`publicSubjectNav`の中身（三角比・数と式の`sampleOnly`・旧サンプルhref）を見直してください。
+- ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-044/`です。**slug「suto-shiki」は、旧開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし。2026-09-24に削除）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
+- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みで、TOPから「問題データベースを見る」で`/app/`へ移ると数と式を含む全4単元が表示されます。サイト内の単元ナビは`dbSubjectNav`だけです。旧左サイドナビ（`Nav.astro`・`subjectNav`／`publicSubjectNav`・`BaseLayout.astro`の`showNav`引数）は、公開ページで表示されていなかった（404だけは2026-09-24まで古いナビが出ていた）ため、同日の不要ファイル整理で旧サンプルとあわせて削除しました。`BaseLayout.astro`のページ（TOP・Privacy・Disclaimer・Contact・404）に単元ナビが必要になった場合は、`dbSubjectNav`を元に新しく設計してください。
 - 数と式masterは`problem_master/expression_calculation_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。
 - ThinkingFlow見出しにTeX記法（`$x^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜044にも踏襲しています。M1-EC-008・009・012（展開）、M1-EC-017・018・019（因数分解）、M1-EC-026・028・030・031・034（実数・平方根、`\sqrt{...}`混入）で混入が見つかりましたが、いずれもUnicode表記（例：`x²`・`(a-b)³`・`√18`）へ修正済みです。新しい問題を追加する際は、ThinkingFlow見出し内に生の`^`・`\sqrt`を残さないよう特に注意してください。
 - **M1-EC-014〜023（因数分解10問）・M1-EC-024〜036（実数・平方根13問）の正本には、独立検算とは無関係にThinkingFlow見出し階層の技術的な不整合が複数見つかり、2026-09に修正済みです**（文言・数式・ThinkingFlowの結論・順序はいずれも無変更のため再独立検算対象外。コミット`ee196d3`）。
@@ -98,7 +98,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。2026-09-24に、QF/TR/DAの118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）にも追加し、**公開162問すべてにこのセクションがあります**。
 
-- QF/TR/DAへの追加は、単元ごとに「正本から問題文・ThinkingFlow題名を抽出（`review/M1-*_prior_knowledge_materials.md`）→GPTと人間による本文作成→Codexの監査・再監査→監査済み確定ファイル（`M1-*_prior_knowledge_audit_fixed_v2.md`。抽出ファイルとともにuntrackedの作業用ファイル）の本文を正本へそのまま挿入→`npm run sync-content`」の手順で行いました（コミット：DA`714e8b1`・TR`9c6237c`・QF`9980ee4`）。監査済み本文は言い換えずに挿入し、問題文・問題メタ・解法メタ・ThinkingFlow・最終解答・frontmatter・assetは無変更です。数学的固定内容を変えていないため、再独立検算の対象外です。
+- QF/TR/DAへの追加は、単元ごとに「正本から問題文・ThinkingFlow題名を作業用ファイルへ抽出→GPTと人間による本文作成→Codexの監査・再監査→監査済み確定本文を正本へそのまま挿入→`npm run sync-content`」の手順で行いました（コミット：DA`714e8b1`・TR`9c6237c`・QF`9980ee4`）。作業用ファイル（`review/M1-*_prior_knowledge_*.md`、git管理外）は、確定本文118問分が正本の「事前知識・使用公式」と完全一致することを確認のうえ、2026-09-24に削除しました。監査済み本文は言い換えずに挿入し、問題文・問題メタ・解法メタ・ThinkingFlow・最終解答・frontmatter・assetは無変更です。数学的固定内容を変えていないため、再独立検算の対象外です。
 - 正本内の配置は「`## 問題`（→`## 問題の言い換え`がある場合はその後）→`## 事前知識・使用公式`→`## 問題メタ`」です。「問題の言い換え」があるのはM1-QF-047・048・049・053・054です。
 - QF/TR/DAの事前知識は箇条書きのテキスト・数式だけで、`placement: prior_knowledge`のassetはありません（このassetを使っているのは下記のM1-EC-016・025だけです）。
 - 正本の改行コードは単元・問題ごとに異なります（M1-TR-005・006・009〜021の15ファイルはCRLF、他はLF）。スクリプトで一括編集する場合は、ファイルごとの改行コードを維持してください。
@@ -269,7 +269,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 
 の計170 URLです（2026-09-23のローカルbuildで`dist/sitemap.xml`の件数・内訳を確認済み）。
 
-`/app/` と旧6サンプルrouteはsitemapへ含めません。
+`/app/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
 `robots.txt` の基本形：
 

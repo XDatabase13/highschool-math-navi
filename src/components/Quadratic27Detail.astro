@@ -302,8 +302,8 @@ function nextContextKey(): string {
     <h2>ThinkingFlow</h2>
     {thinkingFlow.subsections.every((s) => s.subsections.length === 0) ? (
       // 通常Flow：見出しがそのまま末端ステップ
-      // data-flow-kind="q27"：ThinkingFlow.astroの汎用スクリプトと二重に
-      // click handlerが付かないよう、このコンポーネント専用スクリプトの対象を区別する。
+      // data-flow-kind="q27"：このコンポーネント専用スクリプトの対象を示す目印
+      // （元は旧サンプル用ThinkingFlow.astroの汎用スクリプトとの二重登録防止。同componentは2026-09-24に削除）。
       <div class="thinking-flow" data-flow-kind="q27">
         <button type="button" class="reveal-all-btn" data-reveal-all>
           考え方を全部見る

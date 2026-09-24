@@ -3,7 +3,7 @@ import type { AskRequestBody, QuestionType } from './types';
 // ブラウザから受け取るpayloadの検証。ここを通過しないリクエストはGeminiへ
 // 到達させない（教材contextの取得もしない）。
 
-const PROBLEM_ID_PATTERN = /^M1-(QF|TR)-\d{3}$/;
+const PROBLEM_ID_PATTERN = /^M1-(QF|TR|DA|EC)-\d{3}$/;
 const CONTEXT_KEY_PATTERN = /^f\d+$/;
 const QUESTION_TYPES: readonly QuestionType[] = ['detail', 'knowledge', 'custom'];
 const FREE_TEXT_MAX_LENGTH = 500;

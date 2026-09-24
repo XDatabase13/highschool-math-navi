@@ -109,7 +109,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 開閉ロジック・アニメーションは最終解答の開閉（`data-answer-toggle`/`.result-box`、`grid-template-rows` 0fr/1fr手法）をそのまま複製しています。ボタン文言が異なるため別data属性（`data-prior-knowledge-toggle`/`data-prior-knowledge-box`）を使いますが、ロジック自体は複製元と同一です。新しい開閉アニメーション実装は増やしていません。
 - CSS（`global.css`の`.prior-knowledge-section`）も最終解答の外枠処理（`.final-answer-section`と同じ上罫線＋transparent、白カード外枠・shadow・pill・左色バーなし）を複製しています。新しいカードUIは作っていません。
 - 数式内に日本語テキストを直接書く場合（例：`(x\text{の指数})`）は、既存規約通り`\text{}`で囲んでください。囲まずに書くとKaTeX build時に`unicodeTextInMathMode`警告が出ます（KaTeXが自動でCJKフォールバック表示するため見た目自体は同じですが、警告は避けられます）。
-- AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）への統合は未実施です（QF・TRの95問のみ対象のまま）。なお`src/utils/aiContext.ts`は「問題」とThinkingFlowを参照し、QF・TRに追加した事前知識はAI-contextに含まれません。対象を広げる場合は同ファイルへ`expressionCalculation`コレクションを追加し、あわせてWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（現在`/^M1-(QF|TR)-\d{3}$/`）も拡張・再deployしてください。
+- 「事前知識・使用公式」は**AI-context JSON（`src/pages/ai-context/[id].json.ts`）へ含めません**（現行仕様）。固定教材側の参照欄であり、AI質問用contextとは別レイヤーとして扱います。`src/utils/aiContext.ts`は「問題」「問題の言い換え」「ThinkingFlow」「最終解答」のセクションだけを取り出すため、公開162問すべてで事前知識の本文・`placement: prior_knowledge`のassetはAI-contextに入りません（問題メタ・解法メタも同様）。
 - asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しています。QF/TR/DAの118問は事前知識のテキストは持ちますが、事前知識内のassetは表示されません。QF/TR/DAの事前知識にassetを置く場合は、先に該当する`prepare*Entry.ts`へ同じ分岐を追加してください。
 
 ### 「たすき掛け」交差図asset（2026-09追加）
@@ -134,7 +134,7 @@ M1-EC-025（「事前知識・使用公式」）専用。自然数⊂整数⊂�
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
 
-**AI-context JSON生成（`src/pages/ai-context/[id].json.ts`）はQF・TRの95問のみ対象で、データの分析（M1-DA-001〜023）・数と式（M1-EC-001〜044）は未拡張です。** 「AIに聞く」ボタン自体は単元で絞っていないためDA/ECページにも表示されますが、有効化してもWorker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`（`/^M1-(QF|TR)-\d{3}$/`）で400エラーになり、AI-contextも存在しません。対象を広げる場合は、同ファイルへ`dataAnalysis`／`expressionCalculation`コレクションを追加し、Workerの正規表現も拡張・再deployしてください。
+**AI-context JSON（`/ai-context/<problem_id>.json`、`src/pages/ai-context/[id].json.ts`）は公開162問（QF54・TR41・DA23・EC44）すべてが対象です**（2026-09-24にDA/ECへ拡張）。build時に4コレクションの独立検算済み問題から自動生成し、手動の許可リストは持ちません。AI用のFlow識別は`problem_id`＋`context_key`（1問題内の表示順`f1`,`f2`,...）で、既存の`part`/`flow`/`flow_key`も維持しています。含めるのは問題文・問題の言い換え（存在する場合）・ThinkingFlow全体・最終解答・asset metadataだけで、**「事前知識・使用公式」・問題メタ・解法メタは含めません**。HTMLコメント（`<!-- ... -->`、制作用メモ）も生成時に除去します（正本は無変更）。Worker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`は`/^M1-(QF|TR|DA|EC)-\d{3}$/`で、本番Workerへdeploy済みです。新しい単元を追加する場合は、`[id].json.ts`・`aiContext.ts`の`AiContextCollection`へコレクションを追加し、Workerの正規表現も拡張・再deployしてください。
 
 公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析（M1-DA-001〜023）も、EXACT判定の12問に外部サイト「教科書より詳しい高校数学」（yorikuwa.com）への同じ「追加で練習する」リンクを追加し、本番公開済みです（コミット`c0b7d45`、同じ`external-practice-links.json`に追記。表示ロジックは共通）。同ファイルの登録は計59問（QF26・TR21・DA12）です。数と式（M1-EC-001〜044）はリンク未登録です。詳細は同文書第37節を正本としてください。
 

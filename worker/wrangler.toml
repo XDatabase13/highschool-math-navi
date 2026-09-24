@@ -13,7 +13,8 @@ AI_CONTEXT_BASE_URL = "http://localhost:4321"
 
 # AI質問機能の対象問題は、許可リストの手動管理ではなく「AI_CONTEXT_BASE_URL上に
 # 対応するAI-context JSONが実在するか」で判定する（src/index.tsのfetchAiContext）。
-# npm run build時に生成される95件のJSON（quadratic27 54件・trig4 41件、
+# npm run build時に生成される162件のJSON（quadratic27 54件・trig4 41件・
+# dataAnalysis 23件・expressionCalculation 44件、
 # いずれもverification_status: 独立検算済みのみ）と常に1:1で一致するため、
 # 問題が増減してもここを手動で更新する必要がない。
 

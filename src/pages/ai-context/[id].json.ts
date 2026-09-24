@@ -4,8 +4,8 @@ import { getVerifiedCollection } from '../../utils/verifiedCollection';
 import { buildAiContext, type AiContextCollection } from '../../utils/aiContext';
 
 // ThinkingFlow単位のAI質問機能用のAI-context JSONを、独立検算済みの問題（quadratic27・
-// trig4）ごとに静的生成する。sitemap.xml.tsと同じ「Content Collectionから毎回組み立てる」
-// 方式のため、npm run sync-content で問題が増減しても手作業でファイルを追加・削除する
+// trig4・dataAnalysis・expressionCalculation）ごとに静的生成する。sitemap.xml.tsと同じ
+// 「Content Collectionから毎回組み立てる」方式のため、npm run sync-content で問題が増減しても手作業でファイルを追加・削除する
 // 必要がない。公開URLは /ai-context/<problem_id>.json（例：/ai-context/M1-QF-001.json）。
 //
 // 生成物はAI APIへの通信・context整形の入力になる想定だが、この段階では
@@ -19,10 +19,14 @@ interface Props {
 export async function getStaticPaths() {
   const quadratic27 = await getVerifiedCollection('quadratic27');
   const trig4 = await getVerifiedCollection('trig4');
+  const dataAnalysis = await getVerifiedCollection('dataAnalysis');
+  const expressionCalculation = await getVerifiedCollection('expressionCalculation');
 
   const targets: Props[] = [
     ...quadratic27.map((entry) => ({ entry, collection: 'quadratic27' as const })),
     ...trig4.map((entry) => ({ entry, collection: 'trig4' as const })),
+    ...dataAnalysis.map((entry) => ({ entry, collection: 'dataAnalysis' as const })),
+    ...expressionCalculation.map((entry) => ({ entry, collection: 'expressionCalculation' as const })),
   ];
 
   return targets.map(({ entry, collection }) => ({

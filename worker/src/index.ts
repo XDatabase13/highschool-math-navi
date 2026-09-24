@@ -20,13 +20,13 @@ type FetchAiContextResult =
   | { status: 'not_found' }
   | { status: 'error'; message: string };
 
-// problem_idは事前にvalidate.tsの正規表現（M1-(QF|TR)-数字3桁）を通過済み。
+// problem_idは事前にvalidate.tsの正規表現（M1-(QF|TR|DA|EC)-数字3桁）を通過済み。
 // AI_CONTEXT_BASE_URLは固定のserver側設定値（クライアント入力の影響を受けない）で、
 // problem_idはこの形式チェック済みの値だけをパス末尾に連結するため、
 // 任意の外部URLへfetchできる構造にはならない。
 // 「どの問題をAI質問機能の対象にするか」は許可リストの手動管理ではなく、
 // このURL上に対応するAI-context JSONが実在するかどうかで判定する
-// （npm run buildで生成される95件のJSONと常に1:1で一致する）。
+// （npm run buildで生成される162件のJSONと常に1:1で一致する）。
 async function fetchAiContext(problemId: string, env: Env): Promise<FetchAiContextResult> {
   const url = `${env.AI_CONTEXT_BASE_URL}/ai-context/${problemId}.json`;
   let res: Response;

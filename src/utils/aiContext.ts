@@ -3,18 +3,21 @@ import { parseMarkdownSectionsRaw, findRawSection, type RawMarkdownSection } fro
 import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex } from './prepareQuadratic27Entry';
 
 // ThinkingFlow単位のAI質問機能に向けた、AI-context JSON生成の本番用ロジック。
-// DOM/生成HTMLは一切参照せず、公開Markdownスナップショット（quadratic27・trig4、
-// どちらも独立検算済みの問題のみ）と、既存表示パイプラインと同じ見出し分割
-// アルゴリズム（rawMarkdownSections.ts）・同じFlowキー/☆マーク処理
+// DOM/生成HTMLは一切参照せず、公開Markdownスナップショット（quadratic27・trig4・
+// dataAnalysis・expressionCalculation、いずれも独立検算済みの問題のみ）と、
+// 既存表示パイプラインと同じ見出し分割アルゴリズム（rawMarkdownSections.ts）・
+// 同じFlowキー/☆マーク処理
 // （prepareQuadratic27Entry.tsのflowAssetKey/parseStepTitle）を再利用して組み立てる。
 //
 // 通常Flow・小問付きFlow・asset付きFlow・「## 問題の言い換え」・Markdown table・
 // 生HTMLはすべて同じ処理を通り、問題ID別の分岐は持たない。
+// 「## 事前知識・使用公式」は固定教材側の参照欄であり、AI質問用contextとは別レイヤーの
+// ため含めない（問題メタ・解法メタも同様に含めない）。
 //
 // 出力はsrc/pages/ai-context/[id].json.tsから、npm run build時に1問題1JSONとして
 // distへ書き出される（このモジュール自体はAstroのpage/endpointではない）。
 
-export type AiContextCollection = 'quadratic27' | 'trig4';
+export type AiContextCollection = 'quadratic27' | 'trig4' | 'dataAnalysis' | 'expressionCalculation';
 
 export interface AiContextAsset {
   file: string | null;
@@ -76,6 +79,13 @@ export interface AiContext {
 // 対して取るため、スライス結果とも整合する。
 function normalizeLineEndings(text: string): string {
   return text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
+
+// HTMLコメント（<!-- ... -->）はページ上に表示されない制作用メモ（例：M1-EC-001〜003の
+// 「Code注記」、M1-DA-017/018のasset位置メモ）なので、AI-contextにも含めない。
+// 元Markdownファイルは変更せず、生成時のメモリ上の文字列からだけ取り除く。
+function stripHtmlComments(text: string): string {
+  return text.replace(/<!--[\s\S]*?-->/g, '');
 }
 
 interface RawAssetLike {
@@ -188,7 +198,7 @@ export async function buildAiContext(
   entry: CollectionEntry<AiContextCollection>,
   collection: AiContextCollection,
 ): Promise<AiContext> {
-  const body = normalizeLineEndings(entry.body ?? '');
+  const body = stripHtmlComments(normalizeLineEndings(entry.body ?? ''));
   const sections = await parseMarkdownSectionsRaw(body);
 
   const problemSection = findRawSection(sections, '問題');

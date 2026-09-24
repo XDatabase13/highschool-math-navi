@@ -508,7 +508,7 @@ function nextContextKey(): string {
 <script>
   import renderMathInElement from 'katex/contrib/auto-render';
 
-  // ThinkingFlow AI質問機能：全95問（QF/TR）共通で同じWorkerエンドポイントへ通信する。
+  // ThinkingFlow AI質問機能：全162問（QF/TR/DA/EC）共通で同じWorkerエンドポイントへ通信する。
   // 問題ごとの個別実装は持たず、data-problem-id・data-context-keyだけで対象を特定する。
   // 実際に受け付けるかどうか（対象のAI-context JSONが存在するか）の判定はWorker側で行う。
   //
@@ -804,7 +804,7 @@ function nextContextKey(): string {
       }
 
       // 3択のうち「もう少し詳しく説明して」「ここで使っている知識を教えて」は、
-      // 即座にWorkerへ実通信する（全95問共通。問題ごとの分岐は持たない）。
+      // 即座にWorkerへ実通信する（全162問共通。問題ごとの分岐は持たない）。
       const aiAskOption = target.closest<HTMLButtonElement>('[data-ai-ask-option]');
       if (aiAskOption) {
         const ask = aiAskOption.closest<HTMLElement>('[data-ai-ask]');

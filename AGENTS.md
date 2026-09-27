@@ -12,9 +12,11 @@
 
 です。
 
-現在、数学I「数と式」「二次関数」「三角比」「データの分析」の4単元・計162問（M1-EC-001〜044・M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析・数と式の詳細は後述の各節を参照してください。
+現在、数学I「数と式」「集合と論証」「二次関数」「三角比」「データの分析」の5単元・計180問（M1-EC-001〜044・M1-SL-001〜018・M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析・数と式・集合と論証の詳細は後述の各節を参照してください。
 
 数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
+
+数学I「集合と論証」M1-SL-001〜018（18問、集合／命題・論証の2区分）は全問独立検算済みで、教材化・人間による実画面・SSレビューを経て、2026-09-27に本番公開しました（AI-context・Worker対応も同日）。詳細は「集合と論証の現在地」節を参照してください。
 
 まず二次関数（M1-QF-001〜054の54問）について、
 
@@ -80,7 +82,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 全44問とも`verification_status: 独立検算済み`です。難易度・重要度は問題ごとに異なります（M1-EC-001〜007：難易度1・重要度4「土台」、以降は展開・因数分解・実数の応用度に応じて難易度1〜4・重要度1〜4）。master xlsx（`expression_calculation_problem_master.xlsx`「公開問題管理」シート）の全44問PASS判定と一致しています。（同ファイルの別シート「式と計算マスタ」冒頭サマリ欄の「独立検算は未実施」という古いメモは2026-09-23に修正済みです。）**判定の正本は「公開問題管理」シートと各`problem.md`の`verification_status`**としてください。
 - 正本・同期先・Content Collection・中央一覧の分類方式（`expressionCalculationDbItems.ts`の`SECTION_TO_GROUP`）はQF/TR/DAと共通の枠組みです。中央一覧は2026-09-23に、`section`値ベースで4区分（式の計算：M1-EC-001〜013／因数分解：M1-EC-014〜023／実数・平方根：M1-EC-024〜036／一次不等式：M1-EC-037〜044）へ分割しました。正本`problem.md`の`section`値・`SECTION_TO_GROUP`・master xlsx（「式と計算マスタ」「公開問題管理」両シートの問題区分列）の3箇所を一致させてください。
 - ルートは`/math1/suto-shiki/`・`/math1/suto-shiki/M1-EC-001/`〜`/M1-EC-044/`です。**slug「suto-shiki」は、旧開発用サンプル（`src/pages/math1/suto-shiki/_factorization.astro`、公開routeなし。2026-09-24に削除）で使われていたromanizationを、ユーザー確認のうえ再利用したものです。**
-- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みで、TOPから「問題データベースを見る」で`/app/`へ移ると数と式を含む全4単元が表示されます。サイト内の単元ナビは`dbSubjectNav`だけです。旧左サイドナビ（`Nav.astro`・`subjectNav`／`publicSubjectNav`・`BaseLayout.astro`の`showNav`引数）は、公開ページで表示されていなかった（404だけは2026-09-24まで古いナビが出ていた）ため、同日の不要ファイル整理で旧サンプルとあわせて削除しました。`BaseLayout.astro`のページ（TOP・Privacy・Disclaimer・Contact・404）に単元ナビが必要になった場合は、`dbSubjectNav`を元に新しく設計してください。
+- `dbSubjectNav`（`src/data/subjects.ts`、DB UI専用の単元ナビ）には追加済みで、TOPから「問題データベースを見る」で`/app/`へ移ると数と式・集合と論証を含む全5単元が表示されます。サイト内の単元ナビは`dbSubjectNav`だけです。旧左サイドナビ（`Nav.astro`・`subjectNav`／`publicSubjectNav`・`BaseLayout.astro`の`showNav`引数）は、公開ページで表示されていなかった（404だけは2026-09-24まで古いナビが出ていた）ため、同日の不要ファイル整理で旧サンプルとあわせて削除しました。`BaseLayout.astro`のページ（TOP・Privacy・Disclaimer・Contact・404）に単元ナビが必要になった場合は、`dbSubjectNav`を元に新しく設計してください。
 - 数と式masterは`problem_master/expression_calculation_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。
 - ThinkingFlow見出しにTeX記法（`$x^2$`等）を生表示させない規約（QF/TR/DA共通）はM1-EC-004〜044にも踏襲しています。M1-EC-008・009・012（展開）、M1-EC-017・018・019（因数分解）、M1-EC-026・028・030・031・034（実数・平方根、`\sqrt{...}`混入）で混入が見つかりましたが、いずれもUnicode表記（例：`x²`・`(a-b)³`・`√18`）へ修正済みです。新しい問題を追加する際は、ThinkingFlow見出し内に生の`^`・`\sqrt`を残さないよう特に注意してください。
 - **M1-EC-014〜023（因数分解10問）・M1-EC-024〜036（実数・平方根13問）の正本には、独立検算とは無関係にThinkingFlow見出し階層の技術的な不整合が複数見つかり、2026-09に修正済みです**（文言・数式・ThinkingFlowの結論・順序はいずれも無変更のため再独立検算対象外。コミット`ee196d3`）。
@@ -90,17 +92,39 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
   - M1-EC-032：本文の数式中（`$...$`内）に生のUnicode丸数字（①②）が直接書かれ、KaTeXの`unknownSymbol`build警告の原因になっていました。既存規約（M1-DA-008等で使用）の`\text{\textcircled{1}}`表記へ修正。
   - 13問すべてで正本`problem.md`の`verification_status`が`未検算`のまま更新漏れになっており、master xlsx「公開問題管理」シートの全問PASS判定と不一致でした。`独立検算済み`へ更新（この不一致を放置すると`getVerifiedCollection`のフィルタで全問非公開のままビルドされます）。
 - M1-EC-016（「事前知識・使用公式」・ThinkingFlow 1）とM1-EC-021（ThinkingFlow 3）に「たすき掛け」の交差図assetを追加しています。M1-EC-025（「事前知識・使用公式」）には実数の分類（自然数⊂整数⊂有理数⊂実数、無理数）を示すネスト矩形図assetを追加しました。M1-EC-038・039・041・043・044（一次不等式）には、ThinkingFlow内（`placement: flow`）に解の範囲・共通範囲・場合分けを示す数直線asset（`type: number`）を配置しています。他の問題は`assets: []`のままです。詳細は次節「事前知識・使用公式」の追記、および下記asset規約を参照してください。
-- 「SEOの現行契約」節のsitemap内訳は、2026-09-23に170 URL（`/math1/suto-shiki/`単元トップ1＋個別問題44を追加）へ更新済みです。数と式の単元トップ・個別問題URLは他単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）で、ローカルbuildで45URLすべて確認済みです。
+- 「SEOの現行契約」節のsitemap内訳は、2026-09-23に170 URL（`/math1/suto-shiki/`単元トップ1＋個別問題44を追加）へ更新しました（2026-09-27の集合と論証追加後は189 URL）。数と式の単元トップ・個別問題URLは他単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）で、ローカルbuildで45URLすべて確認済みです。
+
+---
+
+## 集合と論証の現在地
+
+数学I「集合と論証」M1-SL-001〜018（18問）について、全問独立検算済みの正本をもとに、教材化・asset生成・技術実装・人間による実画面／全18ページSSレビューとレビュー後修正を行い、2026-09-27に本番公開しました（コミット`5fe39b0`、GitHub Actions deploy）。同日、AI-context生成・Workerの問題ID許可もSLへ拡張し、本番Workerを再deployしています（「AI質問機能・外部追加演習リンクの現在地」節）。TOPページの本文（計180問）・DBプレビュー画像も更新済みです（コミット`0549f06`）。**Codex最終構造監査・Opus asset横断レビューは未実施のまま公開しています。**
+
+- 正本・同期先・Content Collection・中央一覧の分類方式は他単元と共通の枠組みです：正本`math_db_quadratic_working/problems/`・`assets/`のM1-SL-*ファイル、スナップショット`src/content/setLogic/`・`src/content/setLogic-assets/`（`npm run sync-content`が5コレクションまとめて同期）、Content Collection`setLogic`、表示は`prepareSetLogicEntry.ts`経由で`Quadratic27Detail.astro`を再利用します。
+- 中央一覧は`src/utils/setLogicDbItems.ts`の`SECTION_TO_GROUP`で、`section`値ベースの2区分（集合：M1-SL-001〜008／命題・論証：M1-SL-009〜018）に分けます。**masterの「問題区分」は管理用の細分類で、`section`とは一致させません**（数と式とは運用が異なります）。
+- ルートは`/math1/set-logic/`・`/math1/set-logic/M1-SL-001/`〜`/M1-SL-018/`で、他単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`dbSubjectNav`では「数と式」の次に置いています。
+- 集合と論証masterは`problem_master/set_logic_problem_master.xlsx`です（他単元のmasterと同じフォルダ）。M1-SL-004の`reference_problem`は95が正です。
+- 全18問に「事前知識・使用公式」があります。
+- **SL正本は初回納品時、既存規約と書式が一部異なっていたため、教材化時に表示構造だけを揃えました**（数学的内容・文章の意味・Flowの順序は無変更のため、再独立検算の対象外）。新しい単元の正本でも同じ点を確認してください。
+  - ThinkingFlow見出し`### (1) 1. …`（小問番号とFlow番号が同じ行）を、既存規約の`### (1)`＋`#### 1. …`へ分割（001〜015）。
+  - 見出し内のTeXをUnicode表記へ（例：`A∩B`・`p ⇒ q`・`3k±1`・`√2`）。**上線（補集合`B̄`）は結合文字（U+0304／U+0305）がWebフォントでずれて表示されるため使えません。** M1-SL-006 (3)-2・M1-SL-007 (1)-1の見出しは「A∩(Bの補集合)」「B の補集合」という同じ意味の文言にしています（人間レビュー済み）。
+  - 独自のasset記法（`asset_id`・`placement: ThinkingFlow (2)(3)`・本文中の`[asset: …]`）を既存の`file`/`placement`/`part`/`flow`/`type`形式へ変換。
+  - 複数行にまたがるインライン数式`$…$`の途中に`=`だけの行があると、Markdownのsetext見出しとして解釈され、生TeX＋巨大見出しになります（M1-SL-006・007で発生）。インライン数式は1行に書いてください。
+  - `**「…」**と`のように、`**`が「」やインライン数式と隣り合うと、CommonMarkの規則で太字になりません（M1-SL-005・006・009・010・011・016・017で発生）。該当箇所は`<strong>…</strong>`で書いています。
+  - 長い数式を1行のインライン数式にすると、スマホ幅で横にはみ出します（M1-SL-001の問題文）。既存規約どおり、独立行の`$$`（3行形式）にしてください。
+- assetは10ファイル・14か所に配置しています（002・004・005・006・008・011・014・016）。ベン図・数直線・包含関係図・逆裏対偶の関係図で、既存の`pa-*`クラスだけで構成し、新しいCSSクラスは追加していません。塗りは`fill="var(--color-accent)" fill-opacity="0.3"`の属性指定です（`var(--color-accent-bg)`は「事前知識」パネルの背景と同色で見えないため）。
+- **問題メタ・解法メタ内へのasset配置（`placement: problem_meta`／`solution_meta`）はSLで新設しました**（M1-SL-002・004・005）。本文中の表示位置は、そのセクション内の単独段落`[asset: <file>]`で示し、`prepareSetLogicEntry.ts`がfigureへ置き換えます。宣言とマーカーは1対1で対応していなければならず、余ったマーカー・対応するマーカーのない宣言、置換されずに残った`[asset:`はbuildエラーになります。QF/TR/DA/ECの`prepare*Entry.ts`はこの2値を処理しないため、他単元で使う場合は先に同じ分岐を追加してください。
+- 外部追加演習リンクは未登録です。
 
 ---
 
 ## 「事前知識・使用公式」（任意セクション、2026-09追加）
 
-正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。2026-09-24に、QF/TR/DAの118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）にも追加し、**公開162問すべてにこのセクションがあります**。
+正本problem.mdスキーマに新しく追加された任意セクションです。M1-EC-001〜003で初めて使用され、M1-EC-004〜044でも踏襲しています。2026-09-24に、QF/TR/DAの118問（M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）にも追加し、**公開162問すべてにこのセクションがあります**（2026-09-27公開の集合と論証18問も全問にあり、公開180問すべてが対象）。
 
 - QF/TR/DAへの追加は、単元ごとに「正本から問題文・ThinkingFlow題名を作業用ファイルへ抽出→GPTと人間による本文作成→Codexの監査・再監査→監査済み確定本文を正本へそのまま挿入→`npm run sync-content`」の手順で行いました（コミット：DA`714e8b1`・TR`9c6237c`・QF`9980ee4`）。作業用ファイル（`review/M1-*_prior_knowledge_*.md`、git管理外）は、確定本文118問分が正本の「事前知識・使用公式」と完全一致することを確認のうえ、2026-09-24に削除しました。監査済み本文は言い換えずに挿入し、問題文・問題メタ・解法メタ・ThinkingFlow・最終解答・frontmatter・assetは無変更です。数学的固定内容を変えていないため、再独立検算の対象外です。
 - 正本内の配置は「`## 問題`（→`## 問題の言い換え`がある場合はその後）→`## 事前知識・使用公式`→`## 問題メタ`」です。「問題の言い換え」があるのはM1-QF-047・048・049・053・054です。
-- QF/TR/DAの事前知識は箇条書きのテキスト・数式だけで、`placement: prior_knowledge`のassetはありません（このassetを使っているのは下記のM1-EC-016・025だけです）。
+- QF/TR/DAの事前知識は箇条書きのテキスト・数式だけで、`placement: prior_knowledge`のassetはありません（このassetを使っているのは下記のM1-EC-016・025と、M1-SL-016だけです）。
 - 正本の改行コードは単元・問題ごとに異なります（M1-TR-005・006・009〜021の15ファイルはCRLF、他はLF）。スクリプトで一括編集する場合は、ファイルごとの改行コードを維持してください。
 
 - 見出しは`## 事前知識・使用公式`。パーサー（`markdownSections.ts`）自体は無変更で、既存の`##`見出し分割の汎用ロジックが処理します。各`prepare*Entry.ts`（QF/TR/DA/EC全4コレクション）に`findSection(sections, '事前知識・使用公式')`を追加し、値の有無だけで表示可否を判定します。
@@ -109,8 +133,8 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 開閉ロジック・アニメーションは最終解答の開閉（`data-answer-toggle`/`.result-box`、`grid-template-rows` 0fr/1fr手法）をそのまま複製しています。ボタン文言が異なるため別data属性（`data-prior-knowledge-toggle`/`data-prior-knowledge-box`）を使いますが、ロジック自体は複製元と同一です。新しい開閉アニメーション実装は増やしていません。
 - CSS（`global.css`の`.prior-knowledge-section`）も最終解答の外枠処理（`.final-answer-section`と同じ上罫線＋transparent、白カード外枠・shadow・pill・左色バーなし）を複製しています。新しいカードUIは作っていません。
 - 数式内に日本語テキストを直接書く場合（例：`(x\text{の指数})`）は、既存規約通り`\text{}`で囲んでください。囲まずに書くとKaTeX build時に`unicodeTextInMathMode`警告が出ます（KaTeXが自動でCJKフォールバック表示するため見た目自体は同じですが、警告は避けられます）。
-- 「事前知識・使用公式」は**AI-context JSON（`src/pages/ai-context/[id].json.ts`）へ含めません**（現行仕様）。固定教材側の参照欄であり、AI質問用contextとは別レイヤーとして扱います。`src/utils/aiContext.ts`は「問題」「問題の言い換え」「ThinkingFlow」「最終解答」のセクションだけを取り出すため、公開162問すべてで事前知識の本文・`placement: prior_knowledge`のassetはAI-contextに入りません（問題メタ・解法メタも同様）。
-- asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しています。QF/TR/DAの118問は事前知識のテキストは持ちますが、事前知識内のassetは表示されません。QF/TR/DAの事前知識にassetを置く場合は、先に該当する`prepare*Entry.ts`へ同じ分岐を追加してください。
+- 「事前知識・使用公式」は**AI-context JSON（`src/pages/ai-context/[id].json.ts`）へ含めません**（現行仕様）。固定教材側の参照欄であり、AI質問用contextとは別レイヤーとして扱います。`src/utils/aiContext.ts`は「問題」「問題の言い換え」「ThinkingFlow」「最終解答」のセクションだけを取り出すため、公開180問すべてで事前知識の本文・`placement: prior_knowledge`のassetはAI-contextに入りません（問題メタ・解法メタも同様）。
+- asset配置：当初「事前知識・使用公式」内へのasset配置は未対応でしたが、2026-09にM1-EC-016向けに対応しました。`content.config.ts`の`problemAssetSchema`へ`placement: 'prior_knowledge'`を追加し（既存の`problem`/`flow`/`final_answer`に1値追加、他3値は無変更）、`prepareExpressionCalculationEntry.ts`に`priorKnowledgeAssets`を返す分岐を追加、`Quadratic27Detail.astro`の展開領域内（`.result-box-inner`、`problemAssets`と同じfigure/table描画パターン）へ表示します。QF/TR/DAの`prepare*Entry.ts`はこのフィールドを返さないため、コンポーネント側は`prepared.priorKnowledgeAssets ?? []`で未定義を吸収しています。QF/TR/DAの118問は事前知識のテキストは持ちますが、事前知識内のassetは表示されません。QF/TR/DAの事前知識にassetを置く場合は、先に該当する`prepare*Entry.ts`へ同じ分岐を追加してください。`prepareSetLogicEntry.ts`（集合と論証）はECと同じく`priorKnowledgeAssets`を返します（M1-SL-016で使用）。
 
 ### 「たすき掛け」交差図asset（2026-09追加）
 
@@ -134,9 +158,9 @@ M1-EC-025（「事前知識・使用公式」）専用。自然数⊂整数⊂�
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
 
-**AI-context JSON（`/ai-context/<problem_id>.json`、`src/pages/ai-context/[id].json.ts`）は公開162問（QF54・TR41・DA23・EC44）すべてが対象です**（2026-09-24にDA/ECへ拡張）。build時に4コレクションの独立検算済み問題から自動生成し、手動の許可リストは持ちません。AI用のFlow識別は`problem_id`＋`context_key`（1問題内の表示順`f1`,`f2`,...）で、既存の`part`/`flow`/`flow_key`も維持しています。含めるのは問題文・問題の言い換え（存在する場合）・ThinkingFlow全体・最終解答・asset metadataだけで、**「事前知識・使用公式」・問題メタ・解法メタは含めません**。HTMLコメント（`<!-- ... -->`、制作用メモ）も生成時に除去します（正本は無変更）。Worker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`は`/^M1-(QF|TR|DA|EC)-\d{3}$/`で、本番Workerへdeploy済みです。新しい単元を追加する場合は、`[id].json.ts`・`aiContext.ts`の`AiContextCollection`へコレクションを追加し、Workerの正規表現も拡張・再deployしてください。
+**AI-context JSON（`/ai-context/<problem_id>.json`、`src/pages/ai-context/[id].json.ts`）は公開180問（QF54・TR41・DA23・EC44・SL18）すべてが対象です**（2026-09-24にDA/ECへ、2026-09-27にSLへ拡張）。build時に4コレクションの独立検算済み問題から自動生成し、手動の許可リストは持ちません。AI用のFlow識別は`problem_id`＋`context_key`（1問題内の表示順`f1`,`f2`,...）で、既存の`part`/`flow`/`flow_key`も維持しています。含めるのは問題文・問題の言い換え（存在する場合）・ThinkingFlow全体・最終解答・asset metadataだけで、**「事前知識・使用公式」・問題メタ・解法メタは含めません**。HTMLコメント（`<!-- ... -->`、制作用メモ）も生成時に除去します（正本は無変更）。Worker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`は`/^M1-(QF|TR|DA|EC|SL)-\d{3}$/`で、本番Workerへdeploy済みです（2026-09-27、Version `c9fd20e4-e191-415c-977b-411f5810e311`）。この正規表現は`M1-SL-000`のような存在しない番号も形式上は通しますが、対応するAI-context JSONがないためWorkerは404「対象外」を返し、Geminiには到達しません。**本番Workerのdeployは`worker/`で`npm run deploy -- --env production`です**（素の`npm run deploy`は`wrangler.toml`の既定＝ローカル開発用設定（参照先localhost）で、本番とは別のWorkerになります）。Webを先にdeployして本番にAI-context JSONが出てからWorkerをdeployしてください。新しい単元を追加する場合は、`[id].json.ts`・`aiContext.ts`の`AiContextCollection`へコレクションを追加し、Workerの正規表現も拡張・再deployしてください。
 
-公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析（M1-DA-001〜023）も、EXACT判定の12問に外部サイト「教科書より詳しい高校数学」（yorikuwa.com）への同じ「追加で練習する」リンクを追加し、本番公開済みです（コミット`c0b7d45`、同じ`external-practice-links.json`に追記。表示ロジックは共通）。同ファイルの登録は計59問（QF26・TR21・DA12）です。数と式（M1-EC-001〜044）はリンク未登録です。詳細は同文書第37節を正本としてください。
+公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析（M1-DA-001〜023）も、EXACT判定の12問に外部サイト「教科書より詳しい高校数学」（yorikuwa.com）への同じ「追加で練習する」リンクを追加し、本番公開済みです（コミット`c0b7d45`、同じ`external-practice-links.json`に追記。表示ロジックは共通）。同ファイルの登録は計59問（QF26・TR21・DA12）です。数と式（M1-EC-001〜044）・集合と論証（M1-SL-001〜018）はリンク未登録です。詳細は同文書第37節を正本としてください。
 
 ---
 
@@ -153,6 +177,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/trig4/`・`src/content/trig4-assets/`（三角比）
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
 - `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
+- `src/content/setLogic/`・`src/content/setLogic-assets/`（集合と論証、M1-SL-001〜018。2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
 
@@ -200,6 +225,7 @@ npm run sync-content
 - `/math1/trig/`：数学I「三角比」上位区分の単元トップ、`/math1/trig/M1-TR-001/` 〜 `/M1-TR-041/`
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
 - `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
+- `/math1/set-logic/`：数学I「集合と論証」上位区分の単元トップ、`/math1/set-logic/M1-SL-001/` 〜 `/M1-SL-018/`（2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -211,9 +237,9 @@ SPA化や複雑なクライアント状態管理を、明示的な要求なし�
 
 ### 中央問題一覧の分類・共有コンポーネント
 
-中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分、数と式＝4区分）。
+中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分、数と式＝4区分、集合と論証＝2区分）。
 
-- 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` / `expressionCalculationDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
+- 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` / `expressionCalculationDbItems.ts` / `setLogicDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
 - 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
 - 新しい単元を追加する場合や表示を調整する場合も、この対応表とコンポーネントを流用してください。`ProblemDbShell.astro` 側や別コンポーネントに、もう一つ別の分類ロジックを増やさないでください。
 
@@ -244,9 +270,9 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - sitemapには載せない
 - robots.txtでDisallowしない
 
-### 各単元トップ・個別問題URL（QF/TR/DA/EC共通）
+### 各単元トップ・個別問題URL（QF/TR/DA/EC/SL共通）
 
-- `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`・`/math1/suto-shiki/`と各個別問題URL
+- `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`・`/math1/suto-shiki/`・`/math1/set-logic/`と各個別問題URL
 - index対象
 - noindexを付けない
 - 個別問題は固有title / description
@@ -256,18 +282,19 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 ### sitemap / robots
 
 `sitemap.xml` は検索対象ページを掲載します（`src/pages/sitemap.xml.ts`）。
-現行162問（QF54・TR41・DA23・EC44）時点の内訳は、
+現行180問（QF54・TR41・DA23・EC44・SL18）時点の内訳は、
 
 - `/`
 - `/math1/quadratic/` ＋ 個別問題54URL
 - `/math1/trig/` ＋ 個別問題41URL
 - `/math1/data-analysis/` ＋ 個別問題23URL
 - `/math1/suto-shiki/` ＋ 個別問題44URL
+- `/math1/set-logic/` ＋ 個別問題18URL
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-の計170 URLです（2026-09-23のローカルbuildで`dist/sitemap.xml`の件数・内訳を確認済み）。
+の計189 URLです（2026-09-27のbuild・本番で`sitemap.xml`の件数・内訳を確認済み）。
 
 `/app/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
@@ -395,6 +422,7 @@ Flow数は固定しません。
 - 難易度説明の丸数字①〜④を、大きい塗りつぶし円から小さいアウトライン円へ縮小。
 - ThinkingFlow説明（ミニ実演、`.mini-flow-*`）に、実際のThinkingFlowと同じ縦レール・番号マーカー・★の視覚言語を反映。
 - DBプレビュー画像（`public/images/top-db-preview.png`）を最新UIのスクリーンショットに差し替え。
+  - 2026-09-27、集合と論証の追加に合わせ、同じ問題（M1-QF-017）・同じ構図・同じサイズ（2540×1182）で撮り直しました（左の単元ナビに全5単元が並ぶ状態）。
 
 情報構造・セクション順・文章内容（上記の明示した文言変更を除く）・レスポンシブのブレークポイント・AI導線・SEO関連（title/description/canonical/BreadcrumbList/単元トップ構造）は変更していません。各段階とも実機確認のうえ、ユーザーの明示的な承認を得て順にcommitしています。
 
@@ -431,6 +459,8 @@ assetの表示位置はファイル名ではなく `problem.md` のmetadataを�
 - 小問内Flow：`placement + part + flow`
 - 問題文：`placement: problem`
 - 最終解答：`placement: final_answer`
+- 事前知識・使用公式：`placement: prior_knowledge`（EC・SLのみ対応）
+- 問題メタ／解法メタ：`placement: problem_meta`／`solution_meta`＋本文中の単独段落`[asset: <file>]`（SLのみ対応。「集合と論証の現在地」節を参照）
 
 `problem.svg` のようなファイル名だけから表示位置を推測しないでください。
 
@@ -517,7 +547,7 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
 
-M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。
+M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。**
 **M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
 
 既存問題を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。
@@ -532,6 +562,6 @@ M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構
 - `math_service_design_summary.md`
 - `problem_authoring_workflow.md`
 - `_TEMPLATE_for_page_generation.md`
-- `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx`）
+- `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx` / `expression_calculation_problem_master.xlsx` / `set_logic_problem_master.xlsx`）
 
 README / AGENTS.mdには概要と作業境界を置き、正本文書と同じ細則を過剰に重複させないでください。

@@ -3,7 +3,7 @@ import { getVerifiedCollection } from '../utils/verifiedCollection';
 
 // 正式な検索対象のみを掲載する、手書きの最小限のsitemap。
 // /app/（学習DBの入口だがnoindex）は含めない。
-// 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculationコレクションから毎回組み立てるため、
+// 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculation・setLogicコレクションから毎回組み立てるため、
 // npm run sync-content で問題が増減しても手作業でsitemapを更新する必要がない。
 const SITE = 'https://math-navi.com';
 
@@ -20,11 +20,16 @@ export const GET: APIRoute = async () => {
   const expressionCalculation = (await getVerifiedCollection('expressionCalculation')).sort(
     (a, b) => a.data.display_order - b.data.display_order,
   );
+  const setLogic = (await getVerifiedCollection('setLogic')).sort(
+    (a, b) => a.data.display_order - b.data.display_order,
+  );
 
   const paths = [
     '/',
     '/math1/suto-shiki/',
     ...expressionCalculation.map((entry) => `/math1/suto-shiki/${entry.id}/`),
+    '/math1/set-logic/',
+    ...setLogic.map((entry) => `/math1/set-logic/${entry.id}/`),
     '/math1/quadratic/',
     ...quadratic27.map((entry) => `/math1/quadratic/${entry.id}/`),
     '/math1/trig/',

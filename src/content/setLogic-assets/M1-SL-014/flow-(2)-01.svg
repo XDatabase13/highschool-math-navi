@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 240" role="img" aria-label="正方形がひし形に含まれ、ひし形が平行四辺形に含まれる包含関係図（ひし形の領域を強調）">
+<ellipse cx="210" cy="140" rx="135" ry="75" fill="var(--color-accent)" fill-opacity="0.3"/>
+<ellipse cx="210" cy="120" rx="190" ry="105" class="pa-figure-line"/>
+<ellipse cx="210" cy="140" rx="135" ry="75" class="pa-figure-line"/>
+<ellipse cx="210" cy="160" rx="75" ry="40" class="pa-figure-line"/>
+<text x="210" y="44" class="pa-panel-label">平行四辺形</text>
+<text x="210" y="96" class="pa-panel-label">ひし形</text>
+<text x="210" y="166" class="pa-panel-label">正方形</text>
+</svg>

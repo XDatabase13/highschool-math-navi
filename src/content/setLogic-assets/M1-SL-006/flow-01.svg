@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 270" role="img" aria-label="Aだけの部分に3と5と7、共通部分に2、Bだけの部分に4と6と8、どちらにも入らない部分に1と9を書き込んだベン図">
+<rect x="20" y="20" width="400" height="230" class="pa-figure-line"/>
+<circle cx="175" cy="140" r="85" class="pa-figure-line"/>
+<circle cx="265" cy="140" r="85" class="pa-figure-line"/>
+<text x="42" y="46" class="pa-panel-label">U</text>
+<text x="100" y="60" class="pa-panel-label">A</text>
+<text x="340" y="60" class="pa-panel-label">B</text>
+<text x="220" y="148" class="pa-label-eq">2</text>
+<text x="118" y="150" class="pa-label-eq">3</text>
+<text x="150" y="110" class="pa-label-eq">5</text>
+<text x="150" y="190" class="pa-label-eq">7</text>
+<text x="290" y="110" class="pa-label-eq">4</text>
+<text x="322" y="150" class="pa-label-eq">6</text>
+<text x="290" y="190" class="pa-label-eq">8</text>
+<text x="52" y="232" class="pa-label-eq">1</text>
+<text x="388" y="232" class="pa-label-eq">9</text>
+</svg>

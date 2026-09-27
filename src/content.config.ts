@@ -12,16 +12,21 @@ import { z } from 'astro/zod';
 
 // 正本Markdownのasset仕様をそのまま受け取る共通スキーマ。placement/part/flow/typeが表示制御の正本。
 // ファイル名からは何も推測しない。purpose/must_show/must_not_showは未記載でよい。
-// placementは 'problem' | 'flow' | 'final_answer' | 'prior_knowledge' の4値のみ許可する。
+// placementは 'problem' | 'flow' | 'final_answer' | 'prior_knowledge' | 'problem_meta' | 'solution_meta'
+// の6値のみ許可する。
 // prior_knowledgeは「事前知識・使用公式」セクション内へのasset配置専用（M1-EC-016で初採用）。
+// problem_meta / solution_metaは「問題メタ」「解法メタ」本文中へのasset配置専用（M1-SL-*で初採用）。
+// 本文中の表示位置は、そのセクション内の単独段落 `[asset: <file>]` で示す
+// （現状この2値を処理するのはprepareSetLogicEntry.tsのみ。他コレクションのprepare*Entry側では
+// 未知のplacementとしてビルド時エラーになる）。
 // これ以外の値や必須項目の欠落はここで弾き、prepare*Entry側で
 // 問題文assetへ暗黙フォールバックさせない（不正データはビルド時エラーにする）。
-// quadratic27・trig4・dataAnalysis・expressionCalculationの4コレクションで共通利用する。
+// quadratic27・trig4・dataAnalysis・expressionCalculation・setLogicの5コレクションで共通利用する。
 const problemAssetSchema = z
   .array(
     z.object({
       file: z.string(),
-      placement: z.enum(['problem', 'flow', 'final_answer', 'prior_knowledge']),
+      placement: z.enum(['problem', 'flow', 'final_answer', 'prior_knowledge', 'problem_meta', 'solution_meta']),
       // 小問(1)(2)...内のFlowを指すときのみ存在する。
       part: z.number().optional(),
       flow: z.number().optional(),
@@ -151,9 +156,35 @@ const expressionCalculation = defineCollection({
   }),
 });
 
+// 数学I「集合と論証」（M1-SL-001〜018）用コレクション。他の4コレクションとは
+// コレクションを分離しているが、公開契約（index対象・sitemap掲載・canonicalは各URL自身）は同格とする。
+const setLogic = defineCollection({
+  loader: glob({
+    pattern: 'M1-SL-*.md',
+    base: './src/content/setLogic',
+    generateId: ({ data }) => String(data.problem_id),
+  }),
+  schema: z.object({
+    problem_id: z.string(),
+    version: z.number(),
+    subject: z.string(),
+    unit: z.string(),
+    section: z.string(),
+    display_order: z.number(),
+    title: z.string(),
+    difficulty: z.number().min(1).max(4),
+    importance: z.number().min(1).max(4),
+    importance_label: z.string(),
+    reference_problem: z.string(),
+    verification_status: verificationStatusSchema,
+    assets: problemAssetSchema,
+  }),
+});
+
 export const collections = {
   quadratic27,
   trig4,
   dataAnalysis,
   expressionCalculation,
+  setLogic,
 };

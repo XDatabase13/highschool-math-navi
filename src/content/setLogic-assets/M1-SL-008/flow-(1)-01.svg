@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="集合AとBの共通部分に1と5を書き込んだベン図">
+<circle cx="150" cy="125" r="90" class="pa-figure-line"/>
+<circle cx="250" cy="125" r="90" class="pa-figure-line"/>
+<text x="78" y="30" class="pa-panel-label">A</text>
+<text x="322" y="30" class="pa-panel-label">B</text>
+<text x="200" y="115" class="pa-label-eq">1</text>
+<text x="200" y="157" class="pa-label-eq">5</text>
+</svg>

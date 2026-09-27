@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" role="img" aria-label="集合Qの中に集合Pが入っている包含関係図">
+<circle cx="194" cy="128" r="52" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="180" cy="115" r="100" class="pa-figure-line"/>
+<circle cx="194" cy="128" r="52" class="pa-figure-line"/>
+<text x="112" y="66" class="pa-panel-label">Q</text>
+<text x="112" y="84" class="pa-label">x&lt;3</text>
+<text x="194" y="122" class="pa-panel-label">P</text>
+<text x="194" y="144" class="pa-label">−2≦x≦2</text>
+</svg>

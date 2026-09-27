@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // 正本（隣接フォルダ math_db_quadratic_working/）から、Web公開用スナップショット
-// （src/content/{quadratic27,trig4,dataAnalysis,expressionCalculation} と各 *-assets）へ
+// （src/content/{quadratic27,trig4,dataAnalysis,expressionCalculation,setLogic} と各 *-assets）へ
 // コピーするだけの単純なスクリプト。
 //
 // - 正本ファイルは一切書き換えない（読み込むだけ）。
@@ -39,6 +39,11 @@ const snapshotDataAnalysisAssets = path.join(repoRoot, 'src/content/dataAnalysis
 // 別コレクション（src/content.config.tsのexpressionCalculation）なので、格納先ディレクトリも分離する。
 const snapshotExpressionCalculationProblems = path.join(repoRoot, 'src/content/expressionCalculation');
 const snapshotExpressionCalculationAssets = path.join(repoRoot, 'src/content/expressionCalculation-assets');
+
+// 集合と論証（M1-SL-001〜018）用スナップショット先。他の4コレクションとは
+// 別コレクション（src/content.config.tsのsetLogic）なので、格納先ディレクトリも分離する。
+const snapshotSetLogicProblems = path.join(repoRoot, 'src/content/setLogic');
+const snapshotSetLogicAssets = path.join(repoRoot, 'src/content/setLogic-assets');
 
 const SNAPSHOT_NOTICE =
   '# 自動生成スナップショット（編集禁止）\n\n' +
@@ -186,6 +191,39 @@ function copyExpressionCalculationAssets() {
   return fileCount;
 }
 
+// 集合と論証（M1-SL-*）用。他単元と同じ考え方
+// （存在するファイルだけを対象にする）を踏襲する。
+function copySetLogicMarkdown() {
+  resetDir(snapshotSetLogicProblems);
+  const files = readdirSync(canonicalProblems).filter((f) => /^M1-SL-\d+\.md$/.test(f));
+  for (const f of files) {
+    copyFileSync(path.join(canonicalProblems, f), path.join(snapshotSetLogicProblems, f));
+  }
+  writeFileSync(path.join(snapshotSetLogicProblems, 'README.md'), SNAPSHOT_NOTICE);
+  return files.length;
+}
+
+function copySetLogicAssets() {
+  resetDir(snapshotSetLogicAssets);
+  if (!existsSync(canonicalAssets)) return 0;
+  const dirs = readdirSync(canonicalAssets).filter((name) => {
+    const full = path.join(canonicalAssets, name);
+    return /^M1-SL-\d+$/.test(name) && statSync(full).isDirectory();
+  });
+  let fileCount = 0;
+  for (const d of dirs) {
+    const srcDir = path.join(canonicalAssets, d);
+    const destDir = path.join(snapshotSetLogicAssets, d);
+    mkdirSync(destDir, { recursive: true });
+    for (const f of readdirSync(srcDir)) {
+      copyFileSync(path.join(srcDir, f), path.join(destDir, f));
+      fileCount += 1;
+    }
+  }
+  writeFileSync(path.join(snapshotSetLogicAssets, 'README.md'), SNAPSHOT_NOTICE);
+  return fileCount;
+}
+
 const mdCount = copyMarkdown();
 const assetCount = copyAssets();
 const trigMdCount = copyTrigMarkdown();
@@ -194,8 +232,11 @@ const dataAnalysisMdCount = copyDataAnalysisMarkdown();
 const dataAnalysisAssetCount = copyDataAnalysisAssets();
 const expressionCalculationMdCount = copyExpressionCalculationMarkdown();
 const expressionCalculationAssetCount = copyExpressionCalculationAssets();
+const setLogicMdCount = copySetLogicMarkdown();
+const setLogicAssetCount = copySetLogicAssets();
 console.log(`同期完了: Markdown ${mdCount}件、asset ${assetCount}件（quadratic27）`);
 console.log(`同期完了: Markdown ${trigMdCount}件、asset ${trigAssetCount}件（trig4・試験バッチ）`);
 console.log(`同期完了: Markdown ${dataAnalysisMdCount}件、asset ${dataAnalysisAssetCount}件（dataAnalysis・試験バッチ）`);
 console.log(`同期完了: Markdown ${expressionCalculationMdCount}件、asset ${expressionCalculationAssetCount}件（expressionCalculation・数と式）`);
+console.log(`同期完了: Markdown ${setLogicMdCount}件、asset ${setLogicAssetCount}件（setLogic・集合と論証）`);
 console.log('git status / git diff で差分を確認し、必要なら commit してください。');

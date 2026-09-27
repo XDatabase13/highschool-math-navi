@@ -4,7 +4,7 @@ import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex } from './pr
 
 // ThinkingFlow単位のAI質問機能に向けた、AI-context JSON生成の本番用ロジック。
 // DOM/生成HTMLは一切参照せず、公開Markdownスナップショット（quadratic27・trig4・
-// dataAnalysis・expressionCalculation、いずれも独立検算済みの問題のみ）と、
+// dataAnalysis・expressionCalculation・setLogic、いずれも独立検算済みの問題のみ）と、
 // 既存表示パイプラインと同じ見出し分割アルゴリズム（rawMarkdownSections.ts）・
 // 同じFlowキー/☆マーク処理
 // （prepareQuadratic27Entry.tsのflowAssetKey/parseStepTitle）を再利用して組み立てる。
@@ -17,7 +17,12 @@ import { flowAssetKey, parseStepTitle, verifyStepNumberMatchesIndex } from './pr
 // 出力はsrc/pages/ai-context/[id].json.tsから、npm run build時に1問題1JSONとして
 // distへ書き出される（このモジュール自体はAstroのpage/endpointではない）。
 
-export type AiContextCollection = 'quadratic27' | 'trig4' | 'dataAnalysis' | 'expressionCalculation';
+export type AiContextCollection =
+  | 'quadratic27'
+  | 'trig4'
+  | 'dataAnalysis'
+  | 'expressionCalculation'
+  | 'setLogic';
 
 export interface AiContextAsset {
   file: string | null;

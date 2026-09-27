@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 230" role="img" aria-label="共通部分と和集合に対応する領域を示すベン図">
+<path d="M122.5,55.63 A62,62 0 0,1 122.5,154.37 A62,62 0 0,1 122.5,55.63 Z" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="85" cy="105" r="62" class="pa-figure-line"/>
+<circle cx="160" cy="105" r="62" class="pa-figure-line"/>
+<text x="38" y="46" class="pa-panel-label">A</text>
+<text x="207" y="46" class="pa-panel-label">B</text>
+<text x="122.5" y="205" class="pa-panel-label">A∩B</text>
+<g opacity="0.3">
+  <circle cx="320" cy="105" r="62" fill="var(--color-accent)"/>
+  <circle cx="395" cy="105" r="62" fill="var(--color-accent)"/>
+</g>
+<circle cx="320" cy="105" r="62" class="pa-figure-line"/>
+<circle cx="395" cy="105" r="62" class="pa-figure-line"/>
+<text x="273" y="46" class="pa-panel-label">A</text>
+<text x="442" y="46" class="pa-panel-label">B</text>
+<text x="357.5" y="205" class="pa-panel-label">A∪B</text>
+</svg>

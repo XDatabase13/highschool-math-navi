@@ -4,39 +4,83 @@ import { prepareSetLogicEntry } from '../../../utils/prepareSetLogicEntry';
 import { buildSetLogicCenterItems } from '../../../utils/setLogicDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+import TypePageDetail from '../../../components/TypePageDetail.astro';
+import type { CollectionEntry } from 'astro:content';
+import {
+  buildTypePageView,
+  getTypeNavItems,
+  getTypePageRoutes,
+  typePageShellProps,
+} from '../../../utils/typePages';
 
 // 集合と論証の個別問題ページ。/math1/suto-shiki/[slug].astroと同じ構成
 // （静的生成・共通DBシェル再利用）をsetLogicコレクションに対しても使う。
 // 他単元と同格の公開contract（index対象・sitemap掲載・canonicalは自身のURL）とする。
+//
+// 型ページ（/math1/set-logic/{型slug}/）も同じURL階層のため、別の動的routeは作らず、
+// ここでproblem/typeのunionを返す（型routeは公開ゲート通過後のpublished全件だけ。
+// 公開前のproduction buildでは0件で、既存の問題routeだけが生成される）。
 export async function getStaticPaths() {
   const problems = await getVerifiedCollection('setLogic');
-  return problems.map((problem) => ({
-    params: { slug: problem.id },
-    props: { problem },
-  }));
+  const typeRoutes = await getTypePageRoutes('set-logic', problems.map((problem) => problem.id));
+  return [
+    ...problems.map((problem) => ({
+      params: { slug: problem.id },
+      props: { kind: 'problem' as const, problem },
+    })),
+    ...typeRoutes.map((route) => ({
+      params: { slug: route.slug },
+      props: { kind: 'type' as const, typePageId: route.id },
+    })),
+  ];
 }
 
-const { problem } = Astro.props;
-const prepared = await prepareSetLogicEntry(problem);
+type Props =
+  | { kind: 'problem'; problem: CollectionEntry<'setLogic'> }
+  | { kind: 'type'; typePageId: string };
+
+const props = Astro.props;
+const problem = props.kind === 'problem' ? props.problem : undefined;
+const prepared = problem ? await prepareSetLogicEntry(problem) : undefined;
+const typeView = props.kind === 'type' ? await buildTypePageView(props.typePageId) : undefined;
 
 const allProblems = (await getVerifiedCollection('setLogic')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
 const centerItems = buildSetLogicCenterItems(allProblems);
+const typeItems = await getTypeNavItems('set-logic');
 ---
 
-<ProblemDbShell
-  title={`${problem.data.title} | 数学I 集合と論証 | 高校数学ナビ`}
-  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「集合と論証」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
-  canonicalPath={`/math1/set-logic/${problem.id}/`}
-  breadcrumbItems={[
-    { label: '数学I' },
-    { label: '集合と論証', href: '/math1/set-logic/' },
-    { label: problem.data.title },
-  ]}
-  activeUnitId="set-logic"
-  activeItemId={problem.id}
-  centerItems={centerItems}
->
-  <Quadratic27Detail prepared={prepared} />
-</ProblemDbShell>
+{typeView ? (
+  <ProblemDbShell
+    {...typePageShellProps(typeView)}
+    activeUnitId="set-logic"
+    centerItems={centerItems}
+    typeItems={typeItems}
+    activeListView="types"
+    activeTypeId={typeView.id}
+    detailLabel="選択中の問題タイプ"
+  >
+    <TypePageDetail view={typeView} />
+  </ProblemDbShell>
+) : (
+  problem &&
+  prepared && (
+    <ProblemDbShell
+      title={`${problem.data.title} | 数学I 集合と論証 | 高校数学ナビ`}
+      description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「集合と論証」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+      canonicalPath={`/math1/set-logic/${problem.id}/`}
+      breadcrumbItems={[
+        { label: '数学I' },
+        { label: '集合と論証', href: '/math1/set-logic/' },
+        { label: problem.data.title },
+      ]}
+      activeUnitId="set-logic"
+      activeItemId={problem.id}
+      centerItems={centerItems}
+      typeItems={typeItems}
+    >
+      <Quadratic27Detail prepared={prepared} />
+    </ProblemDbShell>
+  )
+)}

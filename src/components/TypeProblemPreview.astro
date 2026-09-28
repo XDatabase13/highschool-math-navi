@@ -1,0 +1,191 @@
+---
+import { displayProblemNumber } from '../utils/dbCenterList';
+import type { TypePageProblemView } from '../utils/typePages';
+
+// 型ページ内の問題preview 1件。ネイティブ<details>/<summary>で、開いたときに
+// 「## 問題」（小問を含む）と placement: problem のassetだけを表示し、既存の個別問題ページへの
+// 通常リンク「この問題を解く」を置く。問題の言い換え・事前知識・問題メタ・解法メタ・
+// ThinkingFlow・最終解答・それ以外のasset・外部追加演習リンクは表示しない。
+// 初期状態は閉じる（open属性を付けない）。同一型ページ内の単一open制御は
+// TypePageDetail.astro側のコンテナ限定スクリプトが担う（ここではJSを持たない）。
+//
+// 問題文・assetのマークアップは、個別問題ページ（Quadratic27Detail.astro）の「問題」
+// セクションと同じ共通クラス（problem-parts・problem-asset-figure等、global.css）を再利用する。
+
+interface Props {
+  problem: TypePageProblemView;
+}
+
+const { problem } = Astro.props;
+const { preview } = problem;
+const number = displayProblemNumber(problem.problemId);
+---
+
+<details class="type-problem-preview" data-type-problem-preview>
+  <summary class="type-problem-summary">
+    <span class="type-problem-caret" aria-hidden="true" />
+    <span class="type-problem-number">{number}</span>
+    <span class="type-problem-title">{problem.title}</span>
+    <span class="type-problem-chips">
+      <span class="type-problem-chip" data-importance={problem.importanceLabel}>{problem.importanceLabel}</span>
+      <span class="type-problem-chip"><span class="type-problem-visually-hidden">難易度</span>{problem.difficulty}</span>
+    </span>
+  </summary>
+  <div class="type-problem-body">
+    <div set:html={preview.problemHtml} />
+    {preview.parts.length > 0 && (
+      <div class="problem-parts">
+        {preview.parts.map((part) => (
+          <div class="problem-part">
+            <p class="problem-part-label">{part.title}</p>
+            <div set:html={part.html} />
+          </div>
+        ))}
+      </div>
+    )}
+    {preview.assets.length > 1 ? (
+      <div class="problem-asset-row">
+        {preview.assets.map(({ type, svg }) =>
+          type === 'table' ? (
+            <details class="problem-asset-collapsible">
+              <summary class="problem-asset-collapsible-toggle">表を見る</summary>
+              <div class="problem-asset-figure problem-asset-table-scroll" set:html={svg} />
+            </details>
+          ) : (
+            <figure class="problem-asset-figure" set:html={svg} />
+          ),
+        )}
+      </div>
+    ) : (
+      preview.assets.map(({ type, svg }) =>
+        type === 'table' ? (
+          <details class="problem-asset-collapsible">
+            <summary class="problem-asset-collapsible-toggle">表を見る</summary>
+            <div class="problem-asset-figure problem-asset-table-scroll" set:html={svg} />
+          </details>
+        ) : (
+          <figure class="problem-asset-figure" set:html={svg} />
+        ),
+      )
+    )}
+    <p class="type-problem-cta-row">
+      <a class="type-problem-cta" href={problem.href}>この問題を解く</a>
+    </p>
+  </div>
+</details>
+
+<style>
+  /* 既存の問題一覧行（ProblemGroupList.astro）と同じ番号・タイトル・チップの並びと、
+     既存の区分アコーディオンと同じ回転キャレットを使う。新しい配色は作らない
+     （重要度チップの色はglobal.cssの[data-importance]共通ルール）。 */
+  .type-problem-preview {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .type-problem-preview:first-child {
+    border-top: 1px solid var(--color-border);
+  }
+  .type-problem-summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.6rem 0.4rem;
+  }
+  .type-problem-summary::-webkit-details-marker {
+    display: none;
+  }
+  .type-problem-summary:hover {
+    background: rgba(47, 95, 122, 0.045);
+  }
+  .type-problem-summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .type-problem-caret {
+    flex-shrink: 0;
+    width: 0.5em;
+    height: 0.5em;
+    margin-top: 0.45em;
+    border-right: 2px solid var(--color-primary-dark);
+    border-bottom: 2px solid var(--color-primary-dark);
+    transform: rotate(-45deg);
+    transition: transform 0.15s ease;
+  }
+  .type-problem-preview[open] > .type-problem-summary .type-problem-caret {
+    transform: rotate(45deg);
+  }
+  .type-problem-number {
+    flex-shrink: 0;
+    width: 2rem;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  .type-problem-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+  .type-problem-chips {
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.3rem;
+    padding-top: 0.15rem;
+  }
+  .type-problem-chip {
+    font-size: 0.72rem;
+    border-radius: var(--radius);
+    padding: 0.05rem 0.45rem;
+    white-space: nowrap;
+  }
+  .type-problem-chip:not([data-importance]) {
+    color: var(--color-text);
+    background: rgba(28, 34, 41, 0.045);
+  }
+  .type-problem-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .type-problem-body {
+    padding: 0.25rem 0.4rem 1rem 1.6rem;
+  }
+  .type-problem-cta-row {
+    margin: 1rem 0 0;
+  }
+  /* 既存の主要ボタン（.reveal-answer-btn等）と同じ塗り・角丸の通常リンク。 */
+  .type-problem-cta {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius);
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .type-problem-cta:hover {
+    background: var(--color-primary-dark);
+    text-decoration: none;
+  }
+  .type-problem-cta:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  @media (max-width: 900px) {
+    .type-problem-body {
+      padding-left: 0.4rem;
+    }
+  }
+</style>

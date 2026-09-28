@@ -4,6 +4,7 @@ import { prepareQuadratic27Entry } from '../../utils/prepareQuadratic27Entry';
 import { buildQuadraticCenterItems } from '../../utils/quadraticDbItems';
 import Quadratic27Detail from '../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../components/ProblemDbShell.astro';
+import { getTypeNavItems } from '../../utils/typePages';
 
 // /app/は問題データベースの正式な入口。現時点では数学I「二次関数」の最初の問題
 // （M1-QF-001、display_order昇順で先頭）を初期選択した状態で3ペインDBを表示する。
@@ -15,6 +16,8 @@ const quadratic27 = (await getVerifiedCollection('quadratic27')).sort(
 const centerItems = buildQuadraticCenterItems(quadratic27);
 const defaultEntry = quadratic27[0];
 const prepared = await prepareQuadratic27Entry(defaultEntry);
+// 中央列の「問題タイプ」一覧（初期タブは問題一覧。公開前は0件で切替自体を出さない）。
+const typeItems = await getTypeNavItems('quadratic');
 ---
 
 <ProblemDbShell
@@ -29,6 +32,7 @@ const prepared = await prepareQuadratic27Entry(defaultEntry);
   activeUnitId="quadratic"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
+  typeItems={typeItems}
   noindex
 >
   <Quadratic27Detail prepared={prepared} />

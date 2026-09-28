@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from 'node:fs';
+import path from 'node:path';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 // astro:content の z は非推奨（同じzod/v4をastro/zodから直接importする形が現行の推奨）。
@@ -181,10 +183,66 @@ const setLogic = defineCollection({
   }),
 });
 
+// 型ページ（問題タイプ）本文の公開用スナップショット。正本は教材側の
+// type_pages/<型ページID>.md で、npm run sync-type-pages（scripts/sync-type-pages.mjs）が
+// 検査に通ったpublished型の分をコピーする（制作途中の0〜36件も同期される）。
+// productionで公開するかは src/utils/typePages.ts の公開ゲート（37件完了＋公開承認）が決める。
+// 型の構造（公開名・slug・状態・表示順・所属問題）は src/data/type-pages.generated.json 側にあり、
+// ここにはtitle・slug・問題ID等を重複させない（frontmatterは2keyだけのstrict schema）。
+const TYPE_PAGES_BASE = './src/content/typePages';
+const TYPE_PAGE_FILE_PATTERN = /^[A-Z]{2}-T\d{2}\.md$/;
+const typePagesGlob = glob({
+  pattern: '[A-Z][A-Z]-T[0-9][0-9].md',
+  base: TYPE_PAGES_BASE,
+  generateId: ({ entry, data }) => {
+    const id = String(data.type_page_id);
+    if (entry !== `${id}.md`) {
+      throw new Error(`型ページMarkdown ${entry} の type_page_id（${id}）がファイル名と一致しません。`);
+    }
+    return id;
+  },
+});
+
+const typePages = defineCollection({
+  // 型Markdownが0件（README.mdだけ）の間はglob loaderを呼ばず空のcollectionにする
+  // （globは一致ファイル0件でbuild警告を出すため）。1件以上あれば通常のglob loaderそのもの。
+  loader: {
+    name: 'type-pages-loader',
+    load: async (context) => {
+      const dir = path.resolve(process.cwd(), TYPE_PAGES_BASE);
+      const hasMarkdown = existsSync(dir) && readdirSync(dir).some((f) => TYPE_PAGE_FILE_PATTERN.test(f));
+      if (hasMarkdown) {
+        await typePagesGlob.load(context);
+        return;
+      }
+      context.store.clear();
+      // dev（astro dev）では0件の状態から型Markdownが同期されてきたら、その時点で
+      // 通常のglob loaderへ切り替える（以後の追加・変更・削除はglob loader自身が監視する）。
+      if (context.watcher) {
+        let started = false;
+        context.watcher.add(dir);
+        context.watcher.on('add', async (changedPath) => {
+          if (started || path.dirname(path.resolve(changedPath)) !== dir) return;
+          if (!TYPE_PAGE_FILE_PATTERN.test(path.basename(changedPath))) return;
+          started = true;
+          await typePagesGlob.load(context);
+        });
+      }
+    },
+  },
+  schema: z
+    .object({
+      type_page_id: z.string().regex(/^[A-Z]{2}-T\d{2}$/),
+      description: z.string().trim().min(1),
+    })
+    .strict(),
+});
+
 export const collections = {
   quadratic27,
   trig4,
   dataAnalysis,
   expressionCalculation,
   setLogic,
+  typePages,
 };

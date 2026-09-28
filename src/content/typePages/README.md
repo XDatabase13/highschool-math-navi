@@ -1,0 +1,8 @@
+# 自動生成スナップショット（編集禁止）
+
+このディレクトリの中身は、正本 `math_db_quadratic_working/type_pages/`（highschool_math_db の外）から
+`npm run sync-type-pages`（scripts/sync-type-pages.mjs）でコピーしたものです。
+同じ同期で `src/data/type-pages.generated.json`（型構造。正本はmaster xlsx）も生成されます。
+
+直接編集しないでください。編集は正本側で行い、その後このコマンドで再同期してください。
+公開前（型Markdownが0件）の間は、このREADMEだけが置かれます。

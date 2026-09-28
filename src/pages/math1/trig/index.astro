@@ -4,6 +4,7 @@ import { prepareTrigEntry } from '../../../utils/prepareTrigEntry';
 import { buildTrigCenterItems } from '../../../utils/trigDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+import { getTypeNavItems } from '../../../utils/typePages';
 
 // 三角比単元トップ。既存の共通3ペインDB UI（ProblemDbShell + Quadratic27Detail）を
 // QFとそのまま共有する。本番公開契約へ昇格済みのため、QFと同様にindex対象・
@@ -14,6 +15,8 @@ const trig4 = (await getVerifiedCollection('trig4')).sort(
 const centerItems = buildTrigCenterItems(trig4);
 const defaultEntry = trig4[0];
 const prepared = await prepareTrigEntry(defaultEntry);
+// 中央列の「問題タイプ」一覧（初期タブは問題一覧。公開前は0件で切替自体を出さない）。
+const typeItems = await getTypeNavItems('trig');
 ---
 
 <ProblemDbShell
@@ -24,6 +27,7 @@ const prepared = await prepareTrigEntry(defaultEntry);
   activeUnitId="trig"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
+  typeItems={typeItems}
 >
   <Quadratic27Detail prepared={prepared} unitHeading="数学I 三角比" />
 </ProblemDbShell>

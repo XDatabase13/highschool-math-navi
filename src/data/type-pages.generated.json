@@ -1,0 +1,1308 @@
+{
+  "schemaVersion": 1,
+  "typePages": [
+    {
+      "id": "EC-T01",
+      "unitId": "suto-shiki",
+      "name": "整式の次数・整理と指数法則",
+      "slug": "polynomial-basics",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "多項式 次数",
+      "problems": [
+        {
+          "problemId": "M1-EC-001",
+          "membership": "primary",
+          "role": "入口：単項式の係数と次数"
+        },
+        {
+          "problemId": "M1-EC-002",
+          "membership": "primary",
+          "role": "基本：多項式の次数と定数項"
+        },
+        {
+          "problemId": "M1-EC-003",
+          "membership": "primary",
+          "role": "基本：降べきの順に整理"
+        },
+        {
+          "problemId": "M1-EC-004",
+          "membership": "primary",
+          "role": "基本：多項式の加法・減法"
+        },
+        {
+          "problemId": "M1-EC-005",
+          "membership": "primary",
+          "role": "基本：指数法則と単項式の乗法"
+        }
+      ]
+    },
+    {
+      "id": "EC-T02",
+      "unitId": "suto-shiki",
+      "name": "式の展開と展開公式",
+      "slug": "expansion",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "展開公式",
+      "problems": [
+        {
+          "problemId": "M1-EC-006",
+          "membership": "primary",
+          "role": "入口：分配法則で展開"
+        },
+        {
+          "problemId": "M1-EC-007",
+          "membership": "primary",
+          "role": "基本：展開公式の基本"
+        },
+        {
+          "problemId": "M1-EC-008",
+          "membership": "primary",
+          "role": "標準：展開公式の組み合わせ"
+        },
+        {
+          "problemId": "M1-EC-009",
+          "membership": "primary",
+          "role": "標準：特定の項の係数"
+        },
+        {
+          "problemId": "M1-EC-010",
+          "membership": "primary",
+          "role": "基本：3項の2乗"
+        },
+        {
+          "problemId": "M1-EC-011",
+          "membership": "primary",
+          "role": "標準：3乗の展開公式"
+        },
+        {
+          "problemId": "M1-EC-012",
+          "membership": "primary",
+          "role": "応用：組み合わせを工夫して展開"
+        },
+        {
+          "problemId": "M1-EC-013",
+          "membership": "primary",
+          "role": "発展：置き換え・順序を工夫する展開"
+        }
+      ]
+    },
+    {
+      "id": "EC-T03",
+      "unitId": "suto-shiki",
+      "name": "因数分解の公式とたすき掛け",
+      "slug": "factorization",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "因数分解 公式",
+      "problems": [
+        {
+          "problemId": "M1-EC-014",
+          "membership": "primary",
+          "role": "入口：共通因数でくくる"
+        },
+        {
+          "problemId": "M1-EC-015",
+          "membership": "primary",
+          "role": "基本：基本公式で因数分解"
+        },
+        {
+          "problemId": "M1-EC-016",
+          "membership": "primary",
+          "role": "基本：たすき掛けの基本"
+        },
+        {
+          "problemId": "M1-EC-019",
+          "membership": "primary",
+          "role": "標準：3乗の因数分解公式"
+        },
+        {
+          "problemId": "M1-EC-021",
+          "membership": "primary",
+          "role": "応用：定数項側からたすき掛け"
+        }
+      ]
+    },
+    {
+      "id": "EC-T04",
+      "unitId": "suto-shiki",
+      "name": "因数分解の工夫（置き換え・整理）",
+      "slug": "factorization-techniques",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "因数分解 置き換え",
+      "problems": [
+        {
+          "problemId": "M1-EC-017",
+          "membership": "primary",
+          "role": "入口：塊を1文字とみる"
+        },
+        {
+          "problemId": "M1-EC-018",
+          "membership": "primary",
+          "role": "基本：繰り返す式を置換"
+        },
+        {
+          "problemId": "M1-EC-020",
+          "membership": "primary",
+          "role": "標準：次数の低い文字で整理"
+        },
+        {
+          "problemId": "M1-EC-022",
+          "membership": "primary",
+          "role": "発展：平方差に持ち込む（複2次式）"
+        },
+        {
+          "problemId": "M1-EC-023",
+          "membership": "primary",
+          "role": "発展：因数分解の総合"
+        }
+      ]
+    },
+    {
+      "id": "EC-T05",
+      "unitId": "suto-shiki",
+      "name": "平方根の計算と分母の有理化",
+      "slug": "square-roots",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "ルート 計算",
+      "problems": [
+        {
+          "problemId": "M1-EC-028",
+          "membership": "primary",
+          "role": "入口：ルートの基本性質"
+        },
+        {
+          "problemId": "M1-EC-029",
+          "membership": "primary",
+          "role": "基本：ルートの四則計算"
+        },
+        {
+          "problemId": "M1-EC-030",
+          "membership": "primary",
+          "role": "基本：分母の有理化"
+        },
+        {
+          "problemId": "M1-EC-034",
+          "membership": "primary",
+          "role": "応用：複雑な分母の有理化"
+        },
+        {
+          "problemId": "M1-EC-036",
+          "membership": "primary",
+          "role": "標準：二重根号を外す"
+        }
+      ]
+    },
+    {
+      "id": "EC-T06",
+      "unitId": "suto-shiki",
+      "name": "根号を含む式の値と整数部分・小数部分",
+      "slug": "root-values",
+      "status": "published",
+      "displayOrder": 6,
+      "primaryKeyword": "整数部分 小数部分",
+      "problems": [
+        {
+          "problemId": "M1-EC-026",
+          "membership": "primary",
+          "role": "入口：整数部分・小数部分の基本"
+        },
+        {
+          "problemId": "M1-EC-031",
+          "membership": "primary",
+          "role": "基本：対称式で式の値"
+        },
+        {
+          "problemId": "M1-EC-032",
+          "membership": "primary",
+          "role": "標準：根号の関係式を利用"
+        },
+        {
+          "problemId": "M1-EC-033",
+          "membership": "primary",
+          "role": "発展：ルートの整数部分・小数部分と式の値"
+        }
+      ]
+    },
+    {
+      "id": "EC-T07",
+      "unitId": "suto-shiki",
+      "name": "絶対値の外し方と方程式・不等式",
+      "slug": "absolute-value",
+      "status": "published",
+      "displayOrder": 7,
+      "primaryKeyword": "絶対値 外し方",
+      "problems": [
+        {
+          "problemId": "M1-EC-027",
+          "membership": "primary",
+          "role": "入口：絶対値の定義と計算"
+        },
+        {
+          "problemId": "M1-EC-035",
+          "membership": "primary",
+          "role": "基本：√a²=|a|（根号と絶対値）"
+        },
+        {
+          "problemId": "M1-EC-042",
+          "membership": "primary",
+          "role": "基本：絶対値を含む基本方程式・不等式"
+        },
+        {
+          "problemId": "M1-EC-043",
+          "membership": "primary",
+          "role": "標準：場合分けによる方程式・不等式"
+        },
+        {
+          "problemId": "M1-EC-044",
+          "membership": "primary",
+          "role": "発展：絶対値が複数ある方程式・不等式"
+        }
+      ]
+    },
+    {
+      "id": "EC-T08",
+      "unitId": "suto-shiki",
+      "name": "一次不等式と連立不等式",
+      "slug": "linear-inequality",
+      "status": "published",
+      "displayOrder": 8,
+      "primaryKeyword": "一次不等式",
+      "problems": [
+        {
+          "problemId": "M1-EC-037",
+          "membership": "primary",
+          "role": "入口：一次不等式の基本"
+        },
+        {
+          "problemId": "M1-EC-038",
+          "membership": "primary",
+          "role": "基本：連立不等式・三連不等式"
+        },
+        {
+          "problemId": "M1-EC-039",
+          "membership": "primary",
+          "role": "標準：整数解・自然数解"
+        },
+        {
+          "problemId": "M1-EC-040",
+          "membership": "primary",
+          "role": "標準：一次不等式の文章題"
+        },
+        {
+          "problemId": "M1-EC-041",
+          "membership": "primary",
+          "role": "発展：整数解の個数から文字の範囲"
+        }
+      ]
+    },
+    {
+      "id": "SL-T01",
+      "unitId": "set-logic",
+      "name": "集合の表し方と部分集合",
+      "slug": "sets-subsets",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "部分集合",
+      "problems": [
+        {
+          "problemId": "M1-SL-001",
+          "membership": "primary",
+          "role": "入口：要素の列挙・条件による集合の表し方"
+        },
+        {
+          "problemId": "M1-SL-002",
+          "membership": "primary",
+          "role": "基本：部分集合と包含関係"
+        },
+        {
+          "problemId": "M1-SL-003",
+          "membership": "primary",
+          "role": "標準：部分集合の列挙と個数"
+        }
+      ]
+    },
+    {
+      "id": "SL-T02",
+      "unitId": "set-logic",
+      "name": "集合の演算（共通部分・和集合・補集合）",
+      "slug": "set-operations",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "共通部分 和集合",
+      "problems": [
+        {
+          "problemId": "M1-SL-004",
+          "membership": "primary",
+          "role": "入口：共通部分・和集合"
+        },
+        {
+          "problemId": "M1-SL-005",
+          "membership": "primary",
+          "role": "基本：補集合とド・モルガンの法則"
+        },
+        {
+          "problemId": "M1-SL-006",
+          "membership": "primary",
+          "role": "基本：ベン図から集合を読み取る"
+        },
+        {
+          "problemId": "M1-SL-007",
+          "membership": "primary",
+          "role": "標準：複数の演算を組み合わせる"
+        },
+        {
+          "problemId": "M1-SL-008",
+          "membership": "primary",
+          "role": "応用：集合の条件から文字を決定"
+        }
+      ]
+    },
+    {
+      "id": "SL-T03",
+      "unitId": "set-logic",
+      "name": "命題と条件（真偽・反例・否定）",
+      "slug": "propositions",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "命題 真偽",
+      "problems": [
+        {
+          "problemId": "M1-SL-009",
+          "membership": "primary",
+          "role": "入口：命題とは何か・命題の真偽"
+        },
+        {
+          "problemId": "M1-SL-010",
+          "membership": "primary",
+          "role": "基本：否定と「かつ」「または」"
+        },
+        {
+          "problemId": "M1-SL-011",
+          "membership": "primary",
+          "role": "標準：命題と集合（真理集合の包含関係）"
+        },
+        {
+          "problemId": "M1-SL-012",
+          "membership": "primary",
+          "role": "応用：「ならば」の真偽と反例"
+        },
+        {
+          "problemId": "M1-SL-015",
+          "membership": "primary",
+          "role": "発展：「すべて」「ある」を含む命題の否定"
+        }
+      ]
+    },
+    {
+      "id": "SL-T04",
+      "unitId": "set-logic",
+      "name": "必要条件・十分条件",
+      "slug": "necessary-sufficient",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "必要条件 十分条件",
+      "problems": [
+        {
+          "problemId": "M1-SL-011",
+          "membership": "secondary",
+          "role": "関連：集合の包含関係で必要・十分を判定（「必要条件 十分条件 ベン図」に対応）"
+        },
+        {
+          "problemId": "M1-SL-013",
+          "membership": "primary",
+          "role": "入口：必要条件・十分条件の判定"
+        },
+        {
+          "problemId": "M1-SL-014",
+          "membership": "primary",
+          "role": "応用：必要条件・十分条件（実践：範囲・文字を含む条件）"
+        }
+      ]
+    },
+    {
+      "id": "SL-T05",
+      "unitId": "set-logic",
+      "name": "逆・裏・対偶と証明法（対偶法・背理法）",
+      "slug": "contrapositive-proof",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "逆 裏 対偶",
+      "problems": [
+        {
+          "problemId": "M1-SL-016",
+          "membership": "primary",
+          "role": "入口：逆・裏・対偶の真偽"
+        },
+        {
+          "problemId": "M1-SL-017",
+          "membership": "primary",
+          "role": "基本：対偶を利用した証明"
+        },
+        {
+          "problemId": "M1-SL-018",
+          "membership": "primary",
+          "role": "標準：背理法（√2 が無理数であることの証明）"
+        }
+      ]
+    },
+    {
+      "id": "QF-T01",
+      "unitId": "quadratic",
+      "name": "二次関数のグラフと平方完成",
+      "slug": "graph",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "二次関数 グラフ",
+      "problems": [
+        {
+          "problemId": "M1-QF-002",
+          "membership": "primary",
+          "role": "入口：基本形 y=ax² のグラフ"
+        },
+        {
+          "problemId": "M1-QF-006",
+          "membership": "primary",
+          "role": "基本：頂点形式から頂点・軸を読む"
+        },
+        {
+          "problemId": "M1-QF-007",
+          "membership": "primary",
+          "role": "基本：平方完成して頂点・軸を求める"
+        },
+        {
+          "problemId": "M1-QF-008",
+          "membership": "primary",
+          "role": "標準：係数をくくる平方完成"
+        },
+        {
+          "problemId": "M1-QF-039",
+          "membership": "primary",
+          "role": "応用：グラフから係数・判別式の符号を読む"
+        }
+      ]
+    },
+    {
+      "id": "QF-T02",
+      "unitId": "quadratic",
+      "name": "放物線の平行移動・対称移動",
+      "slug": "translation-reflection",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "二次関数 平行移動",
+      "problems": [
+        {
+          "problemId": "M1-QF-009",
+          "membership": "primary",
+          "role": "入口：2つの放物線の平行移動関係（頂点の比較）"
+        },
+        {
+          "problemId": "M1-QF-010",
+          "membership": "primary",
+          "role": "基本：平行移動後の方程式"
+        },
+        {
+          "problemId": "M1-QF-011",
+          "membership": "primary",
+          "role": "基本：x軸・y軸・原点に関する対称移動"
+        },
+        {
+          "problemId": "M1-QF-012",
+          "membership": "primary",
+          "role": "応用：移動の組合せから元の放物線を求める"
+        }
+      ]
+    },
+    {
+      "id": "QF-T03",
+      "unitId": "quadratic",
+      "name": "二次関数の最大・最小",
+      "slug": "max-min",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "二次関数 最大最小",
+      "problems": [
+        {
+          "problemId": "M1-QF-013",
+          "membership": "primary",
+          "role": "入口：定義域なしの最大・最小"
+        },
+        {
+          "problemId": "M1-QF-014",
+          "membership": "primary",
+          "role": "基本：閉区間での最大・最小"
+        },
+        {
+          "problemId": "M1-QF-015",
+          "membership": "primary",
+          "role": "標準：端を含まない範囲（最大・最小が存在しない場合）"
+        },
+        {
+          "problemId": "M1-QF-016",
+          "membership": "primary",
+          "role": "標準：最大・最小の条件から定数を決定"
+        },
+        {
+          "problemId": "M1-QF-019",
+          "membership": "primary",
+          "role": "標準：最小値から定数を逆算（場合分け不要）"
+        },
+        {
+          "problemId": "M1-QF-020",
+          "membership": "primary",
+          "role": "応用：最小値を文字の関数として最大化"
+        },
+        {
+          "problemId": "M1-QF-022",
+          "membership": "primary",
+          "role": "応用：文章・図形条件を二次関数に帰着"
+        }
+      ]
+    },
+    {
+      "id": "QF-T04",
+      "unitId": "quadratic",
+      "name": "軸や定義域が動く最大・最小（場合分け）",
+      "slug": "max-min-cases",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "二次関数 最大最小 場合分け",
+      "problems": [
+        {
+          "problemId": "M1-QF-017",
+          "membership": "primary",
+          "role": "基本：定義域の一端が動く"
+        },
+        {
+          "problemId": "M1-QF-018",
+          "membership": "primary",
+          "role": "基本：軸が動く（固定区間）"
+        },
+        {
+          "problemId": "M1-QF-019",
+          "membership": "secondary",
+          "role": "比較：場合分けが不要な例（「場合分けする時としない時」に対応）"
+        },
+        {
+          "problemId": "M1-QF-021",
+          "membership": "primary",
+          "role": "発展：定義域全体が動く"
+        }
+      ]
+    },
+    {
+      "id": "QF-T05",
+      "unitId": "quadratic",
+      "name": "二次関数の決定",
+      "slug": "determination",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "二次関数の決定",
+      "problems": [
+        {
+          "problemId": "M1-QF-012",
+          "membership": "secondary",
+          "role": "関連：移動条件から式を決定（「二次関数の決定 平行移動」に対応）"
+        },
+        {
+          "problemId": "M1-QF-023",
+          "membership": "primary",
+          "role": "入口：通過点から係数を決定"
+        },
+        {
+          "problemId": "M1-QF-024",
+          "membership": "primary",
+          "role": "基本：頂点＋通過点"
+        },
+        {
+          "problemId": "M1-QF-025",
+          "membership": "primary",
+          "role": "標準：軸＋通過点"
+        },
+        {
+          "problemId": "M1-QF-026",
+          "membership": "primary",
+          "role": "基本：最大・最小の条件＋通過点"
+        },
+        {
+          "problemId": "M1-QF-027",
+          "membership": "primary",
+          "role": "標準：3点を通る（連立方程式）"
+        }
+      ]
+    },
+    {
+      "id": "QF-T06",
+      "unitId": "quadratic",
+      "name": "二次方程式の解き方",
+      "slug": "quadratic-equation",
+      "status": "published",
+      "displayOrder": 6,
+      "primaryKeyword": "二次方程式 解き方",
+      "problems": [
+        {
+          "problemId": "M1-QF-028",
+          "membership": "primary",
+          "role": "基本：因数分解（たすき掛け）で解く"
+        },
+        {
+          "problemId": "M1-QF-029",
+          "membership": "primary",
+          "role": "基本：平方根を利用して解く"
+        },
+        {
+          "problemId": "M1-QF-030",
+          "membership": "primary",
+          "role": "基本：解の公式で解く"
+        },
+        {
+          "problemId": "M1-QF-031",
+          "membership": "primary",
+          "role": "標準：1つの解から係数ともう1つの解を求める"
+        }
+      ]
+    },
+    {
+      "id": "QF-T07",
+      "unitId": "quadratic",
+      "name": "判別式と実数解の個数",
+      "slug": "discriminant",
+      "status": "published",
+      "displayOrder": 7,
+      "primaryKeyword": "判別式",
+      "problems": [
+        {
+          "problemId": "M1-QF-032",
+          "membership": "primary",
+          "role": "入口：判別式で実数解の個数を判定"
+        },
+        {
+          "problemId": "M1-QF-033",
+          "membership": "primary",
+          "role": "標準：文字を含む方程式の実数解条件"
+        },
+        {
+          "problemId": "M1-QF-047",
+          "membership": "primary",
+          "role": "応用：実数解条件が二次不等式になる"
+        },
+        {
+          "problemId": "M1-QF-049",
+          "membership": "secondary",
+          "role": "関連：判別式 D<0 を使う不等式の条件（「二次方程式 判別式 すべての実数」に対応）"
+        }
+      ]
+    },
+    {
+      "id": "QF-T08",
+      "unitId": "quadratic",
+      "name": "放物線とx軸・直線の共有点",
+      "slug": "intersection",
+      "status": "published",
+      "displayOrder": 8,
+      "primaryKeyword": "二次関数 共有点",
+      "problems": [
+        {
+          "problemId": "M1-QF-034",
+          "membership": "primary",
+          "role": "入口：二次方程式の解と x 軸との共有点"
+        },
+        {
+          "problemId": "M1-QF-035",
+          "membership": "primary",
+          "role": "基本：x 軸との共有点の個数"
+        },
+        {
+          "problemId": "M1-QF-036",
+          "membership": "primary",
+          "role": "標準：文字条件と x 軸との共有点"
+        },
+        {
+          "problemId": "M1-QF-037",
+          "membership": "primary",
+          "role": "標準：x 軸から切り取る線分の長さ"
+        },
+        {
+          "problemId": "M1-QF-038",
+          "membership": "primary",
+          "role": "標準：文字による x 軸との共有点個数の分類"
+        },
+        {
+          "problemId": "M1-QF-040",
+          "membership": "primary",
+          "role": "基本：放物線と直線の共有点"
+        },
+        {
+          "problemId": "M1-QF-041",
+          "membership": "primary",
+          "role": "標準：文字による放物線と直線の共有点個数"
+        },
+        {
+          "problemId": "M1-QF-048",
+          "membership": "primary",
+          "role": "応用：二次不等式を用いる共有点個数の分類"
+        }
+      ]
+    },
+    {
+      "id": "QF-T09",
+      "unitId": "quadratic",
+      "name": "二次不等式と連立不等式",
+      "slug": "inequality",
+      "status": "published",
+      "displayOrder": 9,
+      "primaryKeyword": "二次不等式",
+      "problems": [
+        {
+          "problemId": "M1-QF-042",
+          "membership": "primary",
+          "role": "入口：二次不等式の基本解法（D>0）"
+        },
+        {
+          "problemId": "M1-QF-043",
+          "membership": "primary",
+          "role": "基本：x 軸に接する場合（D=0）"
+        },
+        {
+          "problemId": "M1-QF-044",
+          "membership": "primary",
+          "role": "基本：x 軸と共有点をもたない場合（D<0）"
+        },
+        {
+          "problemId": "M1-QF-045",
+          "membership": "primary",
+          "role": "基本：連立二次不等式"
+        },
+        {
+          "problemId": "M1-QF-046",
+          "membership": "primary",
+          "role": "標準：連続不等式"
+        },
+        {
+          "problemId": "M1-QF-049",
+          "membership": "primary",
+          "role": "標準：すべての実数で成り立つ条件"
+        },
+        {
+          "problemId": "M1-QF-050",
+          "membership": "primary",
+          "role": "応用：連立二次不等式の整数解"
+        },
+        {
+          "problemId": "M1-QF-051",
+          "membership": "primary",
+          "role": "標準：解から係数を決定"
+        },
+        {
+          "problemId": "M1-QF-052",
+          "membership": "primary",
+          "role": "発展：文字を含む二次不等式（場合分け）"
+        }
+      ]
+    },
+    {
+      "id": "QF-T10",
+      "unitId": "quadratic",
+      "name": "二次方程式の解の配置",
+      "slug": "root-location",
+      "status": "hold",
+      "displayOrder": 10,
+      "primaryKeyword": "解の配置",
+      "problems": [
+        {
+          "problemId": "M1-QF-053",
+          "membership": "primary",
+          "role": "基本：2解の符号条件"
+        },
+        {
+          "problemId": "M1-QF-054",
+          "membership": "primary",
+          "role": "標準：2解の位置条件（判別式・軸・端点）"
+        }
+      ]
+    },
+    {
+      "id": "TR-T01",
+      "unitId": "trig",
+      "name": "三角比の定義と三角比の表",
+      "slug": "definition",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "三角比の定義",
+      "problems": [
+        {
+          "problemId": "M1-TR-001",
+          "membership": "primary",
+          "role": "入口：直角三角形での三角比の定義"
+        },
+        {
+          "problemId": "M1-TR-002",
+          "membership": "primary",
+          "role": "基本：三角比の表の使い方"
+        },
+        {
+          "problemId": "M1-TR-003",
+          "membership": "primary",
+          "role": "基本：高さ・距離の測量"
+        },
+        {
+          "problemId": "M1-TR-004",
+          "membership": "primary",
+          "role": "標準：定義から辺の長さを求める"
+        }
+      ]
+    },
+    {
+      "id": "TR-T02",
+      "unitId": "trig",
+      "name": "三角比の相互関係と変換公式",
+      "slug": "identities",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "三角比の相互関係",
+      "problems": [
+        {
+          "problemId": "M1-TR-005",
+          "membership": "primary",
+          "role": "入口：相互関係で残りの三角比を求める"
+        },
+        {
+          "problemId": "M1-TR-006",
+          "membership": "primary",
+          "role": "基本：90°−θ の三角比"
+        },
+        {
+          "problemId": "M1-TR-007",
+          "membership": "primary",
+          "role": "標準：相互関係を使った式計算"
+        },
+        {
+          "problemId": "M1-TR-010",
+          "membership": "primary",
+          "role": "基本：鈍角での符号と相互関係"
+        },
+        {
+          "problemId": "M1-TR-013",
+          "membership": "primary",
+          "role": "標準：180°−θ などの変換公式を使う式計算"
+        },
+        {
+          "problemId": "M1-TR-014",
+          "membership": "primary",
+          "role": "標準：sinθ+cosθ から式の値を求める"
+        }
+      ]
+    },
+    {
+      "id": "TR-T03",
+      "unitId": "trig",
+      "name": "単位円と0°〜180°の三角比",
+      "slug": "unit-circle",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "三角比 単位円",
+      "problems": [
+        {
+          "problemId": "M1-TR-008",
+          "membership": "primary",
+          "role": "入口：単位円で鈍角の三角比を求める"
+        },
+        {
+          "problemId": "M1-TR-009",
+          "membership": "primary",
+          "role": "基本：三角比の値から角を求める"
+        },
+        {
+          "problemId": "M1-TR-011",
+          "membership": "primary",
+          "role": "基本：tanθ＝直線の傾き"
+        },
+        {
+          "problemId": "M1-TR-012",
+          "membership": "primary",
+          "role": "標準：2直線のなす角"
+        },
+        {
+          "problemId": "M1-TR-015",
+          "membership": "primary",
+          "role": "標準：三角比を含む不等式"
+        }
+      ]
+    },
+    {
+      "id": "TR-T04",
+      "unitId": "trig",
+      "name": "正弦定理と外接円",
+      "slug": "law-of-sines",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "正弦定理",
+      "problems": [
+        {
+          "problemId": "M1-TR-016",
+          "membership": "primary",
+          "role": "入口：正弦定理の基本"
+        },
+        {
+          "problemId": "M1-TR-017",
+          "membership": "primary",
+          "role": "基本：外接円の半径"
+        },
+        {
+          "problemId": "M1-TR-024",
+          "membership": "primary",
+          "role": "標準：sinの比＝辺の比"
+        },
+        {
+          "problemId": "M1-TR-025",
+          "membership": "primary",
+          "role": "標準：最大角の判定"
+        }
+      ]
+    },
+    {
+      "id": "TR-T05",
+      "unitId": "trig",
+      "name": "余弦定理",
+      "slug": "law-of-cosines",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "余弦定理",
+      "problems": [
+        {
+          "problemId": "M1-TR-018",
+          "membership": "primary",
+          "role": "入口：余弦定理で辺を求める"
+        },
+        {
+          "problemId": "M1-TR-019",
+          "membership": "primary",
+          "role": "標準：余弦定理から二次方程式を解いて辺を求める"
+        },
+        {
+          "problemId": "M1-TR-020",
+          "membership": "primary",
+          "role": "基本：余弦定理で角を求める"
+        }
+      ]
+    },
+    {
+      "id": "TR-T06",
+      "unitId": "trig",
+      "name": "正弦定理・余弦定理の使い分け（三角形の決定・形状）",
+      "slug": "solving-triangles",
+      "status": "published",
+      "displayOrder": 6,
+      "primaryKeyword": "正弦定理 余弦定理 使い分け",
+      "problems": [
+        {
+          "problemId": "M1-TR-021",
+          "membership": "primary",
+          "role": "標準：三角形の形状判定"
+        },
+        {
+          "problemId": "M1-TR-022",
+          "membership": "primary",
+          "role": "入口：正弦定理・余弦定理による三角形の決定（標準型）"
+        },
+        {
+          "problemId": "M1-TR-023",
+          "membership": "primary",
+          "role": "応用：解が2つある場合の判断"
+        }
+      ]
+    },
+    {
+      "id": "TR-T07",
+      "unitId": "trig",
+      "name": "三角形の面積と内接円の半径",
+      "slug": "triangle-area",
+      "status": "published",
+      "displayOrder": 7,
+      "primaryKeyword": "三角形の面積 sin",
+      "problems": [
+        {
+          "problemId": "M1-TR-027",
+          "membership": "primary",
+          "role": "入口：2辺と間の角から面積"
+        },
+        {
+          "problemId": "M1-TR-028",
+          "membership": "primary",
+          "role": "基本：3辺から面積（余弦定理経由）"
+        },
+        {
+          "problemId": "M1-TR-033",
+          "membership": "primary",
+          "role": "標準：面積から内接円の半径"
+        },
+        {
+          "problemId": "M1-TR-034",
+          "membership": "primary",
+          "role": "標準：対角線となす角から四角形の面積"
+        },
+        {
+          "problemId": "M1-TR-035",
+          "membership": "primary",
+          "role": "発展：ヘロンの公式"
+        }
+      ]
+    },
+    {
+      "id": "TR-T08",
+      "unitId": "trig",
+      "name": "円に内接する四角形",
+      "slug": "cyclic-quadrilateral",
+      "status": "published",
+      "displayOrder": 8,
+      "primaryKeyword": "円に内接する四角形",
+      "problems": [
+        {
+          "problemId": "M1-TR-030",
+          "membership": "primary",
+          "role": "入口：円に内接する四角形の面積"
+        },
+        {
+          "problemId": "M1-TR-031",
+          "membership": "primary",
+          "role": "標準：対角線の長さと面積"
+        },
+        {
+          "problemId": "M1-TR-032",
+          "membership": "primary",
+          "role": "基本：正六角形の面積"
+        }
+      ]
+    },
+    {
+      "id": "TR-T09",
+      "unitId": "trig",
+      "name": "空間図形と三角比",
+      "slug": "solid-figures",
+      "status": "published",
+      "displayOrder": 9,
+      "primaryKeyword": "空間図形 三角比",
+      "problems": [
+        {
+          "problemId": "M1-TR-036",
+          "membership": "primary",
+          "role": "入口：直方体内の三角形の角・面積"
+        },
+        {
+          "problemId": "M1-TR-037",
+          "membership": "primary",
+          "role": "基本：正四面体の辺上の点と三角形"
+        },
+        {
+          "problemId": "M1-TR-038",
+          "membership": "primary",
+          "role": "基本：正四面体の高さと体積"
+        },
+        {
+          "problemId": "M1-TR-039",
+          "membership": "primary",
+          "role": "標準：外心を利用する三角錐"
+        },
+        {
+          "problemId": "M1-TR-040",
+          "membership": "primary",
+          "role": "応用：正四面体の内接球"
+        },
+        {
+          "problemId": "M1-TR-041",
+          "membership": "primary",
+          "role": "標準：円錐の側面の最短距離（展開図）"
+        }
+      ]
+    },
+    {
+      "id": "DA-T01",
+      "unitId": "data-analysis",
+      "name": "代表値（平均値・中央値・最頻値）",
+      "slug": "representative-values",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "平均値 中央値 最頻値",
+      "problems": [
+        {
+          "problemId": "M1-DA-001",
+          "membership": "primary",
+          "role": "入口：平均値・中央値・最頻値の求め方"
+        },
+        {
+          "problemId": "M1-DA-002",
+          "membership": "primary",
+          "role": "基本：度数分布表・ヒストグラムから代表値"
+        },
+        {
+          "problemId": "M1-DA-003",
+          "membership": "primary",
+          "role": "基本：平均値から未知の値を求める"
+        },
+        {
+          "problemId": "M1-DA-004",
+          "membership": "primary",
+          "role": "標準：データの訂正と平均値・中央値"
+        },
+        {
+          "problemId": "M1-DA-005",
+          "membership": "primary",
+          "role": "応用：訂正されたデータを特定する"
+        }
+      ]
+    },
+    {
+      "id": "DA-T02",
+      "unitId": "data-analysis",
+      "name": "四分位数と箱ひげ図",
+      "slug": "box-plot",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "箱ひげ図",
+      "problems": [
+        {
+          "problemId": "M1-DA-006",
+          "membership": "primary",
+          "role": "入口：四分位数・四分位範囲"
+        },
+        {
+          "problemId": "M1-DA-007",
+          "membership": "primary",
+          "role": "基本：外れ値の判定"
+        },
+        {
+          "problemId": "M1-DA-008",
+          "membership": "primary",
+          "role": "標準：箱ひげ図の読み取りと比較"
+        },
+        {
+          "problemId": "M1-DA-009",
+          "membership": "primary",
+          "role": "標準：ヒストグラムと箱ひげ図の対応"
+        }
+      ]
+    },
+    {
+      "id": "DA-T03",
+      "unitId": "data-analysis",
+      "name": "分散と標準偏差",
+      "slug": "variance",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "分散 標準偏差",
+      "problems": [
+        {
+          "problemId": "M1-DA-010",
+          "membership": "primary",
+          "role": "入口：偏差の2乗の平均から分散・標準偏差"
+        },
+        {
+          "problemId": "M1-DA-011",
+          "membership": "primary",
+          "role": "基本：分散＝2乗の平均−平均の2乗"
+        },
+        {
+          "problemId": "M1-DA-012",
+          "membership": "primary",
+          "role": "応用：2つのデータを合わせた平均・分散"
+        },
+        {
+          "problemId": "M1-DA-013",
+          "membership": "primary",
+          "role": "応用：データの変更と平均・分散"
+        }
+      ]
+    },
+    {
+      "id": "DA-T04",
+      "unitId": "data-analysis",
+      "name": "変量の変換",
+      "slug": "variable-transformation",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "変量変換",
+      "problems": [
+        {
+          "problemId": "M1-DA-014",
+          "membership": "primary",
+          "role": "入口：変量変換（y=ax+b）と平均・分散・標準偏差"
+        },
+        {
+          "problemId": "M1-DA-015",
+          "membership": "primary",
+          "role": "標準：仮平均を使った平均・分散の計算"
+        },
+        {
+          "problemId": "M1-DA-019",
+          "membership": "secondary",
+          "role": "関連：変量変換で相関係数が変わらないこと（「変量変換 相関係数」に対応）"
+        }
+      ]
+    },
+    {
+      "id": "DA-T05",
+      "unitId": "data-analysis",
+      "name": "相関係数と散布図",
+      "slug": "correlation",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "相関係数",
+      "problems": [
+        {
+          "problemId": "M1-DA-016",
+          "membership": "primary",
+          "role": "入口：共分散から相関係数を求める"
+        },
+        {
+          "problemId": "M1-DA-017",
+          "membership": "primary",
+          "role": "基本：散布図と相関係数の対応"
+        },
+        {
+          "problemId": "M1-DA-018",
+          "membership": "primary",
+          "role": "標準：散布図から相関・因果・条件を読み取る"
+        },
+        {
+          "problemId": "M1-DA-019",
+          "membership": "primary",
+          "role": "応用：変量変換と相関係数"
+        }
+      ]
+    },
+    {
+      "id": "DA-T06",
+      "unitId": "data-analysis",
+      "name": "仮説検定の考え方",
+      "slug": "hypothesis-testing",
+      "status": "published",
+      "displayOrder": 6,
+      "primaryKeyword": "仮説検定",
+      "problems": [
+        {
+          "problemId": "M1-DA-020",
+          "membership": "primary",
+          "role": "入口：仮説検定の流れ"
+        },
+        {
+          "problemId": "M1-DA-021",
+          "membership": "primary",
+          "role": "基本：シミュレーション（コイン投げ）を用いた仮説検定"
+        },
+        {
+          "problemId": "M1-DA-022",
+          "membership": "primary",
+          "role": "基本：有意水準（基準）による判断の違い"
+        },
+        {
+          "problemId": "M1-DA-023",
+          "membership": "primary",
+          "role": "標準：確率を計算して行う仮説検定"
+        }
+      ]
+    }
+  ]
+}

@@ -4,39 +4,83 @@ import { prepareTrigEntry } from '../../../utils/prepareTrigEntry';
 import { buildTrigCenterItems } from '../../../utils/trigDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+import TypePageDetail from '../../../components/TypePageDetail.astro';
+import type { CollectionEntry } from 'astro:content';
+import {
+  buildTypePageView,
+  getTypeNavItems,
+  getTypePageRoutes,
+  typePageShellProps,
+} from '../../../utils/typePages';
 
 // 三角比の個別問題ページ。/math1/quadratic/[slug].astroと同じ構成
 // （静的生成・共通DBシェル再利用）をtrig4コレクションに対しても使う。
 // 本番のURL契約（sitemap掲載・index対象化）を適用済み（QFと同様、noindexは外す）。
+//
+// 型ページ（/math1/trig/{型slug}/）も同じURL階層のため、別の動的routeは作らず、
+// ここでproblem/typeのunionを返す（型routeは公開ゲート通過後のpublished全件だけ。
+// 公開前のproduction buildでは0件で、既存の問題routeだけが生成される）。
 export async function getStaticPaths() {
   const problems = await getVerifiedCollection('trig4');
-  return problems.map((problem) => ({
-    params: { slug: problem.id },
-    props: { problem },
-  }));
+  const typeRoutes = await getTypePageRoutes('trig', problems.map((problem) => problem.id));
+  return [
+    ...problems.map((problem) => ({
+      params: { slug: problem.id },
+      props: { kind: 'problem' as const, problem },
+    })),
+    ...typeRoutes.map((route) => ({
+      params: { slug: route.slug },
+      props: { kind: 'type' as const, typePageId: route.id },
+    })),
+  ];
 }
 
-const { problem } = Astro.props;
-const prepared = await prepareTrigEntry(problem);
+type Props =
+  | { kind: 'problem'; problem: CollectionEntry<'trig4'> }
+  | { kind: 'type'; typePageId: string };
+
+const props = Astro.props;
+const problem = props.kind === 'problem' ? props.problem : undefined;
+const prepared = problem ? await prepareTrigEntry(problem) : undefined;
+const typeView = props.kind === 'type' ? await buildTypePageView(props.typePageId) : undefined;
 
 const allProblems = (await getVerifiedCollection('trig4')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
 const centerItems = buildTrigCenterItems(allProblems);
+const typeItems = await getTypeNavItems('trig');
 ---
 
-<ProblemDbShell
-  title={`${problem.data.title} | 数学I 三角比 | 高校数学ナビ`}
-  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「三角比」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
-  canonicalPath={`/math1/trig/${problem.id}/`}
-  breadcrumbItems={[
-    { label: '数学I' },
-    { label: '三角比', href: '/math1/trig/' },
-    { label: problem.data.title },
-  ]}
-  activeUnitId="trig"
-  activeItemId={problem.id}
-  centerItems={centerItems}
->
-  <Quadratic27Detail prepared={prepared} />
-</ProblemDbShell>
+{typeView ? (
+  <ProblemDbShell
+    {...typePageShellProps(typeView)}
+    activeUnitId="trig"
+    centerItems={centerItems}
+    typeItems={typeItems}
+    activeListView="types"
+    activeTypeId={typeView.id}
+    detailLabel="選択中の問題タイプ"
+  >
+    <TypePageDetail view={typeView} />
+  </ProblemDbShell>
+) : (
+  problem &&
+  prepared && (
+    <ProblemDbShell
+      title={`${problem.data.title} | 数学I 三角比 | 高校数学ナビ`}
+      description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学I「三角比」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+      canonicalPath={`/math1/trig/${problem.id}/`}
+      breadcrumbItems={[
+        { label: '数学I' },
+        { label: '三角比', href: '/math1/trig/' },
+        { label: problem.data.title },
+      ]}
+      activeUnitId="trig"
+      activeItemId={problem.id}
+      centerItems={centerItems}
+      typeItems={typeItems}
+    >
+      <Quadratic27Detail prepared={prepared} />
+    </ProblemDbShell>
+  )
+)}

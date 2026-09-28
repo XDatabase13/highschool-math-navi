@@ -4,6 +4,7 @@ import { prepareSetLogicEntry } from '../../../utils/prepareSetLogicEntry';
 import { buildSetLogicCenterItems } from '../../../utils/setLogicDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+import { getTypeNavItems } from '../../../utils/typePages';
 
 // 集合と論証 単元トップ。既存の共通3ペインDB UI（ProblemDbShell + Quadratic27Detail）を
 // QF/TR/DA/ECとそのまま共有する。他単元と同格の公開contract（index対象・sitemap掲載・
@@ -14,6 +15,8 @@ const setLogic = (await getVerifiedCollection('setLogic')).sort(
 const centerItems = buildSetLogicCenterItems(setLogic);
 const defaultEntry = setLogic[0];
 const prepared = await prepareSetLogicEntry(defaultEntry);
+// 中央列の「問題タイプ」一覧（初期タブは問題一覧。公開前は0件で切替自体を出さない）。
+const typeItems = await getTypeNavItems('set-logic');
 ---
 
 <ProblemDbShell
@@ -24,6 +27,7 @@ const prepared = await prepareSetLogicEntry(defaultEntry);
   activeUnitId="set-logic"
   activeItemId={defaultEntry.id}
   centerItems={centerItems}
+  typeItems={typeItems}
 >
   <Quadratic27Detail prepared={prepared} unitHeading="数学I 集合と論証" />
 </ProblemDbShell>

@@ -1,0 +1,81 @@
+---
+import TypeProblemPreview from './TypeProblemPreview.astro';
+import type { TypePageView } from '../utils/typePages';
+
+// 型ページ（問題タイプ）の右側本文。H1はmasterの公開名、「型の概要」は型Markdownの本文
+// （常時表示・折りたたまない）、「この型の問題」は構造データから生成する
+// （型内の順序は既存問題のdisplay_order昇順。primary/secondaryやroleは初版では表示しない）。
+// 問題詳細専用のQuadratic27Detail.astroは流用しない。
+
+interface Props {
+  view: TypePageView;
+}
+
+const { view } = Astro.props;
+---
+
+<div class="type-page-detail" data-type-page-id={view.id}>
+  <h1 class="type-page-title">{view.name}</h1>
+
+  <section class="type-page-overview" aria-labelledby="type-page-overview-heading">
+    <h2 id="type-page-overview-heading">型の概要</h2>
+    <div class="type-page-overview-body" set:html={view.overviewHtml} />
+  </section>
+
+  <section class="type-page-problems" aria-labelledby="type-page-problems-heading">
+    <h2 id="type-page-problems-heading">この型の問題</h2>
+    <div class="type-problem-list" data-type-problem-list>
+      {view.problems.map((problem) => <TypeProblemPreview problem={problem} />)}
+    </div>
+  </section>
+</div>
+
+<script>
+  // 同一型ページ内の問題previewを原則1問だけ開いた状態にする漸進的強化。
+  // - 対象は data-type-problem-list コンテナ直下のpreviewだけ（document全体の別のdetails、
+  //   preview内の「表を見る」details、問題一覧・dialogのdetailsには作用しない）。
+  // - toggleイベントはバブリングしないためcaptureで受ける。click専用にせず、キーボード操作や
+  //   プログラムによるopen変更でも同じ規則を保つ。閉じる側で発生するtoggle（open === false）は処理しない。
+  // - focusは移動させない。summaryの標準操作を妨げない（preventDefaultしない）。
+  //   aria-expandedは付けない（ネイティブdetailsが状態を公開する）。
+  // - JS無効時は各previewが通常のdetailsとして個別に開閉できる。
+  document.querySelectorAll<HTMLElement>('[data-type-problem-list]').forEach((list) => {
+    list.addEventListener(
+      'toggle',
+      (event) => {
+        const opened = event.target;
+        if (!(opened instanceof HTMLDetailsElement) || !opened.open) return;
+        if (opened.parentElement !== list || !opened.hasAttribute('data-type-problem-preview')) return;
+        list.querySelectorAll<HTMLDetailsElement>(':scope > details[data-type-problem-preview][open]').forEach((other) => {
+          if (other !== opened) other.open = false;
+        });
+      },
+      true,
+    );
+  });
+</script>
+
+<style>
+  .type-page-title {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+  .type-page-overview,
+  .type-page-problems {
+    margin-bottom: 1.5rem;
+  }
+  .type-page-detail h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+  }
+  .type-page-overview-body :global(p) {
+    margin: 0 0 0.6rem;
+    line-height: 1.8;
+  }
+  .type-page-overview-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

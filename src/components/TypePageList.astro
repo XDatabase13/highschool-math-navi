@@ -1,0 +1,70 @@
+---
+import type { TypeNavItem } from '../utils/typePages';
+
+// 「問題タイプ」一覧。PC中央列（ProblemDbShell.astro）とスマホ用の問題一覧ダイアログの
+// 両方から同じマークアップ・同じCSSで使う。単元内のpublished型ページだけを
+// masterの表示順で並べたフラットリストで、アコーディオン・重要度・難易度・問題数・
+// 説明文previewは付けない（既存の問題一覧ProblemGroupListとは別component）。
+
+interface Props {
+  items: TypeNavItem[];
+  activeTypeId?: string;
+}
+
+const { items, activeTypeId } = Astro.props;
+---
+
+<nav class="db-type-nav" aria-label="問題タイプ">
+  <ul class="db-type-list">
+    {items.map((item) => {
+      const isSelected = item.id === activeTypeId;
+      return (
+        <li class="db-type-row">
+          <a
+            class:list={['db-type-link', isSelected && 'is-selected']}
+            href={item.href}
+            aria-current={isSelected ? 'page' : undefined}
+          >
+            {item.name}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
+
+<style>
+  /* 既存の問題一覧（ProblemGroupList.astro）の行リストと同じ視覚言語
+     （細いborder-bottomの行・左アクセント付きの選択行）に揃え、新しい配色は作らない。 */
+  .db-type-list {
+    list-style: none;
+    margin: 0 0 0.75rem;
+    padding: 0;
+  }
+  .db-type-row {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .db-type-row:last-child {
+    border-bottom: none;
+  }
+  .db-type-link {
+    display: block;
+    padding: 0.5rem 0.6rem;
+    border-left: 4px solid transparent;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .db-type-link:hover {
+    background: rgba(47, 95, 122, 0.045);
+    text-decoration: none;
+  }
+  .db-type-link.is-selected {
+    background: rgba(47, 95, 122, 0.16);
+    border-left-color: var(--color-primary-dark);
+    font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+</style>

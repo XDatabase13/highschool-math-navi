@@ -185,8 +185,8 @@ const setLogic = defineCollection({
 
 // 型ページ（問題タイプ）本文の公開用スナップショット。正本は教材側の
 // type_pages/<型ページID>.md で、npm run sync-type-pages（scripts/sync-type-pages.mjs）が
-// 検査に通ったpublished型の分をコピーする（制作途中の0〜36件も同期される）。
-// productionで公開するかは src/utils/typePages.ts の公開ゲート（37件完了＋公開承認）が決める。
+// 検査に通ったpublished型の分をコピーする（制作途中の0〜37件も同期される）。
+// productionで公開するかは src/utils/typePages.ts の公開ゲート（38件完了＋公開承認）が決める。
 // 型の構造（公開名・slug・状態・表示順・所属問題）は src/data/type-pages.generated.json 側にあり、
 // ここにはtitle・slug・問題ID等を重複させない（frontmatterは2keyだけのstrict schema）。
 const TYPE_PAGES_BASE = './src/content/typePages';

@@ -25,13 +25,13 @@ import { assertSvgIdReferences } from './svgIdNamespace';
 // （src/data/type-pages.generated.json と typePages Content Collection）で、xlsxは読まない。
 //
 // 公開ゲート（仕様v1.1の一括公開ゲートを2026-09-28に改訂）：
-// - 型Markdownは0〜37件のどの状態でも保存・同期・ローカル確認してよい。
-// - productionで型route・型一覧nav・sitemapを出すのは「published全37件のMarkdownがそろっている」
+// - 型Markdownは0〜38件のどの状態でも保存・同期・ローカル確認してよい。
+// - productionで型route・型一覧nav・sitemapを出すのは「published全38件のMarkdownがそろっている」
 //   かつ「人間が公開を明示承認した（src/data/type-page-publication.ts が true）」ときだけで、
-//   37件を一括で出す。それ以外は1件も出さない（現行189 URLのまま）。
-// - 承認済みなのに37件そろっていない、orphan・hold型のMarkdownがある … buildエラー。
-// 開発時（astro dev）は公開前でも、Markdownがある型と src/dev-fixtures/typePageFixture.ts の1件を
-// 同じroute・component経由でローカル確認できる（noindex付き。productionには出さない）。
+//   38件を一括で出す。それ以外は1件も出さない（現行189 URLのまま）。
+// - 承認済みなのに38件そろっていない、orphan・hold型のMarkdownがある … buildエラー。
+// 開発時（astro dev）は公開前でも、Markdownがある型を同じroute・component経由で
+// ローカル確認できる（noindex付き。productionには出さない）。
 
 // ---------------------------------------------------------------------------
 // 構造スナップショット（type-pages.generated.json）の型と検証
@@ -146,9 +146,9 @@ function typePageRecordById(id: string): TypePageRecord {
 type TypePageMarkdownEntry = CollectionEntry<'typePages'>;
 
 interface TypePagePublication {
-  // 同期済みの型Markdown（0〜37件。制作途中の保存・同期・ローカル確認は可）。
+  // 同期済みの型Markdown（0〜38件。制作途中の保存・同期・ローカル確認は可）。
   markdownById: Map<string, TypePageMarkdownEntry>;
-  // productionで型route・nav・sitemapを出すか（37件完了 かつ 公開承認済みのときだけtrue）。
+  // productionで型route・nav・sitemapを出すか（38件完了 かつ 公開承認済みのときだけtrue）。
   isPublic: boolean;
 }
 
@@ -177,7 +177,7 @@ async function loadPublication(): Promise<TypePagePublication> {
   if (TYPE_PAGES_PUBLICATION_APPROVED && !isComplete) {
     errors.push(
       `公開承認済み（TYPE_PAGES_PUBLICATION_APPROVED = true）ですが、型Markdownが` +
-        `${markdownById.size}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜36件だけの公開はしません）。不足: ${missing.join(', ')}`,
+        `${markdownById.size}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜37件だけの公開はしません）。不足: ${missing.join(', ')}`,
     );
   }
   if (errors.length > 0) throw new Error(`型ページの公開ゲート検証に失敗しました:\n${errors.join('\n')}`);
@@ -192,17 +192,10 @@ function getPublication(): Promise<TypePagePublication> {
   return publicationPromise;
 }
 
-// 開発確認用fixture。DEV分岐内の動的importにして、production buildでは読み込まない。
-async function loadDevFixture() {
-  if (!import.meta.env.DEV) return undefined;
-  const { DEV_TYPE_PAGE_FIXTURE } = await import('../dev-fixtures/typePageFixture');
-  return DEV_TYPE_PAGE_FIXTURE;
-}
-
 // route・navに出す型ページ（hold型は常に含めない）。
-// - 公開（37件完了＋公開承認）: published全件。production・devとも同じ。
-// - 公開前のproduction: 0件（1〜37件のMarkdownがあっても出さない）。
-// - 公開前のdev（includeLocalPreview指定時）: Markdownがある型＋開発確認用fixture（ローカル確認用）。
+// - 公開（38件完了＋公開承認）: published全件。production・devとも同じ。
+// - 公開前のproduction: 0件（1〜38件のMarkdownがあっても出さない）。
+// - 公開前のdev（includeLocalPreview指定時）: Markdownがある型（ローカル確認用）。
 async function listRoutableTypePages(unitId: TypePageUnitId, includeLocalPreview: boolean): Promise<TypePageRecord[]> {
   const publication = await getPublication();
   const inUnit = (p: TypePageRecord) => p.unitId === unitId && p.status === 'published';
@@ -211,12 +204,6 @@ async function listRoutableTypePages(unitId: TypePageUnitId, includeLocalPreview
     pages = snapshot.typePages.filter(inUnit);
   } else if (includeLocalPreview && import.meta.env.DEV) {
     pages = snapshot.typePages.filter((p) => inUnit(p) && publication.markdownById.has(p.id));
-    const fixture = await loadDevFixture();
-    if (fixture) {
-      const record = typePageRecordById(fixture.typePageId);
-      if (record.status !== 'published') throw new Error(`開発確認用fixture ${record.id} はpublished型ではありません。`);
-      if (record.unitId === unitId && !pages.includes(record)) pages.push(record);
-    }
   }
   return [...pages].sort((a, b) => a.displayOrder - b.displayOrder);
 }
@@ -258,8 +245,8 @@ export async function getTypePageRoutes(unitId: TypePageUnitId, problemSlugs: st
   return pages.map((page) => ({ id: page.id, slug: page.slug }));
 }
 
-// sitemap用。公開（37件完了＋公開承認）のときだけpublished全件。承認前のローカル確認用の型・
-// 開発確認用fixtureは開発時でも含めない。
+// sitemap用。公開（38件完了＋公開承認）のときだけpublished全件。承認前のローカル確認用の型は
+// 開発時でも含めない。
 export async function getPublishedTypePagePaths(): Promise<Map<TypePageUnitId, string[]>> {
   const result = new Map<TypePageUnitId, string[]>();
   for (const unit of TYPE_PAGE_UNITS) {
@@ -323,8 +310,8 @@ export interface TypePageView {
   url: string;
   description: string;
   overviewHtml: string;
-  // 公開ゲート（37件完了＋公開承認）を通過したページならtrue。公開前のローカル確認
-  // （devでの承認前Markdown・開発確認用fixture）ではfalseで、noindexを付ける。
+  // 公開ゲート（38件完了＋公開承認）を通過したページならtrue。公開前のローカル確認
+  // （devでの承認前Markdown）ではfalseで、noindexを付ける。
   isPublic: boolean;
   problems: TypePageProblemView[];
 }
@@ -361,25 +348,14 @@ export async function buildTypePageView(typePageId: string): Promise<TypePageVie
   const unit = typePageUnitById(record.unitId);
   const publication = await getPublication();
 
-  let description: string;
-  let overviewMarkdown: string;
   const entry = publication.markdownById.get(record.id);
   if (!publication.isPublic && !import.meta.env.DEV) {
-    throw new Error(`型ページ ${record.id} は公開前（37件完了＋公開承認の前）のため生成できません。`);
+    throw new Error(`型ページ ${record.id} は公開前（38件完了＋公開承認の前）のため生成できません。`);
   }
-  if (entry) {
-    // 公開後、または公開前のdevでのローカル確認（承認前の正式Markdown）。
-    description = entry.data.description;
-    overviewMarkdown = entry.body ?? '';
-  } else {
-    // 公開前のdevで、正式Markdownがまだない型だけ開発確認用fixtureを使う。
-    const fixture = await loadDevFixture();
-    if (publication.isPublic || !fixture || fixture.typePageId !== record.id) {
-      throw new Error(`型ページ ${record.id} のMarkdownがありません。`);
-    }
-    description = fixture.description;
-    overviewMarkdown = fixture.overviewMarkdown;
-  }
+  // 公開後、または公開前のdevでのローカル確認（承認前の正式Markdown）。
+  if (!entry) throw new Error(`型ページ ${record.id} のMarkdownがありません。`);
+  const description = entry.data.description;
+  const overviewMarkdown = entry.body ?? '';
 
   const entries = await getVerifiedCollection(unit.collection);
   const byId = new Map<string, VerifiedProblemEntry>(entries.map((entry) => [entry.id, entry]));

@@ -5,4 +5,5 @@
 同じ同期で `src/data/type-pages.generated.json`（型構造。正本はmaster xlsx）も生成されます。
 
 直接編集しないでください。編集は正本側で行い、その後このコマンドで再同期してください。
-公開前（型Markdownが0件）の間は、このREADMEだけが置かれます。
+制作途中（0〜37件）の型Markdownも同期されますが、productionで型ページを公開するのは
+「published全38件がそろう」かつ「src/data/type-page-publication.ts で公開承認」のときだけです。

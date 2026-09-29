@@ -15,8 +15,8 @@
 // - すべての検査が通った場合だけ、一時ディレクトリへ生成してから置換する
 //   （途中失敗で既存の正常スナップショットを消さない）。
 // - 出力はdeterministic（timestamp等は入れない）。
-// - 型Markdownは0〜37件のどの状態でも（制作途中でも）検査に通ったものを同期する。
-//   同期は公開を決めない。productionで型route・nav・sitemapを出すのは「published全37件の
+// - 型Markdownは0〜38件のどの状態でも（制作途中でも）検査に通ったものを同期する。
+//   同期は公開を決めない。productionで型route・nav・sitemapを出すのは「published全38件の
 //   Markdown」かつ「人間の公開承認（src/data/type-page-publication.ts）」がそろったときだけで、
 //   その判定はbuild側（src/utils/typePages.ts）と監査（scripts/audit-type-pages.mjs）で行う。
 //
@@ -26,6 +26,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, w
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ExcelJS from 'exceljs';
+import JSZip from 'jszip';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
@@ -62,7 +63,6 @@ const HEADER_ROW = 4;
 const STATUS_MAP = { 採用: 'published', 保留: 'hold' };
 const TYPE_ID_PATTERN = /^([A-Z]{2})-T(\d{2})$/;
 const PROBLEM_ID_PATTERN = /^M1-([A-Z]{2})-\d{3}$/;
-const PROBLEM_ID_IN_TEXT = /M1-[A-Z]{2}-\d{3}/;
 const NO_TYPE_PAGE = 'なし';
 
 const SNAPSHOT_NOTICE =
@@ -71,8 +71,8 @@ const SNAPSHOT_NOTICE =
   '`npm run sync-type-pages`（scripts/sync-type-pages.mjs）でコピーしたものです。\n' +
   '同じ同期で `src/data/type-pages.generated.json`（型構造。正本はmaster xlsx）も生成されます。\n\n' +
   '直接編集しないでください。編集は正本側で行い、その後このコマンドで再同期してください。\n' +
-  '制作途中（0〜36件）の型Markdownも同期されますが、productionで型ページを公開するのは\n' +
-  '「published全37件がそろう」かつ「src/data/type-page-publication.ts で公開承認」のときだけです。\n';
+  '制作途中（0〜37件）の型Markdownも同期されますが、productionで型ページを公開するのは\n' +
+  '「published全38件がそろう」かつ「src/data/type-page-publication.ts で公開承認」のときだけです。\n';
 
 const errors = [];
 const warnings = [];
@@ -82,6 +82,31 @@ const warn = (msg) => warnings.push(msg);
 // ---------------------------------------------------------------------------
 // xlsx読取
 // ---------------------------------------------------------------------------
+
+const SPREADSHEETML_MAIN_NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+// masterのxlsxを、exceljsが読める形のバッファで返す。
+// Open XML SDK等で保存されたxlsxは、SpreadsheetMLの要素に名前空間prefix（<x:sheets>等）が
+// 付いており、exceljsはprefix付きの要素名を認識できずに読込自体が失敗する。
+// その場合だけ、各XMLパートのprefixをメモリ上で既定名前空間へ置き換えてから渡す
+// （XMLとして同じ意味の変換。正本のmasterファイルは書き換えない）。
+async function readMasterBuffer(masterPath) {
+  const buffer = readFileSync(masterPath);
+  const zip = await JSZip.loadAsync(buffer);
+  let changed = false;
+  for (const name of Object.keys(zip.files)) {
+    if (zip.files[name].dir || !name.endsWith('.xml')) continue;
+    const xml = await zip.file(name).async('string');
+    const prefix = xml.match(/xmlns:([A-Za-z_][\w.-]*)="http:\/\/schemas\.openxmlformats\.org\/spreadsheetml\/2006\/main"/)?.[1];
+    if (!prefix) continue;
+    const normalized = xml
+      .replace(new RegExp(`<(/?)${prefix}:`, 'g'), '<$1')
+      .replace(`xmlns:${prefix}="${SPREADSHEETML_MAIN_NS}"`, `xmlns="${SPREADSHEETML_MAIN_NS}"`);
+    zip.file(name, normalized);
+    changed = true;
+  }
+  return changed ? zip.generateAsync({ type: 'nodebuffer' }) : buffer;
+}
 
 // exceljsのセル値（文字列・数値・rich text・数式結果）を素のテキストへ。
 function cellText(value) {
@@ -211,7 +236,33 @@ const ALLOWED_NODE_TYPES = new Set([
   'root', 'heading', 'paragraph', 'text', 'strong', 'emphasis', 'inlineMath', 'break',
 ]);
 
-function validateTypeMarkdown(markdown, expectedId, label) {
+// 本文中の問題ID（M1-XX-999）・3桁の問題番号（spec §3.2・§3.4、2026-09-29改訂）。
+// 所属問題の例示に使ってよいためwarningとして報告し、その型の所属問題でない番号だけをエラーにする。
+// 3桁番号は数式（$…$）の外にある単独の3桁の数字で、角度（180°等）は除く。「020〜023」は範囲として展開する。
+function checkMentionedProblems(body, record, label) {
+  const prefix = record.id.slice(0, 2);
+  const text = body.replace(/\$[^$]*\$/g, ' ');
+  const numbers = new Set();
+  for (const m of text.matchAll(/M1-([A-Z]{2})-(\d{3})/g)) {
+    if (m[1] !== prefix) fail(`${label}: 本文の問題ID M1-${m[1]}-${m[2]} は別単元の問題です。`);
+    else numbers.add(m[2]);
+  }
+  const bare = text.replace(/M1-[A-Z]{2}-/g, '');
+  for (const m of bare.matchAll(/(?<![\d.])(\d{3})\s*〜\s*(\d{3})(?![\d.°])/g)) {
+    for (let n = Number(m[1]); n <= Number(m[2]); n += 1) numbers.add(String(n).padStart(3, '0'));
+  }
+  for (const m of bare.matchAll(/(?<![\d.])(\d{3})(?![\d.°])/g)) numbers.add(m[1]);
+  if (numbers.size === 0) return;
+  const members = new Set(record.problems.map((p) => p.problemId));
+  const sorted = [...numbers].sort();
+  const outside = sorted.filter((n) => !members.has(`M1-${prefix}-${n}`));
+  if (outside.length > 0) {
+    fail(`${label}: 本文の問題番号 ${outside.join(', ')} は ${record.id} の所属問題ではありません。`);
+  }
+  warn(`${label}: 本文に問題ID・問題番号があります（${sorted.join(', ')}、いずれも所属問題と照合済み）。人間レビューで確認してください。`);
+}
+
+function validateTypeMarkdown(markdown, expectedId, label, record) {
   const { data, body } = parseTypeFrontmatter(markdown, label);
   if (data.type_page_id !== undefined && data.type_page_id !== expectedId) {
     fail(`${label}: filenameと type_page_id（${data.type_page_id}）が一致しません。`);
@@ -221,7 +272,7 @@ function validateTypeMarkdown(markdown, expectedId, label) {
   }
   if (body.trim() === '') fail(`${label}: 本文が空です。`);
   if (/\[asset:/.test(body)) fail(`${label}: asset記法（[asset: ...]）は使えません。`);
-  if (PROBLEM_ID_IN_TEXT.test(body)) fail(`${label}: 本文に問題ID（M1-XX-999形式）が含まれています。`);
+  checkMentionedProblems(body, record, label);
 
   const tree = markdownParser.parse(body);
   let overviewCount = 0;
@@ -281,7 +332,7 @@ async function main() {
     // 既存masterの一部はテーブル定義のrelsを絶対パス（/xl/tables/...）で持っており、
     // exceljsはそれを解決できずに読込自体が失敗する。型同期はテーブル定義を使わないため、
     // tablePartsだけを読み飛ばす（セル値の読取には影響しない。masterは書き換えない）。
-    await workbook.xlsx.readFile(masterPath, { ignoreNodes: ['tableParts'] });
+    await workbook.xlsx.load(await readMasterBuffer(masterPath), { ignoreNodes: ['tableParts'] });
 
     const typeRows = readSheetRows(
       workbook,
@@ -491,11 +542,11 @@ async function main() {
       continue;
     }
     const markdown = readFileSync(path.join(canonicalTypePages, file), 'utf-8');
-    validateTypeMarkdown(markdown, id, label);
+    validateTypeMarkdown(markdown, id, label, record);
     if (record.status === 'published') markdownById.set(id, markdown);
   }
 
-  // 制作途中（0〜36件）でも同期してよい。完了状況は報告だけ（公開判定はbuild側）。
+  // 制作途中（0〜37件）でも同期してよい。完了状況は報告だけ（公開判定はbuild側）。
   const missing = published.filter((t) => !markdownById.has(t.id)).map((t) => t.id);
 
   for (const w of warnings) console.warn(`[warning] ${w}`);

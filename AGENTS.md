@@ -12,7 +12,7 @@
 
 です。
 
-現在、数学I「数と式」「集合と論証」「二次関数」「三角比」「データの分析」の5単元・計180問（M1-EC-001〜044・M1-SL-001〜018・M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。三角比・データの分析・数と式・集合と論証の詳細は後述の各節を参照してください。
+現在、数学I「数と式」「集合と論証」「二次関数」「三角比」「データの分析」の5単元・計180問（M1-EC-001〜044・M1-SL-001〜018・M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023）を本番公開しています。2026-09-29には、これらを問題タイプ単位で束ねる型ページ38件も本番公開しました（「型ページ（問題タイプ）の現在地」節）。三角比・データの分析・数と式・集合と論証の詳細は後述の各節を参照してください。
 
 数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
 
@@ -120,18 +120,19 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## 型ページ（問題タイプ）の現在地
 
-既存問題DBを置き換えない追加ナビゲーション層として、型ページの**基盤だけ**を2026-09-28に実装しました（**productionでは型ページを1件も公開していません**）。実装正本はrepo直下の `type_page_implementation_spec_v1.1_2026-09-28.md`（§16に公開ゲート改訂を追記済み）です。
+既存問題DBを置き換えない追加ナビゲーション層として、型ページ基盤を2026-09-28に実装し、**2026-09-29にpublished 38型を一括で本番公開しました**（人間の公開承認により`TYPE_PAGES_PUBLICATION_APPROVED = true`、sitemap 189→227）。実装正本は本教材側（`math_db_quadratic_working/`）の `type_page_implementation_spec_v1.1_2026-09-28.md`（§16に公開ゲート改訂、§17にQF-T10採用による38型改訂を追記済み。2026-09-29にWeb repo直下から移動）です。正式Markdown 38件（published 38・hold 0）はPC/スマホのDEV確認を経て公開しています。Codex横断監査は未実施のまま公開しています。
 
-- **正本**：型の構造（型ページID・公開名・slug・状態・表示順・所属問題・主副・役割）は5つのmaster xlsx（「型ページ管理」「公開問題管理」）、公開本文と人間承認済みdescriptionは `math_db_quadratic_working/type_pages/<型ページID>.md`（未作成）。「型ページ管理」には2026-09-28に明示列 `表示順`（L列、初期値T01→Tnn）を追加済みです。Web側は行順・ID文字列から順序を推論しません。
-- **同期**：`npm run sync-type-pages`（`scripts/sync-type-pages.mjs`、`sync-content` からも問題同期の後に実行）。exceljs（devDependency）でmasterを読み、`src/data/type-pages.generated.json`（38型＝published 37・hold 1、所属177件＝主172・副5）と `src/content/typePages/*.md` を生成します。いずれも直接編集禁止。既存masterはテーブル定義のrelsが絶対パスのため、exceljsは `ignoreNodes: ['tableParts']` なしでは読めません。xlsx読取コードをAstro component・client・runtimeからimportしないでください。
-- **公開ゲート**：型Markdownは0〜37件のどの状態でも同期・devでのローカル確認（noindex付き）ができます。productionで型route・型一覧nav・sitemapを出すのは、「published 37件すべての本文・description・人間レビュー完了」かつ「人間が `src/data/type-page-publication.ts` の `TYPE_PAGES_PUBLICATION_APPROVED` を `true` にしてcommit」の2条件を満たしたときだけで、37件を一括で出します（sitemap 189→226）。37件そろっても承認なしでは自動公開しません。承認済みで37件未満はbuildエラーです（1〜36件だけの公開は禁止）。hold型（QF-T10）はroute・nav・sitemapへ出しません。**承認フラグは明示的な公開承認なしに変更しないでください。**
+- **正本**：型の構造（型ページID・公開名・slug・状態・表示順・所属問題・主副・役割）は5つのmaster xlsx（「型ページ管理」「公開問題管理」）、公開本文と人間承認済みdescriptionは `math_db_quadratic_working/type_pages/<型ページID>.md`（published 38型すべて作成・人間承認済み。2026-09-29）。「型ページ管理」には2026-09-28に明示列 `表示順`（L列、初期値T01→Tnn）を追加済みです。Web側は行順・ID文字列から順序を推論しません。
+- **同期**：`npm run sync-type-pages`（`scripts/sync-type-pages.mjs`、`sync-content` からも問題同期の後に実行）。exceljs（devDependency）でmasterを読み、`src/data/type-pages.generated.json`（38型＝published 38・hold 0、所属177件＝主172・副5。2026-09-29にQF-T10を保留から採用へ変更）と `src/content/typePages/*.md` を生成します。いずれも直接編集禁止。既存masterはテーブル定義のrelsが絶対パスのため、exceljsは `ignoreNodes: ['tableParts']` なしでは読めません。また、Open XML SDK等で保存されたmaster（2026-09-29時点のQF master。要素に`x:`等の名前空間prefixが付く）はexceljsが直接読めないため、同期スクリプトがjszip（devDependency）でメモリ上だけprefixを既定名前空間へ正規化してから読みます（masterは書き換えません）。xlsx読取コードをAstro component・client・runtimeからimportしないでください。
+- **公開ゲート**：型Markdownは0〜38件のどの状態でも同期・devでのローカル確認（noindex付き）ができます。productionで型route・型一覧nav・sitemapを出すのは、「published 38件すべての本文・description・人間レビュー完了」かつ「人間が `src/data/type-page-publication.ts` の `TYPE_PAGES_PUBLICATION_APPROVED` を `true` にしてcommit」の2条件を満たしたときだけで、38件を一括で出します（sitemap 189→227）。38件そろっても承認なしでは自動公開しません。承認済みで38件未満はbuildエラーです（1〜37件だけの公開は禁止）。hold型（現在0件）はroute・nav・sitemapへ出しません。2026-09-29に人間の公開承認を受けて`true`にしました。**承認フラグは明示的な指示なしに変更しないでください**（`false`へ戻すと型ページ38件が一括で非公開になります）。
 - **URL**：`/math1/{単元}/{型slug}/`（例 `/math1/quadratic/max-min/`）。既存の各単元 `[slug].astro` がproblem/typeのunionを返します（同階層に別の動的routeを作らない）。型ページはself-canonical、title「{公開名} | 数学I {単元名} | 高校数学ナビ」、BreadcrumbListは単元＋現在地の2要素です。
 - **UI**：PC中央列とスマホ問題一覧dialogに「問題タイプ / 問題一覧」切替を追加しました（`ProblemDbShell.astro`、型一覧が0件のページでは切替を出さず従来と同じマークアップ）。初期タブは型ページだけ「問題タイプ」、それ以外は「問題一覧」です。型一覧は `TypePageList.astro`（masterの表示順のフラットリスト）、本文は `TypePageDetail.astro`、問題previewは `TypeProblemPreview.astro`（ネイティブ`details`、初期全閉、型ページ内だけ単一open）。previewに出すのは「## 問題」（小問含む）と `placement: problem` のassetだけで、`prepareProblemPreview.ts` が用意します。型内の問題順は既存の `display_order` 昇順（`orderTypeProblems(..., {mode:'number'})`）。既存の `ProblemGroupList`・分類utils・`Quadratic27Detail` は変更していません。
 - **SVG**：1ページに複数問題のinline SVGが並ぶため、preview用assetの内部IDは `tp-<問題ID>-a<n>-` で名前空間化し、参照（`url(#…)`・`href`・`xlink:href`・aria）も書き換えます（`src/utils/svgIdNamespace.ts`）。重複id・参照切れはbuildエラーです。problem assetを持つ型はQF-T01・TR-T01・TR-T09・DA-T01・DA-T02・DA-T05の6つだけです。
-- **開発確認用fixture**：`src/dev-fixtures/typePageFixture.ts`（QF-T03、仮の概要・descriptionだけを持つ）。`astro dev` のときだけ表示され、公開ゲートとは別扱いです（正式なQF-T03のMarkdownがあればそちらを優先）。production・sitemapには出ません。不要になったら削除してよいファイルです。
-- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・fixture・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・36件・37件承認なし→189、37件承認あり→226、36件承認あり→buildエラー。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
+- **開発確認用fixture**：正式Markdown 38件の同期に伴い、2026-09-29に`src/dev-fixtures/typePageFixture.ts`（QF-T03の仮文）と`typePages.ts`の読込分岐を削除しました。DEVで表示されるのは同期済みの正式Markdownがある型だけです。`audit-type-pages`は旧fixtureの文字列がbuild成果物へ混入していないかを引き続き検査します。
+- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→189、38件承認あり→227、37件承認あり→buildエラー。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
 - **初版でやらないこと**：推薦順・4×4・ユーザー条件・推薦理由、型同士のリンク、個別問題本文からの所属型リンク、primary/secondary・roleの表示、型専用GA4 event。将来の推薦は `orderTypeProblems` の新modeとして分離し、master・型Markdown・問題データへ順序情報を持たせないでください。
-- **残作業**：37型の概要本文の人間執筆とdescriptionのレビュー・承認 → 同期 → PC/スマホ実画面レビュー → 人間の公開承認（フラグ変更）→ build・監査 → deploy。公開時にこの節とSEO節（sitemap件数）を更新してください。
+- **本文の自動検査**：spec §3.2・§3.4（2026-09-29改訂）どおり、本文中の問題ID（`M1-XX-999`形式）・3桁の問題番号（数式外の単独の3桁数字。角度`180°`等は除き、`020〜023`は範囲展開）は所属問題の例示として許可し、warningとして報告します。その型の所属問題でない番号・別単元の問題IDだけが同期エラーです（`scripts/sync-type-pages.mjs`の`checkMentionedProblems`）。句点数（目安2〜4文）もwarningだけです。warningが出ても承認済み本文・descriptionを自動修正しないでください。
+- **残作業**：Codexによる型ページ横断監査（公開後に実施予定）。型を追加・削除する場合は、`EXPECTED_PUBLISHED_TYPE_PAGE_COUNT`・テスト・この節・SEO節（sitemap件数）を一緒に更新してください。
 
 ---
 
@@ -260,7 +261,7 @@ SPA化や複雑なクライアント状態管理を、明示的な要求なし�
 - 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` / `expressionCalculationDbItems.ts` / `setLogicDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
 - 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
 - 新しい単元を追加する場合や表示を調整する場合も、この対応表とコンポーネントを流用してください。`ProblemDbShell.astro` 側や別コンポーネントに、もう一つ別の分類ロジックを増やさないでください。
-- 型ページ一覧が1件以上ある単元では、中央列（とスマホdialog）に「問題タイプ / 問題一覧」切替が出ます。「問題一覧」側は上記の `ProblemGroupList` そのままで、分類・見た目は変えません。詳細は「型ページ（問題タイプ）の現在地」節を参照（productionは公開承認まで切替なし）。
+- 型ページ一覧が1件以上ある単元では、中央列（とスマホdialog）に「問題タイプ / 問題一覧」切替が出ます。「問題一覧」側は上記の `ProblemGroupList` そのままで、分類・見た目は変えません。詳細は「型ページ（問題タイプ）の現在地」節を参照（2026-09-29の型ページ公開以降、productionでも全5単元に切替が出ます）。
 
 ### スマートフォン表示
 
@@ -304,20 +305,20 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 現行180問（QF54・TR41・DA23・EC44・SL18）時点の内訳は、
 
 - `/`
-- `/math1/quadratic/` ＋ 個別問題54URL
-- `/math1/trig/` ＋ 個別問題41URL
-- `/math1/data-analysis/` ＋ 個別問題23URL
-- `/math1/suto-shiki/` ＋ 個別問題44URL
-- `/math1/set-logic/` ＋ 個別問題18URL
+- `/math1/quadratic/` ＋ 個別問題54URL ＋ 型ページ10URL
+- `/math1/trig/` ＋ 個別問題41URL ＋ 型ページ9URL
+- `/math1/data-analysis/` ＋ 個別問題23URL ＋ 型ページ6URL
+- `/math1/suto-shiki/` ＋ 個別問題44URL ＋ 型ページ8URL
+- `/math1/set-logic/` ＋ 個別問題18URL ＋ 型ページ5URL
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-の計189 URLです（2026-09-27のbuild・本番で`sitemap.xml`の件数・内訳を確認済み）。
+の計227 URLです（既存189＋型ページ38。2026-09-29のbuildで`sitemap.xml`の件数・内訳を確認済み。型ページは各単元の個別問題の後ろに並びます）。
 
 `/app/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
-型ページは、公開ゲート（published 37件完了＋人間の公開承認）を通過したときだけ37件を一括でsitemapへ追加します（189→226 URL）。それまでは189 URLのままで、190〜225件の段階状態は作りません。公開後の型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
+型ページは、公開ゲート（published 38件完了＋人間の公開承認）を通過したときだけ38件を一括でsitemapへ追加する方式で、2026-09-29の公開承認により189→227 URLになりました。190〜226件の段階状態は作りません。型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
 
 `robots.txt` の基本形：
 
@@ -567,7 +568,7 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - 個別HTMLに固有の問題本文が含まれるか
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
-- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認前は型route・型nav 0件、sitemap 189件）
+- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 227件）
 
 M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。**
 **M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
@@ -585,6 +586,6 @@ M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構
 - `problem_authoring_workflow.md`
 - `_TEMPLATE_for_page_generation.md`
 - `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx` / `expression_calculation_problem_master.xlsx` / `set_logic_problem_master.xlsx`）
-- 型ページの実装仕様：`type_page_implementation_spec_v1.1_2026-09-28.md`（Web repo直下）
+- 型ページの実装仕様：`type_page_implementation_spec_v1.1_2026-09-28.md`（本教材側 `math_db_quadratic_working/` 直下）
 
 README / AGENTS.mdには概要と作業境界を置き、正本文書と同じ細則を過剰に重複させないでください。

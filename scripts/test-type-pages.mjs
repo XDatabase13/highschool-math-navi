@@ -3,16 +3,16 @@
 //
 //   node scripts/test-type-pages.mjs sync
 //     テスト用の一時正本（node_modules/.cache/test-type-pages/ 配下にコピー）で sync-type-pages を実行し、
-//     制作途中（0〜37件）のMarkdownが同期できること、不正なMarkdown・masterが失敗すること、
+//     制作途中（0〜38件）のMarkdownが同期できること、不正なMarkdown・masterが失敗すること、
 //     失敗時に既存スナップショットが保持されることを確認する。正本・repoのスナップショットは触らない。
 //
 //   node scripts/test-type-pages.mjs gate
 //     src/content/typePages/ と src/data/type-page-publication.ts を一時的に書き換えて
 //     production buildと監査（audit-type-pages）を実行し、次を確認する。終了時（失敗時も）に元へ戻す。
-//       1. 1〜36件のMarkdown → productionの型ページ 0件・sitemap 189件
-//       2. 37件そろっても公開承認なし → 189件
-//       3. 37件＋公開承認あり → 226件（37型一括）
-//       4. 公開承認ありで36件 → buildエラー
+//       1. 1〜37件のMarkdown → productionの型ページ 0件・sitemap 189件
+//       2. 38件そろっても公開承認なし → 189件
+//       3. 38件＋公開承認あり → 227件（38型一括）
+//       4. 公開承認ありで37件 → buildエラー
 //     distは上書きされるため、最後に現状（元の状態）で再buildする。
 
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -50,9 +50,12 @@ function syncTests() {
   const cases = [
     { name: '0件', expect: 'ok', count: 0 },
     { name: '1件（制作途中）', expect: 'ok', count: 1, files: { 'QF-T03.md': typeMarkdown('QF-T03') } },
-    { name: '36件（制作途中）', expect: 'ok', count: 36, all: true, remove: ['QF-T03.md'] },
-    { name: '37件', expect: 'ok', count: 37, all: true },
-    { name: '37件＋hold型Markdown（同期対象外）', expect: 'ok', count: 37, all: true, files: { [`${holdIds[0]}.md`]: typeMarkdown(holdIds[0]) } },
+    { name: '37件（制作途中）', expect: 'ok', count: 37, all: true, remove: ['QF-T03.md'] },
+    { name: '38件', expect: 'ok', count: 38, all: true },
+    // hold型がmasterにあるときだけ（2026-09-29のQF-T10採用後はhold 0件）。
+    ...(holdIds.length > 0
+      ? [{ name: `${publishedIds.length}件＋hold型Markdown（同期対象外）`, expect: 'ok', count: publishedIds.length, all: true, files: { [`${holdIds[0]}.md`]: typeMarkdown(holdIds[0]) } }]
+      : []),
     { name: '_TEMPLATE.mdは無視', expect: 'ok', count: 1, files: { '_TEMPLATE.md': 'x', 'QF-T03.md': typeMarkdown('QF-T03') } },
     { name: '空description', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { description: '' }) } },
     { name: '空本文', expect: 'fail', files: { 'QF-T03.md': '---\ntype_page_id: QF-T03\ndescription: "d"\n---\n' } },
@@ -61,7 +64,11 @@ function syncTests() {
     { name: '余分なfrontmatter key', expect: 'fail', files: { 'QF-T03.md': '---\ntype_page_id: QF-T03\ndescription: "d"\ntitle: x\n---\n\n## 型の概要\n\na。b。\n' } },
     { name: '箇条書き', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: '- 箇条書き' }) } },
     { name: '追加見出し', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'a。b。\n\n### 追加' }) } },
-    { name: '問題ID混入', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'M1-QF-013を見る。b。' }) } },
+    // 所属問題のID・3桁番号はwarning（spec §3.2・§3.4、2026-09-29改訂）。所属外・別単元だけエラー。
+    { name: '所属問題のID・番号（warningのみ）', expect: 'ok', count: 1, files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'M1-QF-013〜016を見る。019・020、$x=100$、180°。' }) } },
+    { name: '所属外の問題番号', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'M1-QF-013を見る。017も見る。' }) } },
+    { name: '所属外の範囲', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'M1-QF-013〜017を見る。b。' }) } },
+    { name: '別単元の問題ID', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: 'M1-TR-013を見る。b。' }) } },
     { name: '生HTML', expect: 'fail', files: { 'QF-T03.md': typeMarkdown('QF-T03', { body: '<div>x</div>' }) } },
   ];
   for (const c of cases) {
@@ -121,17 +128,17 @@ function gateTests() {
   const flagBackup = readFileSync(flagFile, 'utf-8');
   const scenarios = [
     { name: '1件・承認なし', count: 1, approved: false, build: true, sitemap: 189 },
-    { name: '36件・承認なし', count: 36, approved: false, build: true, sitemap: 189 },
     { name: '37件・承認なし', count: 37, approved: false, build: true, sitemap: 189 },
-    { name: '37件・承認あり', count: 37, approved: true, build: true, sitemap: 226 },
-    { name: '36件・承認あり（部分公開は禁止）', count: 36, approved: true, build: false },
+    { name: '38件・承認なし', count: 38, approved: false, build: true, sitemap: 189 },
+    { name: '38件・承認あり', count: 38, approved: true, build: true, sitemap: 227 },
+    { name: '37件・承認あり（部分公開は禁止）', count: 37, approved: true, build: false },
   ];
   try {
     for (const s of scenarios) {
       setState(s);
       const build = run('npm', ['run', 'build']);
       if (!s.build) {
-        check(`gate: ${s.name} → buildエラー`, !build.ok && build.out.includes('1〜36件だけの公開はしません'));
+        check(`gate: ${s.name} → buildエラー`, !build.ok && build.out.includes('1〜37件だけの公開はしません'));
         continue;
       }
       const audit = build.ok ? run('node', ['scripts/audit-type-pages.mjs']) : { ok: false, out: build.out.slice(-800) };
@@ -139,7 +146,7 @@ function gateTests() {
       const typeDirs = build.ok ? readdirSync(path.join(repoRoot, 'dist/math1/quadratic')).filter((d) => !d.startsWith('M1-') && d !== 'index.html') : [];
       check(
         `gate: ${s.name} → sitemap ${s.sitemap}件`,
-        build.ok && audit.ok && count === s.sitemap && typeDirs.length === (s.sitemap === 226 ? 9 : 0),
+        build.ok && audit.ok && count === s.sitemap && typeDirs.length === (s.sitemap === 227 ? 10 : 0),
         `build ${build.ok ? 'OK' : 'NG'} / audit ${audit.ok ? 'OK' : 'NG'} / sitemap ${count} / 二次関数の型route ${typeDirs.length}件`,
       );
       if (!audit.ok) console.log(audit.out);

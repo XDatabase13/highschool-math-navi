@@ -808,7 +808,7 @@
       "unitId": "quadratic",
       "name": "二次方程式の解の配置",
       "slug": "root-location",
-      "status": "hold",
+      "status": "published",
       "displayOrder": 10,
       "primaryKeyword": "解の配置",
       "problems": [

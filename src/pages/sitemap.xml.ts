@@ -6,8 +6,8 @@ import { getPublishedTypePagePaths } from '../utils/typePages';
 // /app/（学習DBの入口だがnoindex）は含めない。
 // 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculation・setLogicコレクションから毎回組み立てるため、
 // npm run sync-content で問題が増減しても手作業でsitemapを更新する必要がない。
-// 型ページは公開ゲート（published全37件の型Markdown＋人間の公開承認）を通過した場合だけ
-// 各単元の末尾へ一括で入る（承認前は0件で現行189 URLのまま。hold型・fixture・承認前の型は入らない）。
+// 型ページは公開ゲート（published全38件の型Markdown＋人間の公開承認）を通過した場合だけ
+// 各単元の末尾へ一括で入る（承認前は0件で現行189 URLのまま。hold型・承認前の型は入らない）。
 const SITE = 'https://math-navi.com';
 
 export const GET: APIRoute = async () => {

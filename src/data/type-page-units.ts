@@ -81,11 +81,11 @@ export const TYPE_PAGE_UNITS: readonly TypePageUnitConfig[] = [
   },
 ];
 
-// 初版の一括公開監査用の固定件数（仕様v1.1 §4.4）。publishedが37件ちょうどでない
+// 初版の一括公開監査用の固定件数（仕様v1.1 §4.4）。publishedが38件ちょうどでない
 // 構造データは同期・buildの双方でエラーにする。productionで型ページを公開できるのは、
-// 37件すべての型Markdownがそろい、かつ公開承認（type-page-publication.ts）があるときだけ。
+// 38件すべての型Markdownがそろい、かつ公開承認（type-page-publication.ts）があるときだけ。
 // 将来型を追加する段階では、別の仕様変更として「master集計との一致」へ置き換える。
-export const EXPECTED_PUBLISHED_TYPE_PAGE_COUNT = 37;
+export const EXPECTED_PUBLISHED_TYPE_PAGE_COUNT = 38;
 
 export const TYPE_PAGE_SNAPSHOT_SCHEMA_VERSION = 1;
 

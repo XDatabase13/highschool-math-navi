@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // 型ページ（問題タイプ）のproduction build監査。`npm run build` の後に実行する。
 //
-// 1. 公開集合: 公開ゲート＝「published全37件の型Markdown」かつ「公開承認
-//    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜37件の
+// 1. 公開集合: 公開ゲート＝「published全38件の型Markdown」かつ「公開承認
+//    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜38件の
 //    どの状態でも）、dist・sitemapに型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと
-//    （sitemapは既存の189 URLのまま）。ゲート通過時だけ、published 37型が一括で存在すること（226 URL）。
-//    承認済みなのに37件そろっていない状態は監査エラー（buildもエラーになる）。
-// 2. hold型（QF-T10等）・開発確認用fixtureが、distのどこにも出ていないこと。
+//    （sitemapは既存の189 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（227 URL）。
+//    承認済みなのに38件そろっていない状態は監査エラー（buildもエラーになる）。
+// 2. hold型が、distのどこにも出ていないこと（2026-09-29に削除した開発確認用fixtureの残骸も検査する）。
 // 3. xlsx読取依存（exceljs）がbuild成果物に含まれていないこと。
 // 4. SVG: 全型ページ（published・hold）について、同じページに並ぶ placement: problem assetを
 //    表示時と同じ規則で名前空間化したうえで、重複id・参照切れがないこと
@@ -73,7 +73,7 @@ const isComplete =
   published.length === EXPECTED_PUBLISHED_TYPE_PAGE_COUNT && published.every((t) => markdownFiles.includes(`${t.id}.md`));
 const isPublished = TYPE_PAGES_PUBLICATION_APPROVED && isComplete;
 if (TYPE_PAGES_PUBLICATION_APPROVED && !isComplete) {
-  fail(`公開承認済みですが、型Markdownが${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜36件だけの公開は禁止）。`);
+  fail(`公開承認済みですが、型Markdownが${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜37件だけの公開は禁止）。`);
 }
 // ゲート未通過なら、型Markdownのdescriptionがbuild成果物に出ていないこと（本文流出の検査）。
 const unpublishedDescriptions = isPublished
@@ -133,7 +133,7 @@ for (const t of hold) {
   if (sitemapUrls.includes(typeUrl(t))) fail(`hold型 ${t.id} がsitemapにあります。`);
 }
 
-// --- 2/3. fixture・exceljsの混入 ---
+// --- 2/3. 旧fixtureの残骸・exceljsの混入 ---
 const forbiddenStrings = ['開発確認用', 'dev-fixtures', 'typePageFixture', 'DEV_TYPE_PAGE_FIXTURE', 'exceljs', 'ExcelJS'];
 for (const file of builtFiles) {
   const text = readFileSync(file, 'utf-8');
@@ -172,7 +172,7 @@ for (const page of snapshot.typePages) {
 // --- 結果 ---
 const withAssets = svgReport.filter((r) => r.assets > 0);
 console.log(
-  `公開状態: ${isPublished ? '公開（37件完了＋公開承認）' : '公開前'}` +
+  `公開状態: ${isPublished ? '公開（38件完了＋公開承認）' : '公開前'}` +
     `（型Markdown ${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件、公開承認 ${TYPE_PAGES_PUBLICATION_APPROVED ? 'あり' : 'なし'}）`,
 );
 console.log(`sitemap: ${sitemapUrls.length} URL（既存 ${expectedBase.length}＝単元トップ5＋問題${problemCount}＋固定4、型 ${isPublished ? published.length : 0}）`);

@@ -169,7 +169,7 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
           4×4の見方
         </button>
       </div>
-      <table class="nv-grid">
+      <table class="nv-grid" data-nv-idle="true">
         <caption class="nv-visually-hidden">重要度（縦）と難易度（横）ごとの、試験範囲内の問題数</caption>
         <thead>
           <tr>
@@ -178,7 +178,15 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
           </tr>
           <tr>
             <th class="nv-grid-rowhead nv-grid-axis" scope="col">重要度</th>
-            {DIFFICULTY_LEVELS.map((difficulty) => <th scope="col">{difficulty}</th>)}
+            {DIFFICULTY_LEVELS.map((difficulty) => (
+              <th scope="col">
+                {/* 右の列ほど高くなる棒（右ほど難しい、を形で示す飾り）。 */}
+                <span class="nv-bars" aria-hidden="true">
+                  {DIFFICULTY_LEVELS.map((step) => <i class={step <= difficulty ? 'is-on' : undefined} />)}
+                </span>
+                {difficulty}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -208,7 +216,9 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
       </table>
 
       <div class="nv-result">
-        <p class="nv-result-count">抽出問題数<strong data-nv-result-count>0</strong>問</p>
+        <p class="nv-result-count">
+          <span class="nv-visually-hidden">抽出問題数</span><strong data-nv-result-count>0</strong>問
+        </p>
         <p class="nv-result-breakdown" data-nv-result-breakdown></p>
         <a class="nv-go" role="link" aria-disabled="true" data-nv-go>問題データベースで見る</a>
       </div>

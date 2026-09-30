@@ -91,6 +91,9 @@ function init(data: NavData) {
   const live = one<HTMLElement>('[data-nv-live]');
   const goLink = one<HTMLAnchorElement>('[data-nv-go]');
   const cellButtons = all<HTMLButtonElement>('[data-nv-cell]');
+  const grid = one<HTMLElement>('.nv-grid');
+  // 直前に表示していた16マスの問題数（初回の表示では弾ませないので、最初はnull）。
+  let shownCounts: Record<string, number> | null = null;
   const resume = one<HTMLElement>('[data-nv-resume]');
   const savedList = one<HTMLElement>('[data-nv-saved-list]');
   const savedStatus = one<HTMLElement>('[data-nv-saved-status]');
@@ -100,6 +103,13 @@ function init(data: NavData) {
     if (!notice) return;
     notice.textContent = message;
     notice.hidden = message === '';
+  }
+
+  function popCell(button: HTMLElement) {
+    button.classList.remove('is-pop');
+    // 連続して範囲を変えたときも弾むよう、reflowを挟んでからクラスを付け直す。
+    void button.offsetWidth;
+    button.classList.add('is-pop');
   }
 
   function setRangeCollapsed(collapsed: boolean) {
@@ -166,10 +176,15 @@ function init(data: NavData) {
     if (rangeCount) rangeCount.textContent = String(candidates.length);
 
     // --- 4×4 ---
+    const hasCandidates = candidates.length > 0;
+    // 範囲未選択のときは、数字のない静かな空盤面にする（見た目の切り替えはCSS）。
+    if (grid) grid.dataset.nvIdle = String(!hasCandidates);
     for (const button of cellButtons) {
       const cell = button.dataset.nvCell ?? '';
       const count = counts[cell] ?? 0;
       const isPressed = pressed.has(cell);
+      // 範囲を変えて数字が変わったマスだけ小さく弾ませる（範囲を選ぶと数字が現れる、を伝える）。
+      if (shownCounts && count > 0 && shownCounts[cell] !== count) popCell(button);
       button.disabled = count === 0;
       button.setAttribute('aria-pressed', String(isPressed));
       button.setAttribute(
@@ -179,7 +194,7 @@ function init(data: NavData) {
       const countEl = one<HTMLElement>('[data-nv-cell-count]', button);
       if (countEl) countEl.textContent = String(count);
     }
-    const hasCandidates = candidates.length > 0;
+    shownCounts = counts;
 
     // --- 抽出問題数と主ボタン ---
     const resultCount = one<HTMLElement>('[data-nv-result-count]');
@@ -195,12 +210,10 @@ function init(data: NavData) {
       if (href) {
         goLink.href = href;
         goLink.removeAttribute('aria-disabled');
-        goLink.textContent = `${results.length}問を問題データベースで見る`;
       } else {
         // 0件のときは結果画面へ進めない。
         goLink.removeAttribute('href');
         goLink.setAttribute('aria-disabled', 'true');
-        goLink.textContent = '問題データベースで見る';
       }
     }
     if (live) {

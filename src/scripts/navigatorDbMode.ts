@@ -5,7 +5,8 @@
 //   - 中央の問題一覧（PC中央列・スマホの問題一覧ダイアログ）を、抽出した問題の行だけにする
 //   - 左の科目・単元ナビを、抽出した問題がある単元だけにする（行き先はその単元の最初の抽出問題）
 //   - 一覧・単元のリンクへ同じ条件のfragmentを付け、問題を移動しても抽出状態を保つ
-//   - ヘッダー直下の帯に「4×4　○問　n/○」・条件のタグ（範囲、重要度 × 難易度）と、問題再選定・保存・共有・
+//   - ヘッダー直下の帯に、選択中のマスを示す小型の4×4（読み取り専用）・「4×4　○問　n/○」・
+//     条件のタグ（範囲、重要度 × 難易度）と、問題再選定・保存・共有・
 //     全問題表示、を出す（前後移動のボタンは置かない。問題の移動は中央の抽出問題一覧から行う）
 // 問題本文の後付け描画・並び替えはしない（並び順は静的な一覧の順＝単元順 → display_order のまま）。
 // どの問題が抽出対象か・何問目かは、navigatorCore.ts の buildDbModeView() が決める。
@@ -18,6 +19,7 @@
 
 import '../styles/navigatorDbMode.css';
 import {
+  ALL_CELLS,
   buildDbModeView,
   cellsSummaryParts,
   createNavIndex,
@@ -164,6 +166,18 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<NavModeFa
     el('span', 'db-nav-mode-position', view.current >= 0 ? `${view.current + 1}/${total}` : '対象外'),
   );
 
+  // 選択中のマスを示す小型の4×4（読み取り専用。押せない・フォーカスも受けない）。
+  // 並びは設定画面の盤面と同じ（縦＝重要度、横＝難易度）。選択中＝重要度色の塗り、それ以外＝枠だけ。
+  const mini = el('span', 'db-nav-mode-mini');
+  mini.setAttribute('role', 'img');
+  mini.setAttribute('aria-label', `選択中のマス：${cellsSummaryParts(state.cells).join('、')}`);
+  const selectedCells = new Set(state.cells);
+  for (const cell of ALL_CELLS) {
+    const dot = el('i', selectedCells.has(cell) ? 'is-on' : '');
+    dot.dataset.r = cell.charAt(0);
+    mini.append(dot);
+  }
+
   const chips = el('ul', 'db-nav-mode-chips');
   chips.setAttribute('aria-label', '選択中の範囲・重要度と難易度');
   chips.append(
@@ -287,7 +301,7 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<NavModeFa
   });
 
   const main = el('div', 'db-nav-mode-main');
-  main.append(title, actions);
+  main.append(mini, title, actions);
   host.replaceChildren(main, chips, sharedRow, status, fallback);
   host.setAttribute('role', 'region');
   host.setAttribute('aria-label', '4×4ナビゲーションの抽出モード');

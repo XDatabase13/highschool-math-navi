@@ -235,6 +235,18 @@ check(
   [navigatorHtml, resultHtml, topHtml, appHtml, sampleProblem].every((html) => gtagCount(html) === 1),
   [navigatorHtml, resultHtml, topHtml, appHtml, sampleProblem].map(gtagCount).join('/'),
 );
+// 本番ドメイン以外では gtag.js を読み込まない：静的な <script src> では読み込まず、
+// 表示時のホスト名が本番（SITEのホスト名）のときだけ読み込むinline scriptになっている。
+const SITE_HOST = new URL(SITE).hostname;
+check(
+  'GA4は本番ドメインで開いたときだけ読み込む（静的なscript srcなし・ホスト名の判定あり）',
+  [navigatorHtml, resultHtml, topHtml, appHtml, sampleProblem].every(
+    (html) =>
+      !/<script[^>]*\ssrc="[^"]*googletagmanager/.test(html ?? '') &&
+      (html ?? '').includes(`const productionHost = "${SITE_HOST}"`) &&
+      (html ?? '').includes('window.location.hostname === productionHost'),
+  ),
+);
 check(
   'TOPに「問題データベースを見る」と「4×4ナビゲーション」の2導線がある',
   /<a[^>]*class="hero-cta-link"[^>]*href="\/app\/"/.test(topHtml) && /<a[^>]*href="\/navigator\/"/.test(topHtml) && topHtml.includes('4×4ナビゲーション'),

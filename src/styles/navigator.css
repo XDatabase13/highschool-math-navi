@@ -244,14 +244,11 @@
 .nv-subject + .nv-subject {
   margin-top: 1rem;
 }
-/* 科目名は見出し。科目全体の選択は、その下の独立したチェック「全範囲」で行う。 */
+/* 科目名は見出しだけ（科目全体をまとめて選ぶ操作は置かない）。 */
 .nv-subject-name {
-  margin: 0.5rem 0 0.1rem;
+  margin: 0.5rem 0 0.35rem;
   color: var(--color-text-subtle);
   font-size: 0.9rem;
-}
-.nv-subject-check {
-  font-weight: 700;
 }
 .nv-unit-list,
 .nv-section-list {

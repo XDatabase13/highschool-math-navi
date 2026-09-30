@@ -31,7 +31,6 @@
   color: var(--color-text-subtle);
   font-variant-numeric: tabular-nums;
 }
-.db-nav-mode-moves,
 .db-nav-mode-actions,
 .db-nav-mode-extra {
   display: flex;
@@ -42,7 +41,6 @@
 .db-nav-mode-actions {
   margin-left: auto;
 }
-.db-nav-mode-move,
 .db-nav-mode-btn {
   display: inline-flex;
   align-items: center;
@@ -58,18 +56,10 @@
   text-decoration: none;
   cursor: pointer;
 }
-.db-nav-mode-move:hover,
 .db-nav-mode-btn:hover {
   background: var(--color-surface-sunken);
   text-decoration: none;
 }
-.db-nav-mode-move[aria-disabled='true'] {
-  background: transparent;
-  color: var(--color-text-muted);
-  font-weight: 400;
-  cursor: default;
-}
-.db-nav-mode-move:focus-visible,
 .db-nav-mode-btn:focus-visible,
 .db-nav-mode-input:focus-visible {
   outline: 2px solid var(--color-accent);
@@ -135,23 +125,17 @@
   .db-nav-mode-title {
     flex: 1 1 100%;
   }
-  .db-nav-mode-moves,
   .db-nav-mode-actions {
     flex: 1 1 100%;
     margin-left: 0;
   }
-  .db-nav-mode-move,
   .db-nav-mode-btn {
     min-height: 40px;
-  }
-  .db-nav-mode-moves .db-nav-mode-move {
-    flex: 1 1 0;
-    justify-content: center;
   }
   .db-nav-mode-more {
     display: inline-flex;
   }
-  /* 「条件を変更・保存・共有」と条件の要約は、開いたときだけ表示する。 */
+  /* 「問題再選定・保存・共有」と条件の要約は、開いたときだけ表示する。 */
   .db-nav-mode-extra {
     order: 3;
     flex: 1 1 100%;

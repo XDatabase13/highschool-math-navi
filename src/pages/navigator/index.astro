@@ -118,10 +118,6 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
         {index.subjects.map((subject) => (
           <div class="nv-subject">
             <h3 class="nv-subject-name">{subject.name}</h3>
-            <label class="nv-check nv-subject-check">
-              <input type="checkbox" data-nv-subject={subject.id} />
-              <span><span class="nv-visually-hidden">{subject.name} </span>全範囲</span>
-            </label>
             <ul class="nv-unit-list">
               {subject.units.map((unit) => (
                 <li class="nv-unit">

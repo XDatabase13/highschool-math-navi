@@ -4,11 +4,11 @@
 // 既存の個別問題ページ（静的HTML）はそのまま使い、ここでは次のことだけを行う。
 //   - 中央の問題一覧（PC中央列・スマホの問題一覧ダイアログ）を、抽出した問題の行だけにする
 //   - 左の科目・単元ナビを、抽出した問題がある単元だけにする（行き先はその単元の最初の抽出問題）
-//   - 一覧・単元・前後移動のリンクへ同じ条件のfragmentを付け、問題を移動しても抽出状態を保つ
-//   - ヘッダー直下の帯に「4×4ナビで選んだ○問を表示中」と、前後移動・条件を変更・保存・共有・
-//     通常の全問題表示へ戻る、を出す
+//   - 一覧・単元のリンクへ同じ条件のfragmentを付け、問題を移動しても抽出状態を保つ
+//   - ヘッダー直下の帯に「4×4ナビで選んだ○問を表示中」・現在位置（○問目／○問）と、問題再選定・保存・共有・
+//     全問題表示、を出す（前後移動のボタンは置かない。問題の移動は中央の抽出問題一覧から行う）
 // 問題本文の後付け描画・並び替えはしない（並び順は静的な一覧の順＝単元順 → display_order のまま）。
-// どの問題が抽出対象か・前後はどれかは、navigatorCore.ts の buildDbModeView() が決める。
+// どの問題が抽出対象か・何問目かは、navigatorCore.ts の buildDbModeView() が決める。
 //
 // 一覧・単元ナビの要素は、ProblemDbShell.astro と ProblemGroupList.astro が出力するclass名
 // （.db-problem-group / .db-problem-row / .db-problem-link / .db-problem-group-count /
@@ -33,7 +33,7 @@ import {
   resultUrl,
   saveFailureMessage,
   shareUrl,
-  showShareOutcome,
+  showShareFallback,
   trackNavEvent,
 } from '../utils/navigatorBrowser.ts';
 
@@ -162,23 +162,6 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
     ),
   );
 
-  const moveLink = (label: string, href: string | null, rel: string) => {
-    if (!href) {
-      const disabled = el('span', 'db-nav-mode-move', label);
-      disabled.setAttribute('aria-disabled', 'true');
-      return disabled;
-    }
-    const link = el('a', 'db-nav-mode-move', label);
-    link.href = withState(href);
-    link.rel = rel;
-    return link;
-  };
-  const moves = el('div', 'db-nav-mode-moves');
-  moves.append(
-    moveLink('← 前の問題', view.prevHref, 'prev'),
-    moveLink(view.current >= 0 ? '次の問題 →' : '最初の問題へ →', view.nextHref, 'next'),
-  );
-
   const summary = el(
     'p',
     'db-nav-mode-summary',
@@ -221,7 +204,7 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
     }
   }
 
-  const edit = el('a', 'db-nav-mode-btn', '条件を変更');
+  const edit = el('a', 'db-nav-mode-btn', '問題再選定');
   edit.href = `/navigator/#${stateString}`;
 
   const save = el('button', 'db-nav-mode-btn', '学習設定を保存');
@@ -247,12 +230,12 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
   share.addEventListener('click', async () => {
     const url = resultUrl(stateString);
     const outcome = await shareUrl(url, '高校数学ナビ 4×4ナビゲーション');
-    showShareOutcome(outcome, url, status, fallback);
+    showShareFallback(outcome, url, status, fallback);
     if (outcome !== 'cancelled') trackNavEvent('navigator_share', { method: outcome, source: 'db' });
   });
 
   // 抽出モードの終了：条件のfragmentを外し、静的な通常表示（その単元の全問題）を読み込み直す。
-  const exit = el('button', 'db-nav-mode-btn db-nav-mode-exit', '通常の全問題表示へ戻る');
+  const exit = el('button', 'db-nav-mode-btn db-nav-mode-exit', '全問題表示');
   exit.type = 'button';
   exit.addEventListener('click', () => {
     try {
@@ -263,7 +246,7 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
     window.location.reload();
   });
 
-  // スマホ幅では「条件を変更・保存・共有」と条件の要約を折りたたみ、帯を低く保つ（PCでは常に表示）。
+  // スマホ幅では「問題再選定・保存・共有」と条件の要約を折りたたみ、帯を低く保つ（PCでは常に表示）。
   const more = el('button', 'db-nav-mode-btn db-nav-mode-more', '条件・保存・共有');
   more.type = 'button';
   more.setAttribute('aria-expanded', 'false');
@@ -278,7 +261,7 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
   actions.append(more, extra, exit);
 
   const main = el('div', 'db-nav-mode-main');
-  main.append(title, moves, actions);
+  main.append(title, actions);
   host.replaceChildren(main, summary, sharedRow, status, fallback);
   host.setAttribute('role', 'region');
   host.setAttribute('aria-label', '4×4ナビゲーションの抽出モード');

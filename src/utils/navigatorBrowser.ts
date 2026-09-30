@@ -41,26 +41,22 @@ export async function shareUrl(url: string, title: string): Promise<ShareOutcome
   }
 }
 
-// 共有の結果を画面へ出す。manualのときは、URLを選択済みの入力欄として表示する。
-export function showShareOutcome(
+// 共有の後始末。共有・コピーが済んだこと（共有完了）は画面へ出さず、どこにも記録しない。
+// 画面へ出すのは、共有もコピーもできなかったとき（manual）の手動コピー用のURLだけで、
+// それ以外のときは前の表示を消す。
+export function showShareFallback(
   outcome: ShareOutcome,
   url: string,
   status: HTMLElement | null,
   fallback: HTMLElement | null,
 ) {
+  const manual = outcome === 'manual';
   const input = fallback?.querySelector<HTMLInputElement>('input') ?? null;
-  if (fallback) fallback.hidden = outcome !== 'manual';
+  if (fallback) fallback.hidden = !manual;
   if (status) {
-    status.textContent =
-      outcome === 'shared'
-        ? '共有しました。'
-        : outcome === 'copied'
-          ? '共有用のURLをコピーしました。'
-          : outcome === 'manual'
-            ? 'URLを自動でコピーできませんでした。下のURLを選択してコピーしてください。'
-            : '';
+    status.textContent = manual ? 'URLを自動でコピーできませんでした。下のURLを選択してコピーしてください。' : '';
   }
-  if (outcome === 'manual' && input) {
+  if (manual && input) {
     input.value = url;
     input.focus();
     input.select();
@@ -69,7 +65,7 @@ export function showShareOutcome(
 
 export function saveFailureMessage(reason: WriteFailure): string {
   return reason === 'unreadable' || reason === 'newer'
-    ? '保存済みデータを読み込めないため、保存できませんでした。4×4ナビゲーションの「保存した学習設定」から初期化できます。'
+    ? '保存済みデータを読み込めないため、保存できませんでした。4×4ナビゲーションの「学習設定」から初期化できます。'
     : 'このブラウザでは設定を保存できませんでした（シークレットモードや保存容量の制限など）。「条件を共有」でURLを控えておくと、同じ条件を開き直せます。';
 }
 

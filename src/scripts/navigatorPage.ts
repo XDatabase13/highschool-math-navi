@@ -15,7 +15,6 @@ import {
   selectionCount,
   serializeState,
   setSectionSelected,
-  setSubjectSelected,
   setUnitSelected,
   toggleCell,
   unitBreakdown,
@@ -34,7 +33,7 @@ import {
   resultUrl,
   saveFailureMessage,
   shareUrl,
-  showShareOutcome,
+  showShareFallback,
   trackNavEvent,
 } from '../utils/navigatorBrowser.ts';
 
@@ -152,15 +151,6 @@ function init(data: NavData) {
         }
         const label = one<HTMLElement>(`[data-nv-unit-count="${unit.id}"]`);
         if (label) label.textContent = `${count.selected}/${count.total}`;
-      }
-      const subjectCount = selectionCount(
-        state,
-        subject.units.flatMap((unit) => unit.sections),
-      );
-      const subjectInput = one<HTMLInputElement>(`[data-nv-subject="${subject.id}"]`);
-      if (subjectInput) {
-        subjectInput.checked = subjectCount.selected === subjectCount.total;
-        subjectInput.indeterminate = subjectCount.selected > 0 && subjectCount.selected < subjectCount.total;
       }
     }
     const chips = one<HTMLElement>('[data-nv-range-chips]');
@@ -355,7 +345,7 @@ function init(data: NavData) {
         actionButton('共有', async () => {
           const url = resultUrl(setting.stateString);
           const outcome = await shareUrl(url, '高校数学ナビ 4×4ナビゲーション');
-          showShareOutcome(outcome, url, savedStatus, shareFallback);
+          showShareFallback(outcome, url, savedStatus, shareFallback);
           if (outcome !== 'cancelled') trackNavEvent('navigator_share', { method: outcome, source: 'saved' });
         }),
       );
@@ -438,11 +428,6 @@ function init(data: NavData) {
   for (const input of all<HTMLInputElement>('[data-nv-unit]')) {
     input.addEventListener('change', () => {
       update(setUnitSelected(index, state, input.dataset.nvUnit ?? '', input.checked).state);
-    });
-  }
-  for (const input of all<HTMLInputElement>('[data-nv-subject]')) {
-    input.addEventListener('change', () => {
-      update(setSubjectSelected(index, state, input.dataset.nvSubject ?? '', input.checked).state);
     });
   }
   one('[data-nv-range-clear]')?.addEventListener('click', () => update(withSections(index, state, []).state));

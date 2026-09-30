@@ -4,7 +4,6 @@
 // navigatorStore.ts の関数をそのまま使う（このファイルに別の抽出・復元ロジックを書かない）。
 
 import {
-  ALL_CELLS,
   candidateProblems,
   countCells,
   createNavIndex,
@@ -12,7 +11,7 @@ import {
   firstResultHref,
   parseStateString,
   rangeSummary,
-  selectCells,
+  rangeSummaryParts,
   selectionCount,
   serializeState,
   setSectionSelected,
@@ -23,7 +22,6 @@ import {
   withSections,
   type NavData,
   type NavState,
-  type StateChange,
 } from '../utils/navigatorCore.ts';
 import {
   MAX_SETTING_NAME_LENGTH,
@@ -40,7 +38,6 @@ import {
   trackNavEvent,
 } from '../utils/navigatorBrowser.ts';
 
-const NOTICE_CELLS_REMOVED = '試験範囲の変更により、該当問題がなくなったマスの選択を解除しました。';
 const NOTICE_PARTIAL = '読み込めない条件が含まれていたため、利用できる条件だけを反映しました。';
 const NOTICE_INVALID = 'URLの条件を読み込めませんでした。新しく設定してください。';
 const NOTICE_UNSUPPORTED =
@@ -166,8 +163,15 @@ function init(data: NavData) {
         subjectInput.indeterminate = subjectCount.selected > 0 && subjectCount.selected < subjectCount.total;
       }
     }
-    const summary = one<HTMLElement>('[data-nv-range-summary]');
-    if (summary) summary.textContent = rangeSummary(index, state.sections) || '未選択';
+    const chips = one<HTMLElement>('[data-nv-range-chips]');
+    if (chips) {
+      const parts = rangeSummaryParts(index, state.sections);
+      chips.replaceChildren(
+        ...(parts.length > 0
+          ? parts.map((part) => el('li', 'nv-chip', part))
+          : [el('li', 'nv-chip nv-chip--empty', '未選択')]),
+      );
+    }
     const rangeCount = one<HTMLElement>('[data-nv-range-count]');
     if (rangeCount) rangeCount.textContent = String(candidates.length);
 
@@ -186,16 +190,6 @@ function init(data: NavData) {
       if (countEl) countEl.textContent = String(count);
     }
     const hasCandidates = candidates.length > 0;
-    const selectAll = one<HTMLButtonElement>('[data-nv-cells-all]');
-    const clearCells = one<HTMLButtonElement>('[data-nv-cells-clear]');
-    if (selectAll) selectAll.disabled = !hasCandidates;
-    if (clearCells) clearCells.disabled = state.cells.length === 0;
-    const hint = one<HTMLElement>('[data-nv-matrix-hint]');
-    if (hint) {
-      hint.textContent = hasCandidates
-        ? '取り組むマスを選んでください（複数選択できます）。数字は試験範囲内の問題数です。'
-        : 'まず試験範囲を選んでください。';
-    }
 
     // --- 抽出問題数と主ボタン ---
     const resultCount = one<HTMLElement>('[data-nv-result-count]');
@@ -206,7 +200,6 @@ function init(data: NavData) {
         .map((row) => `${row.name} ${row.count}問`)
         .join(' ／ ');
     }
-    const help = one<HTMLElement>('[data-nv-result-help]');
     if (goLink) {
       const href = dbHref(state);
       if (href) {
@@ -219,12 +212,6 @@ function init(data: NavData) {
         goLink.setAttribute('aria-disabled', 'true');
         goLink.textContent = '問題データベースで見る';
       }
-    }
-    if (help) {
-      help.hidden = results.length > 0;
-      help.textContent = !hasCandidates
-        ? '試験範囲とマスを選ぶと、抽出した問題を一覧で確認できます。'
-        : '問題のあるマスを1つ以上選ぶと、抽出した問題を一覧で確認できます。';
     }
     if (live) {
       live.textContent = hasCandidates ? `対象${candidates.length}問、抽出${results.length}問` : '';
@@ -263,11 +250,13 @@ function init(data: NavData) {
   }
 
   // 利用者の操作による変更。ここで初めて下書きを保存する（ページを開いただけでは保存しない）。
-  function update(next: NavState, removedCells: string[] = []) {
+  // 範囲の変更で0問になったマスは navigatorCore 側で選択から外れる（画面には通知を出さず、
+  // マスの選択状態と件数の変化だけで示す）。
+  function update(next: NavState) {
     const hadRange = state.sections.length > 0;
     const hadCells = state.cells.length > 0;
     state = next;
-    showNotice(removedCells.length > 0 ? NOTICE_CELLS_REMOVED : '');
+    showNotice('');
     // 自分で設定を始めたら、復元の案内は閉じる。
     offer = null;
     renderResume();
@@ -283,8 +272,6 @@ function init(data: NavData) {
       trackNavEvent('navigator_cell_select');
     }
   }
-
-  const applyChange = (change: StateChange) => update(change.state, change.removedCells);
 
   function showUrlNotice(kind: string, partial: boolean) {
     if (kind === 'ok') showNotice(partial ? NOTICE_PARTIAL : '');
@@ -410,6 +397,11 @@ function init(data: NavData) {
     const status = store.status();
     const settings = store.listSettings(index);
     savedList.replaceChildren(...settings.map(savedItem));
+    const settingsCount = one<HTMLElement>('[data-nv-settings-count]');
+    if (settingsCount) {
+      settingsCount.textContent = String(settings.length);
+      settingsCount.hidden = settings.length === 0;
+    }
     const empty = one<HTMLElement>('[data-nv-saved-empty]');
     if (empty) {
       empty.hidden = settings.length > 0 || status !== 'ok';
@@ -440,20 +432,20 @@ function init(data: NavData) {
   // --- イベント ---
   for (const input of all<HTMLInputElement>('[data-nv-section]')) {
     input.addEventListener('change', () => {
-      applyChange(setSectionSelected(index, state, input.dataset.nvSection ?? '', input.checked));
+      update(setSectionSelected(index, state, input.dataset.nvSection ?? '', input.checked).state);
     });
   }
   for (const input of all<HTMLInputElement>('[data-nv-unit]')) {
     input.addEventListener('change', () => {
-      applyChange(setUnitSelected(index, state, input.dataset.nvUnit ?? '', input.checked));
+      update(setUnitSelected(index, state, input.dataset.nvUnit ?? '', input.checked).state);
     });
   }
   for (const input of all<HTMLInputElement>('[data-nv-subject]')) {
     input.addEventListener('change', () => {
-      applyChange(setSubjectSelected(index, state, input.dataset.nvSubject ?? '', input.checked));
+      update(setSubjectSelected(index, state, input.dataset.nvSubject ?? '', input.checked).state);
     });
   }
-  one('[data-nv-range-clear]')?.addEventListener('click', () => applyChange(withSections(index, state, [])));
+  one('[data-nv-range-clear]')?.addEventListener('click', () => update(withSections(index, state, []).state));
   for (const toggle of all<HTMLButtonElement>('[data-nv-unit-toggle]')) {
     toggle.addEventListener('click', () => {
       setUnitExpanded(toggle.dataset.nvUnitToggle ?? '', toggle.getAttribute('aria-expanded') !== 'true');
@@ -465,8 +457,6 @@ function init(data: NavData) {
   for (const button of cellButtons) {
     button.addEventListener('click', () => update(toggleCell(index, state, button.dataset.nvCell ?? '')));
   }
-  one('[data-nv-cells-all]')?.addEventListener('click', () => update(selectCells(index, state, ALL_CELLS)));
-  one('[data-nv-cells-clear]')?.addEventListener('click', () => update(selectCells(index, state, [])));
 
   // 主ボタン：結果画面へ進む時点で、前回使用設定として記録する（中クリック等の別タブも含む）。
   const onGo = (event: Event) => {
@@ -509,6 +499,34 @@ function init(data: NavData) {
     setSavedStatus(result.ok ? '保存データを初期化しました。' : '保存データを初期化できませんでした。');
     renderSaved();
   });
+
+  // 「学習設定」（保存した設定の一覧）。ボタンの直下にその場で開く。
+  // ボタンをもう一度押す・外側を押す・Esc・フォーカスが外へ出る、で閉じる。
+  const settings = one<HTMLElement>('[data-nv-settings]');
+  const settingsToggle = one<HTMLButtonElement>('[data-nv-settings-toggle]');
+  const settingsPanel = one<HTMLElement>('[data-nv-settings-panel]');
+  if (settings && settingsToggle && settingsPanel) {
+    const setSettingsOpen = (open: boolean) => {
+      settingsToggle.setAttribute('aria-expanded', String(open));
+      settingsPanel.hidden = !open;
+    };
+    const isOpen = () => settingsToggle.getAttribute('aria-expanded') === 'true';
+    settingsToggle.addEventListener('click', () => setSettingsOpen(!isOpen()));
+    // 一覧の描き直し（名前変更・削除）で押した要素がDOMから外れても内側と判定できるよう、
+    // containsではなくcomposedPathで見る。
+    document.addEventListener('click', (event) => {
+      if (isOpen() && !event.composedPath().includes(settings)) setSettingsOpen(false);
+    });
+    settings.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !isOpen()) return;
+      setSettingsOpen(false);
+      settingsToggle.focus();
+    });
+    settings.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget;
+      if (isOpen() && next instanceof Node && !settings.contains(next)) setSettingsOpen(false);
+    });
+  }
 
   // 「4×4の見方」。フォーカス移動・Escで閉じる・閉じた後のフォーカス復帰は<dialog>の標準動作に任せる。
   const guide = one<HTMLDialogElement>('[data-nv-guide]');

@@ -229,7 +229,7 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
   save.addEventListener('click', () => {
     const result = store.saveSetting(index, state);
     if (result.ok) {
-      status.textContent = `「${result.setting.name}」として保存しました（このブラウザの中だけに保存されます）。名前の変更・削除は、4×4ナビゲーションの「保存した学習設定」から行えます。`;
+      status.textContent = `「${result.setting.name}」として保存しました（このブラウザの中だけに保存されます）。名前の変更・削除は、4×4ナビゲーションの「学習設定」から行えます。`;
       trackNavEvent('navigator_save', { problem_count: total });
     } else if (result.reason === 'duplicate') {
       status.textContent = `同じ条件の設定「${result.existing?.name ?? ''}」が保存済みです。`;

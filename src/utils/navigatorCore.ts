@@ -551,8 +551,8 @@ export function parseStateString(index: NavIndex, input: unknown): ParseResult {
 // 表示用の要約
 // ---------------------------------------------------------------------------
 
-// 例: 「集合と論証 全体＋二次関数 3項目」。未選択は空文字列。
-export function rangeSummary(index: NavIndex, sections: readonly string[]): string {
+// 例: ['集合と論証 全体', '二次関数 3項目']。未選択は空配列。設定画面の範囲タグに使う。
+export function rangeSummaryParts(index: NavIndex, sections: readonly string[]): string[] {
   const set = new Set(sections);
   const parts: string[] = [];
   for (const subject of index.subjects) {
@@ -567,7 +567,12 @@ export function rangeSummary(index: NavIndex, sections: readonly string[]): stri
       parts.push(selected === unit.sections.length ? `${unit.name} 全体` : `${unit.name} ${selected}項目`);
     }
   }
-  return parts.join('＋');
+  return parts;
+}
+
+// 例: 「集合と論証 全体＋二次関数 3項目」。未選択は空文字列。
+export function rangeSummary(index: NavIndex, sections: readonly string[]): string {
+  return rangeSummaryParts(index, sections).join('＋');
 }
 
 export function importanceLabel(importance: number): string {

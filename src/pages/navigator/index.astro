@@ -41,12 +41,39 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
     <link rel="canonical" href={canonicalUrl} />
   </Fragment>
 
-  <section class="nv-intro">
+  <div class="nv-intro">
     <h1>4×4ナビゲーション</h1>
-    <p>
-      試験範囲を選ぶと、その範囲の問題数が「重要度×難易度」の16マスに表示されます。取り組むマスを選んで、抽出した問題を問題データベースで確認できます。
-    </p>
-  </section>
+    {/* 保存した学習設定。ボタンの直下にその場で開く（ボタンをもう一度押す・外側を押す・Escで閉じる）。 */}
+    <div class="nv-settings" data-nv-settings>
+      <button
+        type="button"
+        class="nv-btn nv-settings-toggle"
+        data-nv-settings-toggle
+        aria-expanded="false"
+        aria-controls="nv-settings-panel"
+      >
+        学習設定<span class="nv-settings-count" data-nv-settings-count hidden></span>
+        <span class="nv-caret" aria-hidden="true" />
+      </button>
+      <section class="nv-settings-panel" id="nv-settings-panel" aria-label="保存した学習設定" data-nv-settings-panel hidden>
+        <div class="nv-notice" data-nv-store-problem hidden>
+          <p data-nv-store-problem-text></p>
+          <button type="button" class="nv-btn" data-nv-store-reset>保存データを初期化する</button>
+        </div>
+        <p class="nv-saved-empty" data-nv-saved-empty>
+          保存した設定はありません。問題データベースの「学習設定を保存」から保存できます。
+        </p>
+        <ul class="nv-saved-list" data-nv-saved-list></ul>
+        <p class="nv-saved-status" role="status" data-nv-saved-status></p>
+        <div class="nv-share-fallback" data-nv-share-fallback hidden>
+          <label>
+            <span class="nv-visually-hidden">共有用のURL</span>
+            <input class="nv-input" type="text" readonly />
+          </label>
+        </div>
+      </section>
+    </div>
+  </div>
 
   <noscript>
     <p class="nv-notice">
@@ -68,14 +95,15 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
   <div class="nv-layout">
     <section class="nv-panel nv-range" aria-labelledby="nv-range-title" data-nv-range data-collapsed="false">
       <div class="nv-panel-head">
-        <h2 id="nv-range-title" class="nv-panel-title">1. 試験範囲を選ぶ</h2>
+        <h2 id="nv-range-title" class="nv-panel-title">範囲指定</h2>
         <button type="button" class="nv-text-btn nv-range-clear" data-nv-range-clear>すべて解除</button>
       </div>
       <div class="nv-range-summary">
-        <p class="nv-range-summary-text">
-          <span class="nv-range-summary-label">試験範囲</span><span data-nv-range-summary>未選択</span>
-        </p>
-        <p class="nv-range-summary-count">対象 <strong data-nv-range-count>0</strong>問</p>
+        {/* 選択中の範囲はタグで示す（未選択のときは「未選択」のタグ1つ）。中身はclient scriptが入れる。 */}
+        <ul class="nv-chips" aria-label="選択中の範囲" data-nv-range-chips>
+          <li class="nv-chip nv-chip--empty">未選択</li>
+        </ul>
+        <p class="nv-range-summary-count"><strong data-nv-range-count>0</strong>問</p>
         <button
           type="button"
           class="nv-text-btn nv-range-toggle"
@@ -89,20 +117,20 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
       <div class="nv-range-tree" id="nv-range-tree">
         {index.subjects.map((subject) => (
           <div class="nv-subject">
+            <h3 class="nv-subject-name">{subject.name}</h3>
             <label class="nv-check nv-subject-check">
               <input type="checkbox" data-nv-subject={subject.id} />
-              <span>{subject.name} 全体</span>
+              <span><span class="nv-visually-hidden">{subject.name} </span>全範囲</span>
             </label>
             <ul class="nv-unit-list">
               {subject.units.map((unit) => (
                 <li class="nv-unit">
+                  {/* チェック（単元全体の選択）と、単元名の行（項目の開閉）は別の操作。
+                      単元名をlabelに入れない（押したときにチェックが変わらないようにする）。 */}
                   <div class="nv-unit-head">
-                    <label class="nv-check">
+                    <label class="nv-check nv-unit-check">
                       <input type="checkbox" data-nv-unit={unit.id} />
-                      <span class="nv-unit-name">
-                        {unit.name}
-                        <span class="nv-visually-hidden">（単元全体を選択）</span>
-                      </span>
+                      <span class="nv-visually-hidden">{unit.name} 全体</span>
                     </label>
                     <button
                       type="button"
@@ -111,8 +139,11 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
                       aria-expanded="false"
                       aria-controls={`nv-sections-${unit.id}`}
                     >
-                      <span class="nv-visually-hidden">{unit.name}の項目を開閉。選択数</span>
-                      <span data-nv-unit-count={unit.id}>0/{unit.sections.length}</span>
+                      <span class="nv-unit-name">{unit.name}</span>
+                      <span class="nv-unit-count">
+                        <span class="nv-visually-hidden">選択数</span>
+                        <span data-nv-unit-count={unit.id}>0/{unit.sections.length}</span>
+                      </span>
                       <span class="nv-caret" aria-hidden="true" />
                     </button>
                   </div>
@@ -137,12 +168,11 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
 
     <section class="nv-panel nv-matrix" aria-labelledby="nv-matrix-title">
       <div class="nv-panel-head">
-        <h2 id="nv-matrix-title" class="nv-panel-title">2. 重要度×難易度のマスを選ぶ</h2>
+        <h2 id="nv-matrix-title" class="nv-panel-title">4×4マトリックス</h2>
         <button type="button" class="nv-btn nv-guide-open" data-nv-guide-open aria-haspopup="dialog" aria-controls="nv-guide">
           4×4の見方
         </button>
       </div>
-      <p class="nv-matrix-hint" data-nv-matrix-hint>まず試験範囲を選んでください。</p>
       <table class="nv-grid">
         <caption class="nv-visually-hidden">重要度（縦）と難易度（横）ごとの、試験範囲内の問題数</caption>
         <thead>
@@ -180,40 +210,15 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
           ))}
         </tbody>
       </table>
-      <div class="nv-matrix-actions">
-        <button type="button" class="nv-btn" data-nv-cells-all disabled>すべて選択</button>
-        <button type="button" class="nv-btn" data-nv-cells-clear disabled>選択を解除</button>
-      </div>
 
       <div class="nv-result">
         <p class="nv-result-count">抽出問題数<strong data-nv-result-count>0</strong>問</p>
         <p class="nv-result-breakdown" data-nv-result-breakdown></p>
         <a class="nv-go" role="link" aria-disabled="true" data-nv-go>問題データベースで見る</a>
-        <p class="nv-result-help" data-nv-result-help>試験範囲とマスを選ぶと、抽出した問題を一覧で確認できます。</p>
       </div>
       <p class="nv-visually-hidden" role="status" aria-live="polite" data-nv-live></p>
     </section>
   </div>
-
-  <section class="nv-panel nv-saved" id="saved" aria-labelledby="nv-saved-title">
-    <h2 id="nv-saved-title" class="nv-panel-title">保存した学習設定</h2>
-    <p class="nv-saved-note">
-      設定の保存は、問題データベースで抽出した問題を表示しているときの「学習設定を保存」から行えます。設定はこのブラウザの中だけに保存され、ブラウザのデータを消去した場合やシークレットモードでは残りません。
-    </p>
-    <div class="nv-notice" data-nv-store-problem hidden>
-      <p data-nv-store-problem-text></p>
-      <button type="button" class="nv-btn" data-nv-store-reset>保存データを初期化する</button>
-    </div>
-    <p class="nv-saved-status" role="status" data-nv-saved-status></p>
-    <div class="nv-share-fallback" data-nv-share-fallback hidden>
-      <label>
-        <span class="nv-visually-hidden">共有用のURL</span>
-        <input class="nv-input" type="text" readonly />
-      </label>
-    </div>
-    <p class="nv-saved-empty" data-nv-saved-empty>保存した設定はまだありません。</p>
-    <ul class="nv-saved-list" data-nv-saved-list></ul>
-  </section>
 
   {/* 「4×4の見方」。ネイティブ<dialog>のshowModal()に、フォーカス移動・Escで閉じる・
       閉じた後のフォーカス復帰を任せる（ProblemDbShellの問題一覧ダイアログと同じ方式）。 */}
@@ -223,7 +228,7 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
       <button type="button" class="nv-dialog-close" data-nv-guide-close aria-label="4×4の見方を閉じる">✕</button>
     </div>
     <div class="nv-dialog-body">
-      <p>選んだ試験範囲の問題を、重要度（縦）と難易度（横）で16マスに分けて表示しています。マスの数字は、そのマスに入る問題数です。</p>
+      <p>重要度は「先に解くべきか」、難易度は「どれくらい難しいか」。</p>
       <h3>重要度（縦）</h3>
       <dl class="nv-guide-list">
         {IMPORTANCE_LEVELS.map((level) => (
@@ -242,12 +247,6 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
           </div>
         ))}
       </dl>
-      <h3>選ぶときの注意</h3>
-      <ul class="nv-guide-notes">
-        <li>重要度と難易度は別の軸です。</li>
-        <li>難しい問題ほど重要、とは限りません。</li>
-        <li>「土台」だけを選べば十分、という意味ではありません。</li>
-      </ul>
     </div>
   </dialog>
 

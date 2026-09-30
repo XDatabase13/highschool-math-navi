@@ -47,6 +47,15 @@ const totalProblems = index.problems.length;
 
   <p class="nv-notice" role="status" data-nvr-notice hidden></p>
 
+  {/* 共有URLから開いた条件（この端末の前回設定・下書き・保存済み設定のどれとも違う条件）のときだけ表示する。
+      開いただけでは保存データへ何も記録せず、利用者が選んだ後に記録する。 */}
+  <div class="nv-resume" data-nvr-shared hidden>
+    <p>共有された条件を表示しています。この端末の設定にはまだ記録していません。</p>
+    <div class="nv-resume-actions">
+      <button type="button" class="nv-btn nv-btn--primary" data-nvr-adopt>この条件で学習する</button>
+    </div>
+  </div>
+
   <section class="nvr-summary" aria-label="抽出条件">
     <dl class="nvr-conditions">
       <div>
@@ -62,7 +71,19 @@ const totalProblems = index.problems.length;
     <div class="nvr-actions">
       <a class="nv-btn" href="/navigator/" data-nvr-edit>条件を変更</a>
       <button type="button" class="nv-btn" data-nvr-clear hidden>絞り込みを解除</button>
+      <button type="button" class="nv-btn" data-nvr-save hidden>この学習設定を保存</button>
+      <button type="button" class="nv-btn" data-nvr-share hidden>この条件を共有</button>
     </div>
+    <p class="nvr-action-status" role="status" data-nvr-action-status></p>
+    <div class="nv-share-fallback" data-nvr-share-fallback hidden>
+      <label>
+        <span class="nv-visually-hidden">共有用のURL</span>
+        <input class="nv-input" type="text" readonly />
+      </label>
+    </div>
+    <p class="nvr-save-note" data-nvr-save-note hidden>
+      保存先はこのブラウザの中だけです（ブラウザのデータを消去した場合やシークレットモードでは残りません）。保存した設定は<a href="/navigator/#saved">4×4ナビゲーション</a>から開けます。
+    </p>
   </section>
 
   <p class="nvr-empty" data-nvr-empty hidden>

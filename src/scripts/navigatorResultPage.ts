@@ -14,6 +14,15 @@ import {
   type NavState,
 } from '../utils/navigatorCore.ts';
 import { NAV_RETURN_KEY } from '../utils/navigatorReturn.ts';
+import { MAX_SAVED_SETTINGS, createNavStore } from '../utils/navigatorStore.ts';
+import {
+  getLocalStorage,
+  resultUrl,
+  saveFailureMessage,
+  shareUrl,
+  showShareOutcome,
+  trackNavEvent,
+} from '../utils/navigatorBrowser.ts';
 
 const NOTICE_PARTIAL = '読み込めない条件が含まれていたため、利用できる条件だけで抽出しました。';
 const NOTICE_INVALID = 'URLの条件を読み込めなかったため、全問題を表示しています。「条件を変更」から設定し直してください。';
@@ -38,13 +47,26 @@ function readData(): NavData | null {
 
 function init(data: NavData) {
   const index = createNavIndex(data);
+  const store = createNavStore(getLocalStorage());
   // 現在適用している条件（条件なし＝全問題表示のときはnull）。
   let state: NavState | null = null;
+  let resultCount = 0;
+  // 結果の表示を計測済みの条件（同じ条件の再描画で重複して送らない）。
+  let trackedView = '';
+  // 最後に適用したfragment。同じfragmentで hashchange と popstate が続けて来ても二重に適用しない
+  // （2回目の適用で「一部を読み込めなかった」通知が消えてしまうのを防ぐ）。
+  let appliedHash: string | null = null;
 
   const notice = one<HTMLElement>('[data-nvr-notice]');
   const list = one<HTMLElement>('[data-nvr-list]');
   const editLink = one<HTMLAnchorElement>('[data-nvr-edit]');
   const clearButton = one<HTMLButtonElement>('[data-nvr-clear]');
+  const saveButton = one<HTMLButtonElement>('[data-nvr-save]');
+  const shareButton = one<HTMLButtonElement>('[data-nvr-share]');
+  const shared = one<HTMLElement>('[data-nvr-shared]');
+  const actionStatus = one<HTMLElement>('[data-nvr-action-status]');
+  const shareFallback = one<HTMLElement>('[data-nvr-share-fallback]');
+  const saveNote = one<HTMLElement>('[data-nvr-save-note]');
 
   function showNotice(message: string) {
     if (!notice) return;
@@ -104,8 +126,80 @@ function init(data: NavData) {
     // 「条件を変更」は、同じ選択状態のまま設定画面へ戻る。
     if (editLink) editLink.href = state ? `/navigator/#${serializeState(index, state)}` : '/navigator/';
 
+    resultCount = total;
+    const canAct = state !== null && total > 0;
+    if (saveButton) saveButton.hidden = !canAct;
+    if (shareButton) shareButton.hidden = !canAct;
+    if (saveNote) saveNote.hidden = !canAct;
+    if (actionStatus) actionStatus.textContent = '';
+    if (shareFallback) shareFallback.hidden = true;
+
+    // 復元と記録（仕様§8.3）。この端末の前回設定・下書き・保存済み設定と同じ条件なら、
+    // 結果画面へ進んだ時点として前回使用設定に記録する。どれとも違う条件（共有URLから
+    // 開いた条件）は、開いただけでは記録せず、利用者が選ぶまで案内だけを出す。
+    let source = 'none';
+    if (state && canAct) {
+      if (store.isOwnCondition(index, state)) {
+        store.setLast(index, state);
+        source = 'own';
+      } else {
+        // 保存できない環境では自分の条件かどうかを判定できず、記録先もないので、案内は出さない。
+        source = store.status() === 'ok' ? 'shared' : 'unknown';
+      }
+    }
+    if (shared) shared.hidden = source !== 'shared';
+
+    const viewKey = state ? serializeState(index, state) : '';
+    if (state && viewKey !== trackedView) {
+      trackedView = viewKey;
+      trackNavEvent('navigator_result_view', { source, problem_count: total });
+    }
+
+    appliedHash = window.location.hash;
     document.documentElement.classList.remove('nvr-pending');
   }
+
+  // 共有された条件を、この端末の前回使用設定として記録する。
+  function adopt() {
+    if (!state) return;
+    store.setLast(index, state);
+    if (shared) shared.hidden = true;
+  }
+
+  one('[data-nvr-adopt]')?.addEventListener('click', () => {
+    adopt();
+    if (actionStatus) actionStatus.textContent = 'この条件を前回の設定として記録しました。';
+    trackNavEvent('navigator_resume', { source: 'shared' });
+  });
+
+  saveButton?.addEventListener('click', () => {
+    if (!state || resultCount === 0) return;
+    const result = store.saveSetting(index, state);
+    let message: string;
+    if (result.ok) {
+      message = `「${result.setting.name}」として保存しました。名前の変更・削除は、4×4ナビゲーションの「保存した学習設定」から行えます。`;
+      trackNavEvent('navigator_save', { problem_count: resultCount });
+    } else if (result.reason === 'duplicate') {
+      message = `同じ条件の設定「${result.existing?.name ?? ''}」が保存済みです。`;
+    } else if (result.reason === 'limit') {
+      message = `保存できる設定は${MAX_SAVED_SETTINGS}件までです。不要な設定を削除してから保存してください。`;
+    } else if (result.reason === 'empty') {
+      message = '';
+    } else {
+      message = saveFailureMessage(result.reason);
+    }
+    // 保存を選んだ時点で、この条件を利用者自身の条件として扱う。
+    if (result.ok || result.reason === 'duplicate') adopt();
+    if (actionStatus) actionStatus.textContent = message;
+  });
+
+  shareButton?.addEventListener('click', async () => {
+    if (!state) return;
+    const url = resultUrl(serializeState(index, state));
+    const outcome = await shareUrl(url, '高校数学ナビ 4×4ナビゲーション');
+    showShareOutcome(outcome, url, actionStatus, shareFallback);
+    if (outcome !== 'cancelled') trackNavEvent('navigator_share', { method: outcome, source: 'result' });
+  });
 
   // 絞り込みを解除：条件を外して全問題を表示する（ブラウザの「戻る」で元の条件へ戻れる）。
   clearButton?.addEventListener('click', () => {
@@ -131,8 +225,11 @@ function init(data: NavData) {
   list?.addEventListener('click', rememberReturn);
   list?.addEventListener('auxclick', rememberReturn);
 
-  window.addEventListener('hashchange', apply);
-  window.addEventListener('popstate', apply);
+  const onLocationChange = () => {
+    if (window.location.hash !== appliedHash) apply();
+  };
+  window.addEventListener('hashchange', onLocationChange);
+  window.addEventListener('popstate', onLocationChange);
   apply();
 }
 

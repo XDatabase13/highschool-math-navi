@@ -532,3 +532,152 @@
     text-align: left;
   }
 }
+
+/* ============================================================
+   復元の案内・保存した学習設定・共有
+   ============================================================ */
+.nv-resume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 0.9rem;
+}
+.nv-resume[hidden] {
+  display: none;
+}
+.nv-resume p {
+  margin: 0;
+  min-width: 0;
+}
+.nv-resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nv-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.nv-share-fallback {
+  margin: 0.4rem 0 0;
+}
+.nv-share-fallback[hidden] {
+  display: none;
+}
+
+.nv-saved {
+  margin-top: 3rem;
+}
+.nv-saved-note,
+.nv-saved-empty {
+  margin: 0.4rem 0 0;
+  max-width: 46rem;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+.nv-saved-empty[hidden] {
+  display: none;
+}
+.nv-saved-status {
+  min-height: 1.6em;
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+}
+.nv-saved .nv-notice {
+  margin: 0.75rem 0 0;
+}
+.nv-saved .nv-notice p {
+  margin: 0 0 0.5rem;
+}
+.nv-saved-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+.nv-saved-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--color-border);
+}
+.nv-saved-item:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+.nv-saved-main {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+.nv-saved-name {
+  display: block;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.nv-saved-meta {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.nv-saved-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.9rem;
+}
+.nv-saved-actions a.nv-text-btn {
+  display: inline-flex;
+  align-items: center;
+}
+.nv-saved-edit {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1 1 100%;
+}
+.nv-saved-edit .nv-input {
+  flex: 1 1 14rem;
+  width: auto;
+}
+.nv-saved-edit p {
+  margin: 0;
+  flex: 1 1 14rem;
+  font-size: 0.9rem;
+}
+
+.nvr-action-status {
+  grid-column: 1 / -1;
+  min-height: 1.6em;
+  margin: 0;
+  font-size: 0.85rem;
+}
+.nvr-summary .nv-share-fallback {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.nvr-save-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+.nvr-save-note[hidden] {
+  display: none;
+}

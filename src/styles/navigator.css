@@ -1,0 +1,440 @@
+/* 4×4ナビゲーション（/navigator/・/app/navigation/）専用のスタイル。
+   この2ページだけがimportする（TOP・問題DB・個別問題ページには読み込まれない）。
+   色・角丸・罫線は global.css の既存design token（--color-*・--radius）だけを使い、
+   新しい配色・影・大きな角丸・カード外枠は増やさない。重要度の色は既存の
+   [data-importance] 共通ルール（global.css）にそのまま乗せる。難易度には色を付けない。
+   クラス名は nv- で始める。 */
+
+.nv-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- ページ見出し ---- */
+.nv-intro {
+  margin: 0 0 1.5rem;
+}
+.nv-intro h1 {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+}
+.nv-intro p {
+  margin: 0;
+  max-width: 46rem;
+  color: var(--color-text-subtle);
+  font-size: 0.95rem;
+}
+
+/* ---- ボタン ---- */
+.nv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+}
+.nv-btn:hover {
+  background: var(--color-accent-bg);
+  text-decoration: none;
+}
+.nv-btn--primary {
+  border-color: var(--color-primary-dark);
+  background: var(--color-primary);
+  color: #fff;
+}
+.nv-btn--primary:hover {
+  background: var(--color-primary-dark);
+}
+.nv-btn:disabled {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+.nv-text-btn {
+  min-height: 40px;
+  padding: 0.3rem 0.2rem;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.nv-text-btn:hover {
+  text-decoration: underline;
+}
+.nv-btn:focus-visible,
+.nv-text-btn:focus-visible,
+.nv-go:focus-visible,
+.nv-cell:focus-visible,
+.nv-unit-toggle:focus-visible,
+.nv-check input:focus-visible,
+.nv-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---- 通知 ---- */
+.nv-notice {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-accent-bg);
+  font-size: 0.9rem;
+}
+.nv-notice[hidden] {
+  display: none;
+}
+
+/* ---- 2カラム（PC）／1カラム（スマホ） ---- */
+.nv-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+.nv-panel {
+  min-width: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+.nv-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.nv-panel-title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* ---- 試験範囲 ---- */
+.nv-range-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--color-surface-sunken);
+  font-size: 0.9rem;
+}
+.nv-range-summary p {
+  margin: 0;
+}
+.nv-range-summary-text {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.nv-range-summary-label {
+  margin-right: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+.nv-range-summary-count strong {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+/* 範囲の折りたたみはスマホ幅だけ。PCでは常に展開したままにする。 */
+.nv-range-toggle {
+  display: none;
+}
+
+.nv-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 40px;
+  min-width: 0;
+  cursor: pointer;
+}
+.nv-check input {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+.nv-subject + .nv-subject {
+  margin-top: 1rem;
+}
+.nv-subject-check {
+  font-weight: 700;
+}
+.nv-unit-list,
+.nv-section-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nv-unit {
+  border-top: 1px solid var(--color-border);
+}
+.nv-unit:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+.nv-unit-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.nv-unit-head .nv-check {
+  flex: 1 1 auto;
+}
+.nv-unit-name {
+  font-weight: 700;
+}
+.nv-unit-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.3rem 0.4rem;
+  border: none;
+  background: none;
+  color: var(--color-text-subtle);
+  font: inherit;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+/* ProblemGroupListの区分見出しと同じ回転キャレット。 */
+.nv-caret {
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid var(--color-primary-dark);
+  border-bottom: 2px solid var(--color-primary-dark);
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+.nv-unit-toggle[aria-expanded='true'] .nv-caret {
+  transform: rotate(45deg);
+}
+.nv-section-list {
+  padding: 0 0 0.4rem 1.65rem;
+}
+.nv-section-list[hidden] {
+  display: none;
+}
+.nv-section-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+.nv-section-count {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 4×4 ---- */
+/* PCでは範囲の木が長いので、4×4と主ボタンを範囲のスクロールに追従させる。 */
+@media (min-width: 901px) {
+  .nv-matrix {
+    position: sticky;
+    top: 1rem;
+  }
+}
+.nv-matrix-hint {
+  margin: 0 0 0.5rem;
+  color: var(--color-text-subtle);
+  font-size: 0.88rem;
+}
+/* border-spacingぶんだけ外側へ広げ、マスの端をパネルの端にそろえる。 */
+.nv-grid {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 4px;
+  margin: 0 -4px;
+  width: calc(100% + 8px);
+}
+.nv-grid th {
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+.nv-grid td {
+  padding: 0;
+}
+.nv-grid-rowhead {
+  width: 3.4rem;
+}
+.nv-grid-axis {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+.nv-grid tbody th [data-importance] {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.85rem;
+}
+/* マスの状態は色だけで伝えない：選択中＝太枠＋✓、0問＝破線枠（無効）。 */
+.nv-cell {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.1rem;
+  width: 100%;
+  min-height: 3.75rem;
+  padding: 1.05rem 0.2rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+.nv-cell:hover:not(:disabled) {
+  background: var(--color-accent-bg);
+}
+.nv-cell-count {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.nv-cell-unit {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+}
+.nv-cell-check {
+  position: absolute;
+  top: 0.05rem;
+  left: 0.35rem;
+  color: var(--color-primary-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+  visibility: hidden;
+}
+.nv-cell[aria-pressed='true'] {
+  border-color: var(--color-primary-dark);
+  box-shadow: inset 0 0 0 1px var(--color-primary-dark);
+  background: var(--color-accent-bg);
+}
+.nv-cell[aria-pressed='true'] .nv-cell-check {
+  visibility: visible;
+}
+.nv-cell:disabled {
+  border-style: dashed;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+.nv-cell:disabled .nv-cell-count {
+  font-weight: 400;
+}
+.nv-matrix-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+/* ---- 抽出問題数と主ボタン ---- */
+.nv-result {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+.nv-result p {
+  margin: 0;
+}
+.nv-result-count {
+  font-size: 0.95rem;
+}
+.nv-result-count strong {
+  margin: 0 0.15rem 0 0.4rem;
+  font-size: 1.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.nv-result-breakdown {
+  min-height: 1.5em;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+.nv-go {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin-top: 0.75rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-primary-dark);
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+.nv-go:hover {
+  background: var(--color-primary-dark);
+  text-decoration: none;
+}
+.nv-go[aria-disabled='true'] {
+  border-color: var(--color-border);
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+.nv-result-help {
+  margin-top: 0.5rem !important;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .nv-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .nv-range-toggle {
+    display: inline-block;
+  }
+  .nv-range[data-collapsed='true'] .nv-range-tree,
+  .nv-range[data-collapsed='true'] .nv-range-clear {
+    display: none;
+  }
+}
+@media (max-width: 400px) {
+  .nv-grid-rowhead {
+    width: 3rem;
+  }
+  .nv-grid tbody th [data-importance] {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.8rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nv-caret {
+    transition: none;
+  }
+}

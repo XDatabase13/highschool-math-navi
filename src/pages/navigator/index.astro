@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadNavigatorData } from '../../utils/navigatorData';
+import { DIFFICULTY_LEVELS, IMPORTANCE_LEVELS, candidateProblems, cellKey } from '../../utils/navigatorCore';
+import '../../styles/navigator.css';
+
+// 4×4ナビゲーションの設定画面。試験範囲（科目 → 単元 → section）と、重要度×難易度の
+// 16マスを同じ画面で選び、抽出結果（/app/navigation/）へ進む。
+//
+// - index対象・self-canonical・sitemap掲載（1ページだけ。条件ごとのページは生成しない）。
+// - 範囲の木と4×4の枠はここで静的に出力し、件数・選択状態の更新だけをclient script
+//   （src/scripts/navigatorPage.ts）が行う。抽出・正規化のロジックは navigatorCore.ts に一本化している。
+// - 候補データは独立検算済みの公開対象問題のfrontmatterからbuild時に作り、JSONで埋め込む。
+const { data, index } = await loadNavigatorData();
+const canonicalUrl = new URL('/navigator/', Astro.site).toString();
+const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
+const totalProblems = index.problems.length;
+const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sectionId]).length;
+---
+
+<BaseLayout
+  title="4×4ナビゲーション｜試験範囲と重要度×難易度で問題を選ぶ | 高校数学ナビ"
+  description={`試験範囲（単元・項目）を選び、重要度×難易度の16マスから取り組む問題を決める、高校数学ナビの4×4ナビゲーションです。数学I ${totalProblems}問から、自分の試験範囲に合う問題を抽出できます。`}
+>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+  </Fragment>
+
+  <section class="nv-intro">
+    <h1>4×4ナビゲーション</h1>
+    <p>
+      試験範囲を選ぶと、その範囲の問題数が「重要度×難易度」の16マスに表示されます。取り組むマスを選んで、抽出した問題を問題データベースで確認できます。
+    </p>
+  </section>
+
+  <noscript>
+    <p class="nv-notice">
+      4×4ナビゲーションの操作にはJavaScriptが必要です。すべての問題は<a href="/app/">問題データベース</a>から見られます。
+    </p>
+  </noscript>
+
+  <p class="nv-notice" role="status" data-nv-notice hidden></p>
+
+  <div class="nv-layout">
+    <section class="nv-panel nv-range" aria-labelledby="nv-range-title" data-nv-range data-collapsed="false">
+      <div class="nv-panel-head">
+        <h2 id="nv-range-title" class="nv-panel-title">1. 試験範囲を選ぶ</h2>
+        <button type="button" class="nv-text-btn nv-range-clear" data-nv-range-clear>すべて解除</button>
+      </div>
+      <div class="nv-range-summary">
+        <p class="nv-range-summary-text">
+          <span class="nv-range-summary-label">試験範囲</span><span data-nv-range-summary>未選択</span>
+        </p>
+        <p class="nv-range-summary-count">対象 <strong data-nv-range-count>0</strong>問</p>
+        <button
+          type="button"
+          class="nv-text-btn nv-range-toggle"
+          data-nv-range-toggle
+          aria-expanded="true"
+          aria-controls="nv-range-tree"
+        >
+          閉じる
+        </button>
+      </div>
+      <div class="nv-range-tree" id="nv-range-tree">
+        {index.subjects.map((subject) => (
+          <div class="nv-subject">
+            <label class="nv-check nv-subject-check">
+              <input type="checkbox" data-nv-subject={subject.id} />
+              <span>{subject.name} 全体</span>
+            </label>
+            <ul class="nv-unit-list">
+              {subject.units.map((unit) => (
+                <li class="nv-unit">
+                  <div class="nv-unit-head">
+                    <label class="nv-check">
+                      <input type="checkbox" data-nv-unit={unit.id} />
+                      <span class="nv-unit-name">
+                        {unit.name}
+                        <span class="nv-visually-hidden">（単元全体を選択）</span>
+                      </span>
+                    </label>
+                    <button
+                      type="button"
+                      class="nv-unit-toggle"
+                      data-nv-unit-toggle={unit.id}
+                      aria-expanded="false"
+                      aria-controls={`nv-sections-${unit.id}`}
+                    >
+                      <span class="nv-visually-hidden">{unit.name}の項目を開閉。選択数</span>
+                      <span data-nv-unit-count={unit.id}>0/{unit.sections.length}</span>
+                      <span class="nv-caret" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <ul class="nv-section-list" id={`nv-sections-${unit.id}`} hidden>
+                    {unit.sections.map((section) => (
+                      <li>
+                        <label class="nv-check">
+                          <input type="checkbox" data-nv-section={section.id} />
+                          <span class="nv-section-name">{section.name}</span>
+                          <span class="nv-section-count">{sectionProblemCount(section.id)}問</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="nv-panel nv-matrix" aria-labelledby="nv-matrix-title">
+      <div class="nv-panel-head">
+        <h2 id="nv-matrix-title" class="nv-panel-title">2. 重要度×難易度のマスを選ぶ</h2>
+      </div>
+      <p class="nv-matrix-hint" data-nv-matrix-hint>まず試験範囲を選んでください。</p>
+      <table class="nv-grid">
+        <caption class="nv-visually-hidden">重要度（縦）と難易度（横）ごとの、試験範囲内の問題数</caption>
+        <thead>
+          <tr>
+            <td class="nv-grid-rowhead"></td>
+            <th class="nv-grid-axis" colspan={DIFFICULTY_LEVELS.length} scope="colgroup">難易度</th>
+          </tr>
+          <tr>
+            <th class="nv-grid-rowhead nv-grid-axis" scope="col">重要度</th>
+            {DIFFICULTY_LEVELS.map((difficulty) => <th scope="col">{difficulty}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {IMPORTANCE_LEVELS.map((level) => (
+            <tr>
+              <th scope="row"><span data-importance={level.label}>{level.label}</span></th>
+              {DIFFICULTY_LEVELS.map((difficulty) => (
+                <td>
+                  <button
+                    type="button"
+                    class="nv-cell"
+                    data-nv-cell={cellKey(level.value, difficulty)}
+                    data-nv-cell-label={`${level.label}・難易度${difficulty}`}
+                    aria-pressed="false"
+                    aria-label={`${level.label}・難易度${difficulty}：0問`}
+                    disabled
+                  >
+                    <span class="nv-cell-check" aria-hidden="true">✓</span>
+                    <span class="nv-cell-count" data-nv-cell-count>0</span>
+                    <span class="nv-cell-unit">問</span>
+                  </button>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div class="nv-matrix-actions">
+        <button type="button" class="nv-btn" data-nv-cells-all disabled>すべて選択</button>
+        <button type="button" class="nv-btn" data-nv-cells-clear disabled>選択を解除</button>
+      </div>
+
+      <div class="nv-result">
+        <p class="nv-result-count">抽出問題数<strong data-nv-result-count>0</strong>問</p>
+        <p class="nv-result-breakdown" data-nv-result-breakdown></p>
+        <a class="nv-go" role="link" aria-disabled="true" data-nv-go>問題データベースで見る</a>
+        <p class="nv-result-help" data-nv-result-help>試験範囲とマスを選ぶと、抽出した問題を一覧で確認できます。</p>
+      </div>
+      <p class="nv-visually-hidden" role="status" aria-live="polite" data-nv-live></p>
+    </section>
+  </div>
+
+  <script type="application/json" id="navigator-data" set:html={dataJson} />
+  <script>
+    import '../../scripts/navigatorPage.ts';
+  </script>
+</BaseLayout>

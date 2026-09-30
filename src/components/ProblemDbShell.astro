@@ -172,6 +172,16 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
         </nav>
       </header>
 
+      <!-- 4×4ナビの抽出結果（/app/navigation/）から来た利用者だけに出す、同じ学習設定へ戻る導線。
+           初期状態はhiddenで、下のscriptがsessionStorageに戻り先があるときだけ表示する
+           （検索等から直接来た利用者には何も出ない。問題本文の静的HTML・SEO契約は変えない）。 -->
+      <div class="db-nav-return" data-navigator-return hidden>
+        <a class="db-nav-return-link" href="/app/navigation/" data-navigator-return-link>← 4×4ナビの抽出結果へ戻る</a>
+        <button type="button" class="db-nav-return-close" data-navigator-return-close aria-label="抽出結果へ戻る案内を閉じる">
+          ✕
+        </button>
+      </div>
+
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
           <ul class="db-subject-list">
@@ -382,6 +392,37 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
       }
     </script>
 
+    <script>
+      // 4×4ナビの抽出結果から来たときだけ、戻り導線を表示する。戻り先の条件は結果画面が
+      // sessionStorage（タブ単位）へ置いた文字列で、形式が正しいときだけリンクにする。
+      import { NAV_RETURN_KEY, navReturnHref } from '../utils/navigatorReturn';
+
+      const returnBar = document.querySelector<HTMLElement>('[data-navigator-return]');
+      const returnLink = document.querySelector<HTMLAnchorElement>('[data-navigator-return-link]');
+
+      if (returnBar && returnLink) {
+        let stored: string | null = null;
+        try {
+          stored = window.sessionStorage.getItem(NAV_RETURN_KEY);
+        } catch {
+          // sessionStorageが使えない環境では導線を出さない。
+        }
+        const href = navReturnHref(stored);
+        if (href) {
+          returnLink.href = href;
+          returnBar.hidden = false;
+        }
+        returnBar.querySelector('[data-navigator-return-close]')?.addEventListener('click', () => {
+          returnBar.hidden = true;
+          try {
+            window.sessionStorage.removeItem(NAV_RETURN_KEY);
+          } catch {
+            // 同上。
+          }
+        });
+      }
+    </script>
+
     {hasListViewSwitch && (
     <script>
       // 「問題タイプ / 問題一覧」切替の小さなcontroller。PC中央列・スマホダイアログの
@@ -499,6 +540,44 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
       .db-header-info a:hover {
         color: #fff;
         text-decoration: none;
+      }
+
+      /* 4×4ナビの抽出結果へ戻る導線（既定は非表示）。ヘッダー直下の細い帯で、影・角丸は付けない。 */
+      .db-nav-return {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.15rem 0.4rem 0.15rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-accent-bg);
+        font-size: 0.85rem;
+      }
+      .db-nav-return[hidden] {
+        display: none;
+      }
+      .db-nav-return-link {
+        padding: 0.35rem 0;
+        font-weight: 700;
+      }
+      .db-nav-return-close {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: none;
+        color: var(--color-text-subtle);
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .db-nav-return-close:hover {
+        color: var(--color-text);
+      }
+      .db-nav-return-link:focus-visible,
+      .db-nav-return-close:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
       }
 
       .db-body {

@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProblemGroupList from '../../../components/ProblemGroupList.astro';
+import { loadNavigatorData } from '../../../utils/navigatorData';
+import '../../../styles/navigator.css';
+
+// 4×4ナビゲーションの抽出結果画面。条件はURL fragment（#v=1&r=…&c=…）で受け取り、
+// 条件ごとのHTMLは生成しない（このページ1枚だけ。fragmentの違いを別ページとして扱わない）。
+//
+// - noindex,follow・self-canonical・sitemap非掲載（/app/ と同じ扱い）。
+// - 全問題の一覧を「科目順 → dbSubjectNavの単元順 → display_order」で静的に出力し、
+//   client script（src/scripts/navigatorResultPage.ts）は条件に合わない行を隠すだけ。
+//   並び替えはしないので、結果の順序は常にこの静的な順序のまま。
+// - 各行は既存の静的な個別問題URLへの通常の<a href>（ProblemGroupListを再利用）。
+//   JavaScriptが無効でも、全問題のリンクをそのまま辿れる。
+const { data, index, resultGroups } = await loadNavigatorData();
+const canonicalUrl = new URL('/app/navigation/', Astro.site).toString();
+const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
+const totalProblems = index.problems.length;
+---
+
+<BaseLayout
+  title="抽出結果｜4×4ナビゲーション | 高校数学ナビ"
+  description="4×4ナビゲーションで選んだ試験範囲と重要度×難易度の条件に合う問題の一覧です。"
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    {/* 条件を適用する前に全問題が一瞬見えるのを避ける。scriptが読み込めない場合に備え、
+        一定時間で必ず表示へ戻す（JavaScript無効時はこのクラス自体が付かない）。 */}
+    <script is:inline>
+      document.documentElement.classList.add('nvr-pending');
+      setTimeout(function () {
+        document.documentElement.classList.remove('nvr-pending');
+      }, 3000);
+    </script>
+  </Fragment>
+
+  <section class="nv-intro">
+    <h1>抽出結果</h1>
+    <p>4×4ナビゲーションで選んだ条件に合う問題です。問題を選ぶと、問題データベースの個別ページが開きます。</p>
+  </section>
+
+  <noscript>
+    <p class="nv-notice">条件の読み込みにはJavaScriptが必要です。全{totalProblems}問を表示しています。</p>
+  </noscript>
+
+  <p class="nv-notice" role="status" data-nvr-notice hidden></p>
+
+  <section class="nvr-summary" aria-label="抽出条件">
+    <dl class="nvr-conditions">
+      <div>
+        <dt>試験範囲</dt>
+        <dd data-nvr-range>指定なし</dd>
+      </div>
+      <div>
+        <dt>重要度×難易度</dt>
+        <dd data-nvr-cells>指定なし</dd>
+      </div>
+    </dl>
+    <p class="nvr-count" role="status"><strong data-nvr-count>{totalProblems}</strong>問</p>
+    <div class="nvr-actions">
+      <a class="nv-btn" href="/navigator/" data-nvr-edit>条件を変更</a>
+      <button type="button" class="nv-btn" data-nvr-clear hidden>絞り込みを解除</button>
+    </div>
+  </section>
+
+  <p class="nvr-empty" data-nvr-empty hidden>
+    条件に合う問題がありません。「条件を変更」から、試験範囲またはマスを選び直してください。
+  </p>
+
+  <section class="nvr-list" aria-label="抽出した問題" data-nvr-list>
+    <ProblemGroupList groups={resultGroups} filterable />
+  </section>
+
+  <script type="application/json" id="navigator-data" set:html={dataJson} />
+  <script>
+    import '../../../scripts/navigatorResultPage.ts';
+  </script>
+</BaseLayout>

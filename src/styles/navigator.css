@@ -438,3 +438,97 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   抽出結果画面（/app/navigation/）
+   ============================================================ */
+.nvr-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 1.5rem;
+  align-items: end;
+  padding: 1rem 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.nvr-conditions {
+  margin: 0;
+  font-size: 0.92rem;
+}
+.nvr-conditions > div {
+  display: flex;
+  gap: 0.75rem;
+}
+.nvr-conditions dt {
+  flex-shrink: 0;
+  width: 7.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.95;
+}
+.nvr-conditions dd {
+  margin: 0;
+  min-width: 0;
+}
+.nvr-count {
+  margin: 0;
+  font-size: 0.95rem;
+  text-align: right;
+  white-space: nowrap;
+}
+.nvr-count strong {
+  margin-right: 0.15rem;
+  font-size: 1.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.nvr-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+.nvr-empty {
+  margin: 1.25rem 0 0;
+  color: var(--color-text-subtle);
+}
+.nvr-empty[hidden] {
+  display: none;
+}
+/* 一覧は問題DBの中央列と同じ、1段沈めたナビゲーション面に置く。 */
+.nvr-list {
+  margin-top: 1.25rem;
+  padding: 0.9rem;
+  background: var(--color-surface-sunken);
+}
+.nvr-list .db-problem-groups {
+  margin: 0;
+}
+.nvr-list .db-problem-row[hidden],
+.nvr-list .db-problem-group[hidden] {
+  display: none;
+}
+/* 条件を適用し終えるまで一覧を見せない（全問題が一瞬見えるのを避ける）。 */
+.nvr-pending [data-nvr-list] {
+  visibility: hidden;
+}
+
+@media (max-width: 600px) {
+  .nvr-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .nvr-conditions > div {
+    flex-direction: column;
+    gap: 0;
+  }
+  .nvr-conditions > div + div {
+    margin-top: 0.4rem;
+  }
+  .nvr-conditions dt {
+    width: auto;
+  }
+  .nvr-count {
+    text-align: left;
+  }
+}

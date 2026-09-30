@@ -287,6 +287,17 @@ ul {
 .hero-cta-link:active {
   background: var(--color-primary-dark);
 }
+/* 4×4ナビゲーション（/navigator/）への導線。問題データベースを主要入口として残すため、
+   塗りではなく枠だけの副ボタンにする（形・大きさ・フォントは主ボタンと同じ）。 */
+.hero-cta-link--secondary {
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
+}
+.hero-cta-link--secondary:hover,
+.hero-cta-link--secondary:active {
+  background: var(--color-accent-bg);
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-cta-link {
     transition: none;

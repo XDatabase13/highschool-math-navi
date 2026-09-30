@@ -502,6 +502,17 @@ function init(data: NavData) {
     renderSaved();
   });
 
+  // 「4×4の見方」。フォーカス移動・Escで閉じる・閉じた後のフォーカス復帰は<dialog>の標準動作に任せる。
+  const guide = one<HTMLDialogElement>('[data-nv-guide]');
+  if (guide && typeof guide.showModal === 'function') {
+    one('[data-nv-guide-open]')?.addEventListener('click', () => guide.showModal());
+    one('[data-nv-guide-close]', guide)?.addEventListener('click', () => guide.close());
+    // 背景（dialog自身の余白）をクリックしたら閉じる。
+    guide.addEventListener('click', (event) => {
+      if (event.target === guide) guide.close();
+    });
+  }
+
   window.addEventListener('hashchange', () => {
     if (window.location.hash.replace(/^#/, '') === serializeState(index, state)) return;
     const parsed = parseStateString(index, window.location.hash);

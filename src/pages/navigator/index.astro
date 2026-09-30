@@ -4,6 +4,21 @@ import { loadNavigatorData } from '../../utils/navigatorData';
 import { DIFFICULTY_LEVELS, IMPORTANCE_LEVELS, candidateProblems, cellKey } from '../../utils/navigatorCore';
 import '../../styles/navigator.css';
 
+// 「4×4の見方」の説明。重要度・難易度の各段階の説明は、TOPページ（src/pages/index.astro）の
+// 「高校数学ナビの4つの特徴」と同じ文言にそろえる（ここで意味を言い換えない）。
+const IMPORTANCE_GUIDE: Record<string, string> = {
+  土台: '高校数学の土台',
+  本命: '定期試験で優先',
+  次点: '本命の次',
+  余力: '余裕があれば',
+};
+const DIFFICULTY_GUIDE: Record<number, { label: string; description: string }> = {
+  1: { label: '基本', description: '教科書の基本' },
+  2: { label: '標準', description: '教科書の標準' },
+  3: { label: '応用', description: '教科書で難しい側' },
+  4: { label: '発展', description: '応用より一段難しい' },
+};
+
 // 4×4ナビゲーションの設定画面。試験範囲（科目 → 単元 → section）と、重要度×難易度の
 // 16マスを同じ画面で選び、抽出結果（/app/navigation/）へ進む。
 //
@@ -123,6 +138,9 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
     <section class="nv-panel nv-matrix" aria-labelledby="nv-matrix-title">
       <div class="nv-panel-head">
         <h2 id="nv-matrix-title" class="nv-panel-title">2. 重要度×難易度のマスを選ぶ</h2>
+        <button type="button" class="nv-btn nv-guide-open" data-nv-guide-open aria-haspopup="dialog" aria-controls="nv-guide">
+          4×4の見方
+        </button>
       </div>
       <p class="nv-matrix-hint" data-nv-matrix-hint>まず試験範囲を選んでください。</p>
       <table class="nv-grid">
@@ -196,6 +214,42 @@ const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sec
     <p class="nv-saved-empty" data-nv-saved-empty>保存した設定はまだありません。</p>
     <ul class="nv-saved-list" data-nv-saved-list></ul>
   </section>
+
+  {/* 「4×4の見方」。ネイティブ<dialog>のshowModal()に、フォーカス移動・Escで閉じる・
+      閉じた後のフォーカス復帰を任せる（ProblemDbShellの問題一覧ダイアログと同じ方式）。 */}
+  <dialog class="nv-dialog" id="nv-guide" aria-labelledby="nv-guide-title" data-nv-guide>
+    <div class="nv-dialog-head">
+      <h2 id="nv-guide-title" class="nv-dialog-title">4×4の見方</h2>
+      <button type="button" class="nv-dialog-close" data-nv-guide-close aria-label="4×4の見方を閉じる">✕</button>
+    </div>
+    <div class="nv-dialog-body">
+      <p>選んだ試験範囲の問題を、重要度（縦）と難易度（横）で16マスに分けて表示しています。マスの数字は、そのマスに入る問題数です。</p>
+      <h3>重要度（縦）</h3>
+      <dl class="nv-guide-list">
+        {IMPORTANCE_LEVELS.map((level) => (
+          <div>
+            <dt><span data-importance={level.label}>{level.label}</span></dt>
+            <dd>{IMPORTANCE_GUIDE[level.label]}</dd>
+          </div>
+        ))}
+      </dl>
+      <h3>難易度（横）</h3>
+      <dl class="nv-guide-list">
+        {DIFFICULTY_LEVELS.map((difficulty) => (
+          <div>
+            <dt>{difficulty}　{DIFFICULTY_GUIDE[difficulty].label}</dt>
+            <dd>{DIFFICULTY_GUIDE[difficulty].description}</dd>
+          </div>
+        ))}
+      </dl>
+      <h3>選ぶときの注意</h3>
+      <ul class="nv-guide-notes">
+        <li>重要度と難易度は別の軸です。</li>
+        <li>難しい問題ほど重要、とは限りません。</li>
+        <li>「土台」だけを選べば十分、という意味ではありません。</li>
+      </ul>
+    </div>
+  </dialog>
 
   <script type="application/json" id="navigator-data" set:html={dataJson} />
   <script>

@@ -681,3 +681,106 @@
 .nvr-save-note[hidden] {
   display: none;
 }
+
+/* ============================================================
+   「4×4の見方」ダイアログ
+   見た目はProblemDbShellの問題一覧ダイアログ（濃いヘッダー帯・丸い閉じるボタン・
+   モーダルだけに許している影）にそろえる。
+   ============================================================ */
+.nv-guide-open {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.82rem;
+}
+.nv-dialog {
+  width: min(92vw, 30rem);
+  max-height: min(88vh, 40rem);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 6px 24px rgba(21, 40, 54, 0.18);
+}
+.nv-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.nv-dialog::backdrop {
+  background: rgba(21, 40, 54, 0.45);
+}
+.nv-dialog-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem 0.5rem 1rem;
+  background: var(--color-header-bg);
+}
+.nv-dialog-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+}
+.nv-dialog-close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.nv-dialog-close:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+.nv-dialog-close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.nv-dialog-body {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.25rem;
+  font-size: 0.92rem;
+}
+.nv-dialog-body p {
+  margin: 0;
+}
+.nv-dialog-body h3 {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.95rem;
+}
+.nv-guide-list {
+  margin: 0;
+}
+.nv-guide-list > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.2rem 0;
+}
+.nv-guide-list dt {
+  flex-shrink: 0;
+  width: 5.5rem;
+  font-weight: 700;
+}
+.nv-guide-list dt [data-importance] {
+  padding: 0.1rem 0.5rem;
+  font-size: 0.85rem;
+}
+.nv-guide-list dd {
+  margin: 0;
+}
+.nv-guide-notes {
+  margin: 0;
+  padding-left: 1.3rem;
+}

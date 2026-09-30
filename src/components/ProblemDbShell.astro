@@ -172,15 +172,11 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
         </nav>
       </header>
 
-      <!-- 4×4ナビの抽出結果（/app/navigation/）から来た利用者だけに出す、同じ学習設定へ戻る導線。
-           初期状態はhiddenで、下のscriptがsessionStorageに戻り先があるときだけ表示する
-           （検索等から直接来た利用者には何も出ない。問題本文の静的HTML・SEO契約は変えない）。 -->
-      <div class="db-nav-return" data-navigator-return hidden>
-        <a class="db-nav-return-link" href="/app/navigation/" data-navigator-return-link>← 4×4ナビの抽出結果へ戻る</a>
-        <button type="button" class="db-nav-return-close" data-navigator-return-close aria-label="抽出結果へ戻る案内を閉じる">
-          ✕
-        </button>
-      </div>
+      <!-- 4×4ナビゲーションの抽出モード用の帯（既定は空・非表示）。URL fragmentに4×4の条件
+           （#v=1&r=…&c=…）が付いているときだけ、下のscriptが抽出モードの本体を遅延読み込みし、
+           ここへ「4×4ナビで選んだ○問を表示中」と操作を出して、一覧・単元ナビを抽出した問題だけに絞る。
+           fragmentのない通常の来訪では何も読み込まず、静的HTML・SEO契約も変わらない。 -->
+      <div class="db-nav-mode" data-nav-mode hidden></div>
 
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
@@ -393,32 +389,30 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
     </script>
 
     <script>
-      // 4×4ナビの抽出結果から来たときだけ、戻り導線を表示する。戻り先の条件は結果画面が
-      // sessionStorage（タブ単位）へ置いた文字列で、形式が正しいときだけリンクにする。
-      import { NAV_RETURN_KEY, navReturnHref } from '../utils/navigatorReturn';
+      // 4×4ナビゲーションの抽出モード。条件はURL fragmentだけで持つ（保存領域には頼らない）ので、
+      // 4×4から入ったページだけが抽出モードになり、通常の入口から開いたDBは従来どおり全問題を表示する。
+      // ここでは形式の判定だけを行い、本体（一覧の絞り込み・帯の表示）は条件があるときだけ読み込む。
+      import { isStateStringShape } from '../utils/navigatorLink';
 
-      const returnBar = document.querySelector<HTMLElement>('[data-navigator-return]');
-      const returnLink = document.querySelector<HTMLAnchorElement>('[data-navigator-return-link]');
+      const navModeHost = document.querySelector<HTMLElement>('[data-nav-mode]');
+      const hasNavCondition = () => isStateStringShape(window.location.hash.slice(1));
 
-      if (returnBar && returnLink) {
-        let stored: string | null = null;
-        try {
-          stored = window.sessionStorage.getItem(NAV_RETURN_KEY);
-        } catch {
-          // sessionStorageが使えない環境では導線を出さない。
+      if (navModeHost) {
+        let navModeActive = false;
+        if (hasNavCondition()) {
+          navModeActive = true;
+          // 絞り込む前の全問題一覧が一瞬見えないよう、適用が終わるまで一覧と単元ナビだけを隠す。
+          document.documentElement.classList.add('db-nav-mode-loading');
+          import('../scripts/navigatorDbMode')
+            .then((module) => module.startNavigatorDbMode(navModeHost))
+            .catch(() => {
+              // 読み込めない場合は通常表示のまま（問題本文・一覧は静的HTMLとしてそのまま使える）。
+            })
+            .finally(() => document.documentElement.classList.remove('db-nav-mode-loading'));
         }
-        const href = navReturnHref(stored);
-        if (href) {
-          returnLink.href = href;
-          returnBar.hidden = false;
-        }
-        returnBar.querySelector('[data-navigator-return-close]')?.addEventListener('click', () => {
-          returnBar.hidden = true;
-          try {
-            window.sessionStorage.removeItem(NAV_RETURN_KEY);
-          } catch {
-            // 同上。
-          }
+        // 同じページのまま条件が付く・外れる・変わるとき（戻る／進む等）は、静的な状態から描き直す。
+        window.addEventListener('hashchange', () => {
+          if (navModeActive || hasNavCondition()) window.location.reload();
         });
       }
     </script>
@@ -542,42 +536,14 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
         text-decoration: none;
       }
 
-      /* 4×4ナビの抽出結果へ戻る導線（既定は非表示）。ヘッダー直下の細い帯で、影・角丸は付けない。 */
-      .db-nav-return {
+      /* 4×4ナビゲーションの抽出モードの帯。中身と見た目は抽出モードの本体
+         （src/scripts/navigatorDbMode.ts・src/styles/navigatorDbMode.css）が用意する。 */
+      .db-nav-mode {
         flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.15rem 0.4rem 0.15rem 1rem;
-        border-bottom: 1px solid var(--color-border);
-        background: var(--color-accent-bg);
-        font-size: 0.85rem;
       }
-      .db-nav-return[hidden] {
-        display: none;
-      }
-      .db-nav-return-link {
-        padding: 0.35rem 0;
-        font-weight: 700;
-      }
-      .db-nav-return-close {
-        flex-shrink: 0;
-        width: 36px;
-        height: 36px;
-        border: none;
-        background: none;
-        color: var(--color-text-subtle);
-        font-size: 0.9rem;
-        cursor: pointer;
-      }
-      .db-nav-return-close:hover {
-        color: var(--color-text);
-      }
-      .db-nav-return-link:focus-visible,
-      .db-nav-return-close:focus-visible {
-        outline: 2px solid var(--color-accent);
-        outline-offset: 2px;
+      :global(.db-nav-mode-loading) .db-pane-subjects,
+      :global(.db-nav-mode-loading) .db-pane-list {
+        visibility: hidden;
       }
 
       .db-body {

@@ -1,32 +1,29 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ProblemGroupList from '../../../components/ProblemGroupList.astro';
 import { loadNavigatorData } from '../../../utils/navigatorData';
 import '../../../styles/navigator.css';
 
-// 4×4ナビゲーションの抽出結果画面。条件はURL fragment（#v=1&r=…&c=…）で受け取り、
-// 条件ごとのHTMLは生成しない（このページ1枚だけ。fragmentの違いを別ページとして扱わない）。
+// 4×4ナビゲーションの抽出結果の入口。条件はURL fragment（#v=1&r=…&c=…）で受け取る。
+// 共有URL・保存した学習設定はここを指し、条件を読んで、抽出した最初の問題の個別ページ
+// （通常の問題DB画面）へ同じ条件を付けて移動する。以後は問題DB側（ProblemDbShell）が
+// 抽出モードとして、一覧・単元ナビを抽出した問題だけに絞る。
 //
-// - noindex,follow・self-canonical・sitemap非掲載（/app/ と同じ扱い）。
-// - 全問題の一覧を「科目順 → dbSubjectNavの単元順 → display_order」で静的に出力し、
-//   client script（src/scripts/navigatorResultPage.ts）は条件に合わない行を隠すだけ。
-//   並び替えはしないので、結果の順序は常にこの静的な順序のまま。
-// - 各行は既存の静的な個別問題URLへの通常の<a href>（ProblemGroupListを再利用）。
-//   JavaScriptが無効でも、全問題のリンクをそのまま辿れる。
-const { data, index, resultGroups } = await loadNavigatorData();
+// - noindex,follow・self-canonical・sitemap非掲載（/app/ と同じ扱い）。条件ごとのHTMLは作らない。
+// - 条件がない・読めない・該当問題がない場合と、JavaScriptが無効な場合は移動せず、
+//   案内と通常の問題DB・各単元トップへの静的リンクを表示する。
+const { data, index } = await loadNavigatorData();
 const canonicalUrl = new URL('/app/navigation/', Astro.site).toString();
-const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
-const totalProblems = index.problems.length;
+const dataJson = JSON.stringify(data).replace(/</g, '\u003c');
 ---
 
 <BaseLayout
   title="抽出結果｜4×4ナビゲーション | 高校数学ナビ"
-  description="4×4ナビゲーションで選んだ試験範囲と重要度×難易度の条件に合う問題の一覧です。"
+  description="4×4ナビゲーションで選んだ試験範囲と重要度×難易度の条件に合う問題を、問題データベースで開くためのページです。"
 >
   <Fragment slot="head">
     <meta name="robots" content="noindex,follow" />
     <link rel="canonical" href={canonicalUrl} />
-    {/* 条件を適用する前に全問題が一瞬見えるのを避ける。scriptが読み込めない場合に備え、
+    {/* 問題DBへ移動する前に案内が一瞬見えるのを避ける。scriptが読み込めない場合に備え、
         一定時間で必ず表示へ戻す（JavaScript無効時はこのクラス自体が付かない）。 */}
     <script is:inline>
       document.documentElement.classList.add('nvr-pending');
@@ -36,63 +33,38 @@ const totalProblems = index.problems.length;
     </script>
   </Fragment>
 
-  <section class="nv-intro">
-    <h1>抽出結果</h1>
-    <p>4×4ナビゲーションで選んだ条件に合う問題です。問題を選ぶと、問題データベースの個別ページが開きます。</p>
-  </section>
+  <div class="nvr-body">
+    <section class="nv-intro">
+      <h1>4×4ナビゲーションの抽出結果</h1>
+      <p data-nvr-message>
+        4×4ナビゲーションで選んだ条件に合う問題を、問題データベースで開くためのページです。
+      </p>
+    </section>
 
-  <noscript>
-    <p class="nv-notice">条件の読み込みにはJavaScriptが必要です。全{totalProblems}問を表示しています。</p>
-  </noscript>
+    <noscript>
+      <p class="nv-notice">条件の読み込みにはJavaScriptが必要です。下のリンクから問題データベースを開けます。</p>
+    </noscript>
 
-  <p class="nv-notice" role="status" data-nvr-notice hidden></p>
-
-  {/* 共有URLから開いた条件（この端末の前回設定・下書き・保存済み設定のどれとも違う条件）のときだけ表示する。
-      開いただけでは保存データへ何も記録せず、利用者が選んだ後に記録する。 */}
-  <div class="nv-resume" data-nvr-shared hidden>
-    <p>共有された条件を表示しています。この端末の設定にはまだ記録していません。</p>
-    <div class="nv-resume-actions">
-      <button type="button" class="nv-btn nv-btn--primary" data-nvr-adopt>この条件で学習する</button>
+    <div class="nvr-links">
+      <a class="nv-btn nv-btn--primary" href="/navigator/" data-nvr-edit>4×4ナビゲーションで条件を設定する</a>
+      <a class="nv-btn" href="/app/">通常の問題データベースを開く</a>
     </div>
+
+    <section class="nvr-units" aria-labelledby="nvr-units-title">
+      <h2 id="nvr-units-title" class="nv-panel-title">単元から開く</h2>
+      <ul>
+        {index.subjects.map((subject) =>
+          subject.units.map((unit) => (
+            <li>
+              <a href={unit.href}>
+                {subject.name} {unit.name}
+              </a>
+            </li>
+          )),
+        )}
+      </ul>
+    </section>
   </div>
-
-  <section class="nvr-summary" aria-label="抽出条件">
-    <dl class="nvr-conditions">
-      <div>
-        <dt>試験範囲</dt>
-        <dd data-nvr-range>指定なし</dd>
-      </div>
-      <div>
-        <dt>重要度×難易度</dt>
-        <dd data-nvr-cells>指定なし</dd>
-      </div>
-    </dl>
-    <p class="nvr-count" role="status"><strong data-nvr-count>{totalProblems}</strong>問</p>
-    <div class="nvr-actions">
-      <a class="nv-btn" href="/navigator/" data-nvr-edit>条件を変更</a>
-      <button type="button" class="nv-btn" data-nvr-clear hidden>絞り込みを解除</button>
-      <button type="button" class="nv-btn" data-nvr-save hidden>この学習設定を保存</button>
-      <button type="button" class="nv-btn" data-nvr-share hidden>この条件を共有</button>
-    </div>
-    <p class="nvr-action-status" role="status" data-nvr-action-status></p>
-    <div class="nv-share-fallback" data-nvr-share-fallback hidden>
-      <label>
-        <span class="nv-visually-hidden">共有用のURL</span>
-        <input class="nv-input" type="text" readonly />
-      </label>
-    </div>
-    <p class="nvr-save-note" data-nvr-save-note hidden>
-      保存先はこのブラウザの中だけです（ブラウザのデータを消去した場合やシークレットモードでは残りません）。保存した設定は<a href="/navigator/#saved">4×4ナビゲーション</a>から開けます。
-    </p>
-  </section>
-
-  <p class="nvr-empty" data-nvr-empty hidden>
-    条件に合う問題がありません。「条件を変更」から、試験範囲またはマスを選び直してください。
-  </p>
-
-  <section class="nvr-list" aria-label="抽出した問題" data-nvr-list>
-    <ProblemGroupList groups={resultGroups} filterable />
-  </section>
 
   <script type="application/json" id="navigator-data" set:html={dataJson} />
   <script>

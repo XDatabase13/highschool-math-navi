@@ -5,22 +5,24 @@
 //
 // 1. /navigator/：index対象（noindexなし）・self-canonical・sitemap掲載、埋め込み候補データが
 //    公開用スナップショットのfrontmatterから作ったものと一致する（180問）。
-// 2. /app/navigation/：noindex,follow・self-canonical・sitemap非掲載、全問題の静的リンクが
-//    「科目順 → dbSubjectNavの単元順 → display_order」で並ぶ（JavaScript無効時のfallback）。
+// 2. /app/navigation/（抽出結果の入口）：noindex,follow・self-canonical・sitemap非掲載、
+//    通常の問題DB・各単元トップへの静的リンクがある（JavaScript無効時のfallback）。
+//    /app/navigation/data.json（問題DBの抽出モードが取得する候補データ）が埋め込みデータと一致する。
+//    個別問題ページの抽出モード用の帯は空・非表示で、候補データを静的HTMLに含まない。
 // 3. 既存契約の回帰：/app/ のnoindex・canonical、sitemapが「既存＋/navigator/ の1件だけ」、robots.txt、
 //    個別問題・単元トップ・型ページが従来どおり生成され、self-canonical・noindexなし・本文が静的HTMLにある。
 // 4. GA4（gtag.js）が各ページで1回だけ読み込まれる。TOPに2つの導線がある。
 //
 // 任意：環境変数 NAV_AUDIT_BASELINE に、4×4実装前のcommitでbuildした dist のパスを渡すと、
 // 既存ページ（TOP以外）の静的HTMLが実装前と同じであることも比較する
-// （script・style・Astroのscope属性・戻り導線の帯は比較対象から除く）。
+// （script・style・Astroのscope属性・抽出モード用の空の帯は比較対象から除く）。
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dbSubjectNav } from '../src/data/subjects.ts';
 import { NAVIGATOR_SUBJECTS } from '../src/data/navigator-config.ts';
-import { buildNavData, createNavIndex } from '../src/utils/navigatorCore.ts';
+import { buildNavData, createNavIndex, problemHref } from '../src/utils/navigatorCore.ts';
 
 const SITE = 'https://math-navi.com';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -123,18 +125,20 @@ const resultHtml = page('/app/navigation/');
 check('/app/navigation/ が生成されている', resultHtml !== null);
 check('/app/navigation/ はnoindex,follow', robotsOf(resultHtml) === 'noindex,follow', robotsOf(resultHtml) ?? 'なし');
 check('/app/navigation/ はself-canonical', canonicalOf(resultHtml) === `${SITE}/app/navigation/`, canonicalOf(resultHtml) ?? '');
-const resultLinks = [...(resultHtml ?? '').matchAll(/<a[^>]*class="[^"]*db-problem-link[^"]*"[^>]*>/g)].map(
-  (m) => m[0].match(/href="([^"]*)"/)?.[1],
+check(
+  '/app/navigation/ に通常の問題DB・設定画面・各単元トップへの静的リンクがある',
+  ['/app/', '/navigator/', ...unitUrls].every((url) => (resultHtml ?? '').includes(`href="${url}"`)),
+);
+check('/app/navigation/ は独立した問題一覧を持たない', !/db-problem-link/.test(resultHtml ?? ''));
+const dataJsonFile = path.join(dist, 'app/navigation/data.json');
+check(
+  '/app/navigation/data.json が埋め込み候補データと一致する',
+  existsSync(dataJsonFile) && readFileSync(dataJsonFile, 'utf-8') === JSON.stringify(expectedData),
 );
 check(
-  '/app/navigation/ に全問題の静的リンクがあり、科目→単元→display_orderの順に並ぶ',
-  JSON.stringify(resultLinks) === JSON.stringify(problemUrls),
-  `${resultLinks.length}件`,
-);
-check(
-  '/app/navigation/ の各行に絞り込み用の問題IDがある',
-  JSON.stringify([...(resultHtml ?? '').matchAll(/data-nav-problem="([^"]*)"/g)].map((m) => m[1])) ===
-    JSON.stringify(index.problems.map((p) => p.id)),
+  '抽出モードの移動先（単元トップURL＋問題ID）が、既存の個別問題ページとしてすべて実在する',
+  JSON.stringify(index.problems.map((problem) => problemHref(index, problem))) === JSON.stringify(problemUrls) &&
+    problemUrls.every((url) => page(url) !== null),
 );
 
 // --- 3. 既存契約 ---
@@ -193,10 +197,16 @@ check(
   `${typePagesBuilt.length}件`,
 );
 const sampleProblem = page(problemUrls[0]);
+const modeHosts = [sampleProblem, appHtml, page(unitUrls[0]), page(typePagesBuilt[0] ?? unitUrls[0])].map(
+  (html) => html?.match(/<div[^>]*data-nav-mode[^>]*>([\s\S]*?)<\/div>/) ?? null,
+);
 check(
-  '個別問題ページの戻り導線は初期状態で非表示',
-  /<div[^>]*class="[^"]*db-nav-return[^"]*"[^>]*\bhidden\b/.test(sampleProblem ?? '') ||
-    /<div[^>]*\bhidden\b[^>]*class="[^"]*db-nav-return/.test(sampleProblem ?? ''),
+  '問題DBの抽出モード用の帯は、静的HTMLでは空・非表示（個別問題・/app/・単元トップ・型ページ）',
+  modeHosts.every((m) => m !== null && /\bhidden\b/.test(m[0]) && m[1].trim() === ''),
+);
+check(
+  '個別問題ページの静的HTMLに4×4の候補データを含まない',
+  !/navigator-data/.test(sampleProblem ?? '') && !(sampleProblem ?? '').includes('"problems":[["M1-'),
 );
 
 // --- 4. GA4・TOP導線 ---
@@ -219,13 +229,13 @@ if (baseline) {
       const full = path.join(dir, name);
       return statSync(full).isDirectory() ? walk(full) : [full];
     });
-  // 静的な内容だけを比べる：script・style・stylesheetのlink・Astroのscope属性・戻り導線の帯を除く。
+  // 静的な内容だけを比べる：script・style・stylesheetのlink・Astroのscope属性・抽出モード用の空の帯を除く。
   const normalize = (html) =>
     html
       .replace(/<script\b[^>]*type="module"[\s\S]*?<\/script>/g, '')
       .replace(/<style\b[\s\S]*?<\/style>/g, '')
       .replace(/<link rel="stylesheet"[^>]*>/g, '')
-      .replace(/<div[^>]*class="db-nav-return"[\s\S]*?<\/div>/g, '')
+      .replace(/<div[^>]*class="db-nav-mode"[^>]*><\/div>/g, '')
       .replace(/\s*data-astro-cid-[a-z0-9]+(="[^"]*")?/g, '')
       .replace(/<!--[\s\S]*?-->/g, '')
       .replace(/\s+/g, ' ');

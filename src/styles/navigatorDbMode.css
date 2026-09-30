@@ -1,0 +1,163 @@
+/* 問題DB（ProblemDbShell）の「4×4ナビゲーションの抽出モード」専用のスタイル。
+   抽出モードの本体（src/scripts/navigatorDbMode.ts）と一緒に、条件があるときだけ読み込まれる。
+   色・角丸・罫線は既存のdesign tokenだけを使い、影・大きな角丸・新しい配色は足さない。
+   帯の中身はscriptが作るため、Astroのscoped styleではなくこのファイルで指定する。 */
+
+.db-nav-mode {
+  padding: 0.35rem 1rem 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-accent-bg);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.db-nav-mode[hidden] {
+  display: none;
+}
+.db-nav-mode p {
+  margin: 0;
+}
+.db-nav-mode-main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.1rem;
+}
+.db-nav-mode-title strong {
+  color: var(--color-primary-dark);
+  font-size: 0.92rem;
+}
+.db-nav-mode-position {
+  margin-left: 0.6rem;
+  color: var(--color-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+.db-nav-mode-moves,
+.db-nav-mode-actions,
+.db-nav-mode-extra {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.db-nav-mode-actions {
+  margin-left: auto;
+}
+.db-nav-mode-move,
+.db-nav-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+}
+.db-nav-mode-move:hover,
+.db-nav-mode-btn:hover {
+  background: var(--color-surface-sunken);
+  text-decoration: none;
+}
+.db-nav-mode-move[aria-disabled='true'] {
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  cursor: default;
+}
+.db-nav-mode-move:focus-visible,
+.db-nav-mode-btn:focus-visible,
+.db-nav-mode-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.db-nav-mode-more {
+  display: none;
+}
+.db-nav-mode-summary {
+  margin-top: 0.15rem !important;
+  color: var(--color-text-subtle);
+  font-size: 0.78rem;
+}
+.db-nav-mode-shared {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.75rem;
+  margin-top: 0.3rem;
+}
+.db-nav-mode-shared[hidden],
+.db-nav-mode-share-fallback[hidden] {
+  display: none;
+}
+.db-nav-mode-status:empty {
+  display: none;
+}
+.db-nav-mode-status {
+  margin-top: 0.3rem !important;
+}
+.db-nav-mode-input {
+  width: 100%;
+  min-height: 36px;
+  margin-top: 0.3rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font: inherit;
+}
+
+/* 一覧・単元ナビ側 */
+.db-shell.db-nav-mode-on .db-list-switch {
+  display: none;
+}
+.db-nav-mode-unit-count {
+  float: right;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+.db-nav-mode-empty {
+  margin: 0.5rem 0.2rem;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .db-nav-mode {
+    padding: 0.5rem 0.9rem 0.55rem;
+  }
+  .db-nav-mode-title {
+    flex: 1 1 100%;
+  }
+  .db-nav-mode-moves,
+  .db-nav-mode-actions {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .db-nav-mode-move,
+  .db-nav-mode-btn {
+    min-height: 40px;
+  }
+  .db-nav-mode-moves .db-nav-mode-move {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+  .db-nav-mode-more {
+    display: inline-flex;
+  }
+  /* 「条件を変更・保存・共有」と条件の要約は、開いたときだけ表示する。 */
+  .db-nav-mode-extra {
+    order: 3;
+    flex: 1 1 100%;
+  }
+  .db-nav-mode:not(.is-open) .db-nav-mode-extra,
+  .db-nav-mode:not(.is-open) .db-nav-mode-summary {
+    display: none;
+  }
+}

@@ -605,3 +605,57 @@ export function autoSettingName(index: NavIndex, state: NavState, maxLength = 40
   const summary = rangeSummary(index, state.sections) || '学習設定';
   return summary.length > maxLength ? `${summary.slice(0, maxLength - 1)}…` : summary;
 }
+
+// ---------------------------------------------------------------------------
+// 問題DBの抽出モード（既存の個別問題ページを、抽出した問題集合の中で見て回る）
+// ---------------------------------------------------------------------------
+
+// 既存の静的な個別問題URL（単元トップURL＋問題ID）。
+export function problemHref(index: NavIndex, problem: NavProblem): string {
+  return `${index.unitInfo.get(problem.unitId)?.unit.href ?? '/'}${problem.id}/`;
+}
+
+// 抽出結果の先頭の問題URL（0件ならnull）。「問題データベースで見る」の移動先。
+export function firstResultHref(index: NavIndex, state: NavState): string | null {
+  const first = extractProblems(index, state)[0];
+  return first ? problemHref(index, first) : null;
+}
+
+export type DbModeView = {
+  // 抽出結果（科目順 → 単元順 → display_order）。
+  results: NavProblem[];
+  // 結果順の個別問題URL。
+  hrefs: string[];
+  // 単元トップURL → その単元の最初の抽出問題URL・件数（抽出問題のない単元は含まない）。
+  units: Map<string, { href: string; count: number }>;
+  // 表示中のページが抽出結果の何番目か（0始まり。抽出対象外のページは-1）。
+  current: number;
+  // 抽出結果の中での前後の問題URL（対象外のページでは、次＝先頭の問題）。
+  prevHref: string | null;
+  nextHref: string | null;
+};
+
+// 問題DBの1ページ（currentPath）を抽出モードで表示するための情報。
+// 一覧の絞り込み・単元リンクの行き先・前後の移動は、すべてここから決める。
+export function buildDbModeView(index: NavIndex, state: NavState, currentPath: string): DbModeView {
+  const results = extractProblems(index, state);
+  const hrefs = results.map((problem) => problemHref(index, problem));
+  const units: DbModeView['units'] = new Map();
+  results.forEach((problem, i) => {
+    const unitHref = index.unitInfo.get(problem.unitId)?.unit.href;
+    if (!unitHref) return;
+    const entry = units.get(unitHref);
+    if (entry) entry.count += 1;
+    else units.set(unitHref, { href: hrefs[i], count: 1 });
+  });
+  const path = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
+  const current = hrefs.indexOf(path);
+  return {
+    results,
+    hrefs,
+    units,
+    current,
+    prevHref: current > 0 ? hrefs[current - 1] : null,
+    nextHref: current === -1 ? (hrefs[0] ?? null) : (hrefs[current + 1] ?? null),
+  };
+}

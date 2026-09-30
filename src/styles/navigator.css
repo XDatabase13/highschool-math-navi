@@ -19,17 +19,18 @@
 
 /* ---- ページ見出し ---- */
 .nv-intro {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
 }
 .nv-intro h1 {
-  margin: 0 0 0.4rem;
-  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
+  font-size: 1.4rem;
 }
 .nv-intro p {
   margin: 0;
   max-width: 46rem;
   color: var(--color-text-subtle);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
 }
 
 /* ---- ボタン ---- */
@@ -37,8 +38,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 0.4rem 0.9rem;
+  min-height: 36px;
+  padding: 0.3rem 0.9rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
@@ -68,7 +69,7 @@
   cursor: not-allowed;
 }
 .nv-text-btn {
-  min-height: 40px;
+  min-height: 32px;
   padding: 0.3rem 0.2rem;
   border: none;
   background: none;
@@ -93,7 +94,7 @@
 
 /* ---- 通知 ---- */
 .nv-notice {
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   padding: 0.6rem 0.8rem;
   border-left: 3px solid var(--color-primary);
   background: var(--color-accent-bg);
@@ -107,12 +108,12 @@
 .nv-layout {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: start;
 }
 .nv-panel {
   min-width: 0;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--color-border);
 }
 .nv-panel-head {
@@ -120,11 +121,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
+/* 見出しは語の途中で折り返さない（幅が足りない場合だけ折り返す）。 */
 .nv-panel-title {
   margin: 0;
   font-size: 1.1rem;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* ---- 試験範囲 ---- */
@@ -133,8 +137,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.2rem 1rem;
-  margin-bottom: 0.75rem;
-  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.4rem;
+  padding: 0.4rem 0.75rem;
   background: var(--color-surface-sunken);
   font-size: 0.9rem;
 }
@@ -163,7 +167,7 @@
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  min-height: 40px;
+  min-height: 34px;
   min-width: 0;
   cursor: pointer;
 }
@@ -210,8 +214,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  min-height: 40px;
-  padding: 0.3rem 0.4rem;
+  min-height: 34px;
+  padding: 0.2rem 0.4rem;
   border: none;
   background: none;
   color: var(--color-text-subtle);
@@ -233,7 +237,10 @@
   transform: rotate(45deg);
 }
 .nv-section-list {
-  padding: 0 0 0.4rem 1.65rem;
+  padding: 0 0 0.3rem 1.65rem;
+}
+.nv-section-list .nv-check {
+  min-height: 30px;
 }
 .nv-section-list[hidden] {
   display: none;
@@ -260,7 +267,7 @@
   }
 }
 .nv-matrix-hint {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
   color: var(--color-text-subtle);
   font-size: 0.88rem;
 }
@@ -301,8 +308,8 @@
   justify-content: center;
   gap: 0.1rem;
   width: 100%;
-  min-height: 3.75rem;
-  padding: 1.05rem 0.2rem 0.65rem;
+  min-height: 3.3rem;
+  padding: 0.9rem 0.2rem 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
@@ -354,13 +361,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.6rem;
+  margin-top: 0.5rem;
 }
 
 /* ---- 抽出問題数と主ボタン ---- */
 .nv-result {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
   border-top: 1px solid var(--color-border);
 }
 .nv-result p {
@@ -385,7 +392,7 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  margin-top: 0.75rem;
+  margin-top: 0.55rem;
   padding: 0.6rem 1rem;
   border: 1px solid var(--color-primary-dark);
   border-radius: var(--radius);
@@ -414,10 +421,30 @@
 @media (max-width: 900px) {
   .nv-layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
   .nv-range-toggle {
     display: inline-block;
+  }
+  /* 「2. 重要度×難易度のマスを選ぶ」の見出しと「4×4の見方」ボタンを同じ行で競合させない。
+     見出しを1行で見せ、ボタンはその下の独立した行に置く。 */
+  .nv-matrix .nv-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+  /* 指で押す行は、詰めすぎず40px前後の高さを保つ。 */
+  .nv-check,
+  .nv-unit-toggle,
+  .nv-btn,
+  .nv-text-btn {
+    min-height: 40px;
+  }
+  .nv-section-list .nv-check {
+    min-height: 38px;
+  }
+  .nv-cell {
+    min-height: 3.5rem;
   }
   .nv-range[data-collapsed='true'] .nv-range-tree,
   .nv-range[data-collapsed='true'] .nv-range-clear {
@@ -440,97 +467,27 @@
 }
 
 /* ============================================================
-   抽出結果画面（/app/navigation/）
+   抽出結果の入口（/app/navigation/）
+   条件を読んで問題DBへ移動するだけのページ。移動できないときの案内とリンクだけを置く。
    ============================================================ */
-.nvr-summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem 1.5rem;
-  align-items: end;
-  padding: 1rem 0;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-}
-.nvr-conditions {
-  margin: 0;
-  font-size: 0.92rem;
-}
-.nvr-conditions > div {
-  display: flex;
-  gap: 0.75rem;
-}
-.nvr-conditions dt {
-  flex-shrink: 0;
-  width: 7.5rem;
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-  line-height: 1.95;
-}
-.nvr-conditions dd {
-  margin: 0;
-  min-width: 0;
-}
-.nvr-count {
-  margin: 0;
-  font-size: 0.95rem;
-  text-align: right;
-  white-space: nowrap;
-}
-.nvr-count strong {
-  margin-right: 0.15rem;
-  font-size: 1.7rem;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-}
-.nvr-actions {
-  grid-column: 1 / -1;
+.nvr-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.25rem;
 }
-.nvr-empty {
-  margin: 1.25rem 0 0;
-  color: var(--color-text-subtle);
+.nvr-units {
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
 }
-.nvr-empty[hidden] {
-  display: none;
+.nvr-units ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.92rem;
 }
-/* 一覧は問題DBの中央列と同じ、1段沈めたナビゲーション面に置く。 */
-.nvr-list {
-  margin-top: 1.25rem;
-  padding: 0.9rem;
-  background: var(--color-surface-sunken);
-}
-.nvr-list .db-problem-groups {
-  margin: 0;
-}
-.nvr-list .db-problem-row[hidden],
-.nvr-list .db-problem-group[hidden] {
-  display: none;
-}
-/* 条件を適用し終えるまで一覧を見せない（全問題が一瞬見えるのを避ける）。 */
-.nvr-pending [data-nvr-list] {
+/* 問題DBへ移動し終えるまで、案内を見せない。 */
+.nvr-pending .nvr-body {
   visibility: hidden;
-}
-
-@media (max-width: 600px) {
-  .nvr-summary {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .nvr-conditions > div {
-    flex-direction: column;
-    gap: 0;
-  }
-  .nvr-conditions > div + div {
-    margin-top: 0.4rem;
-  }
-  .nvr-conditions dt {
-    width: auto;
-  }
-  .nvr-count {
-    text-align: left;
-  }
 }
 
 /* ============================================================
@@ -541,9 +498,9 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin: 0 0 1.25rem;
-  padding: 0.7rem 0.9rem;
+  gap: 0.4rem 1rem;
+  margin: 0 0 0.9rem;
+  padding: 0.5rem 0.8rem;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   font-size: 0.9rem;
@@ -580,7 +537,7 @@
 }
 
 .nv-saved {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 .nv-saved-note,
 .nv-saved-empty {
@@ -613,8 +570,8 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.3rem 1rem;
-  padding: 0.6rem 0;
+  gap: 0.2rem 1rem;
+  padding: 0.4rem 0;
   border-top: 1px solid var(--color-border);
 }
 .nv-saved-item:last-child {
@@ -660,26 +617,6 @@
   margin: 0;
   flex: 1 1 14rem;
   font-size: 0.9rem;
-}
-
-.nvr-action-status {
-  grid-column: 1 / -1;
-  min-height: 1.6em;
-  margin: 0;
-  font-size: 0.85rem;
-}
-.nvr-summary .nv-share-fallback {
-  grid-column: 1 / -1;
-  margin: 0;
-}
-.nvr-save-note {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-}
-.nvr-save-note[hidden] {
-  display: none;
 }
 
 /* ============================================================

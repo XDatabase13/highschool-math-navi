@@ -4,7 +4,7 @@
 //   npm run test-navigator
 //
 // repo内の公開用スナップショット（src/content/<collection>/*.md のfrontmatter）を読み、
-// ページと同じ純粋関数（src/utils/navigatorCore.ts・navigatorStore.ts・navigatorReturn.ts）で
+// ページと同じ純粋関数（src/utils/navigatorCore.ts・navigatorStore.ts・navigatorLink.ts）で
 // 候補データ・範囲集計・16マス・抽出・並び順・状態のencode/decode・保存を検証する。
 // 期待値は、このファイル内でfrontmatterから別途数え直したものと突き合わせる。
 // build後の成果物（sitemap・canonical・robots等）は scripts/audit-navigator.mjs が検査する。
@@ -18,6 +18,7 @@ import {
   ALL_CELLS,
   IMPORTANCE_LEVELS,
   autoSettingName,
+  buildDbModeView,
   buildNavData,
   canExtract,
   candidateProblems,
@@ -29,8 +30,10 @@ import {
   encodeCells,
   encodeRange,
   extractProblems,
+  firstResultHref,
   normalizeState,
   parseStateString,
+  problemHref,
   rangeSummary,
   selectCells,
   serializeState,
@@ -49,7 +52,7 @@ import {
   createNavStore,
   resolveInitialState,
 } from '../src/utils/navigatorStore.ts';
-import { isStateStringShape, navReturnHref } from '../src/utils/navigatorReturn.ts';
+import { isStateStringShape } from '../src/utils/navigatorLink.ts';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let failures = 0;
@@ -398,14 +401,14 @@ const rangesToTest = [
     if (parsed.kind === 'ok' && serializeState(index, parsed.state) !== text) deterministic = false;
     // 同じ設定は、指定順が違っても同じ正規化URLになる。
     if (serializeState(index, normalizeState(index, [...range].reverse(), [...cells].reverse()).state) !== text) deterministic = false;
-    if (!isStateStringShape(text) || navReturnHref(text) !== `/app/navigation/#${text}`) shape = false;
+    if (!isStateStringShape(text)) shape = false;
     const key = JSON.stringify(state);
     if (seen.has(text) && seen.get(text) !== key) deterministic = false;
     seen.set(text, key);
   }
   check('URL: 生成→読込のround-tripで同じ条件になる', roundTrip);
   check('URL: 同じ設定は同じ正規化URLになる（決定的）', deterministic);
-  check('URL: 出力が戻り導線の形式検査を通る', shape);
+  check('URL: 出力が問題DB側の形式判定（抽出モードの起動条件）を通る', shape);
 
   check('URL: 単元全体・科目全体・全マスの省略表現', serializeState(index, normalizeState(index, ['sl1', 'sl2', 'qf1', 'qf2'], ['41']).state) === 'v=1&r=sl,qf1,qf2&c=41' && serializeState(index, normalizeState(index, allSections, ALL_CELLS.filter((c) => countCells(candidateProblems(index, allSections))[c] > 0)).state).startsWith('v=1&r=m1&c='));
   check('URL: 範囲トークンの展開（科目・単元・section）', same(normalizeState(index, ['m1'], []).state.sections, allSections) && same(normalizeState(index, ['qf'], []).state.sections, ['qf1', 'qf2', 'qf3', 'qf4', 'qf5', 'qf6', 'qf7']));
@@ -475,7 +478,56 @@ const rangesToTest = [
   check('URL: 将来version（v=2）は適用しない', parseStateString(index, 'v=2&r=sl&c=41').kind === 'unsupported' && parseStateString(index, 'v=99&r=zz').kind === 'unsupported');
 
   // 戻り導線の形式検査。
-  check('戻り導線: 不正な値はリンクにしない', [null, undefined, '', 'v=2&r=sl', 'v=1', 'v=1&c=41', 'v=1&r=sl&c=41"><script>', 'v=1&r=sl#x', 'javascript:alert(1)', 'v=1&r=SL'].every((v) => navReturnHref(v) === null));
+  check('抽出モード: 条件の形をしていないfragmentでは起動しない', [null, undefined, '', 'saved', 'v=2&r=sl', 'v=1', 'v=1&c=41', 'v=1&r=sl&c=41"><script>', 'v=1&r=sl#x', 'javascript:alert(1)', 'v=1&r=SL'].every((v) => !isStateStringShape(v)));
+}
+
+// ---------------------------------------------------------------------------
+// 6b. 問題DBの抽出モード（既存の個別問題ページを抽出した集合の中で見て回る）
+// ---------------------------------------------------------------------------
+{
+  // 個別問題URLは、既存の静的URL（単元トップURL＋問題ID）そのもの。
+  const routeOf = { expressionCalculation: '/math1/suto-shiki/', setLogic: '/math1/set-logic/', quadratic27: '/math1/quadratic/', trig4: '/math1/trig/', dataAnalysis: '/math1/data-analysis/' };
+  check('抽出モード: 個別問題URLが既存の静的URLと一致する（180問）', index.problems.every((p) => problemHref(index, p) === `${routeOf[entryById.get(p.id).collection]}${p.id}/`));
+
+  const state = normalizeState(index, ['sl', 'qf1', 'qf3'], ['41', '42', '31']).state;
+  const expected = expectedIds(['sl1', 'sl2', 'qf1', 'qf3'], ['41', '42', '31']);
+  const hrefOf = (id) => `${routeOf[entryById.get(id).collection]}${id}/`;
+  const expectedHrefs = expected.map(hrefOf);
+  check('抽出モード: 「問題データベースで見る」の移動先は抽出した先頭の問題', firstResultHref(index, state) === expectedHrefs[0] && firstResultHref(index, normalizeState(index, ['sl'], []).state) === null && firstResultHref(index, emptyState()) === null);
+
+  // 抽出した問題を開いても、同じ集合・同じ順序のまま（科目 → 単元 → display_order）。
+  let keepOk = true;
+  let moveOk = true;
+  expectedHrefs.forEach((href, i) => {
+    const view = buildDbModeView(index, state, href);
+    if (!same(view.hrefs, expectedHrefs) || view.current !== i) keepOk = false;
+    if (view.prevHref !== (expectedHrefs[i - 1] ?? null) || view.nextHref !== (expectedHrefs[i + 1] ?? null)) moveOk = false;
+  });
+  check('抽出モード: どの抽出問題を開いても一覧は同じ抽出集合・同じ並び順', keepOk, `${expectedHrefs.length}問`);
+  check('抽出モード: 前後の移動は抽出集合の中だけで行い、単元をまたぐ', moveOk && expectedHrefs.some((href, i) => i > 0 && href.split('/')[2] !== expectedHrefs[i - 1].split('/')[2]));
+
+  // 次の問題を辿り続けると、抽出した全問題をちょうど1回ずつ通る。
+  const walked = [];
+  for (let href = firstResultHref(index, state); href; href = buildDbModeView(index, state, href).nextHref) walked.push(href);
+  check('抽出モード: 「次の問題」を辿ると抽出した全問題を1回ずつ通る', same(walked, expectedHrefs));
+
+  // 単元ナビ：抽出した問題がある単元だけ。行き先はその単元の最初の抽出問題。
+  const view = buildDbModeView(index, state, expectedHrefs[0]);
+  const slFirst = expectedHrefs.find((href) => href.startsWith('/math1/set-logic/'));
+  const qfFirst = expectedHrefs.find((href) => href.startsWith('/math1/quadratic/'));
+  check(
+    '抽出モード: 単元ナビは抽出した問題がある単元だけ（行き先はその単元の最初の抽出問題）',
+    same([...view.units.keys()], ['/math1/set-logic/', '/math1/quadratic/']) &&
+      view.units.get('/math1/set-logic/').href === slFirst &&
+      view.units.get('/math1/quadratic/').href === qfFirst &&
+      [...view.units.values()].reduce((sum, unit) => sum + unit.count, 0) === expectedHrefs.length,
+  );
+
+  // 抽出対象外のページ（単元トップ・対象外の問題・型ページ）では、現在位置なし・次＝先頭。
+  const outside = buildDbModeView(index, state, '/math1/trig/M1-TR-001/');
+  const unitTop = buildDbModeView(index, state, '/math1/quadratic');
+  check('抽出モード: 対象外のページでは現在位置なし・次は先頭の問題', outside.current === -1 && outside.prevHref === null && outside.nextHref === expectedHrefs[0] && unitTop.current === -1 && same(outside.hrefs, expectedHrefs));
+  check('抽出モード: 0件の条件では移動先がない', buildDbModeView(index, normalizeState(index, ['sl'], []).state, slFirst).hrefs.length === 0);
 }
 
 // ---------------------------------------------------------------------------

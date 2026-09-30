@@ -9,26 +9,22 @@ import { displayProblemNumber, type DbCenterGroup } from '../utils/dbCenterList'
 interface Props {
   groups: DbCenterGroup[];
   activeItemId?: string;
-  // 4×4ナビの抽出結果画面（/app/navigation/）専用。trueのときだけ、全区分を開いた状態で出力し、
-  // client scriptが行を絞り込むためのdata属性（区分・件数・問題ID）を付ける。
-  // 既定（false）では出力は従来と完全に同じで、既存のDBページには影響しない。
-  filterable?: boolean;
 }
 
-const { groups, activeItemId, filterable = false } = Astro.props;
+const { groups, activeItemId } = Astro.props;
 ---
 
 <div class="db-problem-groups">
   {groups.map((group) => {
     const isActiveGroup = group.items.some((item) => item.id === activeItemId);
     return (
-      <details class="db-problem-group" open={isActiveGroup || filterable} data-nav-group={filterable ? group.groupId : undefined}>
+      <details class="db-problem-group" open={isActiveGroup}>
         <summary class="db-problem-group-toggle">
           <span class="db-problem-group-toggle-main">
             <span class="db-problem-group-caret" aria-hidden="true" />
             <span class="db-problem-group-label">{group.groupLabel}</span>
           </span>
-          <span class="db-problem-group-count" data-nav-group-count={filterable || undefined}>{group.items.length}問</span>
+          <span class="db-problem-group-count">{group.items.length}問</span>
         </summary>
         <ul class="db-problem-list">
           {group.items.map((item) => {
@@ -38,7 +34,7 @@ const { groups, activeItemId, filterable = false } = Astro.props;
             // と同じdisplayProblemNumberを使い、表示番号の情報源を一本化する。
             const number = displayProblemNumber(item.id);
             return (
-              <li class="db-problem-row" data-nav-problem={filterable ? item.id : undefined}>
+              <li class="db-problem-row">
                 <a
                   class:list={['db-problem-link', isSelected && 'is-selected']}
                   href={item.href}

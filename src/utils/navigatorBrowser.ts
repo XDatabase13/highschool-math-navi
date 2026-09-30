@@ -1,7 +1,7 @@
 // 4×4ナビゲーションの2ページ（/navigator/・/app/navigation/）で共有する、ブラウザAPIまわりの小さな部品
 // （localStorageの取得・共有・GA4イベント）。DOMに依存するため、純粋ロジック（navigatorCore.ts）とは分ける。
 
-import { NAV_RESULT_PATH } from './navigatorReturn.ts';
+import { NAV_RESULT_PATH } from './navigatorLink.ts';
 import type { StorageLike, WriteFailure } from './navigatorStore.ts';
 
 // localStorageが使えない（無効化・シークレットモードの制限等）ときはnull。
@@ -13,7 +13,7 @@ export function getLocalStorage(): StorageLike | null {
   }
 }
 
-// 共有するURL。常に抽出結果画面（/app/navigation/）＋条件のfragmentで、
+// 共有するURL。常に抽出結果の入口（/app/navigation/）＋条件のfragmentで（開くと問題DBの抽出表示へ移動する）、
 // 設定名・学習履歴・個人情報は含めない。
 export function resultUrl(stateString: string): string {
   return new URL(`${NAV_RESULT_PATH}#${stateString}`, window.location.origin).toString();
@@ -70,7 +70,7 @@ export function showShareOutcome(
 export function saveFailureMessage(reason: WriteFailure): string {
   return reason === 'unreadable' || reason === 'newer'
     ? '保存済みデータを読み込めないため、保存できませんでした。4×4ナビゲーションの「保存した学習設定」から初期化できます。'
-    : 'このブラウザでは設定を保存できませんでした（シークレットモードや保存容量の制限など）。「この条件を共有」でURLを控えておくと、同じ条件を開き直せます。';
+    : 'このブラウザでは設定を保存できませんでした（シークレットモードや保存容量の制限など）。「条件を共有」でURLを控えておくと、同じ条件を開き直せます。';
 }
 
 // GA4イベント。既存のAnalytics.astro（BaseLayoutが1回だけ読み込む）のgtagをそのまま使い、

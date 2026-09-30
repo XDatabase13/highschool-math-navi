@@ -9,6 +9,7 @@ import {
   countCells,
   createNavIndex,
   extractProblems,
+  firstResultHref,
   parseStateString,
   rangeSummary,
   selectCells,
@@ -24,7 +25,6 @@ import {
   type NavState,
   type StateChange,
 } from '../utils/navigatorCore.ts';
-import { NAV_RESULT_PATH } from '../utils/navigatorReturn.ts';
 import {
   MAX_SETTING_NAME_LENGTH,
   createNavStore,
@@ -76,6 +76,12 @@ function el<K extends keyof HTMLElementTagNameMap>(
 
 function init(data: NavData) {
   const index = createNavIndex(data);
+  // 「問題データベースで見る」の移動先：抽出した最初の問題の個別ページ（通常の問題DB画面）へ、
+  // 同じ条件をfragmentで付けて移動する。以後は問題DB側が抽出モードとして一覧を絞る。
+  const dbHref = (target: NavState): string | null => {
+    const first = firstResultHref(index, target);
+    return first ? `${first}#${serializeState(index, target)}` : null;
+  };
   const store = createNavStore(getLocalStorage());
   const initial = resolveInitialState(index, window.location.hash, store);
   let state: NavState = initial.state;
@@ -202,8 +208,9 @@ function init(data: NavData) {
     }
     const help = one<HTMLElement>('[data-nv-result-help]');
     if (goLink) {
-      if (results.length > 0) {
-        goLink.href = `${NAV_RESULT_PATH}#${serializeState(index, state)}`;
+      const href = dbHref(state);
+      if (href) {
+        goLink.href = href;
         goLink.removeAttribute('aria-disabled');
         goLink.textContent = `${results.length}問を問題データベースで見る`;
       } else {
@@ -299,7 +306,8 @@ function init(data: NavData) {
 
   function savedItem(setting: SavedSettingView): HTMLLIElement {
     const item = el('li', 'nv-saved-item');
-    const usable = setting.stateString !== '';
+    const openHref = dbHref(setting.state);
+    const usable = openHref !== null;
     const count = usable ? extractProblems(index, setting.state).length : 0;
 
     const main = el('div', 'nv-saved-main');
@@ -315,10 +323,10 @@ function init(data: NavData) {
     );
 
     const actions = el('div', 'nv-saved-actions');
-    if (usable) {
-      // 「開く」は、条件をURLへ載せて抽出結果画面へ移動する通常のリンク。
+    if (openHref) {
+      // 「開く」は、条件をURLへ載せて問題DB（抽出した最初の問題）へ移動する通常のリンク。
       const open = el('a', 'nv-text-btn', '開く');
-      open.href = `${NAV_RESULT_PATH}#${setting.stateString}`;
+      open.href = openHref;
       const onOpen = () => {
         store.setLast(index, setting.state);
         trackNavEvent('navigator_resume', { source: 'saved' });

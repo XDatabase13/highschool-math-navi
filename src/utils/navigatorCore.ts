@@ -591,6 +591,19 @@ export function cellsSummary(cells: readonly string[]): string {
   return rows.join('／');
 }
 
+// 例: ['土台1・2', '本命1']（重要度ごとに、選択中の難易度を並べる）。未選択は空配列。
+// 問題DBの抽出モード（スマホ幅）の条件タグに使う。
+export function cellsSummaryParts(cells: readonly string[]): string[] {
+  const set = new Set(cells);
+  if (ALL_CELLS.every((cell) => set.has(cell))) return ['すべてのマス'];
+  const parts: string[] = [];
+  for (const level of IMPORTANCE_LEVELS) {
+    const difficulties = DIFFICULTY_LEVELS.filter((difficulty) => set.has(cellKey(level.value, difficulty)));
+    if (difficulties.length > 0) parts.push(`${level.label}${difficulties.join('・')}`);
+  }
+  return parts;
+}
+
 // 単元ごとの内訳（結果の並び順）。
 export function unitBreakdown(index: NavIndex, problems: readonly NavProblem[]): { unitId: string; name: string; count: number }[] {
   const counts = new Map<string, number>();

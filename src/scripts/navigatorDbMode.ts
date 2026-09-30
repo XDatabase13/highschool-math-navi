@@ -20,9 +20,11 @@ import '../styles/navigatorDbMode.css';
 import {
   buildDbModeView,
   cellsSummary,
+  cellsSummaryParts,
   createNavIndex,
   parseStateString,
   rangeSummary,
+  rangeSummaryParts,
   serializeState,
   type NavData,
 } from '../utils/navigatorCore.ts';
@@ -152,20 +154,37 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
   // --- ヘッダー直下の帯 ---
   const store = createNavStore(getLocalStorage());
 
-  const title = el('p', 'db-nav-mode-title');
-  title.append(el('strong', '', `4×4ナビで選んだ${total}問を表示中`));
-  title.append(
+  // 件数・現在位置・条件は、PC用（文章）とスマホ用（短い表記・タグ）の両方を出し、
+  // 画面幅に応じてCSSで片方だけを表示する（.db-nav-mode-wide / .db-nav-mode-narrow）。
+  const inCurrent = view.current >= 0;
+  const heading = el('strong', '');
+  heading.append(
+    el('span', 'db-nav-mode-wide', `4×4ナビで選んだ${total}問を表示中`),
+    el('span', 'db-nav-mode-narrow', `4×4　${total}問`),
+  );
+  const position = el('span', 'db-nav-mode-position');
+  position.append(
     el(
       'span',
-      'db-nav-mode-position',
-      view.current >= 0 ? `${view.current + 1}問目／${total}問` : 'このページは選んだ問題に含まれません',
+      'db-nav-mode-wide',
+      inCurrent ? `${view.current + 1}問目／${total}問` : 'このページは選んだ問題に含まれません',
     ),
+    el('span', 'db-nav-mode-narrow', inCurrent ? `${view.current + 1}/${total}` : '対象外'),
   );
+  const title = el('p', 'db-nav-mode-title');
+  title.append(heading, position);
 
   const summary = el(
     'p',
-    'db-nav-mode-summary',
+    'db-nav-mode-summary db-nav-mode-wide',
     `${rangeSummary(index, state.sections)}／${cellsSummary(state.cells)}`,
+  );
+  const chips = el('ul', 'db-nav-mode-chips db-nav-mode-narrow');
+  chips.setAttribute('aria-label', '選択中の範囲・重要度と難易度');
+  chips.append(
+    ...[...rangeSummaryParts(index, state.sections), ...cellsSummaryParts(state.cells)].map((part) =>
+      el('li', 'db-nav-mode-chip', part),
+    ),
   );
 
   const status = el('p', 'db-nav-mode-status');
@@ -246,23 +265,45 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
     window.location.reload();
   });
 
-  // スマホ幅では「問題再選定・保存・共有」と条件の要約を折りたたみ、帯を低く保つ（PCでは常に表示）。
-  const more = el('button', 'db-nav-mode-btn db-nav-mode-more', '条件・保存・共有');
+  // スマホ幅では4つの操作を「4×4設定」のメニューへ格納し、押したときだけ本文の上へ重ねて出す
+  // （本文を押し下げない）。PCではメニューのボタンを出さず、4つの操作を常に横並びで表示する。
+  const more = el('button', 'db-nav-mode-btn db-nav-mode-more', '4×4設定');
   more.type = 'button';
   more.setAttribute('aria-expanded', 'false');
-  more.addEventListener('click', () => {
-    const open = !host.classList.contains('is-open');
+  more.setAttribute('aria-controls', 'db-nav-mode-menu');
+  const extra = el('div', 'db-nav-mode-extra');
+  extra.id = 'db-nav-mode-menu';
+  extra.append(edit, save, share, exit);
+  const actions = el('div', 'db-nav-mode-actions');
+  actions.append(more, extra);
+
+  const isMenuOpen = () => host.classList.contains('is-open');
+  // refocus: メニュー内の操作で閉じたとき、消える項目からボタンへフォーカスを戻す（スマホ幅だけ）。
+  const setMenuOpen = (open: boolean, refocus = false) => {
     host.classList.toggle('is-open', open);
     more.setAttribute('aria-expanded', String(open));
+    if (refocus && more.offsetParent !== null) more.focus();
+  };
+  more.addEventListener('click', () => setMenuOpen(!isMenuOpen()));
+  // 保存・共有は、押したらメニューを閉じる（結果の表示は帯の中に出る）。
+  // 問題再選定・全問題表示はページ移動なので、そのままにする。
+  save.addEventListener('click', () => setMenuOpen(false, true));
+  share.addEventListener('click', () => setMenuOpen(false, true));
+  document.addEventListener('click', (event) => {
+    if (isMenuOpen() && !event.composedPath().includes(actions)) setMenuOpen(false);
   });
-  const extra = el('div', 'db-nav-mode-extra');
-  extra.append(edit, save, share);
-  const actions = el('div', 'db-nav-mode-actions');
-  actions.append(more, extra, exit);
+  actions.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !isMenuOpen()) return;
+    setMenuOpen(false, true);
+  });
+  actions.addEventListener('focusout', (event) => {
+    const next = event.relatedTarget;
+    if (isMenuOpen() && next instanceof Node && !actions.contains(next)) setMenuOpen(false);
+  });
 
   const main = el('div', 'db-nav-mode-main');
   main.append(title, actions);
-  host.replaceChildren(main, summary, sharedRow, status, fallback);
+  host.replaceChildren(main, summary, chips, sharedRow, status, fallback);
   host.setAttribute('role', 'region');
   host.setAttribute('aria-label', '4×4ナビゲーションの抽出モード');
   host.hidden = false;

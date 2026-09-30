@@ -591,15 +591,15 @@ export function cellsSummary(cells: readonly string[]): string {
   return rows.join('／');
 }
 
-// 例: ['土台1・2', '本命1']（重要度ごとに、選択中の難易度を並べる）。未選択は空配列。
-// 問題DBの抽出モード（スマホ幅）の条件タグに使う。
+// 例: ['土台 × 1・2', '本命 × 1']（重要度（4×4の縦軸）× 選択中の難易度（横軸））。未選択は空配列。
+// 問題DBの抽出モードの条件タグに使う（PC・スマホ共通）。
 export function cellsSummaryParts(cells: readonly string[]): string[] {
   const set = new Set(cells);
   if (ALL_CELLS.every((cell) => set.has(cell))) return ['すべてのマス'];
   const parts: string[] = [];
   for (const level of IMPORTANCE_LEVELS) {
     const difficulties = DIFFICULTY_LEVELS.filter((difficulty) => set.has(cellKey(level.value, difficulty)));
-    if (difficulties.length > 0) parts.push(`${level.label}${difficulties.join('・')}`);
+    if (difficulties.length > 0) parts.push(`${level.label} × ${difficulties.join('・')}`);
   }
   return parts;
 }

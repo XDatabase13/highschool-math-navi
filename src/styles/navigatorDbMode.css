@@ -65,15 +65,28 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
-/* 「4×4設定」（メニューのボタン）と、短い表記・条件タグはスマホ幅だけ。PCでは出さない。 */
-.db-nav-mode-more,
-.db-nav-mode-narrow {
+/* 「4×4設定」（メニューのボタン）はスマホ幅だけ。PCでは出さない。 */
+.db-nav-mode-more {
   display: none;
 }
-.db-nav-mode-summary {
-  margin-top: 0.15rem !important;
-  color: var(--color-text-subtle);
-  font-size: 0.78rem;
+/* 条件のタグ（範囲、重要度 × 難易度）。多いときは折り返す（横へ押し広げない）。 */
+.db-nav-mode-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.db-nav-mode-chip {
+  max-width: 100%;
+  padding: 0 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 .db-nav-mode-shared {
   display: flex;
@@ -126,12 +139,6 @@
   .db-nav-mode {
     padding: 0.35rem 0.9rem 0.4rem;
   }
-  .db-nav-mode-wide {
-    display: none;
-  }
-  .db-nav-mode-narrow {
-    display: inline;
-  }
   .db-nav-mode-main {
     flex-wrap: nowrap;
     gap: 0.5rem;
@@ -155,23 +162,8 @@
   .db-nav-mode-more[aria-expanded='true'] {
     background: var(--color-surface-sunken);
   }
-  ul.db-nav-mode-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin: 0.3rem 0 0;
-    padding: 0;
-    list-style: none;
-  }
-  .db-nav-mode-chip {
-    max-width: 100%;
-    padding: 0 0.4rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background: var(--color-surface);
-    font-size: 0.75rem;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
+  .db-nav-mode-chips {
+    margin-top: 0.3rem;
   }
   /* メニューは本文の上へ重ねて出す（本文を押し下げない）。重ねて出すUIなので影だけ許す。
      ボタンの右端にそろえ、幅は画面幅を超えない。 */

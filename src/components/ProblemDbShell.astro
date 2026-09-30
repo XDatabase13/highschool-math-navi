@@ -174,7 +174,7 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
 
       <!-- 4×4ナビゲーションの抽出モード用の帯（既定は空・非表示）。URL fragmentに4×4の条件
            （#v=1&r=…&c=…）が付いているときだけ、下のscriptが抽出モードの本体を遅延読み込みし、
-           ここへ「4×4ナビで選んだ○問を表示中」と操作を出して、一覧・単元ナビを抽出した問題だけに絞る。
+           ここへ「4×4　○問　n/○」・条件のタグと操作を出して、一覧・単元ナビを抽出した問題だけに絞る。
            fragmentのない通常の来訪では何も読み込まず、静的HTML・SEO契約も変わらない。 -->
       <div class="db-nav-mode" data-nav-mode hidden></div>
 

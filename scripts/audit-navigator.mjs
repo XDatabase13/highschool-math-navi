@@ -130,6 +130,25 @@ check(
   ['/app/', '/navigator/', ...unitUrls].every((url) => (resultHtml ?? '').includes(`href="${url}"`)),
 );
 check('/app/navigation/ は独立した問題一覧を持たない', !/db-problem-link/.test(resultHtml ?? ''));
+// 埋め込みJSONの「<」は、両ページとも同じ書式（< へ置換）でエスケープする。
+const ESCAPE_SOURCE = "JSON.stringify(data).replace(/</g, '\\\\u003c')";
+check(
+  '埋め込み候補データの「<」のエスケープが /navigator/ と /app/navigation/ で同じ書式',
+  ['src/pages/navigator/index.astro', 'src/pages/app/navigation/index.astro'].every((file) =>
+    readFileSync(path.join(repoRoot, file), 'utf-8').includes(ESCAPE_SOURCE),
+  ),
+);
+const resultEmbedded = resultHtml?.match(/<script type="application\/json" id="navigator-data">([\s\S]*?)<\/script>/)?.[1];
+check(
+  '/app/navigation/ の埋め込み候補データに生の「<」がなく、/navigator/ の埋め込みと一致する',
+  typeof resultEmbedded === 'string' && !resultEmbedded.includes('<') && resultEmbedded === embedded,
+);
+// navigator_result_view は問題DBの抽出モード側で送る（入口ページの転送前には送らない＝二重計測しない）。
+check(
+  'navigator_result_view を送るのは抽出モード本体だけ（入口ページでは送らない）',
+  readFileSync(path.join(repoRoot, 'src/scripts/navigatorDbMode.ts'), 'utf-8').includes("trackNavEvent('navigator_result_view'") &&
+    !readFileSync(path.join(repoRoot, 'src/scripts/navigatorResultPage.ts'), 'utf-8').includes('trackNavEvent('),
+);
 const dataJsonFile = path.join(dist, 'app/navigation/data.json');
 check(
   '/app/navigation/data.json が埋め込み候補データと一致する',

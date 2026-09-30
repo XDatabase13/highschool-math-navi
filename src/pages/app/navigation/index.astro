@@ -13,7 +13,7 @@ import '../../../styles/navigator.css';
 //   案内と通常の問題DB・各単元トップへの静的リンクを表示する。
 const { data, index } = await loadNavigatorData();
 const canonicalUrl = new URL('/app/navigation/', Astro.site).toString();
-const dataJson = JSON.stringify(data).replace(/</g, '\u003c');
+const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
 ---
 
 <BaseLayout

@@ -5,13 +5,11 @@
 
 import {
   createNavIndex,
-  extractProblems,
   firstResultHref,
   parseStateString,
   serializeState,
   type NavData,
 } from '../utils/navigatorCore.ts';
-import { trackNavEvent } from '../utils/navigatorBrowser.ts';
 
 const MESSAGE_NONE = '条件が指定されていません。4×4ナビゲーションで試験範囲とマスを選んでください。';
 const MESSAGE_EMPTY = '条件に合う問題がありません。試験範囲またはマスを選び直してください。';
@@ -45,9 +43,8 @@ function init(data: NavData) {
       const first = firstResultHref(index, parsed.state);
       if (first) {
         if (message) message.textContent = MESSAGE_MOVING;
-        trackNavEvent('navigator_result_view', {
-          problem_count: extractProblems(index, parsed.state).length,
-        });
+        // navigator_result_view は、移動先の問題DBで抽出表示が成立した時点で送る
+        // （navigatorDbMode.ts。ここでは送らない＝二重に計測しない）。
         // このページを履歴に残さない（「戻る」で元の画面へ戻れるようにする）。
         window.location.replace(`${first}#${stateString}`);
         return;

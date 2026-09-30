@@ -653,6 +653,18 @@ export type DbModeView = {
   nextHref: string | null;
 };
 
+// 抽出モードを始められるか。条件らしいfragmentが付いたページで使う（fragmentに条件がない
+// 場合も「読めない」扱い）。読めない・新しい形式・該当問題なしのときは、問題DBは全問題一覧へ
+// 黙って戻らず、案内を出す。
+export type DbModeStart = { kind: 'ok'; state: NavState } | { kind: 'invalid' | 'unsupported' | 'empty' };
+
+export function resolveDbModeStart(index: NavIndex, fragment: unknown): DbModeStart {
+  const parsed = parseStateString(index, fragment);
+  if (parsed.kind === 'unsupported') return { kind: 'unsupported' };
+  if (parsed.kind !== 'ok') return { kind: 'invalid' };
+  return extractProblems(index, parsed.state).length > 0 ? { kind: 'ok', state: parsed.state } : { kind: 'empty' };
+}
+
 // 問題DBの1ページ（currentPath）を抽出モードで表示するための情報。
 // 一覧の絞り込み・単元リンクの行き先・前後の移動は、すべてここから決める。
 export function buildDbModeView(index: NavIndex, state: NavState, currentPath: string): DbModeView {

@@ -35,6 +35,7 @@ import {
   parseStateString,
   problemHref,
   rangeSummary,
+  resolveDbModeStart,
   selectCells,
   serializeState,
   setSectionSelected,
@@ -52,7 +53,7 @@ import {
   createNavStore,
   resolveInitialState,
 } from '../src/utils/navigatorStore.ts';
-import { isStateStringShape } from '../src/utils/navigatorLink.ts';
+import { isNavModeEntry, isStateStringShape, looksLikeNavFragment, navEditHref } from '../src/utils/navigatorLink.ts';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let failures = 0;
@@ -528,6 +529,68 @@ const rangesToTest = [
   const unitTop = buildDbModeView(index, state, '/math1/quadratic');
   check('抽出モード: 対象外のページでは現在位置なし・次は先頭の問題', outside.current === -1 && outside.prevHref === null && outside.nextHref === expectedHrefs[0] && unitTop.current === -1 && same(outside.hrefs, expectedHrefs));
   check('抽出モード: 0件の条件では移動先がない', buildDbModeView(index, normalizeState(index, ['sl'], []).state, slFirst).hrefs.length === 0);
+
+  // --- 抽出モードを始められないとき（全問題一覧へ黙って戻さず、案内を出す） ---
+  // 条件らしいfragmentには、形が壊れていても・新しい形式でも反応する（通常のアンカーには反応しない）。
+  check(
+    '抽出モード: 条件らしいfragment（v=<数字>…）は、壊れていても・新しい形式でも検出する',
+    ['v=1&r=sl&c=41', 'v=2&r=sl', 'v=1', 'v=1&c=41', 'v=1&r=SL', 'v=1&r=sl&c=41"><script>', 'v=1&r=zz&c=99', 'v=99'].every((v) => looksLikeNavFragment(v)) &&
+      [null, undefined, '', 'saved', 'top', 'javascript:alert(1)', 'r=sl&c=41', 'version', 'v=', 'x&v=1'].every((v) => !looksLikeNavFragment(v)),
+  );
+  const startOk = resolveDbModeStart(index, '#v=1&r=sl,qf1,qf3&c=41,42,31');
+  check('抽出モード開始: 正常な条件はok（正規化した状態を返す）', startOk.kind === 'ok' && same(startOk.state, state));
+  check(
+    '抽出モード開始: 読めない条件・条件のないfragmentはinvalid',
+    ['v=1&r=zz&c=41', 'v=1&r=SL', 'v=1&c=41', 'v=1', 'v=0&r=sl', 'v=abc&r=sl', 'v=1&r=' + 'sl,'.repeat(2000)].every(
+      (v) => resolveDbModeStart(index, v).kind === 'invalid',
+    ),
+  );
+  check('抽出モード開始: 新しい形式（v=2）はunsupported', resolveDbModeStart(index, 'v=2&r=sl&c=41').kind === 'unsupported');
+  check(
+    '抽出モード開始: 範囲だけ・0問のマスだけの条件はempty',
+    resolveDbModeStart(index, 'v=1&r=sl').kind === 'empty' && resolveDbModeStart(index, 'v=1&r=sl&c=14').kind === (extractProblems(index, normalizeState(index, ['sl'], ['14']).state).length === 0 ? 'empty' : 'ok'),
+  );
+  check(
+    '抽出モード開始: okになるのは抽出結果が1問以上のときだけ',
+    ['v=1&r=sl&c=41', 'v=1&r=m1&c=all', 'v=1&r=sl', 'v=1&r=da5&c=44', 'v=1&r=zz', 'v=2&r=sl&c=41'].every((v) => {
+      const start = resolveDbModeStart(index, v);
+      const parsed = parseStateString(index, v);
+      const count = parsed.kind === 'ok' ? extractProblems(index, parsed.state).length : 0;
+      return (start.kind === 'ok') === (count > 0);
+    }),
+  );
+  // 「問題再選定」の行き先：条件を可能な範囲で引き継ぐ。条件に使わない文字を含むものは引き継がない。
+  check(
+    '抽出モード失敗時: 問題再選定は条件を引き継いで設定画面へ（危険な文字列は引き継がない）',
+    navEditHref('v=1&r=sl,qf1&c=41,42') === '/navigator/#v=1&r=sl,qf1&c=41,42' &&
+      navEditHref('v=2&r=sl') === '/navigator/#v=2&r=sl' &&
+      ['v=1&r=sl&c=41"><script>', 'v=1&r=sl#x', 'v=1&r=sl c=1', 'v=1&r=sl/../x', 'v=1&r=' + 'a'.repeat(1000), '', null, undefined].every((v) => navEditHref(v) === '/navigator/'),
+  );
+  check(
+    '抽出モード失敗時: 引き継いだ条件は設定画面で読める部分だけ反映される',
+    parseStateString(index, navEditHref('v=1&r=sl,zz&c=41').split('#')[1]).kind === 'ok' &&
+      parseStateString(index, navEditHref('v=2&r=sl').split('#')[1]).kind === 'unsupported',
+  );
+
+  // --- navigator_result_view を送るのは、抽出モードへ入ったときだけ ---
+  const origin = 'https://math-navi.com';
+  check(
+    '計測: 設定画面・共有URLの入口・外部・直接のURLから入ったときは送る',
+    isNavModeEntry(`${origin}/navigator/`, origin, 'navigate') &&
+      isNavModeEntry(`${origin}/navigator/#v=1&r=sl&c=41`, origin, 'navigate') &&
+      isNavModeEntry(`${origin}/app/navigation/`, origin, 'navigate') &&
+      isNavModeEntry('', origin, 'navigate') &&
+      isNavModeEntry('https://example.com/x', origin, 'navigate') &&
+      isNavModeEntry('not a url', origin, 'navigate'),
+  );
+  check(
+    '計測: 抽出モードのまま問題DB内を移動したとき・再読み込み・戻る／進むでは送らない',
+    !isNavModeEntry(`${origin}/math1/set-logic/M1-SL-001/`, origin, 'navigate') &&
+      !isNavModeEntry(`${origin}/math1/quadratic/`, origin, 'navigate') &&
+      !isNavModeEntry(`${origin}/app/`, origin, 'navigate') &&
+      !isNavModeEntry(`${origin}/navigator/`, origin, 'reload') &&
+      !isNavModeEntry('', origin, 'back_forward'),
+  );
 }
 
 // ---------------------------------------------------------------------------

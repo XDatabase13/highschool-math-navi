@@ -21,12 +21,12 @@ import {
   buildDbModeView,
   cellsSummaryParts,
   createNavIndex,
-  parseStateString,
   rangeSummaryParts,
+  resolveDbModeStart,
   serializeState,
   type NavData,
 } from '../utils/navigatorCore.ts';
-import { NAV_DATA_PATH } from '../utils/navigatorLink.ts';
+import { NAV_DATA_PATH, isNavModeEntry, type NavModeFailure } from '../utils/navigatorLink.ts';
 import { MAX_SAVED_SETTINGS, createNavStore } from '../utils/navigatorStore.ts';
 import {
   getLocalStorage,
@@ -52,17 +52,22 @@ function all<T extends Element>(selector: string, root: ParentNode = document): 
   return Array.from(root.querySelectorAll<T>(selector));
 }
 
-export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
-  const response = await fetch(NAV_DATA_PATH);
-  if (!response.ok) return;
-  const index = createNavIndex((await response.json()) as NavData);
-  const parsed = parseStateString(index, window.location.hash);
-  // 条件を読めない・該当問題がない場合は、通常表示のままにする。
-  if (parsed.kind !== 'ok') return;
-  const state = parsed.state;
+// 抽出モードを始める。始められなかった場合は、画面を変えずに理由を返す（案内を出すのは呼び出し側の
+// ProblemDbShell。全問題一覧へ黙って戻さないため、呼び出し側は一覧を隠したまま案内を表示する）。
+export async function startNavigatorDbMode(host: HTMLElement): Promise<NavModeFailure | null> {
+  let index: ReturnType<typeof createNavIndex>;
+  try {
+    const response = await fetch(NAV_DATA_PATH);
+    if (!response.ok) return 'data';
+    index = createNavIndex((await response.json()) as NavData);
+  } catch {
+    return 'data';
+  }
+  const start = resolveDbModeStart(index, window.location.hash);
+  if (start.kind !== 'ok') return start.kind;
+  const state = start.state;
   const view = buildDbModeView(index, state, window.location.pathname);
   const total = view.results.length;
-  if (total === 0) return;
 
   const stateString = serializeState(index, state);
   const withState = (href: string) => `${href}#${stateString}`;
@@ -287,4 +292,12 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<void> {
   host.setAttribute('role', 'region');
   host.setAttribute('aria-label', '4×4ナビゲーションの抽出モード');
   host.hidden = false;
+
+  // 抽出表示が成立した。設定画面・共有URLの入口などから抽出モードへ入ったときに1回だけ計測する
+  // （抽出モードのまま問題を移動するたびには送らない）。送るのは実際の抽出件数だけ。
+  const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+  if (isNavModeEntry(document.referrer, window.location.origin, navigation?.type ?? 'navigate')) {
+    trackNavEvent('navigator_result_view', { problem_count: total });
+  }
+  return null;
 }

@@ -129,10 +129,34 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - **UI**：PC中央列とスマホ問題一覧dialogに「問題タイプ / 問題一覧」切替を追加しました（`ProblemDbShell.astro`、型一覧が0件のページでは切替を出さず従来と同じマークアップ）。初期タブは型ページだけ「問題タイプ」、それ以外は「問題一覧」です。型一覧は `TypePageList.astro`（masterの表示順のフラットリスト）、本文は `TypePageDetail.astro`、問題previewは `TypeProblemPreview.astro`（ネイティブ`details`、初期全閉、型ページ内だけ単一open）。previewに出すのは「## 問題」（小問含む）と `placement: problem` のassetだけで、`prepareProblemPreview.ts` が用意します。型内の問題順は既存の `display_order` 昇順（`orderTypeProblems(..., {mode:'number'})`）。既存の `ProblemGroupList`・分類utils・`Quadratic27Detail` は変更していません。
 - **SVG**：1ページに複数問題のinline SVGが並ぶため、preview用assetの内部IDは `tp-<問題ID>-a<n>-` で名前空間化し、参照（`url(#…)`・`href`・`xlink:href`・aria）も書き換えます（`src/utils/svgIdNamespace.ts`）。重複id・参照切れはbuildエラーです。problem assetを持つ型はQF-T01・TR-T01・TR-T09・DA-T01・DA-T02・DA-T05の6つだけです。
 - **開発確認用fixture**：正式Markdown 38件の同期に伴い、2026-09-29に`src/dev-fixtures/typePageFixture.ts`（QF-T03の仮文）と`typePages.ts`の読込分岐を削除しました。DEVで表示されるのは同期済みの正式Markdownがある型だけです。`audit-type-pages`は旧fixtureの文字列がbuild成果物へ混入していないかを引き続き検査します。
-- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→189、38件承認あり→227、37件承認あり→buildエラー。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
+- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→190、38件承認あり→228、37件承認あり→buildエラー。件数は4×4ナビの `/navigator/` 1件を含む。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
 - **初版でやらないこと**：推薦順・4×4・ユーザー条件・推薦理由、型同士のリンク、個別問題本文からの所属型リンク、primary/secondary・roleの表示、型専用GA4 event。将来の推薦は `orderTypeProblems` の新modeとして分離し、master・型Markdown・問題データへ順序情報を持たせないでください。
 - **本文の自動検査**：spec §3.2・§3.4（2026-09-29改訂）どおり、本文中の問題ID（`M1-XX-999`形式）・3桁の問題番号（数式外の単独の3桁数字。角度`180°`等は除き、`020〜023`は範囲展開）は所属問題の例示として許可し、warningとして報告します。その型の所属問題でない番号・別単元の問題IDだけが同期エラーです（`scripts/sync-type-pages.mjs`の`checkMentionedProblems`）。句点数（目安2〜4文）もwarningだけです。warningが出ても承認済み本文・descriptionを自動修正しないでください。
 - **残作業**：Codexによる型ページ横断監査（公開後に実施予定）。型を追加・削除する場合は、`EXPECTED_PUBLISHED_TYPE_PAGE_COUNT`・テスト・この節・SEO節（sitemap件数）を一緒に更新してください。
+
+---
+
+## 4×4ナビゲーションの現在地
+
+試験範囲（科目 → 単元 → section）と重要度×難易度の16マスから問題を抽出する「4×4推薦・学習ナビゲーション」初版を、2026-09-30に `feature/4x4-navigation` branch（基準commit `2f74b6e`）で実装しました。**masterへのmerge・push・本番公開は、人間のPC／スマホ確認と明示的な承認の後です**（この節はmerge後の契約として書いています）。実装正本は本教材側（`math_db_quadratic_working/`）の `four_by_four_navigation_implementation_spec_v1.0_2026-09-30.md` です。既存の問題DB・型ページを置き換えない別レイヤーで、正本Markdown・master xlsx・型ページ所属・既存問題URLは変更していません。
+
+- **ルートとindex契約**：設定画面 `/navigator/`（index対象・self-canonical・sitemap掲載。sitemapは227→228）、抽出結果の入口 `/app/navigation/`（`noindex,follow`・self-canonical・sitemap非掲載）。条件はURL fragmentで渡し、条件ごとのHTML・sitemap登録は作りません。どちらも `BaseLayout`（GA4は既存の `Analytics.astro` を1回だけ）を使います。TOPには既存の「問題データベースを見る」の隣に副ボタン「4×4ナビゲーション」を置いています。
+- **抽出結果は通常の問題DBで見る（抽出モード）**：独立した抽出結果一覧ページは持ちません（2026-09-30に廃止）。「○問を問題データベースで見る」は、抽出した先頭の問題の既存URLへ条件のfragmentを付けて移動します（例 `/math1/set-logic/M1-SL-001/#v=1&r=sl,qf1,qf3&c=41,42,31`）。`ProblemDbShell` は、fragmentが条件らしい形（`src/utils/navigatorLink.ts` の `looksLikeNavFragment`。「v=<数字>」で始まる）のときだけ `src/scripts/navigatorDbMode.ts` を遅延読み込みし、(1) 中央の問題一覧（PC中央列・スマホの問題一覧ダイアログ）を抽出した問題の行だけにする、(2) 左の単元ナビを抽出した問題がある単元だけにして行き先をその単元の最初の抽出問題にする、(3) 一覧・単元・パンくずのリンクへ同じfragmentを付けて抽出状態を保つ、(4) ヘッダー直下の帯に、選択中のマスを示す小型の4×4（読み取り専用の図。押せない。1行目の高さに収まる大きさで帯を高くしない。条件のタグと内容が重なるが、人間が重複感を確認するため当面は両方を出す）・「4×4　○問　n/○」（抽出対象外のページでは「対象外」）・条件のタグ（範囲は `rangeSummaryParts()`、重要度×難易度は `cellsSummaryParts()` の「土台 × 1・2」形式。PC・スマホ共通の表記で、多いときは折り返す）・問題再選定（設定画面へ戻る）・学習設定を保存・条件を共有・全問題表示（抽出モードの終了）、を出します（2026-09-30改訂：帯に長い説明文・前後移動ボタンは置かず、問題の移動は中央の抽出問題一覧から行います。共有・コピーが済んだことを知らせる完了メッセージは出さず、記録もしません。コピーもできなかったときだけ手動コピー用のURLを出します。PC幅では4つの操作をボタンの横並びで常に表示し、スマホ幅では「4×4設定」ボタンのメニュー（本文の上へ重ねて出す。再押下・外側クリック・Esc・フォーカス移動で閉じる）へ格納します）。候補データは抽出モードのときだけ `/app/navigation/data.json`（build時生成の静的JSON）を取得します。**条件らしいfragmentが付いているのに抽出表示を始められなかった場合（抽出モード本体・`data.json` を読み込めない、条件を読めない・新しい形式、該当問題0件。判定は `navigatorCore.ts` の `resolveDbModeStart()`）は、全問題一覧へ黙って戻しません**。一覧・単元ナビ・スマホの「問題一覧」ボタンを隠したまま、帯に短い案内と「問題再選定」（`navEditHref()`：fragmentを可能な範囲で引き継いで `/navigator/` へ）・「全問題表示」（fragmentを外して再読み込み）だけを出します。全問題一覧へ戻るのは利用者が「全問題表示」を選んだときだけです。この案内は `ProblemDbShell.astro` 側で完結させています（本体の読み込み自体が失敗しても出せるようにするため）。問題本文・canonical・index設定は静的HTMLのまま変わりません。**条件はURL fragmentだけで持ち、sessionStorage等には置きません**。そのため、fragmentのない通常の入口（`/app/`・単元トップ・検索からの直接着地）は従来どおり全問題表示で、個別問題の静的HTML（本文・一覧・canonical・index契約）は抽出モードの有無で変わりません（帯のための空の `<div data-nav-mode hidden>` があるだけ）。個別問題をSPA化・クライアント描画にしないでください。抽出モードは `ProblemGroupList.astro`・`ProblemDbShell.astro` が出力するclass名（`.db-problem-group`・`.db-problem-row`・`.db-problem-link`・`.db-problem-group-count`・`.db-unit-btn`・`.db-list-toggle`・`.db-list-switch`）で要素を見つけるので、これらを変えるときは `navigatorDbMode.ts` も合わせて直してください。
+- **`/app/navigation/` の役割**：共有URL・保存設定の入口です。条件を読めて該当問題があれば、抽出した先頭の問題のURLへ同じfragmentを付けて `location.replace` します。条件がない・読めない・該当問題がない場合とJavaScript無効時は移動せず、案内と `/navigator/`・`/app/`・各単元トップへの静的リンクを表示します。共有するURLは常にこの入口の形（`/app/navigation/#…`）です。
+- **データ源**：独立検算済みの公開対象問題のfrontmatter（`subject`・`unit`・`section`・`display_order`・`importance`・`importance_label`・`difficulty`）だけです。`src/utils/navigatorData.ts` がbuild時に5コレクションから候補データを作り、ページへJSONで埋め込みます。重要度・難易度・所属sectionを別の一覧へ書き写さないでください。Web側だけで持つのは、URL・保存用の短い安定ID（`src/data/navigator-config.ts`：科目 `m1`、単元 `ec`/`sl`/`qf`/`tr`/`da`、section `ec1`…`da5` の22件）です。**一度公開したIDは変更・再利用しないでください**（共有URL・保存済み設定が別の範囲を指します）。科目名・単元名・単元順は `dbSubjectNav` が唯一の情報源で、設定とfrontmatterの食い違い（未知のsection・問題0件のsection・単元の過不足・重要度ラベルの不一致・評価値の範囲外）はbuildエラーになります。
+- **ロジックの置き場所**：候補・範囲集計・16マス・抽出・並び順・状態のencode/decode・正規化は `src/utils/navigatorCore.ts`、ブラウザ保存と復元の優先順位は `src/utils/navigatorStore.ts` の純粋関数に一本化し、ページのclient script（`src/scripts/navigatorPage.ts`・`navigatorResultPage.ts`・`navigatorDbMode.ts`）とテストが同じ関数を使います。UI側に別の抽出・正規化ロジックを増やさないでください。
+- **並び順**：抽出結果は常に「科目順 → `dbSubjectNav` の単元順 → `display_order` 昇順」で、問題IDで重複排除します。4×4は候補を残すフィルターで、難易度順・重要度順・推薦スコア順へ並べ替えません。抽出モードは既存の静的な一覧から対象外の行を隠すだけで（並び替えない）、現在位置（○問目）・単元リンクの行き先は `navigatorCore.ts` の `buildDbModeView()` が同じ順序から決めます。
+- **4×4**：行＝土台・本命・次点・余力（内部値4→1）、列＝難易度1〜4。初期状態は範囲・16マスとも未選択。0問のマスは無効で、範囲変更で0問になった選択マスは自動解除し（画面上の通知は出さず、マスの選択状態と件数で示す）、後で件数が戻っても自動再選択しません。プリセットUI・「すべて選択」「選択を解除」ボタンはなく、マスを直接押して選択・解除します。将来のプリセット（例：土台・本命×難易度1〜3）は `selectCells()` へセル集合を渡すだけで追加し、専用の抽出ロジックを作らないでください。
+- **状態と共有URL**：形式は `#v=1&r=<範囲>&c=<セル>`（例 `/app/navigation/#v=1&r=sl,qf1,qf3&c=41,42,31`）。範囲は科目全体＝科目ID・単元全体＝単元ID・それ以外はsectionのID、セルは「重要度の内部値＋難易度」（全16マスは `all`）で、同じ設定は必ず同じ文字列になります。不明なID・重複・不正な値はその値だけ無視し、未知の `v` は適用しません。URLには設定名・学習履歴・個人情報を含めません。形式を変えるときは `v` を上げ、`v=1` を読めるままにしてください。
+- **設定画面のUI（2026-09-30「タイル盤」、2026-10-01スマホ主操作固定）**：説明文を置かず、配置・形・数字・選択状態で操作が分かる画面にしています。**4×4ナビゲーション（`navigator.css`）と抽出帯（`navigatorDbMode.css`）の中だけ、角丸・薄い影・立体感をサイト規約（`--radius: 2px`・通常コンテンツは影なし）の例外として認めています**（人間の承認済み。TOP・問題DB本体・個別問題ページへ広げないこと）。色は既存トークンと重要度4色の濃淡だけで、新しい色相は足しません。盤面：4×4を白い面に載せて主役にし（PCは範囲24rem＋盤面31remの2カラム、盤面側はスクロールに追従）、マスは正方形に近いタイル。押せるマス＝下辺に厚みのある浮いたタイル＋数字、選択中＝重要度色の塗り＋右上の✓バッジ、0問＝へこんだ穴（数字なし）、範囲未選択＝数字も厚みもない空盤面（`.nv-grid[data-nv-idle]`）。範囲を変えて数字が変わったマスは小さく弾みます（`is-pop`）。押すと3px沈みます。`prefers-reduced-motion` では動きを止めます。マスの「問」は画面に出さず（`aria-label` には残す）、難易度の列見出しには右ほど高くなる棒を添えています。主ボタン：抽出問題数（大きな数字）と「問題データベースで見る」を1行に並べ、この画面でいちばん強い要素にしています。PCでは盤面の直下、スマホでは画面下端へ固定し、safe areaと本文側の逃げを確保します。固定バーには単元別内訳を入れず、同じ主ボタン要素をレスポンシブ配置するため表示・イベントを二重化しません（ボタンの文言には件数を入れない）。範囲指定：見出しは「範囲指定」「4×4マトリックス」。選択中の範囲はタグ（`rangeSummaryParts()`）＋問題数。科目名は見出しだけで、科目全体をまとめて選ぶ操作はありません。単元の行は、左のチェック区画（単元全体の選択・解除。44px角）と、単元名を含む右のボタン区画（sectionの開閉）を細い仕切りで分けた白い1行です（チェックボックスは標準の部品のまま。単元名をチェックの`label`へ入れないでください）。スマホでは単元を2列に並べ（`li` を `display: contents` にして行と項目を直接格子へ置く）、開いた単元の項目はその行の下に全幅で出します。スマホの範囲の折りたたみ（変更／閉じる）は残しています。補助操作（学習設定・4×4の見方・すべて解除）は枠のない文字ボタンにして弱くしています。保存した設定の一覧は、ページ上部の「学習設定」ボタンの直下にその場で開きます（ボタン再押下・外側クリック・Esc・フォーカス移動で閉じる。`aria-expanded`付き）。説明は「4×4の見方」ダイアログ（冒頭の1文＋重要度・難易度の各4段階）だけに置きます。
+- **保存**：アカウント・サーバー・外部DBは使わず、localStorage（key `mathnavi.navigator`、形式version 1）へ「条件」だけを保存します（問題ID一覧・進捗・正誤は保存しない）。保存済み設定（複数。自動名・名前変更・開く・共有・削除）、前回使用設定、下書きの3種です。復元の優先順位は「URLの条件 → 前回使用設定 → 下書き → 新規」で、前回使用設定・下書きは自動適用せず「続ける／新しく設定する」を提示します。共有URLを開いただけでは保存データへ書き込みません（利用者が「この条件で学習する」か保存を選んだ後に記録）。localStorageが使えない・容量超過・壊れたデータでもナビ・共有・DB利用は継続でき、読めない保存データは利用者が明示的に初期化するまで上書きしません。
+- **共有された条件の扱い（抽出モード）**：この端末の前回設定・下書き・保存済み設定のどれとも違う条件で開いたときは、帯に「共有された条件を表示しています」と「この条件で学習する」を出し、選ぶまで保存データへ記録しません。記録に失敗したときは案内を残したまま理由を表示し、`navigator_resume` は送りません。
+- **GA4イベント**：`navigator_open`・`navigator_range_select`・`navigator_cell_select`・`navigator_extract`・`navigator_result_view`・`navigator_save`・`navigator_share`・`navigator_resume`（`src/utils/navigatorBrowser.ts`）。`navigator_result_view` は、問題DBで抽出表示が実際に成立したときに `navigatorDbMode.ts` が送ります（`problem_count`＝実際の抽出件数。読み込み失敗・条件不正・0件では送らない）。送るのは抽出モードへ入ったときの1回だけで（`isNavModeEntry()`：参照元が設定画面・`/app/navigation/`・外部・直接のURL）、抽出モードのまま問題を移動したとき・再読み込み・戻る／進むでは送りません。`/app/navigation/` の転送前には送りません（二重計測しない）。送るのは件数と種別だけで、section名・設定名・問題ID・条件文字列は送りません。
+- **テスト・監査**：`npm run test-navigator`（buildなし。候補180問・5単元22 section・不正値検出・範囲集計・抽出・並び順・0問セル・URL状態・抽出モードの一覧／前後移動／単元リンク・保存と復元）、`npm run build && npm run audit-navigator`（両ルートのindex契約・`data.json`・抽出モード用の帯が静的HTMLでは空で非表示・sitemap 228件・robots・既存180問／単元トップ5／型ページ38の回帰・GA4の二重読込なし。`NAV_AUDIT_BASELINE=<実装前のdist>` を渡すと既存ページの静的HTMLが実装前と同じことも比較）。抽出モードのDOM操作そのもの（行の絞り込み・帯の表示）は自動テストがなく、ブラウザで確認します。
+- **数学A追加時の拡張点**：(1) `dbSubjectNav` に科目・単元を追加、(2) `navigator-config.ts` に科目（例 `ma`）・単元・sectionのIDを追加、(3) `navigatorData.ts` の `SOURCES` に新しいcollectionを追加。状態形式・抽出ロジック・UIは変更不要です（科目横断の選択・並び順はテスト済み）。数学Aを同じ4×4へ載せる前に、数学Iと同じ尺度で重要度・難易度を付け、科目横断監査を通してください。仮データ・空の科目は置かないでください。
+- **Privacyページ**：「ブラウザ内への保存について」節（2026-10-01追加、`src/pages/privacy/index.astro`）で、localStorageの利用、保存するもの（条件・保存済み設定とその名称・前回使用設定・下書き）、保存しないもの（問題の一覧・進捗・解答や正誤）、サイトとして氏名などの個人情報の入力は求めないことと、自由入力の設定名へ個人情報を入れないよう求める案内、保存先がブラウザ内だけであること、削除方法（「学習設定」からの削除・ブラウザのサイトデータ削除）を説明しています。内部key名は本文に出していません。保存対象・保存先・削除操作を変えるときは、この節も合わせて直してください。
+- **Codex監査（2026-10-01）**：指摘2点を修正しました。(1) 抽出モードの「この条件で学習する」（`navigatorDbMode.ts`）が `store.setLast()` の戻り値を見ずに案内を隠し、「記録しました」の表示と `navigator_resume` の送信をしていたため、記録に成功したときだけそうするよう変更。失敗（`write-failed` 等）では案内を残し、`saveFailureMessage()` の理由を表示します（抽出表示・共有など保存に依存しない機能はそのまま使えます）。「学習設定を保存」側の動作は変えていません。(2) Privacyページの「氏名などの個人情報は保存しません」は、設定名が自由入力で実装と矛盾するため、「入力を求めない・設定名に個人情報を入れないでください」という案内へ変更。
+- **Codex再監査（2026-10-01）**：上記2点の修正後に再監査を行い、追加の指摘なしで合格しました。初回監査の2指摘（保存失敗時の誤った成功表示、Privacyの個人情報の表現）は修正済みです。確認時の結果：`npm run check` エラー0（既存のヒント1件）、`npm run test-navigator` 135/135成功、`npm run build` 231ページ成功、`npm run audit-navigator` 34/34成功、`npm run audit-type-pages` 成功、`git diff --check master` 問題なし。
 
 ---
 
@@ -245,6 +269,7 @@ npm run sync-content
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
 - `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 - `/math1/set-logic/`：数学I「集合と論証」上位区分の単元トップ、`/math1/set-logic/M1-SL-001/` 〜 `/M1-SL-018/`（2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
+- `/navigator/`：4×4ナビゲーションの設定画面、`/app/navigation/`：その抽出結果の入口（どちらも `BaseLayout`。抽出結果そのものは、条件のfragmentを付けた既存の個別問題URL＝問題DBの抽出モードで表示する。詳細は「4×4ナビゲーションの現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
 **1問題＝1固有URL、表示UI＝共通DBシェル**が現行仕様です。
@@ -290,6 +315,13 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - sitemapには載せない
 - robots.txtでDisallowしない
 
+### `/navigator/`・`/app/navigation/`（4×4ナビゲーション）
+
+- `/navigator/`：index対象・noindexを付けない・canonicalは自身・sitemapに1件だけ掲載
+- `/app/navigation/`：`noindex,follow`・canonicalは自身・sitemapには載せない・robots.txtでDisallowしない
+- 条件はURL fragmentで渡す。条件ごとのページ・sitemap登録は作らない
+- 個別問題URLへ条件のfragmentを付けて開く「抽出モード」は、表示だけをclient側で絞るもので、個別問題のcanonical・index・静的HTMLは変えない
+
 ### 各単元トップ・個別問題URL（QF/TR/DA/EC/SL共通）
 
 - `/math1/quadratic/`・`/math1/trig/`・`/math1/data-analysis/`・`/math1/suto-shiki/`・`/math1/set-logic/`と各個別問題URL
@@ -305,6 +337,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 現行180問（QF54・TR41・DA23・EC44・SL18）時点の内訳は、
 
 - `/`
+- `/navigator/`（4×4ナビゲーションの設定画面）
 - `/math1/quadratic/` ＋ 個別問題54URL ＋ 型ページ10URL
 - `/math1/trig/` ＋ 個別問題41URL ＋ 型ページ9URL
 - `/math1/data-analysis/` ＋ 個別問題23URL ＋ 型ページ6URL
@@ -314,11 +347,11 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - `/disclaimer/`
 - `/contact/`
 
-の計227 URLです（既存189＋型ページ38。2026-09-29のbuildで`sitemap.xml`の件数・内訳を確認済み。型ページは各単元の個別問題の後ろに並びます）。
+の計228 URLです（型ページなしの190＋型ページ38。2026-09-29時点の227 URLに、4×4ナビゲーションの `/navigator/` 1件を加えたもの。2026-09-30のbuildで件数・内訳を確認済み。型ページは各単元の個別問題の後ろに並びます）。
 
-`/app/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
+`/app/`・`/app/navigation/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
-型ページは、公開ゲート（published 38件完了＋人間の公開承認）を通過したときだけ38件を一括でsitemapへ追加する方式で、2026-09-29の公開承認により189→227 URLになりました。190〜226件の段階状態は作りません。型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
+型ページは、公開ゲート（published 38件完了＋人間の公開承認）を通過したときだけ38件を一括でsitemapへ追加する方式で、2026-09-29の公開承認により189→227 URLになりました（4×4ナビの `/navigator/` 追加後は、型ページなし190・型ページあり228）。その中間の件数になる段階状態は作りません。型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
 
 `robots.txt` の基本形：
 
@@ -517,6 +550,8 @@ GA4は `src/components/Analytics.astro` を共通利用します。
 
 の双方で利用し、1ページ内で二重読み込みしないこと。
 
+**GA4は本番ドメインで開いたときだけ読み込み・送信します**（2026-09-30）。`Analytics.astro` は、表示時のホスト名が `astro.config` の `site` のホスト名（`math-navi.com`）と一致するときだけ `gtag.js` を読み込み、`window.gtag` を定義します。localhost・`127.0.0.1` の `astro dev`／`astro preview`、`*.github.io` などでは読み込まず、イベントも送りません（イベントを送る側は `gtag` が無ければ何もしません）。build成果物は本番と同じものなので、判定はbuild時ではなく表示時に行います。ローカルのブラウザ確認・自動テストが本番プロパティへ混ざらないようにするための仕組みなので、静的な `<script src="…googletagmanager…">` へ戻さないでください。独自ドメインを変える場合は `astro.config` の `site` を変えれば追従します。
+
 新規ページは、原則として既存のGA4対応済み共通レイアウト／シェルを利用してください。
 別レイアウトを新設する場合はGA4計測漏れを確認します。
 
@@ -568,7 +603,8 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - 個別HTMLに固有の問題本文が含まれるか
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
-- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 227件）
+- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 228件）
+- 4×4ナビゲーションのロジックテスト（`npm run test-navigator`。buildなしで実行可）とbuild監査（`npm run audit-navigator`。build後に実行）
 
 M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。**
 **M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
@@ -587,5 +623,6 @@ M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構
 - `_TEMPLATE_for_page_generation.md`
 - `problem_master/`配下の各xlsx（`quadratic_function_problem_master.xlsx` / `trigonometric_ratio_problem_master.xlsx` / `data_analysis_problem_master.xlsx` / `expression_calculation_problem_master.xlsx` / `set_logic_problem_master.xlsx`）
 - 型ページの実装仕様：`type_page_implementation_spec_v1.1_2026-09-28.md`（本教材側 `math_db_quadratic_working/` 直下）
+- 4×4ナビゲーションの実装仕様：`four_by_four_navigation_implementation_spec_v1.0_2026-09-30.md`（同上）
 
 README / AGENTS.mdには概要と作業境界を置き、正本文書と同じ細則を過剰に重複させないでください。

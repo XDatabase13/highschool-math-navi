@@ -172,6 +172,12 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
         </nav>
       </header>
 
+      <!-- 4×4ナビゲーションの抽出モード用の帯（既定は空・非表示）。URL fragmentに4×4の条件
+           （#v=1&r=…&c=…）が付いているときだけ、下のscriptが抽出モードの本体を遅延読み込みし、
+           ここへ「4×4　○問　n/○」・条件のタグと操作を出して、一覧・単元ナビを抽出した問題だけに絞る。
+           fragmentのない通常の来訪では何も読み込まず、静的HTML・SEO契約も変わらない。 -->
+      <div class="db-nav-mode" data-nav-mode hidden></div>
+
       <div class="db-body">
         <nav class="db-pane db-pane-subjects" aria-label="科目・単元">
           <ul class="db-subject-list">
@@ -382,6 +388,86 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
       }
     </script>
 
+    <script>
+      // 4×4ナビゲーションの抽出モード。条件はURL fragmentだけで持つ（保存領域には頼らない）ので、
+      // 4×4から入ったページだけが抽出モードになり、通常の入口から開いたDBは従来どおり全問題を表示する。
+      // ここでは条件らしいfragmentかどうかの判定だけを行い、本体（一覧の絞り込み・帯の表示）は
+      // 条件があるときだけ読み込む。
+      //
+      // 条件らしいfragmentが付いているのに抽出表示を始められなかった場合（本体・候補データを
+      // 読み込めない、条件を読めない・新しい形式、該当問題なし）は、全問題一覧へ黙って戻さない。
+      // 一覧と単元ナビを隠したまま、帯に案内と「問題再選定」「全問題表示」を出す。全問題一覧へ戻るのは、
+      // 利用者が「全問題表示」を選んだときだけ。問題本文・canonical・index設定は静的HTMLのまま変わらない。
+      import { looksLikeNavFragment, navEditHref, type NavModeFailure } from '../utils/navigatorLink';
+
+      const navModeHost = document.querySelector<HTMLElement>('[data-nav-mode]');
+      const navFragment = () => window.location.hash.slice(1);
+      const hasNavCondition = () => looksLikeNavFragment(navFragment());
+
+      const NAV_MODE_FAILURE_MESSAGES: Record<NavModeFailure, string> = {
+        load: '4×4の条件を読み込めなかったため、問題一覧を表示していません。',
+        data: '4×4の条件を読み込めなかったため、問題一覧を表示していません。',
+        invalid: 'URLの条件を読み取れなかったため、問題一覧を表示していません。',
+        unsupported: 'このURLは新しい形式の条件のため、問題一覧を表示していません。',
+        empty: '条件に合う問題がないため、問題一覧を表示していません。',
+      };
+
+      function showNavModeFailure(host: HTMLElement, reason: NavModeFailure) {
+        document.documentElement.classList.add('db-nav-mode-failed');
+        const message = document.createElement('p');
+        message.className = 'db-nav-fail-message';
+        message.setAttribute('role', 'alert');
+        message.textContent = NAV_MODE_FAILURE_MESSAGES[reason];
+
+        const edit = document.createElement('a');
+        edit.className = 'db-nav-fail-btn';
+        edit.href = navEditHref(navFragment());
+        edit.textContent = '問題再選定';
+
+        const exit = document.createElement('button');
+        exit.type = 'button';
+        exit.className = 'db-nav-fail-btn';
+        exit.textContent = '全問題表示';
+        exit.addEventListener('click', () => {
+          try {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          } catch {
+            window.location.hash = '';
+          }
+          window.location.reload();
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'db-nav-fail-actions';
+        actions.append(edit, exit);
+        host.replaceChildren(message, actions);
+        host.classList.add('db-nav-mode--failed');
+        host.setAttribute('role', 'region');
+        host.setAttribute('aria-label', '4×4ナビゲーションの抽出モード');
+        host.hidden = false;
+      }
+
+      if (navModeHost) {
+        let navModeActive = false;
+        if (hasNavCondition()) {
+          navModeActive = true;
+          // 絞り込む前の全問題一覧が一瞬見えないよう、適用が終わるまで一覧と単元ナビだけを隠す。
+          document.documentElement.classList.add('db-nav-mode-loading');
+          import('../scripts/navigatorDbMode')
+            .then((module) => module.startNavigatorDbMode(navModeHost))
+            .catch((): NavModeFailure => 'load')
+            .then((failure) => {
+              if (failure) showNavModeFailure(navModeHost, failure);
+              document.documentElement.classList.remove('db-nav-mode-loading');
+            });
+        }
+        // 同じページのまま条件が付く・外れる・変わるとき（戻る／進む等）は、静的な状態から描き直す。
+        window.addEventListener('hashchange', () => {
+          if (navModeActive || hasNavCondition()) window.location.reload();
+        });
+      }
+    </script>
+
     {hasListViewSwitch && (
     <script>
       // 「問題タイプ / 問題一覧」切替の小さなcontroller。PC中央列・スマホダイアログの
@@ -499,6 +585,73 @@ const currentSubject = dbSubjectNavPublic.find((subject) =>
       .db-header-info a:hover {
         color: #fff;
         text-decoration: none;
+      }
+
+      /* 4×4ナビゲーションの抽出モードの帯。中身と見た目は抽出モードの本体
+         （src/scripts/navigatorDbMode.ts・src/styles/navigatorDbMode.css）が用意する。 */
+      .db-nav-mode {
+        flex-shrink: 0;
+      }
+      :global(.db-nav-mode-loading) .db-pane-subjects,
+      :global(.db-nav-mode-loading) .db-pane-list,
+      :global(.db-nav-mode-failed) .db-pane-subjects,
+      :global(.db-nav-mode-failed) .db-pane-list {
+        visibility: hidden;
+      }
+      /* 抽出表示を始められなかったときの案内。全問題一覧へ黙って戻さないため、一覧・単元ナビ・
+         スマホの「問題一覧」ボタンを隠したまま、帯に案内と2つの導線だけを出す。
+         抽出モード本体（遅延読み込みのCSSを含む）を読み込めない場合にも表示できるよう、
+         見た目はここで完結させる（値は navigatorDbMode.css の帯・ボタンと同じ）。 */
+      :global(.db-nav-mode-failed) .mobile-problem-trigger {
+        display: none;
+      }
+      .db-nav-mode--failed {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.35rem 1.1rem;
+        padding: 0.4rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-accent-bg);
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      .db-nav-mode--failed[hidden] {
+        display: none;
+      }
+      .db-nav-mode :global(.db-nav-fail-message) {
+        flex: 1 1 16rem;
+        min-width: 0;
+        margin: 0;
+        color: var(--color-primary-dark);
+        font-weight: 700;
+      }
+      .db-nav-mode :global(.db-nav-fail-actions) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+      .db-nav-mode :global(.db-nav-fail-btn) {
+        display: inline-flex;
+        align-items: center;
+        min-height: 36px;
+        padding: 0.15rem 0.65rem;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        background: var(--color-surface);
+        color: var(--color-primary-dark);
+        font: inherit;
+        font-weight: 700;
+        line-height: 1.4;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .db-nav-mode :global(.db-nav-fail-btn:hover) {
+        background: var(--color-surface-sunken);
+      }
+      .db-nav-mode :global(.db-nav-fail-btn:focus-visible) {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
       }
 
       .db-body {

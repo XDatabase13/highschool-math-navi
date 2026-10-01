@@ -1,17 +1,31 @@
 ---
-// Google Analytics 4（gtag.js、公式スニペット準拠）。
+// Google Analytics 4（gtag.js）。
 // BaseLayout / ProblemDbShell の両head内から1回ずつ読み込む共通コンポーネント。
 // 各ページはBaseLayoutかProblemDbShellのどちらか一方しか使わないため、
 // このコンポーネント自体を複数回importしない限り二重読み込みにはならない。
 // Measurement IDは秘密情報ではないため、.env化せずここに直接書く。
+//
+// 本番ドメイン（astro.config の site のホスト名。math-navi.com）で開いたときだけ、gtag.js を
+// 読み込んで送信する。それ以外（localhost・127.0.0.1 の dev / preview、*.github.io、
+// ファイルを直接開いた場合など）では gtag.js を読み込まず、window.gtag も定義しない。
+// 同じbuild成果物をローカルで確認しても本番のプロパティへ送らないよう、build時ではなく
+// 表示時のホスト名で判定する。イベントを送る側（navigatorBrowser.ts・Quadratic27Detail.astro）は
+// gtag が無ければ何もしないので、本番以外ではイベントも送られない。
+const GA_MEASUREMENT_ID = 'G-WFP1G4QGPX';
+const productionHost = Astro.site?.hostname ?? '';
 ---
 
-<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-WFP1G4QGPX"></script>
-<script is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
+<script is:inline define:vars={{ GA_MEASUREMENT_ID, productionHost }}>
+  if (productionHost !== '' && window.location.hostname === productionHost) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag('js', new Date());
+    window.gtag('config', GA_MEASUREMENT_ID);
+    var gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+    document.head.appendChild(gaScript);
   }
-  gtag('js', new Date());
-  gtag('config', 'G-WFP1G4QGPX');
 </script>

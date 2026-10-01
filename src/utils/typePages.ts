@@ -28,7 +28,7 @@ import { assertSvgIdReferences } from './svgIdNamespace';
 // - 型Markdownは0〜38件のどの状態でも保存・同期・ローカル確認してよい。
 // - productionで型route・型一覧nav・sitemapを出すのは「published全38件のMarkdownがそろっている」
 //   かつ「人間が公開を明示承認した（src/data/type-page-publication.ts が true）」ときだけで、
-//   38件を一括で出す。それ以外は1件も出さない（現行189 URLのまま）。
+//   38件を一括で出す。それ以外は1件も出さない（型ページなしの190 URLのまま）。
 // - 承認済みなのに38件そろっていない、orphan・hold型のMarkdownがある … buildエラー。
 // 開発時（astro dev）は公開前でも、Markdownがある型を同じroute・component経由で
 // ローカル確認できる（noindex付き。productionには出さない）。

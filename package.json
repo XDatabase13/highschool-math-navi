@@ -14,7 +14,9 @@
     "sync-problems": "node scripts/sync-quadratic-content.mjs",
     "sync-type-pages": "node scripts/sync-type-pages.mjs",
     "sync-content": "npm run sync-problems && npm run sync-type-pages",
-    "audit-type-pages": "node scripts/audit-type-pages.mjs"
+    "audit-type-pages": "node scripts/audit-type-pages.mjs",
+    "test-navigator": "node scripts/test-navigator.mjs",
+    "audit-navigator": "node scripts/audit-navigator.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.4",

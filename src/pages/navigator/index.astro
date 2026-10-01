@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadNavigatorData } from '../../utils/navigatorData';
+import { DIFFICULTY_LEVELS, IMPORTANCE_LEVELS, candidateProblems, cellKey } from '../../utils/navigatorCore';
+import '../../styles/navigator.css';
+
+// 「4×4の見方」の説明。重要度・難易度の各段階の説明は、TOPページ（src/pages/index.astro）の
+// 「高校数学ナビの4つの特徴」と同じ文言にそろえる（ここで意味を言い換えない）。
+const IMPORTANCE_GUIDE: Record<string, string> = {
+  土台: '高校数学の土台',
+  本命: '定期試験で優先',
+  次点: '本命の次',
+  余力: '余裕があれば',
+};
+const DIFFICULTY_GUIDE: Record<number, { label: string; description: string }> = {
+  1: { label: '基本', description: '教科書の基本' },
+  2: { label: '標準', description: '教科書の標準' },
+  3: { label: '応用', description: '教科書で難しい側' },
+  4: { label: '発展', description: '応用より一段難しい' },
+};
+
+// 4×4ナビゲーションの設定画面。試験範囲（科目 → 単元 → section）と、重要度×難易度の
+// 16マスを同じ画面で選び、抽出結果（/app/navigation/）へ進む。
+//
+// - index対象・self-canonical・sitemap掲載（1ページだけ。条件ごとのページは生成しない）。
+// - 範囲の木と4×4の枠はここで静的に出力し、件数・選択状態の更新だけをclient script
+//   （src/scripts/navigatorPage.ts）が行う。抽出・正規化のロジックは navigatorCore.ts に一本化している。
+// - 候補データは独立検算済みの公開対象問題のfrontmatterからbuild時に作り、JSONで埋め込む。
+const { data, index } = await loadNavigatorData();
+const canonicalUrl = new URL('/navigator/', Astro.site).toString();
+const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
+const totalProblems = index.problems.length;
+const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sectionId]).length;
+---
+
+<BaseLayout
+  title="4×4ナビゲーション｜試験範囲と重要度×難易度で問題を選ぶ | 高校数学ナビ"
+  description={`試験範囲（単元・項目）を選び、重要度×難易度の16マスから取り組む問題を決める、高校数学ナビの4×4ナビゲーションです。数学I ${totalProblems}問から、自分の試験範囲に合う問題を抽出できます。`}
+>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+  </Fragment>
+
+  <div class="nv-intro">
+    <h1>4×4ナビゲーション</h1>
+    {/* 保存した学習設定。ボタンの直下にその場で開く（ボタンをもう一度押す・外側を押す・Escで閉じる）。 */}
+    <div class="nv-settings" data-nv-settings>
+      <button
+        type="button"
+        class="nv-btn nv-settings-toggle"
+        data-nv-settings-toggle
+        aria-expanded="false"
+        aria-controls="nv-settings-panel"
+      >
+        学習設定<span class="nv-settings-count" data-nv-settings-count hidden></span>
+        <span class="nv-caret" aria-hidden="true" />
+      </button>
+      <section class="nv-settings-panel" id="nv-settings-panel" aria-label="保存した学習設定" data-nv-settings-panel hidden>
+        <div class="nv-notice" data-nv-store-problem hidden>
+          <p data-nv-store-problem-text></p>
+          <button type="button" class="nv-btn" data-nv-store-reset>保存データを初期化する</button>
+        </div>
+        <p class="nv-saved-empty" data-nv-saved-empty>
+          保存した設定はありません。問題データベースの「学習設定を保存」から保存できます。
+        </p>
+        <ul class="nv-saved-list" data-nv-saved-list></ul>
+        <p class="nv-saved-status" role="status" data-nv-saved-status></p>
+        <div class="nv-share-fallback" data-nv-share-fallback hidden>
+          <label>
+            <span class="nv-visually-hidden">共有用のURL</span>
+            <input class="nv-input" type="text" readonly />
+          </label>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <noscript>
+    <p class="nv-notice">
+      4×4ナビゲーションの操作にはJavaScriptが必要です。すべての問題は<a href="/app/">問題データベース</a>から見られます。
+    </p>
+  </noscript>
+
+  <p class="nv-notice" role="status" data-nv-notice hidden></p>
+
+  {/* 前回使用設定（なければ操作途中の下書き）があるときだけ表示する。勝手には適用しない。 */}
+  <div class="nv-resume" data-nv-resume hidden>
+    <p><span data-nv-resume-label>前回の設定があります</span>：<span data-nv-resume-summary></span></p>
+    <div class="nv-resume-actions">
+      <button type="button" class="nv-btn nv-btn--primary" data-nv-resume-apply>前回の設定を続ける</button>
+      <button type="button" class="nv-btn" data-nv-resume-dismiss>新しく設定する</button>
+    </div>
+  </div>
+
+  <div class="nv-layout">
+    <section class="nv-panel nv-range" aria-labelledby="nv-range-title" data-nv-range data-collapsed="false">
+      <div class="nv-panel-head">
+        <h2 id="nv-range-title" class="nv-panel-title">範囲指定</h2>
+        <button type="button" class="nv-text-btn nv-range-clear" data-nv-range-clear>すべて解除</button>
+      </div>
+      <div class="nv-range-summary">
+        {/* 選択中の範囲はタグで示す（未選択のときは「未選択」のタグ1つ）。中身はclient scriptが入れる。 */}
+        <ul class="nv-chips" aria-label="選択中の範囲" data-nv-range-chips>
+          <li class="nv-chip nv-chip--empty">未選択</li>
+        </ul>
+        <p class="nv-range-summary-count"><strong data-nv-range-count>0</strong>問</p>
+        <button
+          type="button"
+          class="nv-text-btn nv-range-toggle"
+          data-nv-range-toggle
+          aria-expanded="true"
+          aria-controls="nv-range-tree"
+        >
+          閉じる
+        </button>
+      </div>
+      <div class="nv-range-tree" id="nv-range-tree">
+        {index.subjects.map((subject) => (
+          <div class="nv-subject">
+            <h3 class="nv-subject-name">{subject.name}</h3>
+            <ul class="nv-unit-list">
+              {subject.units.map((unit) => (
+                <li class="nv-unit">
+                  {/* チェック（単元全体の選択）と、単元名の行（項目の開閉）は別の操作。
+                      単元名をlabelに入れない（押したときにチェックが変わらないようにする）。 */}
+                  <div class="nv-unit-head">
+                    <label class="nv-check nv-unit-check">
+                      <input type="checkbox" data-nv-unit={unit.id} />
+                      <span class="nv-visually-hidden">{unit.name} 全体</span>
+                    </label>
+                    <button
+                      type="button"
+                      class="nv-unit-toggle"
+                      data-nv-unit-toggle={unit.id}
+                      aria-expanded="false"
+                      aria-controls={`nv-sections-${unit.id}`}
+                    >
+                      <span class="nv-unit-name">{unit.name}</span>
+                      <span class="nv-unit-count">
+                        <span class="nv-visually-hidden">選択数</span>
+                        <span data-nv-unit-count={unit.id}>0/{unit.sections.length}</span>
+                      </span>
+                      <span class="nv-caret" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <ul class="nv-section-list" id={`nv-sections-${unit.id}`} hidden>
+                    {unit.sections.map((section) => (
+                      <li>
+                        <label class="nv-check">
+                          <input type="checkbox" data-nv-section={section.id} />
+                          <span class="nv-section-name">{section.name}</span>
+                          <span class="nv-section-count">{sectionProblemCount(section.id)}問</span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="nv-panel nv-matrix" aria-labelledby="nv-matrix-title">
+      <div class="nv-panel-head">
+        <h2 id="nv-matrix-title" class="nv-panel-title">4×4マトリックス</h2>
+        <button type="button" class="nv-btn nv-guide-open" data-nv-guide-open aria-haspopup="dialog" aria-controls="nv-guide">
+          4×4の見方
+        </button>
+      </div>
+      <table class="nv-grid" data-nv-idle="true">
+        <caption class="nv-visually-hidden">重要度（縦）と難易度（横）ごとの、試験範囲内の問題数</caption>
+        <thead>
+          <tr>
+            <td class="nv-grid-rowhead"></td>
+            <th class="nv-grid-axis" colspan={DIFFICULTY_LEVELS.length} scope="colgroup">難易度</th>
+          </tr>
+          <tr>
+            <th class="nv-grid-rowhead nv-grid-axis" scope="col">重要度</th>
+            {DIFFICULTY_LEVELS.map((difficulty) => (
+              <th scope="col">
+                {/* 右の列ほど高くなる棒（右ほど難しい、を形で示す飾り）。 */}
+                <span class="nv-bars" aria-hidden="true">
+                  {DIFFICULTY_LEVELS.map((step) => <i class={step <= difficulty ? 'is-on' : undefined} />)}
+                </span>
+                {difficulty}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {IMPORTANCE_LEVELS.map((level) => (
+            <tr>
+              <th scope="row"><span data-importance={level.label}>{level.label}</span></th>
+              {DIFFICULTY_LEVELS.map((difficulty) => (
+                <td>
+                  <button
+                    type="button"
+                    class="nv-cell"
+                    data-nv-cell={cellKey(level.value, difficulty)}
+                    data-nv-cell-label={`${level.label}・難易度${difficulty}`}
+                    aria-pressed="false"
+                    aria-label={`${level.label}・難易度${difficulty}：0問`}
+                    disabled
+                  >
+                    <span class="nv-cell-check" aria-hidden="true">✓</span>
+                    <span class="nv-cell-count" data-nv-cell-count>0</span>
+                    <span class="nv-cell-unit">問</span>
+                  </button>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div class="nv-result">
+        <p class="nv-result-count">
+          <span class="nv-visually-hidden">抽出問題数</span><strong data-nv-result-count>0</strong>問
+        </p>
+        <p class="nv-result-breakdown" data-nv-result-breakdown></p>
+        <a class="nv-go" role="link" aria-disabled="true" data-nv-go>問題データベースで見る</a>
+      </div>
+      <p class="nv-visually-hidden" role="status" aria-live="polite" data-nv-live></p>
+    </section>
+  </div>
+
+  {/* 「4×4の見方」。ネイティブ<dialog>のshowModal()に、フォーカス移動・Escで閉じる・
+      閉じた後のフォーカス復帰を任せる（ProblemDbShellの問題一覧ダイアログと同じ方式）。 */}
+  <dialog class="nv-dialog" id="nv-guide" aria-labelledby="nv-guide-title" data-nv-guide>
+    <div class="nv-dialog-head">
+      <h2 id="nv-guide-title" class="nv-dialog-title">4×4の見方</h2>
+      <button type="button" class="nv-dialog-close" data-nv-guide-close aria-label="4×4の見方を閉じる">✕</button>
+    </div>
+    <div class="nv-dialog-body">
+      <p>重要度は「先に解くべきか」、難易度は「どれくらい難しいか」。</p>
+      <h3>重要度（縦）</h3>
+      <dl class="nv-guide-list">
+        {IMPORTANCE_LEVELS.map((level) => (
+          <div>
+            <dt><span data-importance={level.label}>{level.label}</span></dt>
+            <dd>{IMPORTANCE_GUIDE[level.label]}</dd>
+          </div>
+        ))}
+      </dl>
+      <h3>難易度（横）</h3>
+      <dl class="nv-guide-list">
+        {DIFFICULTY_LEVELS.map((difficulty) => (
+          <div>
+            <dt>{difficulty}　{DIFFICULTY_GUIDE[difficulty].label}</dt>
+            <dd>{DIFFICULTY_GUIDE[difficulty].description}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="navigator-data" set:html={dataJson} />
+  <script>
+    import '../../scripts/navigatorPage.ts';
+  </script>
+</BaseLayout>

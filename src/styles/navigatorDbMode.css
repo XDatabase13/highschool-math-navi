@@ -1,0 +1,236 @@
+/* 問題DB（ProblemDbShell）の「4×4ナビゲーションの抽出モード」専用のスタイル。
+   抽出モードの本体（src/scripts/navigatorDbMode.ts）と一緒に、条件があるときだけ読み込まれる。
+   色は既存のdesign tokenだけを使う。角丸は4×4ナビゲーション（navigator.css の「タイル盤」）と
+   そろえた値にしている（4×4の中だけに認めたサイト規約の例外。問題DB本体には広げない）。
+   帯の中身はscriptが作るため、Astroのscoped styleではなくこのファイルで指定する。 */
+
+.db-nav-mode {
+  padding: 0.45rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-accent-bg);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.db-nav-mode[hidden] {
+  display: none;
+}
+.db-nav-mode p {
+  margin: 0;
+}
+.db-nav-mode-main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.7rem;
+}
+/* 選択中のマスを示す小型の4×4（読み取り専用の図）。帯の1行目の高さ（ボタンの高さ）に収まる大きさにし、
+   帯を高くしない。選択中＝重要度色の塗り、それ以外＝枠だけ（色だけに頼らず、塗りの有無でも分かる）。 */
+.db-nav-mode-mini {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 6px);
+  gap: 2px;
+}
+.db-nav-mode-mini i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid #b9c6ce;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+.db-nav-mode-mini i.is-on {
+  border-color: transparent;
+  background: #6a6862;
+}
+.db-nav-mode-mini i.is-on[data-r='4'] {
+  background: var(--color-importance-navy);
+}
+.db-nav-mode-mini i.is-on[data-r='3'] {
+  background: var(--color-importance-royal);
+}
+.db-nav-mode-mini i.is-on[data-r='2'] {
+  background: var(--color-importance-lagoon);
+}
+.db-nav-mode-title strong {
+  color: var(--color-primary-dark);
+  font-size: 0.92rem;
+}
+.db-nav-mode-position {
+  margin-left: 0.6rem;
+  color: var(--color-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+.db-nav-mode-actions,
+.db-nav-mode-extra {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.db-nav-mode-actions {
+  margin-left: auto;
+}
+.db-nav-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-primary-dark);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* 抽出モードを終える操作は、ほかの3つより弱く見せる（枠も面も持たない文字ボタン）。 */
+.db-nav-mode-exit {
+  border-color: transparent;
+  background: none;
+  color: var(--color-primary);
+}
+.db-nav-mode-btn:hover {
+  background: var(--color-surface-sunken);
+  text-decoration: none;
+}
+.db-nav-mode-btn:focus-visible,
+.db-nav-mode-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+/* 「4×4設定」（メニューのボタン）はスマホ幅だけ。PCでは出さない。 */
+.db-nav-mode-more {
+  display: none;
+}
+/* 条件のタグ（範囲、重要度 × 難易度）。多いときは折り返す（横へ押し広げない）。 */
+.db-nav-mode-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.db-nav-mode-chip {
+  max-width: 100%;
+  padding: 0 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.db-nav-mode-shared {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.75rem;
+  margin-top: 0.3rem;
+}
+.db-nav-mode-shared[hidden],
+.db-nav-mode-share-fallback[hidden] {
+  display: none;
+}
+.db-nav-mode-status:empty {
+  display: none;
+}
+.db-nav-mode-status {
+  margin-top: 0.3rem !important;
+}
+.db-nav-mode-input {
+  width: 100%;
+  min-height: 36px;
+  margin-top: 0.3rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font: inherit;
+}
+
+/* 一覧・単元ナビ側 */
+.db-shell.db-nav-mode-on .db-list-switch {
+  display: none;
+}
+.db-nav-mode-unit-count {
+  float: right;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+.db-nav-mode-empty {
+  margin: 0.5rem 0.2rem;
+  color: var(--color-text-subtle);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  /* スマホ幅：問題本文までの縦幅を小さくする。1行目＝「4×4 ○問 n/○」＋「4×4設定」、
+     2行目＝条件のタグ。操作は「4×4設定」のメニューへ格納する。 */
+  .db-nav-mode {
+    padding: 0.35rem 0.9rem 0.4rem;
+  }
+  .db-nav-mode-main {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+  .db-nav-mode-title {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .db-nav-mode-actions {
+    position: relative;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
+  .db-nav-mode-btn {
+    min-height: 40px;
+  }
+  .db-nav-mode-more {
+    display: inline-flex;
+    min-height: 36px;
+  }
+  .db-nav-mode-more[aria-expanded='true'] {
+    background: var(--color-surface-sunken);
+  }
+  .db-nav-mode-chips {
+    margin-top: 0.3rem;
+  }
+  /* メニューは本文の上へ重ねて出す（本文を押し下げない）。重ねて出すUIなので影だけ許す。
+     ボタンの右端にそろえ、幅は画面幅を超えない。 */
+  .db-nav-mode-extra {
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    right: 0;
+    z-index: 30;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    width: max-content;
+    min-width: 11rem;
+    max-width: calc(100vw - 1.8rem);
+    padding: 0.3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-surface);
+    box-shadow: 0 6px 24px rgba(21, 40, 54, 0.18);
+  }
+  .db-nav-mode:not(.is-open) .db-nav-mode-extra {
+    display: none;
+  }
+  .db-nav-mode-extra .db-nav-mode-btn {
+    min-height: 44px;
+    padding: 0.2rem 0.75rem;
+    border-color: transparent;
+    background: none;
+    color: var(--color-primary-dark);
+  }
+  .db-nav-mode-extra .db-nav-mode-btn:hover {
+    background: var(--color-surface-sunken);
+  }
+}

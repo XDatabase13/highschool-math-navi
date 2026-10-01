@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { loadNavigatorData } from '../../../utils/navigatorData';
+import '../../../styles/navigator.css';
+
+// 4×4ナビゲーションの抽出結果の入口。条件はURL fragment（#v=1&r=…&c=…）で受け取る。
+// 共有URL・保存した学習設定はここを指し、条件を読んで、抽出した最初の問題の個別ページ
+// （通常の問題DB画面）へ同じ条件を付けて移動する。以後は問題DB側（ProblemDbShell）が
+// 抽出モードとして、一覧・単元ナビを抽出した問題だけに絞る。
+//
+// - noindex,follow・self-canonical・sitemap非掲載（/app/ と同じ扱い）。条件ごとのHTMLは作らない。
+// - 条件がない・読めない・該当問題がない場合と、JavaScriptが無効な場合は移動せず、
+//   案内と通常の問題DB・各単元トップへの静的リンクを表示する。
+const { data, index } = await loadNavigatorData();
+const canonicalUrl = new URL('/app/navigation/', Astro.site).toString();
+const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<BaseLayout
+  title="抽出結果｜4×4ナビゲーション | 高校数学ナビ"
+  description="4×4ナビゲーションで選んだ試験範囲と重要度×難易度の条件に合う問題を、問題データベースで開くためのページです。"
+>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    {/* 問題DBへ移動する前に案内が一瞬見えるのを避ける。scriptが読み込めない場合に備え、
+        一定時間で必ず表示へ戻す（JavaScript無効時はこのクラス自体が付かない）。 */}
+    <script is:inline>
+      document.documentElement.classList.add('nvr-pending');
+      setTimeout(function () {
+        document.documentElement.classList.remove('nvr-pending');
+      }, 3000);
+    </script>
+  </Fragment>
+
+  <div class="nvr-body">
+    <section class="nv-intro">
+      <h1>4×4ナビゲーションの抽出結果</h1>
+      <p data-nvr-message>
+        4×4ナビゲーションで選んだ条件に合う問題を、問題データベースで開くためのページです。
+      </p>
+    </section>
+
+    <noscript>
+      <p class="nv-notice">条件の読み込みにはJavaScriptが必要です。下のリンクから問題データベースを開けます。</p>
+    </noscript>
+
+    <div class="nvr-links">
+      <a class="nv-btn nv-btn--primary" href="/navigator/" data-nvr-edit>4×4ナビゲーションで条件を設定する</a>
+      <a class="nv-btn" href="/app/">通常の問題データベースを開く</a>
+    </div>
+
+    <section class="nvr-units" aria-labelledby="nvr-units-title">
+      <h2 id="nvr-units-title" class="nv-panel-title">単元から開く</h2>
+      <ul>
+        {index.subjects.map((subject) =>
+          subject.units.map((unit) => (
+            <li>
+              <a href={unit.href}>
+                {subject.name} {unit.name}
+              </a>
+            </li>
+          )),
+        )}
+      </ul>
+    </section>
+  </div>
+
+  <script type="application/json" id="navigator-data" set:html={dataJson} />
+  <script>
+    import '../../../scripts/navigatorResultPage.ts';
+  </script>
+</BaseLayout>

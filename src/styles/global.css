@@ -1464,6 +1464,11 @@ ul {
 .footer-links a:hover {
   color: var(--color-primary);
 }
+/* 下端固定の操作バーがあるページ（BaseLayoutの fixedBottomAction）だけ、バーの高さぶん
+   フッターの下を空ける。値はページ側CSSの --fixed-bottom-action-space（未設定の幅では0）。 */
+.app.fixed-bottom-action .site-footer {
+  padding-bottom: calc(1.25rem + var(--fixed-bottom-action-space, 0px));
+}
 
 /* Responsive */
 @media (max-width: 767px) {

@@ -12,6 +12,10 @@ interface Props {
   // TOPページ限定の配色（Cool Paper × Digital Blue）。.app配下のCSS変数を
   // 上書きするだけなので、このクラスを持たない他ページは既存の配色のまま。
   topTheme?: boolean;
+  // 画面下端に操作バーを固定するページ（/navigator/ のスマホ幅）限定。フッターの下に
+  // バーの高さぶんの余白を足し、最下部でバーがフッターリンクを隠さないようにする。
+  // 余白の値はページ側のCSSが --fixed-bottom-action-space に入れる（未設定なら余白なし）。
+  fixedBottomAction?: boolean;
 }
 
 const DEFAULT_DESCRIPTION =
@@ -23,6 +27,7 @@ const {
   largeBrand = false,
   wideLayout = false,
   topTheme = false,
+  fixedBottomAction = false,
 } = Astro.props;
 ---
 
@@ -39,7 +44,7 @@ const {
     <slot name="head" />
   </head>
   <body>
-    <div class:list={['app', topTheme && 'top-theme']}>
+    <div class:list={['app', topTheme && 'top-theme', fixedBottomAction && 'fixed-bottom-action']}>
       <header class="site-header">
         <a class:list={['site-title', largeBrand && 'site-title--top']} href="/">高校数学ナビ</a>
       </header>

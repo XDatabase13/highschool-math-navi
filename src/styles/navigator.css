@@ -692,11 +692,16 @@
 }
 
 @media (max-width: 900px) {
+  /* 固定した主操作（.nv-result）1段ぶんの逃げ。本文（.nv-layout）と、BaseLayoutの
+     fixedBottomAction で opt-in したページのフッター（global.css）が同じ値を使う。 */
+  :root {
+    --fixed-bottom-action-space: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
   .nv-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
     /* 固定した主操作に最下部の内容を隠されないよう、バー1段ぶん逃がす。 */
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: var(--fixed-bottom-action-space);
   }
   .nv-intro {
     margin-bottom: 0.5rem;

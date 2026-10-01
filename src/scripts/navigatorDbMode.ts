@@ -210,7 +210,13 @@ export async function startNavigatorDbMode(host: HTMLElement): Promise<NavModeFa
       const adoptButton = el('button', 'db-nav-mode-btn', 'この条件で学習する');
       adoptButton.type = 'button';
       adoptButton.addEventListener('click', () => {
-        adopt();
+        // 記録できなかったときは案内を残し、理由を出す（抽出表示・共有は保存なしでも使える）。
+        const result = store.setLast(index, state);
+        if (!result.ok) {
+          status.textContent = saveFailureMessage(result.reason);
+          return;
+        }
+        sharedRow.hidden = true;
         status.textContent = 'この条件を前回の設定として記録しました。';
         trackNavEvent('navigator_resume', { source: 'shared' });
       });

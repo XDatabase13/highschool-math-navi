@@ -695,6 +695,8 @@
   .nv-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
+    /* 固定した主操作に最下部の内容を隠されないよう、バー1段ぶん逃がす。 */
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
   .nv-intro {
     margin-bottom: 0.5rem;
@@ -785,7 +787,26 @@
     font-size: 0.58rem;
   }
   .nv-result {
+    position: fixed;
+    z-index: 30;
+    right: 0;
+    bottom: 0;
+    left: 0;
     gap: 0.3rem 0.7rem;
+    margin: 0;
+    padding: 0.65rem max(0.75rem, env(safe-area-inset-right, 0px))
+      calc(0.65rem + env(safe-area-inset-bottom, 0px))
+      max(0.75rem, env(safe-area-inset-left, 0px));
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: 0 -4px 18px rgb(31 53 69 / 12%);
+  }
+  /* 固定バーは主操作に絞り、単元別内訳はPCの元位置だけに残す。 */
+  .nv-result-breakdown {
+    display: none;
+  }
+  .nv-go {
+    min-height: 48px;
   }
 }
 /* 360px前後：2列の単元名（最長6文字）が1行に収まるよう、文字と余白を少し詰める。 */

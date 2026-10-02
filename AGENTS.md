@@ -129,7 +129,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - **UI**：PC中央列とスマホ問題一覧dialogに「問題タイプ / 問題一覧」切替を追加しました（`ProblemDbShell.astro`、型一覧が0件のページでは切替を出さず従来と同じマークアップ）。初期タブは型ページだけ「問題タイプ」、それ以外は「問題一覧」です。型一覧は `TypePageList.astro`（masterの表示順のフラットリスト）、本文は `TypePageDetail.astro`、問題previewは `TypeProblemPreview.astro`（ネイティブ`details`、初期全閉、型ページ内だけ単一open）。previewに出すのは「## 問題」（小問含む）と `placement: problem` のassetだけで、`prepareProblemPreview.ts` が用意します。型内の問題順は既存の `display_order` 昇順（`orderTypeProblems(..., {mode:'number'})`）。既存の `ProblemGroupList`・分類utils・`Quadratic27Detail` は変更していません。
 - **SVG**：1ページに複数問題のinline SVGが並ぶため、preview用assetの内部IDは `tp-<問題ID>-a<n>-` で名前空間化し、参照（`url(#…)`・`href`・`xlink:href`・aria）も書き換えます（`src/utils/svgIdNamespace.ts`）。重複id・参照切れはbuildエラーです。problem assetを持つ型はQF-T01・TR-T01・TR-T09・DA-T01・DA-T02・DA-T05の6つだけです。
 - **開発確認用fixture**：正式Markdown 38件の同期に伴い、2026-09-29に`src/dev-fixtures/typePageFixture.ts`（QF-T03の仮文）と`typePages.ts`の読込分岐を削除しました。DEVで表示されるのは同期済みの正式Markdownがある型だけです。`audit-type-pages`は旧fixtureの文字列がbuild成果物へ混入していないかを引き続き検査します。
-- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→190、38件承認あり→228、37件承認あり→buildエラー。件数は4×4ナビの `/navigator/` 1件を含む。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
+- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→191、38件承認あり→229、37件承認あり→buildエラー。件数は4×4ナビの `/navigator/` と `/about/` を含む。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
 - **初版でやらないこと**：推薦順・4×4・ユーザー条件・推薦理由、型同士のリンク、個別問題本文からの所属型リンク、primary/secondary・roleの表示、型専用GA4 event。将来の推薦は `orderTypeProblems` の新modeとして分離し、master・型Markdown・問題データへ順序情報を持たせないでください。
 - **本文の自動検査**：spec §3.2・§3.4（2026-09-29改訂）どおり、本文中の問題ID（`M1-XX-999`形式）・3桁の問題番号（数式外の単独の3桁数字。角度`180°`等は除き、`020〜023`は範囲展開）は所属問題の例示として許可し、warningとして報告します。その型の所属問題でない番号・別単元の問題IDだけが同期エラーです（`scripts/sync-type-pages.mjs`の`checkMentionedProblems`）。句点数（目安2〜4文）もwarningだけです。warningが出ても承認済み本文・descriptionを自動修正しないでください。
 - **残作業**：Codexによる型ページ横断監査（公開後に実施予定）。型を追加・削除する場合は、`EXPECTED_PUBLISHED_TYPE_PAGE_COUNT`・テスト・この節・SEO節（sitemap件数）を一緒に更新してください。
@@ -152,7 +152,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - **保存**：アカウント・サーバー・外部DBは使わず、localStorage（key `mathnavi.navigator`、形式version 1）へ「条件」だけを保存します（問題ID一覧・進捗・正誤は保存しない）。保存済み設定（複数。自動名・名前変更・開く・共有・削除）、前回使用設定、下書きの3種です。復元の優先順位は「URLの条件 → 前回使用設定 → 下書き → 新規」で、前回使用設定・下書きは自動適用せず「続ける／新しく設定する」を提示します。共有URLを開いただけでは保存データへ書き込みません（利用者が「この条件で学習する」か保存を選んだ後に記録）。localStorageが使えない・容量超過・壊れたデータでもナビ・共有・DB利用は継続でき、読めない保存データは利用者が明示的に初期化するまで上書きしません。
 - **共有された条件の扱い（抽出モード）**：この端末の前回設定・下書き・保存済み設定のどれとも違う条件で開いたときは、帯に「共有された条件を表示しています」と「この条件で学習する」を出し、選ぶまで保存データへ記録しません。記録に失敗したときは案内を残したまま理由を表示し、`navigator_resume` は送りません。
 - **GA4イベント**：`navigator_open`・`navigator_range_select`・`navigator_cell_select`・`navigator_extract`・`navigator_result_view`・`navigator_save`・`navigator_share`・`navigator_resume`（`src/utils/navigatorBrowser.ts`）。`navigator_result_view` は、問題DBで抽出表示が実際に成立したときに `navigatorDbMode.ts` が送ります（`problem_count`＝実際の抽出件数。読み込み失敗・条件不正・0件では送らない）。送るのは抽出モードへ入ったときの1回だけで（`isNavModeEntry()`：参照元が設定画面・`/app/navigation/`・外部・直接のURL）、抽出モードのまま問題を移動したとき・再読み込み・戻る／進むでは送りません。`/app/navigation/` の転送前には送りません（二重計測しない）。送るのは件数と種別だけで、section名・設定名・問題ID・条件文字列は送りません。
-- **テスト・監査**：`npm run test-navigator`（buildなし。候補180問・5単元22 section・不正値検出・範囲集計・抽出・並び順・0問セル・URL状態・抽出モードの一覧／前後移動／単元リンク・保存と復元）、`npm run build && npm run audit-navigator`（両ルートのindex契約・`data.json`・抽出モード用の帯が静的HTMLでは空で非表示・sitemap 228件・robots・既存180問／単元トップ5／型ページ38の回帰・GA4の二重読込なし。`NAV_AUDIT_BASELINE=<実装前のdist>` を渡すと既存ページの静的HTMLが実装前と同じことも比較）。抽出モードのDOM操作そのもの（行の絞り込み・帯の表示）は自動テストがなく、ブラウザで確認します。
+- **テスト・監査**：`npm run test-navigator`（buildなし。候補180問・5単元22 section・不正値検出・範囲集計・抽出・並び順・0問セル・URL状態・抽出モードの一覧／前後移動／単元リンク・保存と復元）、`npm run build && npm run audit-navigator`（両ルートのindex契約・`data.json`・抽出モード用の帯が静的HTMLでは空で非表示・sitemap 229件・robots・既存180問／単元トップ5／型ページ38の回帰・GA4の二重読込なし。`NAV_AUDIT_BASELINE=<実装前のdist>` を渡すと既存ページの静的HTMLが実装前と同じことも比較）。抽出モードのDOM操作そのもの（行の絞り込み・帯の表示）は自動テストがなく、ブラウザで確認します。
 - **数学A追加時の拡張点**：(1) `dbSubjectNav` に科目・単元を追加、(2) `navigator-config.ts` に科目（例 `ma`）・単元・sectionのIDを追加、(3) `navigatorData.ts` の `SOURCES` に新しいcollectionを追加。状態形式・抽出ロジック・UIは変更不要です（科目横断の選択・並び順はテスト済み）。数学Aを同じ4×4へ載せる前に、数学Iと同じ尺度で重要度・難易度を付け、科目横断監査を通してください。仮データ・空の科目は置かないでください。
 - **Privacyページ**：「ブラウザ内への保存について」節（2026-10-01追加、`src/pages/privacy/index.astro`）で、localStorageの利用、保存するもの（条件・保存済み設定とその名称・前回使用設定・下書き）、保存しないもの（問題の一覧・進捗・解答や正誤）、サイトとして氏名などの個人情報の入力は求めないことと、自由入力の設定名へ個人情報を入れないよう求める案内、保存先がブラウザ内だけであること、削除方法（「学習設定」からの削除・ブラウザのサイトデータ削除）を説明しています。内部key名は本文に出していません。保存対象・保存先・削除操作を変えるときは、この節も合わせて直してください。
 - **Codex監査（2026-10-01）**：指摘2点を修正しました。(1) 抽出モードの「この条件で学習する」（`navigatorDbMode.ts`）が `store.setLast()` の戻り値を見ずに案内を隠し、「記録しました」の表示と `navigator_resume` の送信をしていたため、記録に成功したときだけそうするよう変更。失敗（`write-failed` 等）では案内を残し、`saveFailureMessage()` の理由を表示します（抽出表示・共有など保存に依存しない機能はそのまま使えます）。「学習設定を保存」側の動作は変えていません。(2) Privacyページの「氏名などの個人情報は保存しません」は、設定名が自由入力で実装と矛盾するため、「入力を求めない・設定名に個人情報を入れないでください」という案内へ変更。
@@ -344,15 +344,16 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - `/math1/data-analysis/` ＋ 個別問題23URL ＋ 型ページ6URL
 - `/math1/suto-shiki/` ＋ 個別問題44URL ＋ 型ページ8URL
 - `/math1/set-logic/` ＋ 個別問題18URL ＋ 型ページ5URL
+- `/about/`（このサイトについて）
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-の計228 URLです（型ページなしの190＋型ページ38。2026-09-29時点の227 URLに、4×4ナビゲーションの `/navigator/` 1件を加えたもの。2026-09-30のbuildで件数・内訳を確認済み。型ページは各単元の個別問題の後ろに並びます）。
+の計229 URLです（型ページなしの191＋型ページ38。2026-09-29時点の227 URLに、4×4ナビゲーションの `/navigator/` 1件と「このサイトについて」の `/about/` 1件（2026-10-02）を加えたもの。型ページは各単元の個別問題の後ろに並びます）。
 
 `/app/`・`/app/navigation/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
-型ページは、公開ゲート（published 38件完了＋人間の公開承認）を通過したときだけ38件を一括でsitemapへ追加する方式で、2026-09-29の公開承認により189→227 URLになりました（4×4ナビの `/navigator/` 追加後は、型ページなし190・型ページあり228）。その中間の件数になる段階状態は作りません。型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
+型ページは、公開ゲート（published 38件完了＋人間の公開承認）を通過したときだけ38件を一括でsitemapへ追加する方式で、2026-09-29の公開承認により189→227 URLになりました（4×4ナビの `/navigator/`・`/about/` 追加後は、型ページなし191・型ページあり229）。その中間の件数になる段階状態は作りません。型ページは単元トップ・個別問題と同格の公開contract（index対象・self-canonical）です。
 
 `robots.txt` の基本形：
 
@@ -558,6 +559,7 @@ GA4は `src/components/Analytics.astro` を共通利用します。
 
 公開情報ページ：
 
+- `/about/`（このサイトについて。index対象・self-canonical・sitemap掲載。本文の正本候補は本教材側の `about_page_draft_2026-10-02.md`、走り書き写真は `public/images/about/`（EXIF除去・縮小済み））
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
@@ -604,7 +606,7 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - 個別HTMLに固有の問題本文が含まれるか
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
-- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 228件）
+- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 229件）
 - 4×4ナビゲーションのロジックテスト（`npm run test-navigator`。buildなしで実行可）とbuild監査（`npm run audit-navigator`。build後に実行）
 
 M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。**

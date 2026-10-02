@@ -4,7 +4,7 @@
 // 1. 公開集合: 公開ゲート＝「published全38件の型Markdown」かつ「公開承認
 //    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜38件の
 //    どの状態でも）、dist・sitemapに型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと
-//    （sitemapは既存の190 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（228 URL）。
+//    （sitemapは既存の191 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（229 URL）。
 //    承認済みなのに38件そろっていない状態は監査エラー（buildもエラーになる）。
 // 2. hold型が、distのどこにも出ていないこと（2026-09-29に削除した開発確認用fixtureの残骸も検査する）。
 // 3. xlsx読取依存（exceljs）がbuild成果物に含まれていないこと。
@@ -85,8 +85,8 @@ const unpublishedDescriptions = isPublished
 const sitemapUrls = [...readFileSync(path.join(dist, 'sitemap.xml'), 'utf-8').matchAll(/<loc>https:\/\/math-navi\.com([^<]*)<\/loc>/g)].map((m) => m[1]);
 if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemapにURLの重複があります。');
 
-// 固定ページ5件（TOP・4×4ナビ設定画面・Privacy・Disclaimer・Contact）。
-const expectedBase = ['/', '/navigator/', '/privacy/', '/disclaimer/', '/contact/'];
+// 固定ページ6件（TOP・4×4ナビ設定画面・このサイトについて・Privacy・Disclaimer・Contact）。
+const expectedBase = ['/', '/navigator/', '/about/', '/privacy/', '/disclaimer/', '/contact/'];
 let problemCount = 0;
 for (const unit of TYPE_PAGE_UNITS) {
   expectedBase.push(`/math1/${unit.routeBase}/`);

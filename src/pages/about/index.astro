@@ -1,0 +1,470 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 「このサイトについて」。本文の正本候補は制作側の about_page_draft_2026-10-02.md、
+// 実装方針は about_page_implementation_notes_2026-10-02.md（どちらも math_db_quadratic_working/）。
+// - index対象・self-canonical・sitemap掲載
+// - 重要度・難易度の表示は、TOPの4つの特徴と同じ .concept-item 系と [data-importance] を再利用する
+// - 走り書き写真は evi1〜3 の順。EXIFを除いて幅1200pxへ縮小し、evi3は180度回転、
+//   evi1は右端に写り込んだ紙束だけを切り落としている（public/images/about/）。
+const canonicalUrl = new URL('/about/', Astro.site).toString();
+
+type Actor = 'human' | 'ai';
+const processSteps: { actor: Actor; role: string; text: string }[] = [
+  { actor: 'human', role: '人間', text: '人間が問題タイプを選ぶ' },
+  { actor: 'ai', role: 'AI', text: 'AIが問題候補を生成する' },
+  { actor: 'human', role: '人間', text: '人間が掲載問題を確定する' },
+  { actor: 'human', role: '人間', text: '人間が先に解答・問題メタ・解法メタ・ThinkingFlow・最終解答を作る' },
+  { actor: 'ai', role: '壁打ち用AI', text: 'AIと壁打ちし、教材の形に整える' },
+  { actor: 'ai', role: '独立検算用AI', text: '独立検算用AIが問題文だけを見て解く' },
+  { actor: 'ai', role: '照合用AI', text: '照合用の別AIが、人間と独立検算用AIの計算を照合する' },
+  { actor: 'human', role: '人間', text: '人間が照合結果を確認し、確認済みの問題だけを公開する' },
+];
+
+const scribbles = [
+  {
+    src: '/images/about/scribble-1.jpg',
+    width: 1200,
+    height: 1672,
+    alt: '二次関数の最大値の問題の走り書き。平方完成した式、軸と定義域の位置関係で場合分けした2つのグラフ、考える順番のメモ。',
+  },
+  {
+    src: '/images/about/scribble-2.jpg',
+    width: 1200,
+    height: 1600,
+    alt: '四角形ABCDと対角線ACの図形の問題の走り書き。図、余弦定理による計算、(1)(2)で考える順番のメモ。',
+  },
+  {
+    src: '/images/about/scribble-3.jpg',
+    width: 1200,
+    height: 1600,
+    alt: '置き換えを使う因数分解の問題の走り書き。(1)(2)の計算と、考える順番のメモ。',
+  },
+];
+
+const aiRoles = [
+  { name: '壁打ち用AI', desc: '人間の走り書きをもとに、説明と構成を一緒に整える' },
+  { name: '独立して解くAI', desc: '問題文だけを渡され、人間の解答を見ずに解く' },
+  { name: '照合するAI', desc: '人間側と独立AI側の計算を、中間結果まで照合する' },
+];
+---
+
+<BaseLayout
+  title="このサイトについて | 高校数学ナビ"
+  description="高校数学ナビの目的、重要度・難易度、問題制作と独立検算、人間とAIの役割について説明します。"
+>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+  </Fragment>
+
+  <div class="about">
+    <h1 class="about-title">このサイトについて</h1>
+
+    <div class="about-lead">
+      <p>
+        高校数学ナビは、学校の授業や定期試験に向けて、<strong>どの優先順位で勉強するか</strong>を考えるための問題データベースです。
+      </p>
+      <p>
+        大学受験での出題価値ではなく、教科書・定期試験の範囲を基準にしています。定期試験で安定して得点し、評定を大切にしたい生徒、その先に内部推薦・指定校推薦を考えている生徒にも役立つ構成を目指しています。
+      </p>
+      <p>
+        学校によって授業や試験範囲は異なるため、学校からの案内と組み合わせて使ってください。このサイトだけで学習を完結させるのではなく、取り組む順番を決めるための「ベースキャンプ」として利用できます。
+      </p>
+    </div>
+
+    <section class="about-section" aria-labelledby="about-rating">
+      <h2 id="about-rating">重要度と難易度</h2>
+      <p>重要度は<strong>取り組む優先順位</strong>、難易度は<strong>問題の難しさ</strong>を示します。</p>
+
+      <div class="about-rating-grid">
+        <div>
+          <h3 class="about-h3">重要度<span class="about-h3-note">現在の公開レギュレーション</span></h3>
+          <ul class="concept-items">
+            <li class="concept-item">
+              <span class="concept-item-label" data-importance="土台">土台</span>
+              <span class="concept-item-desc">高校数学の土台</span>
+            </li>
+            <li class="concept-item">
+              <span class="concept-item-label" data-importance="本命">本命</span>
+              <span class="concept-item-desc">定期試験で優先</span>
+            </li>
+            <li class="concept-item">
+              <span class="concept-item-label" data-importance="次点">次点</span>
+              <span class="concept-item-desc">本命の次</span>
+            </li>
+            <li class="concept-item">
+              <span class="concept-item-label" data-importance="余力">余力</span>
+              <span class="concept-item-desc">余裕があれば</span>
+            </li>
+          </ul>
+          <p class="about-note">
+            「土台」と「本命」は、試験範囲内では同じように優先します。土台は高校3年間維持してほしい知識、本命はその単元の定期試験で優先する主要問題です。
+          </p>
+        </div>
+
+        <div>
+          <h3 class="about-h3">難易度<span class="about-h3-note">現在の公開レギュレーション</span></h3>
+          <ol class="concept-items">
+            <li class="concept-item concept-item--numbered">
+              <span class="concept-item-num">1</span>
+              <span class="concept-item-label">基本</span>
+              <span class="concept-item-desc">教科書の基本</span>
+            </li>
+            <li class="concept-item concept-item--numbered">
+              <span class="concept-item-num">2</span>
+              <span class="concept-item-label">標準</span>
+              <span class="concept-item-desc">教科書の標準</span>
+            </li>
+            <li class="concept-item concept-item--numbered">
+              <span class="concept-item-num">3</span>
+              <span class="concept-item-label">応用</span>
+              <span class="concept-item-desc">教科書で難しい側</span>
+            </li>
+            <li class="concept-item concept-item--numbered">
+              <span class="concept-item-num">4</span>
+              <span class="concept-item-label">発展</span>
+              <span class="concept-item-desc">応用より一段難しい</span>
+            </li>
+          </ol>
+          <p class="about-note">重要度と難易度は別の軸です。難しいから重要、簡単だから重要ではありません。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-find">
+      <h2 id="about-find">問題の探し方とThinkingFlow</h2>
+      <ul class="about-list">
+        <li><a href="/app/"><strong>問題データベース</strong></a>：科目・単元・問題タイプから問題を探す</li>
+        <li><a href="/navigator/"><strong>4×4ナビゲーション</strong></a>：試験範囲を指定し、重要度×難易度の16マスから取り組む問題を選ぶ</li>
+      </ul>
+      <p>
+        問題を選んだ後は、ThinkingFlowで「何に注目し、次に何をするか」を順に確認できます。まず自分で考え、迷ったFlowだけを開く使い方を想定しています。
+      </p>
+    </section>
+
+    <section class="about-section" aria-labelledby="about-making">
+      <h2 id="about-making">問題をどのように作り、確かめているか</h2>
+      <p>
+        運営者は約20年、高校数学を指導し、推薦専門の塾にも関わってきました。問題選定、重要度、ThinkingFlowには、その経験を反映しています。
+      </p>
+
+      <ol class="about-process" aria-label="問題の制作と確認の流れ">
+        {processSteps.map((step, index) => (
+          <li class="about-process-step" data-actor={step.actor}>
+            <span class="about-process-num" aria-hidden="true">{index + 1}</span>
+            <span class="about-process-role">{step.role}</span>
+            <span class="about-process-text">{step.text}</span>
+          </li>
+        ))}
+      </ol>
+
+      <h3 class="about-h3">走り書きから教材へ</h3>
+      <p>運営者が独立検算より先に作成した、3つの問題の走り書きを掲載します。</p>
+
+      <figure class="about-scribbles">
+        <ul class="about-scribble-row" aria-label="走り書きの写真（3枚）">
+          {scribbles.map((photo, index) => (
+            <li class="about-scribble">
+              <a href={photo.src} aria-label={`走り書き${index + 1}を拡大表示`}>
+                <img
+                  src={photo.src}
+                  width={photo.width}
+                  height={photo.height}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <figcaption>独立検算より先に作成した、解答とThinkingFlowの走り書き（写真を押すと拡大します）</figcaption>
+      </figure>
+
+      <p>この内容をAIへ伝え、壁打ちしながら説明と構成を整えます。数学的な骨格は、人間が先に作ります。</p>
+
+      <div class="about-roles">
+        <div class="about-role">
+          <h3 class="about-h3">人間が決めること</h3>
+          <ul class="about-list">
+            <li>問題タイプ、掲載問題、重要度・難易度</li>
+            <li>問題メタ・解法メタ、ThinkingFlow、中間結果、最終解答</li>
+            <li>AIの提案を採用するか</li>
+            <li>修正、再検算、公開の最終判断</li>
+          </ul>
+        </div>
+        <div class="about-role">
+          <h3 class="about-h3">AIが担当すること</h3>
+          <ul class="about-list">
+            <li>条件に沿った問題候補の生成</li>
+            <li>走り書きを教材へ整えるための壁打ち</li>
+            <li>教材文・図・ページ制作の補助</li>
+            <li>人間の解答を見ずに行う独立計算</li>
+            <li>人間の計算と独立計算を比較する、別AIによる照合</li>
+          </ul>
+        </div>
+      </div>
+
+      <p>壁打ち用AI、独立して解くAI、両者の計算を照合するAIは役割を分けます。</p>
+      <ol class="about-ai-roles" aria-label="3つのAIの役割">
+        {aiRoles.map((role) => (
+          <li class="about-ai-role">
+            <span class="about-ai-role-name">{role.name}</span>
+            <span class="about-ai-role-desc">{role.desc}</span>
+          </li>
+        ))}
+      </ol>
+      <p>
+        独立して解くAIには問題文だけを渡します。別のAIが人間側と独立AI側の計算を中間結果まで照合し、最後に人間が結果を確認します。数学内容を変更した場合は再検算します。
+      </p>
+    </section>
+
+    <section class="about-section about-closing">
+      <p>
+        誤りや不具合を見つけた場合は、<a href="/contact/">お問い合わせフォーム</a>からお知らせください。掲載内容の扱いについては<a href="/disclaimer/">免責事項</a>をご覧ください。
+      </p>
+      <nav class="about-next" aria-label="次に見るページ">
+        <a href="/app/">問題データベースを見る</a>
+        <a href="/navigator/">4×4ナビゲーション</a>
+      </nav>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about {
+    max-width: 52rem;
+    margin: 0 auto;
+  }
+  .about-title {
+    font-size: 1.85rem;
+    margin: 0.5rem 0 1.25rem;
+  }
+  .about-lead p {
+    margin-bottom: 0.9rem;
+  }
+  .about-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .about-section h2 {
+    margin-top: 0;
+  }
+  .about-h3 {
+    font-size: 1rem;
+    margin: 1.75rem 0 0.5rem;
+  }
+  .about-h3-note {
+    margin-left: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+  .about-note {
+    margin-top: 0.75rem;
+    font-size: 0.92rem;
+    color: var(--color-text-subtle);
+  }
+  .about-list {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+  }
+  .about-list li + li {
+    margin-top: 0.25rem;
+  }
+
+  /* 重要度・難易度：PCは2列、狭幅は縦積み（TOPの4つの特徴と同じ部品） */
+  .about-rating-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2.5rem;
+  }
+
+  /* 制作・検算工程：PCは横方向（4列×2段、各段の上に横レール）、狭幅は縦レール。
+     番号マーカーはThinkingFlowと同じ小さなアウトライン円。人間の工程だけ塗りつぶす。 */
+  .about-process {
+    list-style: none;
+    margin: 1.5rem 0 0.5rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem 0;
+  }
+  .about-process-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0 0.9rem 0 0;
+  }
+  .about-process-step::before {
+    content: '';
+    position: absolute;
+    top: 0.8rem;
+    left: 1.6rem;
+    right: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .about-process-step:nth-child(4n)::before,
+  .about-process-step:last-child::before {
+    display: none;
+  }
+  .about-process-num {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+  .about-process-step[data-actor='human'] .about-process-num {
+    border-color: var(--color-primary-dark);
+    background: var(--color-primary-dark);
+    color: #fff;
+  }
+  .about-process-role {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+  .about-process-step[data-actor='human'] .about-process-role {
+    color: var(--color-primary-dark);
+  }
+  .about-process-text {
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  /* 走り書き3枚：PCは横一列、狭幅は横スクロール */
+  .about-scribbles {
+    margin: 1rem 0 1.25rem;
+  }
+  .about-scribble-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .about-scribble a {
+    display: block;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  /* 3枚の縦横比が少し違う（1枚目だけ右端を切り落とした）ため、枠を3:4にそろえ、
+     紙面を欠かさないようcontainで収める。 */
+  .about-scribble img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
+  }
+  .about-scribbles figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .about-roles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2.5rem;
+  }
+  .about-role .about-h3 {
+    margin-top: 1rem;
+  }
+
+  .about-ai-roles {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .about-ai-role {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 0.9rem;
+    background: var(--color-accent-bg);
+    border-radius: var(--radius);
+  }
+  .about-ai-role-name {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--color-primary-dark);
+  }
+  .about-ai-role-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .about-next {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .about-title {
+      font-size: 1.5rem;
+    }
+    .about-rating-grid,
+    .about-roles,
+    .about-ai-roles {
+      grid-template-columns: 1fr;
+    }
+
+    .about-process {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .about-process-step {
+      display: grid;
+      grid-template-columns: 1.6rem 1fr;
+      column-gap: 0.75rem;
+      padding: 0 0 1rem;
+    }
+    .about-process-step::before,
+    .about-process-step:nth-child(4n)::before {
+      display: block;
+      top: 1.6rem;
+      bottom: 0;
+      left: 0.8rem;
+      right: auto;
+      border-top: none;
+      border-left: 1px solid var(--color-border);
+    }
+    .about-process-step:last-child::before {
+      display: none;
+    }
+    .about-process-num {
+      grid-row: 1 / span 2;
+    }
+    .about-process-role {
+      line-height: 1.6rem;
+    }
+
+    .about-scribble-row {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 0.75rem;
+      padding-bottom: 0.5rem;
+    }
+    .about-scribble {
+      flex: 0 0 72%;
+      scroll-snap-align: start;
+    }
+  }
+</style>

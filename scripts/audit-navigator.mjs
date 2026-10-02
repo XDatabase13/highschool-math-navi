@@ -170,7 +170,7 @@ const typeUrls = typeSnapshot.typePages
   .map((t) => `${dbSubjectNav.flatMap((s) => s.units).find((unit) => unit.id === t.unitId)?.href}${t.slug}/`);
 const typePagesBuilt = typeUrls.filter((url) => page(url) !== null);
 // 型ページは公開ゲート（承認＋38件）を通過しているときだけsitemapに入る。ここでは実際にbuildされた型ページを基準にする。
-const expectedExisting = ['/', ...unitUrls, ...problemUrls, ...typePagesBuilt, '/privacy/', '/disclaimer/', '/contact/'];
+const expectedExisting = ['/', ...unitUrls, ...problemUrls, ...typePagesBuilt, '/about/', '/privacy/', '/disclaimer/', '/contact/'];
 const expectedSitemap = [...expectedExisting, '/navigator/'].map((url) => `${SITE}${url}`);
 check('sitemapにURLの重複がない', new Set(sitemapUrls).size === sitemapUrls.length);
 check(
@@ -178,7 +178,7 @@ check(
   sitemapUrls.length === expectedSitemap.length && expectedSitemap.every((url) => sitemapUrls.includes(url)),
   `${sitemapUrls.length}件（既存${expectedExisting.length}＋1）`,
 );
-check('sitemapは228件（型ページ公開中）', typePagesBuilt.length !== 38 || sitemapUrls.length === 228, `${sitemapUrls.length}件・型ページ${typePagesBuilt.length}件`);
+check('sitemapは229件（型ページ公開中）', typePagesBuilt.length !== 38 || sitemapUrls.length === 229, `${sitemapUrls.length}件・型ページ${typePagesBuilt.length}件`);
 check('sitemapに /navigator/ が1件だけある', sitemapUrls.filter((url) => url === `${SITE}/navigator/`).length === 1);
 check('sitemapに /app/ と /app/navigation/ がない', !sitemapUrls.some((url) => url.startsWith(`${SITE}/app/`)));
 check('sitemapにfragment付きURLがない', !sitemapUrls.some((url) => url.includes('#')));

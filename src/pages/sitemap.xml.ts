@@ -48,6 +48,7 @@ export const GET: APIRoute = async () => {
     '/math1/data-analysis/',
     ...dataAnalysis.map((entry) => `/math1/data-analysis/${entry.id}/`),
     ...(typePagePaths.get('data-analysis') ?? []),
+    '/about/',
     '/privacy/',
     '/disclaimer/',
     '/contact/',

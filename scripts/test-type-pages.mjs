@@ -9,10 +9,10 @@
 //   node scripts/test-type-pages.mjs gate
 //     src/content/typePages/ と src/data/type-page-publication.ts を一時的に書き換えて
 //     production buildと監査（audit-type-pages）を実行し、次を確認する。終了時（失敗時も）に元へ戻す。
-//       1. 1〜37件のMarkdown → productionの型ページ 0件・sitemap 190件
-//       2. 38件そろっても公開承認なし → 190件
-//       3. 38件＋公開承認あり → 228件（38型一括）
-//     （190＝TOP・4×4ナビ設定画面 /navigator/・単元トップ5・問題180・Privacy/Disclaimer/Contact）
+//       1. 1〜37件のMarkdown → productionの型ページ 0件・sitemap 191件
+//       2. 38件そろっても公開承認なし → 191件
+//       3. 38件＋公開承認あり → 229件（38型一括）
+//     （191＝TOP・4×4ナビ設定画面 /navigator/・このサイトについて /about/・単元トップ5・問題180・Privacy/Disclaimer/Contact）
 //       4. 公開承認ありで37件 → buildエラー
 //     distは上書きされるため、最後に現状（元の状態）で再buildする。
 
@@ -128,10 +128,10 @@ function gateTests() {
   cpSync(markdownDir, path.join(backupDir, 'typePages'), { recursive: true });
   const flagBackup = readFileSync(flagFile, 'utf-8');
   const scenarios = [
-    { name: '1件・承認なし', count: 1, approved: false, build: true, sitemap: 190 },
-    { name: '37件・承認なし', count: 37, approved: false, build: true, sitemap: 190 },
-    { name: '38件・承認なし', count: 38, approved: false, build: true, sitemap: 190 },
-    { name: '38件・承認あり', count: 38, approved: true, build: true, sitemap: 228 },
+    { name: '1件・承認なし', count: 1, approved: false, build: true, sitemap: 191 },
+    { name: '37件・承認なし', count: 37, approved: false, build: true, sitemap: 191 },
+    { name: '38件・承認なし', count: 38, approved: false, build: true, sitemap: 191 },
+    { name: '38件・承認あり', count: 38, approved: true, build: true, sitemap: 229 },
     { name: '37件・承認あり（部分公開は禁止）', count: 37, approved: true, build: false },
   ];
   try {
@@ -147,7 +147,7 @@ function gateTests() {
       const typeDirs = build.ok ? readdirSync(path.join(repoRoot, 'dist/math1/quadratic')).filter((d) => !d.startsWith('M1-') && d !== 'index.html') : [];
       check(
         `gate: ${s.name} → sitemap ${s.sitemap}件`,
-        build.ok && audit.ok && count === s.sitemap && typeDirs.length === (s.sitemap === 228 ? 10 : 0),
+        build.ok && audit.ok && count === s.sitemap && typeDirs.length === (s.sitemap === 229 ? 10 : 0),
         `build ${build.ok ? 'OK' : 'NG'} / audit ${audit.ok ? 'OK' : 'NG'} / sitemap ${count} / 二次関数の型route ${typeDirs.length}件`,
       );
       if (!audit.ok) console.log(audit.out);

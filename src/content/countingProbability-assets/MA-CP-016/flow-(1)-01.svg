@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 232" role="img" aria-label="AとBを囲んだ1つのまとまりと残り6人の、合計7つの対象を円形に並べる">
+<circle cx="160" cy="118" r="78" class="pa-guide"/>
+<rect x="124" y="21" width="72" height="38" rx="10" fill="var(--color-surface)"/>
+<rect x="124" y="21" width="72" height="38" rx="10" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="124" y="21" width="72" height="38" class="pa-figure-line" rx="10"/>
+<text x="144" y="45" class="geo-point-label">A</text>
+<text x="176" y="45" class="geo-point-label">B</text>
+<circle cx="221" cy="69.4" r="15" fill="var(--color-surface)"/>
+<circle cx="221" cy="69.4" r="15" class="pa-guide"/>
+<circle cx="236" cy="135.4" r="15" fill="var(--color-surface)"/>
+<circle cx="236" cy="135.4" r="15" class="pa-guide"/>
+<circle cx="193.8" cy="188.3" r="15" fill="var(--color-surface)"/>
+<circle cx="193.8" cy="188.3" r="15" class="pa-guide"/>
+<circle cx="126.2" cy="188.3" r="15" fill="var(--color-surface)"/>
+<circle cx="126.2" cy="188.3" r="15" class="pa-guide"/>
+<circle cx="84" cy="135.4" r="15" fill="var(--color-surface)"/>
+<circle cx="84" cy="135.4" r="15" class="pa-guide"/>
+<circle cx="99" cy="69.4" r="15" fill="var(--color-surface)"/>
+<circle cx="99" cy="69.4" r="15" class="pa-guide"/>
+<text x="160" y="116" class="geo-side-label">7つを</text>
+<text x="160" y="134" class="geo-side-label">円形に並べる</text>
+<text x="330" y="104" class="geo-angle-label">A・Bのまとまり</text>
+<text x="330" y="124" class="geo-angle-label">＋ 残り6人</text>
+</svg>

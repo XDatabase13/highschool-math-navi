@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 290" role="img" aria-label="3の倍数、4の倍数、5の倍数を表す3つの円の内側全体を塗りつぶしたベン図">
+<rect x="40" y="26" width="350" height="250" class="pa-figure-line" fill="none"/>
+<text x="98" y="18" class="geo-angle-label">1〜180の整数</text>
+<g opacity="0.3"><circle cx="172" cy="118" r="70" fill="var(--color-accent)"/><circle cx="258" cy="118" r="70" fill="var(--color-accent)"/><circle cx="215" cy="190" r="70" fill="var(--color-accent)"/></g>
+<circle cx="172" cy="118" r="70" class="pa-figure-line"/>
+<circle cx="258" cy="118" r="70" class="pa-figure-line"/>
+<circle cx="215" cy="190" r="70" class="pa-figure-line"/>
+<text x="92" y="52" class="geo-point-label">3の倍数</text>
+<text x="338" y="52" class="geo-point-label">4の倍数</text>
+<text x="320" y="262" class="geo-point-label">5の倍数</text>
+</svg>

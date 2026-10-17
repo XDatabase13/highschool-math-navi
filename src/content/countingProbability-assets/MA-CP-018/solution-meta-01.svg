@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 236" role="img" aria-label="普通の順列ABC、BCA、CABは回転で同じ円順列に、ACB、CBA、BACも回転で同じ円順列にまとまる。2つの円順列は裏返すと一致し、1つのじゅず順列になる">
+<text x="56" y="20" class="geo-side-label">普通の順列</text>
+<text x="210" y="20" class="geo-side-label">円順列</text>
+<text x="360" y="20" class="geo-side-label">じゅず順列</text>
+<text x="56" y="55" class="geo-point-label">ABC</text>
+<text x="56" y="81" class="geo-point-label">BCA</text>
+<text x="56" y="107" class="geo-point-label">CAB</text>
+<path d="M92 36 L102 36 L102 116 L92 116" class="pa-figure-line"/>
+<line x1="112" y1="76" x2="165" y2="76" class="pa-axis"/>
+<path d="M168 76 L160.6 79.1 L160.6 72.9 Z" class="pa-axis-fill"/>
+<text x="140" y="66" class="pa-label">回転で同じ</text>
+<circle cx="210" cy="76" r="26" class="pa-guide"/>
+<circle cx="210" cy="50" r="12" fill="var(--color-surface)"/>
+<circle cx="210" cy="50" r="12" class="pa-figure-line"/>
+<text x="210" y="55" class="geo-point-label">A</text>
+<circle cx="232.5" cy="89" r="12" fill="var(--color-surface)"/>
+<circle cx="232.5" cy="89" r="12" class="pa-figure-line"/>
+<text x="232.5" y="94" class="geo-point-label">B</text>
+<circle cx="187.5" cy="89" r="12" fill="var(--color-surface)"/>
+<circle cx="187.5" cy="89" r="12" class="pa-figure-line"/>
+<text x="187.5" y="94" class="geo-point-label">C</text>
+<text x="56" y="167" class="geo-point-label">ACB</text>
+<text x="56" y="193" class="geo-point-label">CBA</text>
+<text x="56" y="219" class="geo-point-label">BAC</text>
+<path d="M92 148 L102 148 L102 228 L92 228" class="pa-figure-line"/>
+<line x1="112" y1="188" x2="165" y2="188" class="pa-axis"/>
+<path d="M168 188 L160.6 191.1 L160.6 184.9 Z" class="pa-axis-fill"/>
+<text x="140" y="178" class="pa-label">回転で同じ</text>
+<circle cx="210" cy="188" r="26" class="pa-guide"/>
+<circle cx="210" cy="162" r="12" fill="var(--color-surface)"/>
+<circle cx="210" cy="162" r="12" class="pa-figure-line"/>
+<text x="210" y="167" class="geo-point-label">A</text>
+<circle cx="232.5" cy="201" r="12" fill="var(--color-surface)"/>
+<circle cx="232.5" cy="201" r="12" class="pa-figure-line"/>
+<text x="232.5" y="206" class="geo-point-label">C</text>
+<circle cx="187.5" cy="201" r="12" fill="var(--color-surface)"/>
+<circle cx="187.5" cy="201" r="12" class="pa-figure-line"/>
+<text x="187.5" y="206" class="geo-point-label">B</text>
+<path d="M244 76 L254 76 L254 188 L244 188" class="pa-figure-line"/>
+<line x1="262" y1="132" x2="315" y2="132" class="pa-axis"/>
+<path d="M318 132 L310.6 135.1 L310.6 128.9 Z" class="pa-axis-fill"/>
+<text x="290" y="120" class="pa-label">裏返しで同じ</text>
+<circle cx="360" cy="132" r="26" class="pa-guide"/>
+<circle cx="360" cy="106" r="12" fill="var(--color-surface)"/>
+<circle cx="360" cy="106" r="12" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="360" cy="106" r="12" class="pa-figure-line"/>
+<text x="360" y="111" class="geo-point-label">A</text>
+<circle cx="382.5" cy="145" r="12" fill="var(--color-surface)"/>
+<circle cx="382.5" cy="145" r="12" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="382.5" cy="145" r="12" class="pa-figure-line"/>
+<text x="382.5" y="150" class="geo-point-label">B</text>
+<circle cx="337.5" cy="145" r="12" fill="var(--color-surface)"/>
+<circle cx="337.5" cy="145" r="12" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="337.5" cy="145" r="12" class="pa-figure-line"/>
+<text x="337.5" y="150" class="geo-point-label">C</text>
+</svg>

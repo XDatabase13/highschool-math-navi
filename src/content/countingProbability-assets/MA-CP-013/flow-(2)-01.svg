@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 170" role="img" aria-label="男子4人のまとまりと女子4人のまとまり。男子のまとまり、女子のまとまりの順と、その逆の順の2つの配置があり、各まとまりの内部でも4人を並べ替える">
+<text x="36" y="66" class="geo-side-label">順1</text>
+<rect x="76" y="42" width="132" height="40" class="pa-figure-line" rx="10" fill="none"/>
+<circle cx="96" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="96" cy="62" r="14" class="pa-figure-line"/>
+<text x="96" y="67" class="geo-point-label">男</text>
+<circle cx="127" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="127" cy="62" r="14" class="pa-figure-line"/>
+<text x="127" y="67" class="geo-point-label">男</text>
+<circle cx="158" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="158" cy="62" r="14" class="pa-figure-line"/>
+<text x="158" y="67" class="geo-point-label">男</text>
+<circle cx="189" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="189" cy="62" r="14" class="pa-figure-line"/>
+<text x="189" y="67" class="geo-point-label">男</text>
+<rect x="226" y="42" width="132" height="40" rx="10" fill="var(--color-surface)"/>
+<rect x="226" y="42" width="132" height="40" rx="10" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="226" y="42" width="132" height="40" class="pa-figure-line" rx="10"/>
+<circle cx="246" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="246" cy="62" r="14" class="pa-figure-line"/>
+<text x="246" y="67" class="geo-point-label">女</text>
+<circle cx="277" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="277" cy="62" r="14" class="pa-figure-line"/>
+<text x="277" y="67" class="geo-point-label">女</text>
+<circle cx="308" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="308" cy="62" r="14" class="pa-figure-line"/>
+<text x="308" y="67" class="geo-point-label">女</text>
+<circle cx="339" cy="62" r="14" fill="var(--color-surface)"/>
+<circle cx="339" cy="62" r="14" class="pa-figure-line"/>
+<text x="339" y="67" class="geo-point-label">女</text>
+<text x="36" y="136" class="geo-side-label">順2</text>
+<rect x="76" y="112" width="132" height="40" rx="10" fill="var(--color-surface)"/>
+<rect x="76" y="112" width="132" height="40" rx="10" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="76" y="112" width="132" height="40" class="pa-figure-line" rx="10"/>
+<circle cx="96" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="96" cy="132" r="14" class="pa-figure-line"/>
+<text x="96" y="137" class="geo-point-label">女</text>
+<circle cx="127" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="127" cy="132" r="14" class="pa-figure-line"/>
+<text x="127" y="137" class="geo-point-label">女</text>
+<circle cx="158" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="158" cy="132" r="14" class="pa-figure-line"/>
+<text x="158" y="137" class="geo-point-label">女</text>
+<circle cx="189" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="189" cy="132" r="14" class="pa-figure-line"/>
+<text x="189" y="137" class="geo-point-label">女</text>
+<rect x="226" y="112" width="132" height="40" class="pa-figure-line" rx="10" fill="none"/>
+<circle cx="246" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="246" cy="132" r="14" class="pa-figure-line"/>
+<text x="246" y="137" class="geo-point-label">男</text>
+<circle cx="277" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="277" cy="132" r="14" class="pa-figure-line"/>
+<text x="277" y="137" class="geo-point-label">男</text>
+<circle cx="308" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="308" cy="132" r="14" class="pa-figure-line"/>
+<text x="308" y="137" class="geo-point-label">男</text>
+<circle cx="339" cy="132" r="14" fill="var(--color-surface)"/>
+<circle cx="339" cy="132" r="14" class="pa-figure-line"/>
+<text x="339" y="137" class="geo-point-label">男</text>
+<text x="224" y="24" class="geo-angle-label">各まとまりの内部でも4人を並べ替える</text>
+</svg>

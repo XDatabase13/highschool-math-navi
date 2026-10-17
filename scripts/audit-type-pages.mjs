@@ -4,7 +4,7 @@
 // 1. 公開集合: 公開ゲート＝「published全38件の型Markdown」かつ「公開承認
 //    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜38件の
 //    どの状態でも）、dist・sitemapに型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと
-//    （sitemapは既存の191 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（229 URL）。
+//    （sitemapは既存の226 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（264 URL）。
 //    承認済みなのに38件そろっていない状態は監査エラー（buildもエラーになる）。
 // 2. hold型が、distのどこにも出ていないこと（2026-09-29に削除した開発確認用fixtureの残骸も検査する）。
 // 3. xlsx読取依存（exceljs）がbuild成果物に含まれていないこと。
@@ -20,6 +20,8 @@ import { fileURLToPath } from 'node:url';
 import { TYPE_PAGE_UNITS, EXPECTED_PUBLISHED_TYPE_PAGE_COUNT, typePageUrl } from '../src/data/type-page-units.ts';
 import { namespaceSvgIds, auditSvgIdReferences } from '../src/utils/svgIdNamespace.ts';
 import { TYPE_PAGES_PUBLICATION_APPROVED } from '../src/data/type-page-publication.ts';
+import { dbSubjectNav } from '../src/data/subjects.ts';
+import { NAVIGATOR_SUBJECTS } from '../src/data/navigator-config.ts';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(repoRoot, 'dist');
@@ -88,12 +90,17 @@ if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemapにURLの重�
 // 固定ページ6件（TOP・4×4ナビ設定画面・このサイトについて・Privacy・Disclaimer・Contact）。
 const expectedBase = ['/', '/navigator/', '/about/', '/privacy/', '/disclaimer/', '/contact/'];
 let problemCount = 0;
-for (const unit of TYPE_PAGE_UNITS) {
-  expectedBase.push(`/math1/${unit.routeBase}/`);
+// 問題DBの全単元（型ページの無い数学A等を含む）。単元トップURLはdbSubjectNav、collectionは4×4ナビ設定から引く。
+const dbUnits = NAVIGATOR_SUBJECTS.flatMap((subject) => subject.units).map((unit) => ({
+  collection: unit.collection,
+  href: dbSubjectNav.flatMap((subject) => subject.units).find((u) => u.id === unit.dbUnitId)?.href,
+}));
+for (const unit of dbUnits) {
+  expectedBase.push(unit.href);
   const dir = path.join(repoRoot, 'src/content', unit.collection);
-  for (const f of readdirSync(dir).filter((name) => /^M1-[A-Z]{2}-\d{3}\.md$/.test(name))) {
+  for (const f of readdirSync(dir).filter((name) => /^M[1A]-[A-Z]{2}-\d{3}\.md$/.test(name))) {
     if (scalar(readFileSync(path.join(dir, f), 'utf-8'), 'verification_status') === '独立検算済み') {
-      expectedBase.push(`/math1/${unit.routeBase}/${f.replace(/\.md$/, '')}/`);
+      expectedBase.push(`${unit.href}${f.replace(/\.md$/, '')}/`);
       problemCount += 1;
     }
   }
@@ -176,7 +183,7 @@ console.log(
   `公開状態: ${isPublished ? '公開（38件完了＋公開承認）' : '公開前'}` +
     `（型Markdown ${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件、公開承認 ${TYPE_PAGES_PUBLICATION_APPROVED ? 'あり' : 'なし'}）`,
 );
-console.log(`sitemap: ${sitemapUrls.length} URL（既存 ${expectedBase.length}＝単元トップ5＋問題${problemCount}＋固定5、型 ${isPublished ? published.length : 0}）`);
+console.log(`sitemap: ${sitemapUrls.length} URL（既存 ${expectedBase.length}＝単元トップ${dbUnits.length}＋問題${problemCount}＋固定6、型 ${isPublished ? published.length : 0}）`);
 console.log(`型ページ in dist: ${typePagesInDist.length}件 / 切替・型一覧navを含むHTML: ${switchPages}件`);
 console.log(`SVG監査: 全${svgReport.length}型、problem assetを持つ型 ${withAssets.length}件（${withAssets.map((r) => `${r.id}:${r.assets}`).join(' ')}）`);
 const rawCollisions = svgReport.filter((r) => r.rawDuplicates.length > 0);

@@ -79,9 +79,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 // ---------------------------------------------------------------------------
 // frontmatterの読込（ページ側は astro:content 経由。ここでは同じ項目を最小パーサーで読む）
 // ---------------------------------------------------------------------------
-const EXPECTED_PROBLEMS = 180;
-const EXPECTED_UNITS = 5;
-const EXPECTED_SECTIONS = 22;
+// 数学I 180問（5単元・22 section）＋数学A 場合の数・確率 34問（独立検算済みのみ。1単元・4 section）。
+const EXPECTED_PROBLEMS = 214;
+const EXPECTED_UNITS = 6;
+const EXPECTED_SECTIONS = 26;
 
 function readFrontmatter(file) {
   const text = readFileSync(file, 'utf-8');
@@ -99,7 +100,7 @@ function loadEntries() {
   for (const subject of NAVIGATOR_SUBJECTS) {
     for (const unit of subject.units) {
       const dir = path.join(repoRoot, 'src/content', unit.collection);
-      for (const file of readdirSync(dir).filter((name) => /^M1-[A-Z]{2}-\d{3}\.md$/.test(name)).sort()) {
+      for (const file of readdirSync(dir).filter((name) => /^M[1A]-[A-Z]{2}-\d{3}\.md$/.test(name)).sort()) {
         const fm = readFrontmatter(path.join(dir, file));
         if (fm.verification_status !== '独立検算済み') continue;
         entries.push({
@@ -156,25 +157,25 @@ const pick = (list, probability) => list.filter(() => random() < probability);
 // ---------------------------------------------------------------------------
 {
   const ids = index.problems.map((p) => p.id);
-  check('候補: 公開180問が一度ずつ読み込まれる', ids.length === EXPECTED_PROBLEMS && new Set(ids).size === EXPECTED_PROBLEMS, `${ids.length}問`);
-  check('候補: すべてM1-XX-999形式の問題ID', ids.every((id) => /^M1-[A-Z]{2}-\d{3}$/.test(id)));
+  check(`候補: 公開${EXPECTED_PROBLEMS}問が一度ずつ読み込まれる`, ids.length === EXPECTED_PROBLEMS && new Set(ids).size === EXPECTED_PROBLEMS, `${ids.length}問`);
+  check('候補: すべてM1-XX-999／MA-XX-999形式の問題ID', ids.every((id) => /^M[1A]-[A-Z]{2}-\d{3}$/.test(id)));
 
   const units = index.subjects.flatMap((s) => s.units);
-  check('候補: 5単元・22 section', units.length === EXPECTED_UNITS && index.sectionIds.length === EXPECTED_SECTIONS, `${units.length}単元・${index.sectionIds.length} section`);
+  check(`候補: ${EXPECTED_UNITS}単元・${EXPECTED_SECTIONS} section`, units.length === EXPECTED_UNITS && index.sectionIds.length === EXPECTED_SECTIONS, `${units.length}単元・${index.sectionIds.length} section`);
   check(
     '候補: 単元順がdbSubjectNavと一致する',
     same(units.map((u) => u.name), unitOrder) && same(units.map((u) => u.href), dbSubjectNav.flatMap((s) => s.units.map((u) => u.href))),
   );
 
-  // 全問題が5単元・22 sectionのいずれか1つに属し、sectionごとの合計が180になる。
+  // 全問題がいずれか1つのsectionに属し、sectionごとの合計が公開問題数になる。
   const perSection = index.sectionIds.map((id) => candidateProblems(index, [id]).length);
-  check('候補: sectionごとの合計が180問', perSection.reduce((a, b) => a + b, 0) === EXPECTED_PROBLEMS && perSection.every((n) => n > 0));
+  check(`候補: sectionごとの合計が${EXPECTED_PROBLEMS}問`, perSection.reduce((a, b) => a + b, 0) === EXPECTED_PROBLEMS && perSection.every((n) => n > 0));
   check('候補: 全問題が設定済みのsectionに属する', index.problems.every((p) => index.sectionInfo.has(p.sectionId) && index.unitInfo.has(p.unitId)));
 
   // ナビ設定のsectionが、現行frontmatterのsection（collectionごと）と過不足なく一致する。
   const frontmatterSections = new Set(entries.map((e) => `${e.collection}|${e.section}`));
   const configSections = new Set(NAVIGATOR_SUBJECTS.flatMap((s) => s.units.flatMap((u) => u.sections.map((sec) => `${u.collection}|${sec.section}`))));
-  check('候補: ナビ設定の22 sectionが現行frontmatterと一致する', frontmatterSections.size === EXPECTED_SECTIONS && same([...frontmatterSections].sort(), [...configSections].sort()));
+  check(`候補: ナビ設定の${EXPECTED_SECTIONS} sectionが現行frontmatterと一致する`, frontmatterSections.size === EXPECTED_SECTIONS && same([...frontmatterSections].sort(), [...configSections].sort()));
 
   // sectionの並びが、各単元のdisplay_orderでの初出順と一致する。
   const firstAppearance = NAVIGATOR_SUBJECTS.flatMap((s) => s.units).map((u) => {
@@ -225,13 +226,15 @@ const pick = (list, probability) => list.filter(() => random() < probability);
   check('設定: 問題が0件のsectionを検出', throws(withConfig((c) => { c[0].units[0].sections.push({ id: 'ec9', section: '空のsection' }); }), /問題がありません/));
   check('設定: 単元の不足を検出', throws(withConfig((c) => { c[0].units.pop(); }), /対応する設定がありません|collection/));
   check('設定: dbSubjectNavにない単元を検出', throws(withConfig((c) => { c[0].units[0].dbUnitId = 'unknown-unit'; }), /dbSubjectNav/));
-  check('設定: dbSubjectNavにない科目を検出', throws(withConfig((c) => { c.push({ id: 'ma', name: '数学A', units: [] }); }), /dbSubjectNav/));
+  check('設定: dbSubjectNavにない科目を検出', throws(withConfig((c) => { c.push({ id: 'mb', name: '数学B', units: [] }); }), /dbSubjectNav/));
 }
 
 // ---------------------------------------------------------------------------
 // 3. 範囲集計と16マス
 // ---------------------------------------------------------------------------
 const allSections = index.sectionIds;
+// 数学Iだけのsection（科目トークン m1 の展開先）。
+const m1Sections = NAVIGATOR_SUBJECTS.find((s) => s.id === 'm1').units.flatMap((u) => u.sections.map((sec) => sec.id));
 const rangesToTest = [
   [],
   allSections,
@@ -299,30 +302,39 @@ const rangesToTest = [
       }),
   );
   check('並び順: 範囲の指定順に依存しない', same(extractProblems(index, normalizeState(index, [...cross].reverse(), [...crossCells].reverse()).state).map((p) => p.id), crossExpected));
-  check('抽出: 同じsectionを重ねて指定しても重複しない', same(extractProblems(index, normalizeState(index, ['qf', 'qf1', 'qf1', 'm1'], ['all', '41']).state).map((p) => p.id), expectedIds(allSections)));
+  check('抽出: 同じsectionを重ねて指定しても重複しない', same(extractProblems(index, normalizeState(index, ['qf', 'qf1', 'qf1', 'm1'], ['all', '41']).state).map((p) => p.id), expectedIds(m1Sections)));
 
   const breakdown = unitBreakdown(index, crossResult);
   check('抽出: 単元ごとの内訳の合計が結果件数と一致する', breakdown.reduce((sum, row) => sum + row.count, 0) === crossResult.length && same(breakdown.map((r) => r.unitId), ['sl', 'qf']));
 }
 
-// 将来の数学A（科目追加・科目横断）を、同じ関数が設定の追加だけで扱えること。
+// 数学I＋数学A（実データ）の科目横断：科目順 → 単元順 → display_order で並ぶ。
 {
-  const futureDb = [...dbSubjectNav, { name: '数学A', units: [{ id: 'probability', name: '場合の数と確率', href: '/mathA/probability/' }] }];
+  const state = normalizeState(index, ['ma', 'sl'], ['all']).state;
+  const result = extractProblems(index, state).map((p) => p.id);
+  const maIds = entries.filter((e) => e.subject === '数学A').sort((a, b) => a.display_order - b.display_order).map((e) => e.id);
+  check('科目横断: 数学I＋数学Aの同時選択で科目順に並ぶ', maIds.length > 0 && same(result, [...expectedIds(['sl1', 'sl2']), ...maIds]));
+  check('科目横断: 科目全体のトークンはその科目だけを指す', serializeState(index, state).startsWith('v=1&r=sl,ma&c=') && rangeSummary(index, state.sections) === '集合と論証 全体＋数学A 全体');
+}
+
+// 将来の科目（数学B等）を、同じ関数が設定の追加だけで扱えること。
+{
+  const futureDb = [...dbSubjectNav, { name: '数学B', units: [{ id: 'sequence', name: '数列', href: '/math-b/sequence/' }] }];
   const futureConfig = [
     ...NAVIGATOR_SUBJECTS,
-    { id: 'ma', name: '数学A', units: [{ id: 'pr', dbUnitId: 'probability', collection: 'probability', sections: [{ id: 'pr1', section: '場合の数' }, { id: 'pr2', section: '確率' }] }] },
+    { id: 'mb', name: '数学B', units: [{ id: 'sq', dbUnitId: 'sequence', collection: 'sequence', sections: [{ id: 'sq1', section: '等差数列' }, { id: 'sq2', section: '等比数列' }] }] },
   ];
   const futureEntries = [
     ...entries,
-    { collection: 'probability', id: 'MA-PR-002', subject: '数学A', unit: '場合の数と確率', section: '確率', display_order: 2, importance: 3, importance_label: '本命', difficulty: 2 },
-    { collection: 'probability', id: 'MA-PR-001', subject: '数学A', unit: '場合の数と確率', section: '場合の数', display_order: 1, importance: 4, importance_label: '土台', difficulty: 1 },
+    { collection: 'sequence', id: 'MB-SQ-002', subject: '数学B', unit: '数列', section: '等比数列', display_order: 2, importance: 3, importance_label: '本命', difficulty: 2 },
+    { collection: 'sequence', id: 'MB-SQ-001', subject: '数学B', unit: '数列', section: '等差数列', display_order: 1, importance: 4, importance_label: '土台', difficulty: 1 },
   ];
   const futureIndex = createNavIndex(buildNavData(futureConfig, futureDb, futureEntries));
-  const state = normalizeState(futureIndex, ['ma', 'sl'], ['all']).state;
+  const state = normalizeState(futureIndex, ['mb', 'sl'], ['all']).state;
   const result = extractProblems(futureIndex, state).map((p) => p.id);
-  check('拡張: 数学I＋数学Aの同時選択で科目順に並ぶ', same(result, [...expectedIds(['sl1', 'sl2']), 'MA-PR-001', 'MA-PR-002']));
-  check('拡張: 科目を足しても既存の共有URLは同じ範囲を指す', same(parseStateString(futureIndex, 'v=1&r=sl,qf1&c=41').state, parseStateString(index, 'v=1&r=sl,qf1&c=41').state));
-  check('拡張: 科目全体のトークンはその科目だけを指す', serializeState(futureIndex, state).startsWith('v=1&r=sl,ma&c=') && rangeSummary(futureIndex, state.sections) === '集合と論証 全体＋数学A 全体');
+  check('拡張: 既存科目＋新しい科目の同時選択で科目順に並ぶ', same(result, [...expectedIds(['sl1', 'sl2']), 'MB-SQ-001', 'MB-SQ-002']));
+  check('拡張: 科目を足しても既存の共有URLは同じ範囲を指す', same(parseStateString(futureIndex, 'v=1&r=sl,qf1,cp3&c=41').state, parseStateString(index, 'v=1&r=sl,qf1,cp3&c=41').state));
+  check('拡張: 科目全体のトークンはその科目だけを指す', serializeState(futureIndex, state).startsWith('v=1&r=sl,mb&c=') && rangeSummary(futureIndex, state.sections) === '集合と論証 全体＋数学B 全体');
 }
 
 // ---------------------------------------------------------------------------
@@ -377,8 +389,8 @@ const rangesToTest = [
   // 将来のプリセット「土台＋本命、難易度1〜3」は、同じ選択セル状態へ設定するだけで足せる。
   const preset = ['41', '42', '43', '31', '32', '33'];
   const presetState = selectCells(index, normalizeState(index, ['m1'], []).state, preset);
-  const allCounts = countCells(candidateProblems(index, allSections));
-  check('プリセット: セル集合をselectCellsへ渡すだけで同じ抽出経路に乗る', presetState.cells.length > 0 && same(presetState.cells, preset.filter((c) => allCounts[c] > 0)) && same(extractProblems(index, presetState).map((p) => p.id), expectedIds(allSections, preset)));
+  const allCounts = countCells(candidateProblems(index, m1Sections));
+  check('プリセット: セル集合をselectCellsへ渡すだけで同じ抽出経路に乗る', presetState.cells.length > 0 && same(presetState.cells, preset.filter((c) => allCounts[c] > 0)) && same(extractProblems(index, presetState).map((p) => p.id), expectedIds(m1Sections, preset)));
 }
 
 // ---------------------------------------------------------------------------
@@ -411,8 +423,8 @@ const rangesToTest = [
   check('URL: 同じ設定は同じ正規化URLになる（決定的）', deterministic);
   check('URL: 出力が問題DB側の形式判定（抽出モードの起動条件）を通る', shape);
 
-  check('URL: 単元全体・科目全体・全マスの省略表現', serializeState(index, normalizeState(index, ['sl1', 'sl2', 'qf1', 'qf2'], ['41']).state) === 'v=1&r=sl,qf1,qf2&c=41' && serializeState(index, normalizeState(index, allSections, ALL_CELLS.filter((c) => countCells(candidateProblems(index, allSections))[c] > 0)).state).startsWith('v=1&r=m1&c='));
-  check('URL: 範囲トークンの展開（科目・単元・section）', same(normalizeState(index, ['m1'], []).state.sections, allSections) && same(normalizeState(index, ['qf'], []).state.sections, ['qf1', 'qf2', 'qf3', 'qf4', 'qf5', 'qf6', 'qf7']));
+  check('URL: 単元全体・科目全体・全マスの省略表現', serializeState(index, normalizeState(index, ['sl1', 'sl2', 'qf1', 'qf2'], ['41']).state) === 'v=1&r=sl,qf1,qf2&c=41' && serializeState(index, normalizeState(index, m1Sections, ALL_CELLS.filter((c) => countCells(candidateProblems(index, m1Sections))[c] > 0)).state).startsWith('v=1&r=m1&c=') && serializeState(index, normalizeState(index, allSections, ['41']).state) === 'v=1&r=m1,ma&c=41');
+  check('URL: 範囲トークンの展開（科目・単元・section）', same(normalizeState(index, ['m1'], []).state.sections, m1Sections) && same(normalizeState(index, ['ma'], []).state.sections, ['cp1', 'cp2', 'cp3', 'cp4']) && same(normalizeState(index, ['qf'], []).state.sections, ['qf1', 'qf2', 'qf3', 'qf4', 'qf5', 'qf6', 'qf7']));
   check('URL: セルを選んでいない条件も読める', same(parseStateString(index, 'v=1&r=sl').state, { sections: ['sl1', 'sl2'], cells: [] }));
 
   // 未知ID：その値だけ無視し、残りを正規化する。
@@ -487,8 +499,8 @@ const rangesToTest = [
 // ---------------------------------------------------------------------------
 {
   // 個別問題URLは、既存の静的URL（単元トップURL＋問題ID）そのもの。
-  const routeOf = { expressionCalculation: '/math1/suto-shiki/', setLogic: '/math1/set-logic/', quadratic27: '/math1/quadratic/', trig4: '/math1/trig/', dataAnalysis: '/math1/data-analysis/' };
-  check('抽出モード: 個別問題URLが既存の静的URLと一致する（180問）', index.problems.every((p) => problemHref(index, p) === `${routeOf[entryById.get(p.id).collection]}${p.id}/`));
+  const routeOf = { expressionCalculation: '/math1/suto-shiki/', setLogic: '/math1/set-logic/', quadratic27: '/math1/quadratic/', trig4: '/math1/trig/', dataAnalysis: '/math1/data-analysis/', countingProbability: '/math-a/counting-probability/' };
+  check(`抽出モード: 個別問題URLが既存の静的URLと一致する（${EXPECTED_PROBLEMS}問）`, index.problems.every((p) => problemHref(index, p) === `${routeOf[entryById.get(p.id).collection]}${p.id}/`));
 
   const state = normalizeState(index, ['sl', 'qf1', 'qf3'], ['41', '42', '31']).state;
   const expected = expectedIds(['sl1', 'sl2', 'qf1', 'qf3'], ['41', '42', '31']);
@@ -598,7 +610,7 @@ const rangesToTest = [
 // ---------------------------------------------------------------------------
 {
   check('要約: 範囲（単元全体＋一部section）', rangeSummary(index, ['sl1', 'sl2', 'qf1', 'qf3', 'qf7']) === '集合と論証 全体＋二次関数 3項目');
-  check('要約: 科目全体', rangeSummary(index, allSections) === '数学I 全体' && rangeSummary(index, []) === '');
+  check('要約: 科目全体', rangeSummary(index, m1Sections) === '数学I 全体' && rangeSummary(index, allSections) === '数学I 全体＋数学A 全体' && rangeSummary(index, []) === '');
   check('要約: セル', cellsSummary(['41', '42', '43', '31', '32']) === '土台：難易度1・2・3／本命：難易度1・2' && cellsSummary(ALL_CELLS) === 'すべてのマス' && cellsSummary([]) === '');
   check('要約: 設定の初期名は範囲から自動生成し、長すぎる場合は切り詰める', autoSettingName(index, normalizeState(index, ['sl', 'qf1'], []).state) === '集合と論証 全体＋二次関数 1項目' && autoSettingName(index, normalizeState(index, ['ec1', 'sl1', 'qf1', 'tr1', 'da1'], []).state).length <= MAX_SETTING_NAME_LENGTH);
   check('要約: encodeの出力', same(encodeRange(index, ['sl1', 'sl2', 'qf1']), ['sl', 'qf1']) && same(encodeCells(ALL_CELLS), ['all']) && same(encodeCells(['31', '41']), ['41', '31']));
@@ -650,7 +662,7 @@ const stateC = normalizeState(index, ['ec1', 'da'], ['all']).state;
 
   // 保存するのは条件だけで、問題IDのスナップショットではない。
   const raw = storage.map.get(NAV_STORAGE_KEY);
-  check('保存: 保存対象は条件で、問題IDを含まない', !/M1-[A-Z]{2}-\d{3}/.test(raw) && JSON.parse(raw).v === 1 && same(JSON.parse(raw).saved[0].r, ['sl', 'qf1', 'qf3']));
+  check('保存: 保存対象は条件で、問題IDを含まない', !/M[1A]-[A-Z]{2}-\d{3}/.test(raw) && JSON.parse(raw).v === 1 && same(JSON.parse(raw).saved[0].r, ['sl', 'qf1', 'qf3']));
 
   const dup = store.saveSetting(index, normalizeState(index, ['qf3', 'qf1', 'sl2', 'sl1'], ['31', '42', '41']).state);
   check('保存: 同じ条件の重複保存を防ぐ', !dup.ok && dup.reason === 'duplicate' && dup.existing.id === a.setting.id && store.listSettings(index).length === 2);

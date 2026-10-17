@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" role="img" aria-label="横一列の8つの位置。左端に男子、右端に女子を固定し、両端の選び方は4通りずつ。中央の6か所へ残り6人を並べる方法は6!通り">
+<circle cx="40" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="40" cy="58" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="40" cy="58" r="14" class="pa-figure-line"/>
+<text x="40" y="63" class="geo-point-label">男</text>
+<circle cx="86" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="86" cy="58" r="14" class="pa-guide"/>
+<circle cx="132" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="132" cy="58" r="14" class="pa-guide"/>
+<circle cx="178" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="178" cy="58" r="14" class="pa-guide"/>
+<circle cx="224" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="224" cy="58" r="14" class="pa-guide"/>
+<circle cx="270" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="270" cy="58" r="14" class="pa-guide"/>
+<circle cx="316" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="316" cy="58" r="14" class="pa-guide"/>
+<circle cx="362" cy="58" r="14" fill="var(--color-surface)"/>
+<circle cx="362" cy="58" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="362" cy="58" r="14" class="pa-figure-line"/>
+<text x="362" y="63" class="geo-point-label">女</text>
+<text x="40" y="30" class="geo-side-label">左端</text>
+<text x="362" y="30" class="geo-side-label">右端</text>
+<text x="40" y="98" class="geo-angle-label">4通り</text>
+<text x="362" y="98" class="geo-angle-label">4通り</text>
+<path d="M72 77 L72 84 L330 84 L330 77" class="pa-figure-line"/>
+<text x="201" y="101" class="geo-angle-label">残り6人を並べる 6!通り</text>
+</svg>

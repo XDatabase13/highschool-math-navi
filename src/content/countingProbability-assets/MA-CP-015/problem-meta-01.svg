@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 180" role="img" aria-label="A、B、Cを円形に並べた3つの図。0度、120度、240度回転した配置で、回転によって一致するため、円順列では同じ1つとして扱う">
+<circle cx="70" cy="70" r="34" class="pa-guide"/>
+<circle cx="70" cy="36" r="14" fill="var(--color-surface)"/>
+<circle cx="70" cy="36" r="14" class="pa-figure-line"/>
+<text x="70" y="41" class="geo-point-label">A</text>
+<circle cx="99.4" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="99.4" cy="87" r="14" class="pa-figure-line"/>
+<text x="99.4" y="92" class="geo-point-label">B</text>
+<circle cx="40.6" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="40.6" cy="87" r="14" class="pa-figure-line"/>
+<text x="40.6" y="92" class="geo-point-label">C</text>
+<circle cx="210" cy="70" r="34" class="pa-guide"/>
+<circle cx="210" cy="36" r="14" fill="var(--color-surface)"/>
+<circle cx="210" cy="36" r="14" class="pa-figure-line"/>
+<text x="210" y="41" class="geo-point-label">C</text>
+<circle cx="239.4" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="239.4" cy="87" r="14" class="pa-figure-line"/>
+<text x="239.4" y="92" class="geo-point-label">A</text>
+<circle cx="180.6" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="180.6" cy="87" r="14" class="pa-figure-line"/>
+<text x="180.6" y="92" class="geo-point-label">B</text>
+<circle cx="350" cy="70" r="34" class="pa-guide"/>
+<circle cx="350" cy="36" r="14" fill="var(--color-surface)"/>
+<circle cx="350" cy="36" r="14" class="pa-figure-line"/>
+<text x="350" y="41" class="geo-point-label">B</text>
+<circle cx="379.4" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="379.4" cy="87" r="14" class="pa-figure-line"/>
+<text x="379.4" y="92" class="geo-point-label">C</text>
+<circle cx="320.6" cy="87" r="14" fill="var(--color-surface)"/>
+<circle cx="320.6" cy="87" r="14" class="pa-figure-line"/>
+<text x="320.6" y="92" class="geo-point-label">A</text>
+<text x="140" y="74" class="pa-panel-label">＝</text>
+<text x="280" y="74" class="pa-panel-label">＝</text>
+<text x="70" y="138" class="geo-side-label">0°</text>
+<text x="210" y="138" class="geo-side-label">120°回転</text>
+<text x="350" y="138" class="geo-side-label">240°回転</text>
+<text x="210" y="166" class="geo-angle-label">回転すると一致するので、円順列では同じ1つ</text>
+</svg>

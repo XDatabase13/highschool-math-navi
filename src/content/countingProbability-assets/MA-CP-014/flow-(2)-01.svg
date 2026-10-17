@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" role="img" aria-label="横一列の8つの位置で、間にちょうど2文字が入る2か所の組を5段で比較。1番目と4番目、2番目と5番目、3番目と6番目、4番目と7番目、5番目と8番目。どちらがCかRかはまだ決めない">
+<text x="70" y="22" class="geo-side-label">1</text>
+<text x="114" y="22" class="geo-side-label">2</text>
+<text x="158" y="22" class="geo-side-label">3</text>
+<text x="202" y="22" class="geo-side-label">4</text>
+<text x="246" y="22" class="geo-side-label">5</text>
+<text x="290" y="22" class="geo-side-label">6</text>
+<text x="334" y="22" class="geo-side-label">7</text>
+<text x="378" y="22" class="geo-side-label">8</text>
+<text x="26" y="54" class="geo-side-label">1と4</text>
+<rect x="53" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="33" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="53" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="97" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="33" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="185" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="229" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="33" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="33" width="34" height="34" class="pa-figure-line"/>
+
+<text x="26" y="98" class="geo-side-label">2と5</text>
+<rect x="53" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="97" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="77" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="97" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="229" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="77" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="229" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="77" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="77" width="34" height="34" class="pa-figure-line"/>
+
+<text x="26" y="142" class="geo-side-label">3と6</text>
+<rect x="53" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="97" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="121" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="141" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="229" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="121" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="273" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="121" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="121" width="34" height="34" class="pa-figure-line"/>
+
+<text x="26" y="186" class="geo-side-label">4と7</text>
+<rect x="53" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="97" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="165" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="185" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="229" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="165" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="317" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="165" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="165" width="34" height="34" class="pa-figure-line"/>
+
+<text x="26" y="230" class="geo-side-label">5と8</text>
+<rect x="53" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="97" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="229" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="209" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="229" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="209" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="209" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="209" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="361" y="209" width="34" height="34" class="pa-figure-line"/>
+
+</svg>

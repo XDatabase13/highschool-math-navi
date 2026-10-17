@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 110" role="img" aria-label="委員長、副委員長、書記の3つの箱。人の選び方は左から10通り、9通り、8通り">
+<text x="86" y="25" class="geo-side-label">委員長</text>
+<rect x="40" y="34" width="92" height="54" fill="var(--color-surface)"/>
+<rect x="40" y="34" width="92" height="54" class="pa-figure-line"/>
+<text x="86" y="66" class="geo-point-label">10通り</text>
+<text x="146" y="66" class="geo-point-label">×</text>
+<text x="206" y="25" class="geo-side-label">副委員長</text>
+<rect x="160" y="34" width="92" height="54" fill="var(--color-surface)"/>
+<rect x="160" y="34" width="92" height="54" class="pa-figure-line"/>
+<text x="206" y="66" class="geo-point-label">9通り</text>
+<text x="266" y="66" class="geo-point-label">×</text>
+<text x="326" y="25" class="geo-side-label">書記</text>
+<rect x="280" y="34" width="92" height="54" fill="var(--color-surface)"/>
+<rect x="280" y="34" width="92" height="54" class="pa-figure-line"/>
+<text x="326" y="66" class="geo-point-label">8通り</text>
+</svg>

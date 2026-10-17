@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 303" role="img" aria-label="表をオ、裏をウと略記し、オが2回またはウが3回出た時点で枝を止めた樹形図。終了する枝は10本">
+<line x1="41" y1="144.2" x2="99" y2="73.9" class="pa-figure-line"/>
+<line x1="123" y1="73.9" x2="175" y2="52" class="pa-figure-line"/>
+<line x1="123" y1="73.9" x2="175" y2="95.8" class="pa-figure-line"/>
+<line x1="199" y1="95.8" x2="251" y2="77" class="pa-figure-line"/>
+<line x1="199" y1="95.8" x2="251" y2="114.5" class="pa-figure-line"/>
+<line x1="275" y1="114.5" x2="327" y2="102" class="pa-figure-line"/>
+<line x1="275" y1="114.5" x2="327" y2="127" class="pa-figure-line"/>
+<line x1="41" y1="144.2" x2="99" y2="214.5" class="pa-figure-line"/>
+<line x1="123" y1="214.5" x2="175" y2="170.8" class="pa-figure-line"/>
+<line x1="199" y1="170.8" x2="251" y2="152" class="pa-figure-line"/>
+<line x1="199" y1="170.8" x2="251" y2="189.5" class="pa-figure-line"/>
+<line x1="275" y1="189.5" x2="327" y2="177" class="pa-figure-line"/>
+<line x1="275" y1="189.5" x2="327" y2="202" class="pa-figure-line"/>
+<line x1="123" y1="214.5" x2="175" y2="258.3" class="pa-figure-line"/>
+<line x1="199" y1="258.3" x2="251" y2="239.5" class="pa-figure-line"/>
+<line x1="275" y1="239.5" x2="327" y2="227" class="pa-figure-line"/>
+<line x1="275" y1="239.5" x2="327" y2="252" class="pa-figure-line"/>
+<line x1="199" y1="258.3" x2="251" y2="277" class="pa-figure-line"/>
+<rect x="176" y="41" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="176" y="41" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="176" y="41" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="188" y="57" class="geo-point-label">オ</text>
+<rect x="252" y="66" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="252" y="66" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="252" y="66" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="264" y="82" class="geo-point-label">オ</text>
+<rect x="328" y="91" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="91" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="91" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="107" class="geo-point-label">オ</text>
+<rect x="328" y="116" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="116" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="116" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="132" class="geo-point-label">ウ</text>
+<text x="264" y="119.5" class="geo-point-label">ウ</text>
+<text x="188" y="100.8" class="geo-point-label">ウ</text>
+<text x="112" y="78.9" class="geo-point-label">オ</text>
+<rect x="252" y="141" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="252" y="141" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="252" y="141" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="264" y="157" class="geo-point-label">オ</text>
+<rect x="328" y="166" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="166" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="166" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="182" class="geo-point-label">オ</text>
+<rect x="328" y="191" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="191" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="191" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="207" class="geo-point-label">ウ</text>
+<text x="264" y="194.5" class="geo-point-label">ウ</text>
+<text x="188" y="175.8" class="geo-point-label">オ</text>
+<rect x="328" y="216" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="216" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="216" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="232" class="geo-point-label">オ</text>
+<rect x="328" y="241" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="328" y="241" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="328" y="241" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="340" y="257" class="geo-point-label">ウ</text>
+<text x="264" y="244.5" class="geo-point-label">オ</text>
+<rect x="252" y="266" width="24" height="22" rx="3" fill="var(--color-surface)"/>
+<rect x="252" y="266" width="24" height="22" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="252" y="266" width="24" height="22" class="pa-figure-line" rx="3"/>
+<text x="264" y="282" class="geo-point-label">ウ</text>
+<text x="188" y="263.3" class="geo-point-label">ウ</text>
+<text x="112" y="219.5" class="geo-point-label">ウ</text>
+<circle cx="36" cy="144.2" r="4" class="pa-dot-closed"/>
+<text x="84" y="22" class="geo-side-label">オ：表　ウ：裏</text>
+<rect x="268" y="11" width="20" height="18" rx="3" fill="var(--color-surface)"/>
+<rect x="268" y="11" width="20" height="18" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="268" y="11" width="20" height="18" class="pa-figure-line" rx="3"/>
+<text x="340" y="25" class="geo-side-label">終了（10本）</text>
+</svg>

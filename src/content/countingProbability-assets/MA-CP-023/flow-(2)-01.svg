@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 212" role="img" aria-label="A組が1・2・3でB組が4・5・6・7の分け方と、A組が4・5・6・7でB組が1・2・3の分け方。組名を外すと同じグループ分けなので、2通りを1つにまとめて2で割る">
+<rect x="24" y="34" width="112" height="40" rx="8" fill="var(--color-surface)"/>
+<rect x="24" y="34" width="112" height="40" rx="8" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="24" y="34" width="112" height="40" class="pa-figure-line" rx="8"/>
+<text x="80" y="26" class="geo-side-label">A組</text>
+<text x="80" y="59" class="geo-point-label">1・2・3</text>
+<rect x="146" y="34" width="112" height="40" rx="8" fill="var(--color-surface)"/>
+<rect x="146" y="34" width="112" height="40" class="pa-figure-line" rx="8"/>
+<text x="202" y="26" class="geo-side-label">B組</text>
+<text x="202" y="59" class="geo-point-label">4・5・6・7</text>
+<rect x="24" y="118" width="112" height="40" rx="8" fill="var(--color-surface)"/>
+<rect x="24" y="118" width="112" height="40" class="pa-figure-line" rx="8"/>
+<text x="80" y="110" class="geo-side-label">A組</text>
+<text x="80" y="143" class="geo-point-label">4・5・6・7</text>
+<rect x="146" y="118" width="112" height="40" rx="8" fill="var(--color-surface)"/>
+<rect x="146" y="118" width="112" height="40" rx="8" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="146" y="118" width="112" height="40" class="pa-figure-line" rx="8"/>
+<text x="202" y="110" class="geo-side-label">B組</text>
+<text x="202" y="143" class="geo-point-label">1・2・3</text>
+<path d="M266 54 L278 54 L278 138 L266 138" class="pa-figure-line"/>
+<line x1="284" y1="96" x2="319" y2="96" class="pa-axis"/>
+<path d="M322 96 L314.6 99.1 L314.6 92.9 Z" class="pa-axis-fill"/>
+<text x="303" y="72" class="pa-label">組名を</text>
+<text x="303" y="86" class="pa-label">外す</text>
+<rect x="326" y="58" width="76" height="28" rx="8" fill="var(--color-surface)"/>
+<rect x="326" y="58" width="76" height="28" rx="8" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="326" y="58" width="76" height="28" class="pa-figure-line" rx="8"/>
+<text x="364" y="76" class="geo-point-label">1・2・3</text>
+<rect x="326" y="98" width="76" height="28" rx="8" fill="var(--color-surface)"/>
+<rect x="326" y="98" width="76" height="28" class="pa-figure-line" rx="8"/>
+<text x="364" y="116" class="geo-point-label">4・5・6・7</text>
+<text x="212" y="196" class="geo-angle-label">同じグループ分けになる2通りを1つにまとめる：÷ 2</text>
+</svg>

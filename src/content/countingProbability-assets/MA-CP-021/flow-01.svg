@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 174" role="img" aria-label="集合Aの要素1、2、3、4、5、6のそれぞれについて、入れる・入れないの2通りを選ぶ。選び方は2×2×2×2×2×2に対応する">
+<text x="52" y="41" class="geo-side-label">Aの要素</text>
+<text x="52" y="80" class="geo-side-label">入れる</text>
+<text x="52" y="116" class="geo-side-label">入れない</text>
+<text x="128" y="41" class="geo-point-label">1</text>
+<rect x="112" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="112" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="112" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="128" y="81" class="geo-point-label">○</text>
+<rect x="112" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="112" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="128" y="117" class="geo-point-label">×</text>
+<text x="128" y="158" class="geo-angle-label">2</text>
+<text x="151" y="158" class="geo-angle-label">×</text>
+<text x="174" y="41" class="geo-point-label">2</text>
+<rect x="158" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="158" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="158" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="174" y="81" class="geo-point-label">○</text>
+<rect x="158" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="158" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="174" y="117" class="geo-point-label">×</text>
+<text x="174" y="158" class="geo-angle-label">2</text>
+<text x="197" y="158" class="geo-angle-label">×</text>
+<text x="220" y="41" class="geo-point-label">3</text>
+<rect x="204" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="204" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="204" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="220" y="81" class="geo-point-label">○</text>
+<rect x="204" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="204" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="220" y="117" class="geo-point-label">×</text>
+<text x="220" y="158" class="geo-angle-label">2</text>
+<text x="243" y="158" class="geo-angle-label">×</text>
+<text x="266" y="41" class="geo-point-label">4</text>
+<rect x="250" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="250" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="250" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="266" y="81" class="geo-point-label">○</text>
+<rect x="250" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="250" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="266" y="117" class="geo-point-label">×</text>
+<text x="266" y="158" class="geo-angle-label">2</text>
+<text x="289" y="158" class="geo-angle-label">×</text>
+<text x="312" y="41" class="geo-point-label">5</text>
+<rect x="296" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="296" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="296" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="312" y="81" class="geo-point-label">○</text>
+<rect x="296" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="296" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="312" y="117" class="geo-point-label">×</text>
+<text x="312" y="158" class="geo-angle-label">2</text>
+<text x="335" y="158" class="geo-angle-label">×</text>
+<text x="358" y="41" class="geo-point-label">6</text>
+<rect x="342" y="60" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="342" y="60" width="32" height="32" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="342" y="60" width="32" height="32" class="pa-figure-line"/>
+<text x="358" y="81" class="geo-point-label">○</text>
+<rect x="342" y="96" width="32" height="32" fill="var(--color-surface)"/>
+<rect x="342" y="96" width="32" height="32" class="pa-figure-line"/>
+<text x="358" y="117" class="geo-point-label">×</text>
+<text x="358" y="158" class="geo-angle-label">2</text>
+<text x="52" y="158" class="geo-side-label">選び方</text>
+</svg>

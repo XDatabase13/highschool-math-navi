@@ -34,6 +34,7 @@ const SOURCES: (() => Promise<NavProblemInput[]>)[] = [
   async () => toInputs('quadratic27', await getVerifiedCollection('quadratic27')),
   async () => toInputs('trig4', await getVerifiedCollection('trig4')),
   async () => toInputs('dataAnalysis', await getVerifiedCollection('dataAnalysis')),
+  async () => toInputs('countingProbability', await getVerifiedCollection('countingProbability')),
 ];
 
 export type NavigatorPageData = {

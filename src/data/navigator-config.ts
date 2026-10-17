@@ -35,8 +35,8 @@ export type NavigatorSubjectConfig = {
   units: NavigatorUnitConfig[];
 };
 
-// 数学Aを追加するときは、dbSubjectNavへ科目・単元を足したうえで、ここへ
-// { id: 'ma', name: '数学A', units: [...] } を追加し、src/utils/navigatorData.ts の
+// 科目を追加するときは、dbSubjectNavへ科目・単元を足したうえで、ここへ
+// { id: ..., name: ..., units: [...] } を追加し、src/utils/navigatorData.ts の
 // collection読込表へ新しいcollectionを足す（状態形式・抽出ロジック・UIは変更不要）。
 export const NAVIGATOR_SUBJECTS: readonly NavigatorSubjectConfig[] = [
   {
@@ -98,6 +98,23 @@ export const NAVIGATOR_SUBJECTS: readonly NavigatorSubjectConfig[] = [
           { id: 'da3', section: '分散と標準偏差' },
           { id: 'da4', section: '散布図と相関' },
           { id: 'da5', section: '仮説検定' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ma',
+    name: '数学A',
+    units: [
+      {
+        id: 'cp',
+        dbUnitId: 'counting-probability',
+        collection: 'countingProbability',
+        sections: [
+          { id: 'cp1', section: '集合の要素の個数' },
+          { id: 'cp2', section: '場合の数' },
+          { id: 'cp3', section: '順列' },
+          { id: 'cp4', section: '組合せ' },
         ],
       },
     ],

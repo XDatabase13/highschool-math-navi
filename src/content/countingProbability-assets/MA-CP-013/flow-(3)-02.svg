@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 162" role="img" aria-label="左端が男子で右端が女子の配置と、左端が女子で右端が男子の配置。左右を入れ替えた同型で、2つの場合を合わせて2倍する">
+<circle cx="40" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="40" cy="40" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="40" cy="40" r="14" class="pa-figure-line"/>
+<text x="40" y="45" class="geo-point-label">男</text>
+<circle cx="86" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="86" cy="40" r="14" class="pa-guide"/>
+<circle cx="132" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="132" cy="40" r="14" class="pa-guide"/>
+<circle cx="178" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="178" cy="40" r="14" class="pa-guide"/>
+<circle cx="224" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="224" cy="40" r="14" class="pa-guide"/>
+<circle cx="270" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="270" cy="40" r="14" class="pa-guide"/>
+<circle cx="316" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="316" cy="40" r="14" class="pa-guide"/>
+<circle cx="362" cy="40" r="14" fill="var(--color-surface)"/>
+<circle cx="362" cy="40" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="362" cy="40" r="14" class="pa-figure-line"/>
+<text x="362" y="45" class="geo-point-label">女</text>
+<circle cx="40" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="40" cy="108" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="40" cy="108" r="14" class="pa-figure-line"/>
+<text x="40" y="113" class="geo-point-label">女</text>
+<circle cx="86" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="86" cy="108" r="14" class="pa-guide"/>
+<circle cx="132" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="132" cy="108" r="14" class="pa-guide"/>
+<circle cx="178" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="178" cy="108" r="14" class="pa-guide"/>
+<circle cx="224" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="224" cy="108" r="14" class="pa-guide"/>
+<circle cx="270" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="270" cy="108" r="14" class="pa-guide"/>
+<circle cx="316" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="316" cy="108" r="14" class="pa-guide"/>
+<circle cx="362" cy="108" r="14" fill="var(--color-surface)"/>
+<circle cx="362" cy="108" r="14" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="362" cy="108" r="14" class="pa-figure-line"/>
+<text x="362" y="113" class="geo-point-label">男</text>
+<line x1="200" y1="62" x2="200" y2="83" class="pa-axis"/>
+<path d="M200 86 L196.9 78.6 L203.1 78.6 Z" class="pa-axis-fill"/>
+<text x="296" y="79" class="geo-side-label">左右を入れ替え（同型）</text>
+<text x="200" y="150" class="geo-angle-label">2つの場合を合わせる：× 2</text>
+</svg>

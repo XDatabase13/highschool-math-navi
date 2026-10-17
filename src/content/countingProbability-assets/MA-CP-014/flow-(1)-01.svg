@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 136" role="img" aria-label="横一列の8つの位置で、両端を子音の位置とする。左端の子音は5通り、右端は残り4通り、中央の6文字は6!通り。両端とも子音は、少なくとも一方の端に母音がくる場合の余事象">
+<rect x="27" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="27" y="53" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="27" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="71" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="71" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="115" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="115" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="159" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="159" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="203" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="203" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="247" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="247" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="291" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="291" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="335" y="53" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="335" y="53" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="335" y="53" width="34" height="34" class="pa-figure-line"/>
+
+<text x="44" y="74" class="geo-side-label">子音</text>
+<text x="352" y="74" class="geo-side-label">子音</text>
+<text x="44" y="108" class="geo-angle-label">5通り</text>
+<text x="352" y="108" class="geo-angle-label">4通り</text>
+<path d="M71 87 L71 94 L325 94 L325 87" class="pa-figure-line"/>
+<text x="198" y="111" class="geo-angle-label">中央の6文字 6!通り</text>
+<text x="200" y="26" class="geo-angle-label">両端とも子音 ＝「少なくとも一方の端に母音」の余事象</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 140" role="img" aria-label="女子4人を囲んだ1つのまとまりと男子4人の、合計5つの対象を一列に並べる。まとまりの内部でも女子4人を並べ替える">
+<rect x="22" y="48" width="132" height="44" rx="10" fill="var(--color-surface)"/>
+<rect x="22" y="48" width="132" height="44" rx="10" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="22" y="48" width="132" height="44" class="pa-figure-line" rx="10"/>
+<circle cx="42" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="42" cy="70" r="14" class="pa-figure-line"/>
+<text x="42" y="75" class="geo-point-label">女</text>
+<circle cx="73" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="73" cy="70" r="14" class="pa-figure-line"/>
+<text x="73" y="75" class="geo-point-label">女</text>
+<circle cx="104" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="104" cy="70" r="14" class="pa-figure-line"/>
+<text x="104" y="75" class="geo-point-label">女</text>
+<circle cx="135" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="135" cy="70" r="14" class="pa-figure-line"/>
+<text x="135" y="75" class="geo-point-label">女</text>
+<circle cx="196" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="196" cy="70" r="14" class="pa-figure-line"/>
+<text x="196" y="75" class="geo-point-label">男</text>
+<circle cx="248" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="248" cy="70" r="14" class="pa-figure-line"/>
+<text x="248" y="75" class="geo-point-label">男</text>
+<circle cx="300" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="300" cy="70" r="14" class="pa-figure-line"/>
+<text x="300" y="75" class="geo-point-label">男</text>
+<circle cx="352" cy="70" r="14" fill="var(--color-surface)"/>
+<circle cx="352" cy="70" r="14" class="pa-figure-line"/>
+<text x="352" y="75" class="geo-point-label">男</text>
+<path d="M22 97 L22 104 L366 104 L366 97" class="pa-figure-line"/>
+<text x="194" y="121" class="geo-angle-label">5つの対象を一列に並べる</text>
+<path d="M22 47 L22 40 L154 40 L154 47" class="pa-figure-line"/>
+<text x="88" y="33" class="geo-side-label">まとまりの内部で4人を並べ替え</text>
+</svg>

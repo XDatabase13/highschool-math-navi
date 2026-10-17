@@ -5,10 +5,10 @@ import { getPublishedTypePagePaths } from '../utils/typePages';
 // 正式な検索対象のみを掲載する、手書きの最小限のsitemap。
 // /app/（学習DBの入口だがnoindex）と /app/navigation/（4×4ナビの抽出結果、noindex）は含めない。
 // 4×4ナビの設定画面 /navigator/ は1件だけ掲載する（条件ごとのfragmentは別ページとして扱わない）。
-// 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculation・setLogicコレクションから毎回組み立てるため、
+// 個別問題はquadratic27・trig4・dataAnalysis・expressionCalculation・setLogic・countingProbabilityコレクションから毎回組み立てるため、
 // npm run sync-content で問題が増減しても手作業でsitemapを更新する必要がない。
 // 型ページは公開ゲート（published全38件の型Markdown＋人間の公開承認）を通過した場合だけ
-// 各単元の末尾へ一括で入る（承認前は0件で190 URLのまま。hold型・承認前の型は入らない）。
+// 各単元の末尾へ一括で入る（承認前は0件で226 URLのまま。hold型・承認前の型は入らない）。
 const SITE = 'https://math-navi.com';
 
 export const GET: APIRoute = async () => {
@@ -25,6 +25,10 @@ export const GET: APIRoute = async () => {
     (a, b) => a.data.display_order - b.data.display_order,
   );
   const setLogic = (await getVerifiedCollection('setLogic')).sort(
+    (a, b) => a.data.display_order - b.data.display_order,
+  );
+  // 数学A「場合の数・確率」。独立検算済みの問題だけが入る（未検算の問題は除外される）。
+  const countingProbability = (await getVerifiedCollection('countingProbability')).sort(
     (a, b) => a.data.display_order - b.data.display_order,
   );
 
@@ -48,6 +52,8 @@ export const GET: APIRoute = async () => {
     '/math1/data-analysis/',
     ...dataAnalysis.map((entry) => `/math1/data-analysis/${entry.id}/`),
     ...(typePagePaths.get('data-analysis') ?? []),
+    '/math-a/counting-probability/',
+    ...countingProbability.map((entry) => `/math-a/counting-probability/${entry.id}/`),
     '/about/',
     '/privacy/',
     '/disclaimer/',

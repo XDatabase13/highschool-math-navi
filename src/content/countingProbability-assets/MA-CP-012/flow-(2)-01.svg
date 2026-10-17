@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" role="img" aria-label="一の位に0を固定し、百の位は5通り、十の位は4通り">
+<text x="93" y="31" class="geo-side-label">百の位</text>
+<rect x="50" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="50" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="93" y="74" class="geo-point-label">5通り</text>
+<text x="151" y="74" class="geo-point-label">×</text>
+<text x="209" y="31" class="geo-side-label">十の位</text>
+<rect x="166" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="166" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="209" y="74" class="geo-point-label">4通り</text>
+<text x="267" y="74" class="geo-point-label">×</text>
+<text x="325" y="31" class="geo-side-label">一の位</text>
+<rect x="282" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="282" y="40" width="86" height="58" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="282" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="325" y="74" class="geo-point-label">0</text>
+</svg>

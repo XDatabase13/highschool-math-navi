@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 178" role="img" aria-label="区別された7人がそれぞれ部屋Aと部屋Bの2つから1つを独立に選ぶ。選び方は2の7乗に対応する">
+<text x="30" y="44" class="geo-side-label">人</text>
+<circle cx="70" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="70" cy="40" r="15" class="pa-figure-line"/>
+<text x="70" y="45" class="geo-point-label">1</text>
+<line x1="70" y1="55" x2="60" y2="78" class="pa-figure-line"/>
+<line x1="70" y1="55" x2="80" y2="78" class="pa-figure-line"/>
+<text x="59" y="94" class="geo-angle-label">A</text>
+<text x="81" y="94" class="geo-angle-label">B</text>
+<text x="93" y="132" class="geo-angle-label">×</text>
+<text x="70" y="132" class="geo-angle-label">2</text>
+<circle cx="116" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="116" cy="40" r="15" class="pa-figure-line"/>
+<text x="116" y="45" class="geo-point-label">2</text>
+<line x1="116" y1="55" x2="106" y2="78" class="pa-figure-line"/>
+<line x1="116" y1="55" x2="126" y2="78" class="pa-figure-line"/>
+<text x="105" y="94" class="geo-angle-label">A</text>
+<text x="127" y="94" class="geo-angle-label">B</text>
+<text x="139" y="132" class="geo-angle-label">×</text>
+<text x="116" y="132" class="geo-angle-label">2</text>
+<circle cx="162" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="162" cy="40" r="15" class="pa-figure-line"/>
+<text x="162" y="45" class="geo-point-label">3</text>
+<line x1="162" y1="55" x2="152" y2="78" class="pa-figure-line"/>
+<line x1="162" y1="55" x2="172" y2="78" class="pa-figure-line"/>
+<text x="151" y="94" class="geo-angle-label">A</text>
+<text x="173" y="94" class="geo-angle-label">B</text>
+<text x="185" y="132" class="geo-angle-label">×</text>
+<text x="162" y="132" class="geo-angle-label">2</text>
+<circle cx="208" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="208" cy="40" r="15" class="pa-figure-line"/>
+<text x="208" y="45" class="geo-point-label">4</text>
+<line x1="208" y1="55" x2="198" y2="78" class="pa-figure-line"/>
+<line x1="208" y1="55" x2="218" y2="78" class="pa-figure-line"/>
+<text x="197" y="94" class="geo-angle-label">A</text>
+<text x="219" y="94" class="geo-angle-label">B</text>
+<text x="231" y="132" class="geo-angle-label">×</text>
+<text x="208" y="132" class="geo-angle-label">2</text>
+<circle cx="254" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="254" cy="40" r="15" class="pa-figure-line"/>
+<text x="254" y="45" class="geo-point-label">5</text>
+<line x1="254" y1="55" x2="244" y2="78" class="pa-figure-line"/>
+<line x1="254" y1="55" x2="264" y2="78" class="pa-figure-line"/>
+<text x="243" y="94" class="geo-angle-label">A</text>
+<text x="265" y="94" class="geo-angle-label">B</text>
+<text x="277" y="132" class="geo-angle-label">×</text>
+<text x="254" y="132" class="geo-angle-label">2</text>
+<circle cx="300" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="300" cy="40" r="15" class="pa-figure-line"/>
+<text x="300" y="45" class="geo-point-label">6</text>
+<line x1="300" y1="55" x2="290" y2="78" class="pa-figure-line"/>
+<line x1="300" y1="55" x2="310" y2="78" class="pa-figure-line"/>
+<text x="289" y="94" class="geo-angle-label">A</text>
+<text x="311" y="94" class="geo-angle-label">B</text>
+<text x="323" y="132" class="geo-angle-label">×</text>
+<text x="300" y="132" class="geo-angle-label">2</text>
+<circle cx="346" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="346" cy="40" r="15" class="pa-figure-line"/>
+<text x="346" y="45" class="geo-point-label">7</text>
+<line x1="346" y1="55" x2="336" y2="78" class="pa-figure-line"/>
+<line x1="346" y1="55" x2="356" y2="78" class="pa-figure-line"/>
+<text x="335" y="94" class="geo-angle-label">A</text>
+<text x="357" y="94" class="geo-angle-label">B</text>
+<text x="346" y="132" class="geo-angle-label">2</text>
+<text x="30" y="94" class="geo-side-label">部屋</text>
+<text x="218" y="164" class="geo-angle-label">2を7回掛ける：2⁷</text>
+</svg>

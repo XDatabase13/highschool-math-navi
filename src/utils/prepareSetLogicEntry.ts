@@ -40,11 +40,12 @@ const SET_LOGIC_ASSETS_ROOT = 'src/content/setLogic-assets';
 // markdownSections.tsがレンダリングした後のHTML上で、単独段落のマーカーを探す。
 const INLINE_ASSET_MARKER = /<p>\[asset:\s*([^\]]+?)\s*\]<\/p>/g;
 
-function injectInlineAssets(
+// countingProbability（数学A 場合の数・確率）の問題メタ・解法メタ内assetも同じ処理を使う。
+export function injectInlineAssets<A extends { asset: { file: string }; svg: string }>(
   problemId: string,
   sectionTitle: string,
   section: MarkdownSection | undefined,
-  assets: SetLogicAssetEntry[],
+  assets: A[],
 ): MarkdownSection | undefined {
   if (!section) {
     if (assets.length > 0) {
@@ -84,7 +85,7 @@ function injectInlineAssets(
 
 // 置き換えられずに残ったマーカー（位置指定に対応しないセクションへ書かれたもの、
 // 宣言の無いもの）は本文にそのまま文字として表示されてしまうため、全セクションを走査して止める。
-function verifyNoStrayMarkers(problemId: string, sections: MarkdownSection[]): void {
+export function verifyNoStrayMarkers(problemId: string, sections: MarkdownSection[]): void {
   for (const section of sections) {
     if (/\[asset:/.test(section.html)) {
       throw new Error(

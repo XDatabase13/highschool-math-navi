@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 246" role="img" aria-label="AからGの文字を付けた色の異なる7個の玉。一方は時計回りにA,B,C,D,E,F,G、もう一方は時計回りにA,G,F,E,D,C,Bと並び、裏返すと一致するので円順列の数を2で割る">
+<circle cx="92" cy="108" r="62" class="pa-figure-line"/>
+<circle cx="92" cy="46" r="14" fill="var(--color-surface)"/>
+<circle cx="92" cy="46" r="14" fill="var(--color-primary)" fill-opacity="0.5"/>
+<circle cx="92" cy="46" r="14" class="pa-figure-line"/>
+<text x="92" y="51" class="geo-point-label">A</text>
+<circle cx="140.5" cy="69.3" r="14" fill="var(--color-surface)"/>
+<circle cx="140.5" cy="69.3" r="14" fill="var(--color-highlight)" fill-opacity="0.5"/>
+<circle cx="140.5" cy="69.3" r="14" class="pa-figure-line"/>
+<text x="140.5" y="74.3" class="geo-point-label">B</text>
+<circle cx="152.4" cy="121.8" r="14" fill="var(--color-surface)"/>
+<circle cx="152.4" cy="121.8" r="14" fill="var(--color-accent)" fill-opacity="0.6"/>
+<circle cx="152.4" cy="121.8" r="14" class="pa-figure-line"/>
+<text x="152.4" y="126.8" class="geo-point-label">C</text>
+<circle cx="118.9" cy="163.9" r="14" fill="var(--color-surface)"/>
+<circle cx="118.9" cy="163.9" r="14" fill="var(--color-importance-royal)" fill-opacity="0.45"/>
+<circle cx="118.9" cy="163.9" r="14" class="pa-figure-line"/>
+<text x="118.9" y="168.9" class="geo-point-label">D</text>
+<circle cx="65.1" cy="163.9" r="14" fill="var(--color-surface)"/>
+<circle cx="65.1" cy="163.9" r="14" fill="var(--color-text-muted)" fill-opacity="0.45"/>
+<circle cx="65.1" cy="163.9" r="14" class="pa-figure-line"/>
+<text x="65.1" y="168.9" class="geo-point-label">E</text>
+<circle cx="31.6" cy="121.8" r="14" fill="var(--color-surface)"/>
+<circle cx="31.6" cy="121.8" r="14" fill="var(--color-importance-lagoon)" fill-opacity="0.3"/>
+<circle cx="31.6" cy="121.8" r="14" class="pa-figure-line"/>
+<text x="31.6" y="126.8" class="geo-point-label">F</text>
+<circle cx="43.5" cy="69.3" r="14" fill="var(--color-surface)"/>
+<circle cx="43.5" cy="69.3" r="14" fill="var(--color-highlight)" fill-opacity="0.25"/>
+<circle cx="43.5" cy="69.3" r="14" class="pa-figure-line"/>
+<text x="43.5" y="74.3" class="geo-point-label">G</text>
+<circle cx="318" cy="108" r="62" class="pa-figure-line"/>
+<circle cx="318" cy="46" r="14" fill="var(--color-surface)"/>
+<circle cx="318" cy="46" r="14" fill="var(--color-primary)" fill-opacity="0.5"/>
+<circle cx="318" cy="46" r="14" class="pa-figure-line"/>
+<text x="318" y="51" class="geo-point-label">A</text>
+<circle cx="366.5" cy="69.3" r="14" fill="var(--color-surface)"/>
+<circle cx="366.5" cy="69.3" r="14" fill="var(--color-highlight)" fill-opacity="0.25"/>
+<circle cx="366.5" cy="69.3" r="14" class="pa-figure-line"/>
+<text x="366.5" y="74.3" class="geo-point-label">G</text>
+<circle cx="378.4" cy="121.8" r="14" fill="var(--color-surface)"/>
+<circle cx="378.4" cy="121.8" r="14" fill="var(--color-importance-lagoon)" fill-opacity="0.3"/>
+<circle cx="378.4" cy="121.8" r="14" class="pa-figure-line"/>
+<text x="378.4" y="126.8" class="geo-point-label">F</text>
+<circle cx="344.9" cy="163.9" r="14" fill="var(--color-surface)"/>
+<circle cx="344.9" cy="163.9" r="14" fill="var(--color-text-muted)" fill-opacity="0.45"/>
+<circle cx="344.9" cy="163.9" r="14" class="pa-figure-line"/>
+<text x="344.9" y="168.9" class="geo-point-label">E</text>
+<circle cx="291.1" cy="163.9" r="14" fill="var(--color-surface)"/>
+<circle cx="291.1" cy="163.9" r="14" fill="var(--color-importance-royal)" fill-opacity="0.45"/>
+<circle cx="291.1" cy="163.9" r="14" class="pa-figure-line"/>
+<text x="291.1" y="168.9" class="geo-point-label">D</text>
+<circle cx="257.6" cy="121.8" r="14" fill="var(--color-surface)"/>
+<circle cx="257.6" cy="121.8" r="14" fill="var(--color-accent)" fill-opacity="0.6"/>
+<circle cx="257.6" cy="121.8" r="14" class="pa-figure-line"/>
+<text x="257.6" y="126.8" class="geo-point-label">C</text>
+<circle cx="269.5" cy="69.3" r="14" fill="var(--color-surface)"/>
+<circle cx="269.5" cy="69.3" r="14" fill="var(--color-highlight)" fill-opacity="0.5"/>
+<circle cx="269.5" cy="69.3" r="14" class="pa-figure-line"/>
+<text x="269.5" y="74.3" class="geo-point-label">B</text>
+<text x="92" y="200" class="geo-side-label">時計回りに A,B,C,D,E,F,G</text>
+<text x="318" y="200" class="geo-side-label">時計回りに A,G,F,E,D,C,B</text>
+<text x="205" y="92" class="geo-side-label">裏返すと</text>
+<text x="205" y="110" class="geo-side-label">一致</text>
+<line x1="178" y1="124" x2="229" y2="124" class="pa-axis"/>
+<path d="M232 124 L224.6 127.1 L224.6 120.9 Z" class="pa-axis-fill"/>
+<line x1="232" y1="124" x2="181" y2="124" class="pa-axis"/>
+<path d="M178 124 L185.4 120.9 L185.4 127.1 Z" class="pa-axis-fill"/>
+<text x="205" y="232" class="geo-angle-label">同じ首飾りを2回ずつ数えているので、円順列の数を ÷ 2</text>
+</svg>

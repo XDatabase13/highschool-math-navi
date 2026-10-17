@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 232" role="img" aria-label="円形に並ぶ色の異なる7個の玉。7個のうち1個を固定し、残り6個を並べると円順列として6!通り">
+<circle cx="150" cy="118" r="78" class="pa-figure-line"/>
+<circle cx="150" cy="40" r="21" class="pa-axis-highlight" fill="none"/>
+<circle cx="150" cy="40" r="15" fill="var(--color-surface)"/>
+<circle cx="150" cy="40" r="15" fill="var(--color-primary)" fill-opacity="0.5"/>
+<circle cx="150" cy="40" r="15" class="pa-figure-line"/>
+<text x="150" y="45" class="geo-point-label">A</text>
+<circle cx="211" cy="69.4" r="15" fill="var(--color-surface)"/>
+<circle cx="211" cy="69.4" r="15" fill="var(--color-highlight)" fill-opacity="0.5"/>
+<circle cx="211" cy="69.4" r="15" class="pa-figure-line"/>
+<text x="211" y="74.4" class="geo-point-label">B</text>
+<circle cx="226" cy="135.4" r="15" fill="var(--color-surface)"/>
+<circle cx="226" cy="135.4" r="15" fill="var(--color-accent)" fill-opacity="0.6"/>
+<circle cx="226" cy="135.4" r="15" class="pa-figure-line"/>
+<text x="226" y="140.4" class="geo-point-label">C</text>
+<circle cx="183.8" cy="188.3" r="15" fill="var(--color-surface)"/>
+<circle cx="183.8" cy="188.3" r="15" fill="var(--color-importance-royal)" fill-opacity="0.45"/>
+<circle cx="183.8" cy="188.3" r="15" class="pa-figure-line"/>
+<text x="183.8" y="193.3" class="geo-point-label">D</text>
+<circle cx="116.2" cy="188.3" r="15" fill="var(--color-surface)"/>
+<circle cx="116.2" cy="188.3" r="15" fill="var(--color-text-muted)" fill-opacity="0.45"/>
+<circle cx="116.2" cy="188.3" r="15" class="pa-figure-line"/>
+<text x="116.2" y="193.3" class="geo-point-label">E</text>
+<circle cx="74" cy="135.4" r="15" fill="var(--color-surface)"/>
+<circle cx="74" cy="135.4" r="15" fill="var(--color-importance-lagoon)" fill-opacity="0.3"/>
+<circle cx="74" cy="135.4" r="15" class="pa-figure-line"/>
+<text x="74" y="140.4" class="geo-point-label">F</text>
+<circle cx="89" cy="69.4" r="15" fill="var(--color-surface)"/>
+<circle cx="89" cy="69.4" r="15" fill="var(--color-highlight)" fill-opacity="0.25"/>
+<circle cx="89" cy="69.4" r="15" class="pa-figure-line"/>
+<text x="89" y="74.4" class="geo-point-label">G</text>
+<text x="150" y="116" class="geo-side-label">残り6個を並べる</text>
+<text x="150" y="136" class="geo-angle-label">6!通り</text>
+<text x="318" y="36" class="geo-angle-label">1個を固定</text>
+<line x1="282" y1="40" x2="181" y2="40" class="pa-guide"/>
+<path d="M178 40 L185.4 36.9 L185.4 43.1 Z" class="pa-axis-fill"/>
+<text x="318" y="210" class="geo-side-label">色の異なる7個の玉</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" role="img" aria-label="百の位、十の位、一の位の3つの箱。百の位は0を除く1から5の5通り、十の位と一の位は0から5の6通りずつで、5×6×6に対応する">
+<text x="93" y="27" class="geo-side-label">百の位</text>
+<rect x="50" y="36" width="86" height="62" fill="var(--color-surface)"/>
+<rect x="50" y="36" width="86" height="62" class="pa-figure-line"/>
+<text x="93" y="64" class="geo-point-label">5通り</text>
+<text x="93" y="82" class="geo-side-label">1〜5</text>
+<text x="151" y="72" class="geo-point-label">×</text>
+<text x="209" y="27" class="geo-side-label">十の位</text>
+<rect x="166" y="36" width="86" height="62" fill="var(--color-surface)"/>
+<rect x="166" y="36" width="86" height="62" class="pa-figure-line"/>
+<text x="209" y="64" class="geo-point-label">6通り</text>
+<text x="209" y="82" class="geo-side-label">0〜5</text>
+<text x="267" y="72" class="geo-point-label">×</text>
+<text x="325" y="27" class="geo-side-label">一の位</text>
+<rect x="282" y="36" width="86" height="62" fill="var(--color-surface)"/>
+<rect x="282" y="36" width="86" height="62" class="pa-figure-line"/>
+<text x="325" y="64" class="geo-point-label">6通り</text>
+<text x="325" y="82" class="geo-side-label">0〜5</text>
+<text x="93" y="120" class="geo-angle-label">0は使えない</text>
+</svg>

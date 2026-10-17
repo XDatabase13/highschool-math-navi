@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 232" role="img" aria-label="男子4人を円形に配置する。男子4人の円順列は3!通りで、男子と男子の間に4つの空き場所ができる">
+<circle cx="150" cy="118" r="78" class="pa-guide"/>
+<circle cx="150" cy="40" r="17" fill="var(--color-surface)"/>
+<circle cx="150" cy="40" r="17" class="pa-figure-line"/>
+<text x="150" y="45" class="geo-point-label">男</text>
+<circle cx="228" cy="118" r="17" fill="var(--color-surface)"/>
+<circle cx="228" cy="118" r="17" class="pa-figure-line"/>
+<text x="228" y="123" class="geo-point-label">男</text>
+<circle cx="150" cy="196" r="17" fill="var(--color-surface)"/>
+<circle cx="150" cy="196" r="17" class="pa-figure-line"/>
+<text x="150" y="201" class="geo-point-label">男</text>
+<circle cx="72" cy="118" r="17" fill="var(--color-surface)"/>
+<circle cx="72" cy="118" r="17" class="pa-figure-line"/>
+<text x="72" y="123" class="geo-point-label">男</text>
+<circle cx="205.2" cy="62.8" r="14" fill="var(--color-surface)"/>
+<circle cx="205.2" cy="62.8" r="14" class="pa-guide"/>
+<circle cx="205.2" cy="173.2" r="14" fill="var(--color-surface)"/>
+<circle cx="205.2" cy="173.2" r="14" class="pa-guide"/>
+<circle cx="94.8" cy="173.2" r="14" fill="var(--color-surface)"/>
+<circle cx="94.8" cy="173.2" r="14" class="pa-guide"/>
+<circle cx="94.8" cy="62.8" r="14" fill="var(--color-surface)"/>
+<circle cx="94.8" cy="62.8" r="14" class="pa-guide"/>
+<text x="150" y="124" class="geo-angle-label">3!通り</text>
+<text x="318" y="104" class="geo-side-label">男子4人の円順列</text>
+<text x="318" y="124" class="geo-side-label">間に空き4か所</text>
+</svg>

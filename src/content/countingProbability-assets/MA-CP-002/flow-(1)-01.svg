@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" role="img" aria-label="全体80人のうち、どちらにも合格しなかった8人と、少なくとも一方に合格した72人を示すベン図">
+<rect x="30" y="40" width="360" height="210" class="pa-figure-line" fill="none"/>
+<text x="80" y="28" class="geo-angle-label">全体 80人</text>
+<g opacity="0.3"><circle cx="170" cy="140" r="78" fill="var(--color-accent)"/><circle cx="262" cy="140" r="78" fill="var(--color-accent)"/></g>
+<circle cx="170" cy="140" r="78" class="pa-figure-line"/>
+<circle cx="262" cy="140" r="78" class="pa-figure-line"/>
+<text x="100" y="72" class="geo-point-label">数学</text>
+<text x="332" y="72" class="geo-point-label">英語</text>
+<text x="358" y="232" class="pa-panel-label">8人</text>
+<path d="M92 261 L92 268 L340 268 L340 261" class="pa-figure-line"/>
+<text x="216" y="285" class="geo-angle-label">少なくとも一方 72人</text>
+</svg>

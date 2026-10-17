@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 222" role="img" aria-label="全体120人の中で、英語検定の合格者73人が数学検定の合格者82人に含まれ、共通部分が73人になる配置">
+<rect x="62" y="70" width="296" height="112" class="pa-figure-line" fill="none"/>
+<line x1="264.3" y1="70" x2="264.3" y2="182" class="pa-figure-line"/>
+<rect x="72.2" y="92" width="180.1" height="68" fill="var(--color-surface)"/>
+<rect x="72.2" y="92" width="180.1" height="68" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="72.2" y="92" width="180.1" height="68" class="pa-figure-line"/>
+<text x="92" y="88" class="geo-side-label">数学</text>
+<text x="94.2" y="108" class="geo-side-label">英語</text>
+<path d="M62 65 L62 58 L264.3 58 L264.3 65" class="pa-figure-line"/>
+<text x="163.1" y="51" class="geo-angle-label">数学 82人</text>
+<path d="M72.2 187 L72.2 194 L252.3 194 L252.3 187" class="pa-figure-line"/>
+<text x="162.2" y="211" class="geo-angle-label">英語 73人</text>
+<text x="330" y="50" class="geo-angle-label">全体 120人</text>
+<text x="162.2" y="134" class="pa-panel-label">共通部分 73人</text>
+</svg>

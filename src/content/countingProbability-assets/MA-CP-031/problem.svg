@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 270" role="img" aria-label="横6区画、縦4区画の格子状の道路。左下の交差点がP、右上の交差点がQで、Pから右へ2・上へ1の交差点がR、右へ4・上へ3の交差点がS、右へ3・上へ2の交差点がT">
+<line x1="50" y1="236" x2="50" y2="36" class="pa-figure-line"/>
+<line x1="100" y1="236" x2="100" y2="36" class="pa-figure-line"/>
+<line x1="150" y1="236" x2="150" y2="36" class="pa-figure-line"/>
+<line x1="200" y1="236" x2="200" y2="36" class="pa-figure-line"/>
+<line x1="250" y1="236" x2="250" y2="36" class="pa-figure-line"/>
+<line x1="300" y1="236" x2="300" y2="36" class="pa-figure-line"/>
+<line x1="350" y1="236" x2="350" y2="36" class="pa-figure-line"/>
+<line x1="50" y1="236" x2="350" y2="236" class="pa-figure-line"/>
+<line x1="50" y1="186" x2="350" y2="186" class="pa-figure-line"/>
+<line x1="50" y1="136" x2="350" y2="136" class="pa-figure-line"/>
+<line x1="50" y1="86" x2="350" y2="86" class="pa-figure-line"/>
+<line x1="50" y1="36" x2="350" y2="36" class="pa-figure-line"/>
+<circle cx="50" cy="236" r="5" class="pa-dot-closed"/>
+<rect x="26" y="239" width="16" height="19" fill="var(--color-surface)"/>
+<text x="34" y="254" class="geo-point-label">P</text>
+<circle cx="350" cy="36" r="5" class="pa-dot-closed"/>
+<rect x="358" y="11" width="16" height="19" fill="var(--color-surface)"/>
+<text x="366" y="26" class="geo-point-label">Q</text>
+<circle cx="150" cy="186" r="5" class="pa-dot-closed"/>
+<rect x="129" y="161" width="16" height="19" fill="var(--color-surface)"/>
+<text x="137" y="176" class="geo-point-label">R</text>
+<circle cx="250" cy="86" r="5" class="pa-dot-closed"/>
+<rect x="229" y="61" width="16" height="19" fill="var(--color-surface)"/>
+<text x="237" y="76" class="geo-point-label">S</text>
+<circle cx="200" cy="136" r="5" class="pa-dot-closed"/>
+<rect x="179" y="111" width="16" height="19" fill="var(--color-surface)"/>
+<text x="187" y="126" class="geo-point-label">T</text>
+</svg>

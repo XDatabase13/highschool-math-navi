@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 166" role="img" aria-label="同じ位置の組（1番目と4番目の例）で、左側にC・右側にRを置く場合と、左側にR・右側にCを置く場合。入れ替えは2通り">
+<text x="70" y="22" class="geo-side-label">1</text>
+<text x="114" y="22" class="geo-side-label">2</text>
+<text x="158" y="22" class="geo-side-label">3</text>
+<text x="202" y="22" class="geo-side-label">4</text>
+<text x="246" y="22" class="geo-side-label">5</text>
+<text x="290" y="22" class="geo-side-label">6</text>
+<text x="334" y="22" class="geo-side-label">7</text>
+<text x="378" y="22" class="geo-side-label">8</text>
+<rect x="53" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="35" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="53" y="35" width="34" height="34" class="pa-figure-line"/>
+<text x="70" y="57" class="geo-point-label">C</text>
+<rect x="97" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="35" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="185" y="35" width="34" height="34" class="pa-figure-line"/>
+<text x="202" y="57" class="geo-point-label">R</text>
+<rect x="229" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="35" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="35" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="53" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="53" y="91" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="53" y="91" width="34" height="34" class="pa-figure-line"/>
+<text x="70" y="113" class="geo-point-label">R</text>
+<rect x="97" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="97" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="141" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="141" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="185" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="185" y="91" width="34" height="34" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="185" y="91" width="34" height="34" class="pa-figure-line"/>
+<text x="202" y="113" class="geo-point-label">C</text>
+<rect x="229" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="229" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="273" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="273" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="317" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="317" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<rect x="361" y="91" width="34" height="34" fill="var(--color-surface)"/>
+<rect x="361" y="91" width="34" height="34" class="pa-figure-line"/>
+
+<text x="36" y="56" class="geo-side-label">左C</text>
+<text x="36" y="112" class="geo-side-label">左R</text>
+<text x="222" y="152" class="geo-angle-label">CとRの入れ替えは2通り</text>
+</svg>

@@ -19,11 +19,11 @@ import { z } from 'astro/zod';
 // prior_knowledgeは「事前知識・使用公式」セクション内へのasset配置専用（M1-EC-016で初採用）。
 // problem_meta / solution_metaは「問題メタ」「解法メタ」本文中へのasset配置専用（M1-SL-*で初採用）。
 // 本文中の表示位置は、そのセクション内の単独段落 `[asset: <file>]` で示す
-// （現状この2値を処理するのはprepareSetLogicEntry.tsのみ。他コレクションのprepare*Entry側では
+// （現状この2値を処理するのはprepareSetLogicEntry.ts・prepareCountingProbabilityEntry.tsのみ。他コレクションのprepare*Entry側では
 // 未知のplacementとしてビルド時エラーになる）。
 // これ以外の値や必須項目の欠落はここで弾き、prepare*Entry側で
 // 問題文assetへ暗黙フォールバックさせない（不正データはビルド時エラーにする）。
-// quadratic27・trig4・dataAnalysis・expressionCalculation・setLogicの5コレクションで共通利用する。
+// quadratic27・trig4・dataAnalysis・expressionCalculation・setLogic・countingProbabilityの6コレクションで共通利用する。
 const problemAssetSchema = z
   .array(
     z.object({
@@ -183,6 +183,32 @@ const setLogic = defineCollection({
   }),
 });
 
+// 数学A「場合の数・確率」（MA-CP-001〜034）用コレクション。数学Iの5コレクションとは
+// コレクションを分離している。正本には未検算の問題（図の照合待ち等）も含まれるが、
+// 公開対象はverifiedCollection.tsの「独立検算済み」フィルターだけが決める。
+const countingProbability = defineCollection({
+  loader: glob({
+    pattern: 'MA-CP-*.md',
+    base: './src/content/countingProbability',
+    generateId: ({ data }) => String(data.problem_id),
+  }),
+  schema: z.object({
+    problem_id: z.string(),
+    version: z.number(),
+    subject: z.string(),
+    unit: z.string(),
+    section: z.string(),
+    display_order: z.number(),
+    title: z.string(),
+    difficulty: z.number().min(1).max(4),
+    importance: z.number().min(1).max(4),
+    importance_label: z.string(),
+    reference_problem: z.string(),
+    verification_status: verificationStatusSchema,
+    assets: problemAssetSchema,
+  }),
+});
+
 // 型ページ（問題タイプ）本文の公開用スナップショット。正本は教材側の
 // type_pages/<型ページID>.md で、npm run sync-type-pages（scripts/sync-type-pages.mjs）が
 // 検査に通ったpublished型の分をコピーする（制作途中の0〜37件も同期される）。
@@ -244,5 +270,6 @@ export const collections = {
   dataAnalysis,
   expressionCalculation,
   setLogic,
+  countingProbability,
   typePages,
 };

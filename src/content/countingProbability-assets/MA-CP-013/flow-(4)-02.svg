@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 172" role="img" aria-label="男女男女男女男女の配置と、女男女男女男女男の配置。決めた男子と女子の並びを各配置へ当てはめ、交互配置の型は2通り">
+<text x="232" y="22" class="geo-side-label">男1〜男4、女1〜女4 はそれぞれ決めた並びの順</text>
+<text x="40" y="62" class="geo-side-label">型1</text>
+<circle cx="92" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="92" cy="58" r="16" class="pa-figure-line"/>
+<text x="92" y="63" class="geo-point-label">男1</text>
+<circle cx="132" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="132" cy="58" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="132" cy="58" r="16" class="pa-figure-line"/>
+<text x="132" y="63" class="geo-point-label">女1</text>
+<circle cx="172" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="172" cy="58" r="16" class="pa-figure-line"/>
+<text x="172" y="63" class="geo-point-label">男2</text>
+<circle cx="212" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="212" cy="58" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="212" cy="58" r="16" class="pa-figure-line"/>
+<text x="212" y="63" class="geo-point-label">女2</text>
+<circle cx="252" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="252" cy="58" r="16" class="pa-figure-line"/>
+<text x="252" y="63" class="geo-point-label">男3</text>
+<circle cx="292" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="292" cy="58" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="292" cy="58" r="16" class="pa-figure-line"/>
+<text x="292" y="63" class="geo-point-label">女3</text>
+<circle cx="332" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="332" cy="58" r="16" class="pa-figure-line"/>
+<text x="332" y="63" class="geo-point-label">男4</text>
+<circle cx="372" cy="58" r="16" fill="var(--color-surface)"/>
+<circle cx="372" cy="58" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="372" cy="58" r="16" class="pa-figure-line"/>
+<text x="372" y="63" class="geo-point-label">女4</text>
+<text x="40" y="118" class="geo-side-label">型2</text>
+<circle cx="92" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="92" cy="114" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="92" cy="114" r="16" class="pa-figure-line"/>
+<text x="92" y="119" class="geo-point-label">女1</text>
+<circle cx="132" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="132" cy="114" r="16" class="pa-figure-line"/>
+<text x="132" y="119" class="geo-point-label">男1</text>
+<circle cx="172" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="172" cy="114" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="172" cy="114" r="16" class="pa-figure-line"/>
+<text x="172" y="119" class="geo-point-label">女2</text>
+<circle cx="212" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="212" cy="114" r="16" class="pa-figure-line"/>
+<text x="212" y="119" class="geo-point-label">男2</text>
+<circle cx="252" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="252" cy="114" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="252" cy="114" r="16" class="pa-figure-line"/>
+<text x="252" y="119" class="geo-point-label">女3</text>
+<circle cx="292" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="292" cy="114" r="16" class="pa-figure-line"/>
+<text x="292" y="119" class="geo-point-label">男3</text>
+<circle cx="332" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="332" cy="114" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="332" cy="114" r="16" class="pa-figure-line"/>
+<text x="332" y="119" class="geo-point-label">女4</text>
+<circle cx="372" cy="114" r="16" fill="var(--color-surface)"/>
+<circle cx="372" cy="114" r="16" class="pa-figure-line"/>
+<text x="372" y="119" class="geo-point-label">男4</text>
+<text x="232" y="160" class="geo-angle-label">交互配置の型は2通り</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 130" role="img" aria-label="6人に対応する6つの箱。それぞれに異なる座席番号を1つずつ割り当て、選び方は左から8通り、7通り、6通り、5通り、4通り、3通り">
+<text x="210" y="18" class="geo-angle-label">各人に異なる座席番号を1つずつ割り当てる</text>
+<text x="39" y="45" class="geo-side-label">1人目</text>
+<rect x="14" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="14" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="39" y="78" class="geo-point-label">8</text>
+<text x="39" y="96" class="geo-side-label">通り</text>
+<text x="72" y="86" class="geo-point-label">×</text>
+<text x="105" y="45" class="geo-side-label">2人目</text>
+<rect x="80" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="80" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="105" y="78" class="geo-point-label">7</text>
+<text x="105" y="96" class="geo-side-label">通り</text>
+<text x="138" y="86" class="geo-point-label">×</text>
+<text x="171" y="45" class="geo-side-label">3人目</text>
+<rect x="146" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="146" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="171" y="78" class="geo-point-label">6</text>
+<text x="171" y="96" class="geo-side-label">通り</text>
+<text x="204" y="86" class="geo-point-label">×</text>
+<text x="237" y="45" class="geo-side-label">4人目</text>
+<rect x="212" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="212" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="237" y="78" class="geo-point-label">5</text>
+<text x="237" y="96" class="geo-side-label">通り</text>
+<text x="270" y="86" class="geo-point-label">×</text>
+<text x="303" y="45" class="geo-side-label">5人目</text>
+<rect x="278" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="278" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="303" y="78" class="geo-point-label">4</text>
+<text x="303" y="96" class="geo-side-label">通り</text>
+<text x="336" y="86" class="geo-point-label">×</text>
+<text x="369" y="45" class="geo-side-label">6人目</text>
+<rect x="344" y="54" width="50" height="54" fill="var(--color-surface)"/>
+<rect x="344" y="54" width="50" height="54" class="pa-figure-line"/>
+<text x="369" y="78" class="geo-point-label">3</text>
+<text x="369" y="96" class="geo-side-label">通り</text>
+</svg>

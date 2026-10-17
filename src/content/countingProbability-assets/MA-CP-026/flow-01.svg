@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 256" role="img" aria-label="一方の方向に並ぶ7本の平行線と、それらに交わる5本の平行線。7本から選んだ2本と5本から選んだ2本を強調し、選んだ4本の直線で囲まれる1個の平行四辺形を塗りつぶしている">
+<path d="M153.2 82 L279.2 82 L303.5 158 L177.5 158 Z" fill="var(--color-accent)" fill-opacity="0.3"/>
+<line x1="92" y1="22" x2="154.7" y2="218" class="pa-figure-line"/>
+<line x1="134" y1="22" x2="196.7" y2="218" class="pa-axis-highlight"/>
+<line x1="176" y1="22" x2="238.7" y2="218" class="pa-figure-line"/>
+<line x1="218" y1="22" x2="280.7" y2="218" class="pa-figure-line"/>
+<line x1="260" y1="22" x2="322.7" y2="218" class="pa-axis-highlight"/>
+<line x1="302" y1="22" x2="364.7" y2="218" class="pa-figure-line"/>
+<line x1="344" y1="22" x2="406.7" y2="218" class="pa-figure-line"/>
+<line x1="60" y1="44" x2="420" y2="44" class="pa-figure-line"/>
+<line x1="60" y1="82" x2="420" y2="82" class="pa-axis-highlight"/>
+<line x1="60" y1="120" x2="420" y2="120" class="pa-figure-line"/>
+<line x1="60" y1="158" x2="420" y2="158" class="pa-axis-highlight"/>
+<line x1="60" y1="196" x2="420" y2="196" class="pa-figure-line"/>
+<text x="232" y="244" class="geo-angle-label">7本から2本</text>
+<text x="28" y="124" class="geo-side-label">5本</text>
+<text x="28" y="142" class="geo-side-label">から2本</text>
+</svg>

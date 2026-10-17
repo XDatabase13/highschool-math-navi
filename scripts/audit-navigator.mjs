@@ -59,13 +59,23 @@ function readFrontmatter(file) {
   }
   return data;
 }
+// 公開対象の問題数・section数・単元数（数学I 180問・22 section・5単元＋数学A 場合の数・確率 34問・4 section・1単元）。
+const EXPECTED_PROBLEMS = 214;
+const EXPECTED_SECTIONS = 26;
+const EXPECTED_UNITS = 6;
+const EXPECTED_SITEMAP = 264;
 const entries = [];
 const titles = new Map();
+// 正本スナップショットにあるが未検算の問題（ページ・一覧・sitemapに出してはいけない）。
+const unverified = [];
 for (const unit of NAVIGATOR_SUBJECTS.flatMap((subject) => subject.units)) {
   const dir = path.join(repoRoot, 'src/content', unit.collection);
-  for (const file of readdirSync(dir).filter((name) => /^M1-[A-Z]{2}-\d{3}\.md$/.test(name)).sort()) {
+  for (const file of readdirSync(dir).filter((name) => /^M[1A]-[A-Z]{2}-\d{3}\.md$/.test(name)).sort()) {
     const fm = readFrontmatter(path.join(dir, file));
-    if (fm.verification_status !== '独立検算済み') continue;
+    if (fm.verification_status !== '独立検算済み') {
+      unverified.push({ id: fm.problem_id, href: dbSubjectNav.flatMap((s) => s.units).find((u) => u.id === unit.dbUnitId)?.href });
+      continue;
+    }
     titles.set(fm.problem_id, fm.title);
     entries.push({
       collection: unit.collection,
@@ -103,11 +113,11 @@ check(
   embeddedData !== null && JSON.stringify(embeddedData) === JSON.stringify(expectedData),
   `${embeddedData?.problems?.length ?? 0}問`,
 );
-check('/navigator/ の候補は180問・問題IDの重複なし', index.problems.length === 180 && new Set(index.problems.map((p) => p.id)).size === 180);
+check(`/navigator/ の候補は${EXPECTED_PROBLEMS}問・問題IDの重複なし`, index.problems.length === EXPECTED_PROBLEMS && new Set(index.problems.map((p) => p.id)).size === EXPECTED_PROBLEMS);
 check(
-  '/navigator/ に範囲22 section・16マス・説明dialog・主ボタンがある',
+  `/navigator/ に範囲${EXPECTED_SECTIONS} section・16マス・説明dialog・主ボタンがある`,
   (navigatorHtml?.match(/data-nv-section="/g) ?? []).length === index.sectionIds.length &&
-    index.sectionIds.length === 22 &&
+    index.sectionIds.length === EXPECTED_SECTIONS &&
     (navigatorHtml?.match(/data-nv-cell="/g) ?? []).length === 16 &&
     /<dialog[^>]*data-nv-guide/.test(navigatorHtml ?? '') &&
     /data-nv-go/.test(navigatorHtml ?? ''),
@@ -178,10 +188,22 @@ check(
   sitemapUrls.length === expectedSitemap.length && expectedSitemap.every((url) => sitemapUrls.includes(url)),
   `${sitemapUrls.length}件（既存${expectedExisting.length}＋1）`,
 );
-check('sitemapは229件（型ページ公開中）', typePagesBuilt.length !== 38 || sitemapUrls.length === 229, `${sitemapUrls.length}件・型ページ${typePagesBuilt.length}件`);
+check(`sitemapは${EXPECTED_SITEMAP}件（型ページ公開中）`, typePagesBuilt.length !== 38 || sitemapUrls.length === EXPECTED_SITEMAP, `${sitemapUrls.length}件・型ページ${typePagesBuilt.length}件`);
 check('sitemapに /navigator/ が1件だけある', sitemapUrls.filter((url) => url === `${SITE}/navigator/`).length === 1);
 check('sitemapに /app/ と /app/navigation/ がない', !sitemapUrls.some((url) => url.startsWith(`${SITE}/app/`)));
 check('sitemapにfragment付きURLがない', !sitemapUrls.some((url) => url.includes('#')));
+
+check(
+  '未検算の問題：個別ページ・sitemap・候補データ・問題一覧のどこにも出ない',
+  unverified.every(
+    (p) =>
+      page(`${p.href}${p.id}/`) === null &&
+      !sitemapUrls.some((url) => url.includes(p.id)) &&
+      !index.problems.some((q) => q.id === p.id) &&
+      unitUrls.every((url) => !(page(url) ?? '').includes(`${p.id}/`)),
+  ),
+  unverified.map((p) => p.id).join(', ') || 'なし',
+);
 
 const robots = readFileSync(path.join(dist, 'robots.txt'), 'utf-8');
 check(
@@ -205,10 +227,10 @@ index.problems.forEach((problem, i) => {
   if (ok) problemPagesOk += 1;
   else problemPageIssues.push(problem.id);
 });
-check('個別問題180ページ：生成・self-canonical・noindexなし・本文が静的HTMLにある', problemPagesOk === 180, problemPageIssues.slice(0, 5).join(', ') || `${problemPagesOk}件`);
+check(`個別問題${EXPECTED_PROBLEMS}ページ：生成・self-canonical・noindexなし・本文が静的HTMLにある`, problemPagesOk === EXPECTED_PROBLEMS, problemPageIssues.slice(0, 5).join(', ') || `${problemPagesOk}件`);
 check(
-  '単元トップ5ページ：生成・self-canonical・noindexなし',
-  unitUrls.length === 5 && unitUrls.every((url) => canonicalOf(page(url)) === `${SITE}${url}` && robotsOf(page(url)) === null),
+  `単元トップ${EXPECTED_UNITS}ページ：生成・self-canonical・noindexなし`,
+  unitUrls.length === EXPECTED_UNITS && unitUrls.every((url) => canonicalOf(page(url)) === `${SITE}${url}` && robotsOf(page(url)) === null),
 );
 check(
   '型ページ：生成済みの全件がself-canonical・noindexなし',

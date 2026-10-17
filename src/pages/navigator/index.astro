@@ -30,13 +30,15 @@ const { data, index } = await loadNavigatorData();
 const canonicalUrl = new URL('/navigator/', Astro.site).toString();
 const dataJson = JSON.stringify(data).replace(/</g, '\\u003c');
 const totalProblems = index.problems.length;
+// descriptionの科目名は候補データの科目（数学I・数学A…）から組み立てる（問題数と食い違わないように）。
+const subjectNames = index.subjects.map((subject) => subject.name).join('・');
 const sectionProblemCount = (sectionId: string) => candidateProblems(index, [sectionId]).length;
 ---
 
 <BaseLayout
   title="4×4ナビゲーション｜試験範囲と重要度×難易度で問題を選ぶ | 高校数学ナビ"
   fixedBottomAction
-  description={`試験範囲（単元・項目）を選び、重要度×難易度の16マスから取り組む問題を決める、高校数学ナビの4×4ナビゲーションです。数学I ${totalProblems}問から、自分の試験範囲に合う問題を抽出できます。`}
+  description={`試験範囲（単元・項目）を選び、重要度×難易度の16マスから取り組む問題を決める、高校数学ナビの4×4ナビゲーションです。${subjectNames} ${totalProblems}問から、自分の試験範囲に合う問題を抽出できます。`}
 >
   <Fragment slot="head">
     <link rel="canonical" href={canonicalUrl} />

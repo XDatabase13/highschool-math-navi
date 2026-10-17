@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 136" role="img" aria-label="男子4人の並び方は4!通り、女子4人の並び方も4!通りで、それぞれ別に決める">
+<text x="54" y="48" class="geo-side-label">男子の並び</text>
+<circle cx="118" cy="44" r="16" fill="var(--color-surface)"/>
+<circle cx="118" cy="44" r="16" class="pa-figure-line"/>
+<text x="118" y="49" class="geo-point-label">男1</text>
+<circle cx="158" cy="44" r="16" fill="var(--color-surface)"/>
+<circle cx="158" cy="44" r="16" class="pa-figure-line"/>
+<text x="158" y="49" class="geo-point-label">男2</text>
+<circle cx="198" cy="44" r="16" fill="var(--color-surface)"/>
+<circle cx="198" cy="44" r="16" class="pa-figure-line"/>
+<text x="198" y="49" class="geo-point-label">男3</text>
+<circle cx="238" cy="44" r="16" fill="var(--color-surface)"/>
+<circle cx="238" cy="44" r="16" class="pa-figure-line"/>
+<text x="238" y="49" class="geo-point-label">男4</text>
+<text x="318" y="48" class="geo-angle-label">4!通り</text>
+<text x="54" y="104" class="geo-side-label">女子の並び</text>
+<circle cx="118" cy="100" r="16" fill="var(--color-surface)"/>
+<circle cx="118" cy="100" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="118" cy="100" r="16" class="pa-figure-line"/>
+<text x="118" y="105" class="geo-point-label">女1</text>
+<circle cx="158" cy="100" r="16" fill="var(--color-surface)"/>
+<circle cx="158" cy="100" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="158" cy="100" r="16" class="pa-figure-line"/>
+<text x="158" y="105" class="geo-point-label">女2</text>
+<circle cx="198" cy="100" r="16" fill="var(--color-surface)"/>
+<circle cx="198" cy="100" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="198" cy="100" r="16" class="pa-figure-line"/>
+<text x="198" y="105" class="geo-point-label">女3</text>
+<circle cx="238" cy="100" r="16" fill="var(--color-surface)"/>
+<circle cx="238" cy="100" r="16" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="238" cy="100" r="16" class="pa-figure-line"/>
+<text x="238" y="105" class="geo-point-label">女4</text>
+<text x="318" y="104" class="geo-angle-label">4!通り</text>
+</svg>

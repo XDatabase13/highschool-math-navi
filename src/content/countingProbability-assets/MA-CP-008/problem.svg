@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 262" role="img" aria-label="地点A、B、Cの間の道を表す図。AとBの間に4本、BとCの間に3本、AとCの間に直接2本の道があり、どの道も両方向に通れる">
+<path d="M56 210 Q85.4 84.2 210 50" class="pa-curve"/>
+<path d="M56 210 Q117.1 114.7 210 50" class="pa-curve"/>
+<path d="M56 210 Q148.9 145.3 210 50" class="pa-curve"/>
+<path d="M56 210 Q180.6 175.8 210 50" class="pa-curve"/>
+<path d="M210 50 Q321.6 96.7 364 210" class="pa-curve"/>
+<path d="M210 50 Q287 130 364 210" class="pa-curve"/>
+<path d="M210 50 Q252.4 163.3 364 210" class="pa-curve"/>
+<path d="M56 210 Q210 186 364 210" class="pa-curve"/>
+<path d="M56 210 Q210 234 364 210" class="pa-curve"/>
+<circle cx="56" cy="210" r="20" fill="var(--color-surface)"/>
+<circle cx="56" cy="210" r="20" class="pa-figure-line"/>
+<text x="56" y="215" class="geo-point-label">A</text>
+<circle cx="210" cy="50" r="20" fill="var(--color-surface)"/>
+<circle cx="210" cy="50" r="20" class="pa-figure-line"/>
+<text x="210" y="55" class="geo-point-label">B</text>
+<circle cx="364" cy="210" r="20" fill="var(--color-surface)"/>
+<circle cx="364" cy="210" r="20" class="pa-figure-line"/>
+<text x="364" y="215" class="geo-point-label">C</text>
+</svg>

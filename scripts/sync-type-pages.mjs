@@ -5,7 +5,7 @@
 // 入力（正本。読み込むだけで一切書き換えない）
 //   - problem_master/*_problem_master.xlsx の「型ページ管理」「公開問題管理」
 //   - type_pages/<型ページID>.md（公開本文・人間承認済みdescriptionの正本）
-//   - problems/*.md（問題IDの存在・検算状態の確認用）
+//   - problems/<単元>/*.md（問題IDの存在・検算状態の確認用）
 // 出力（Web repo内。直接編集禁止の生成物）
 //   - src/data/type-pages.generated.json（正規化済み型構造）
 //   - src/content/typePages/*.md ＋ README.md（型Markdownスナップショット）
@@ -167,9 +167,12 @@ function readFrontmatterScalar(markdown, key) {
   return line.slice(key.length + 1).trim().replace(/^["']|["']$/g, '');
 }
 
+// 教材正本は単元ごとのサブフォルダ（problems/M1-QF/M1-QF-001.md）に置かれている。
+// 旧配置（problems/M1-QF-001.md）とWebスナップショット（フォルダ直下）も同じ関数で読む。
 function problemFileState(dir, problemId) {
-  const file = path.join(dir, `${problemId}.md`);
-  if (!existsSync(file)) return { exists: false };
+  const unitDir = problemId.replace(/-\d+$/, '');
+  const file = [path.join(dir, unitDir, `${problemId}.md`), path.join(dir, `${problemId}.md`)].find((f) => existsSync(f));
+  if (!file) return { exists: false };
   const md = readFileSync(file, 'utf-8');
   return {
     exists: true,

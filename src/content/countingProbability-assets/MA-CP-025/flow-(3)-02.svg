@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 250" role="img" aria-label="正九角形と9個の頂点。隣り合う2頂点を結んだ線分は辺で対角線として数えない。隣り合わない2頂点を結んだ線分の例が対角線">
+<path d="M150 36 L209.1 57.5 L240.6 112 L229.7 174 L181.5 214.5 L118.5 214.5 L70.3 174 L59.4 112 L90.9 57.5 Z" class="pa-figure-line" fill="none"/>
+<line x1="150" y1="36" x2="209.1" y2="57.5" class="pa-curve"/>
+<line x1="150" y1="36" x2="181.5" y2="214.5" class="pa-axis-highlight"/>
+<circle cx="150" cy="36" r="4" class="pa-dot-closed"/>
+<circle cx="209.1" cy="57.5" r="4" class="pa-dot-closed"/>
+<circle cx="240.6" cy="112" r="4" class="pa-dot-closed"/>
+<circle cx="229.7" cy="174" r="4" class="pa-dot-closed"/>
+<circle cx="181.5" cy="214.5" r="4" class="pa-dot-closed"/>
+<circle cx="118.5" cy="214.5" r="4" class="pa-dot-closed"/>
+<circle cx="70.3" cy="174" r="4" class="pa-dot-closed"/>
+<circle cx="59.4" cy="112" r="4" class="pa-dot-closed"/>
+<circle cx="90.9" cy="57.5" r="4" class="pa-dot-closed"/>
+<text x="318" y="54" class="geo-side-label">隣り合う2頂点</text>
+<text x="318" y="72" class="geo-angle-label">→ 辺（対角線ではない）</text>
+<line x1="258" y1="66" x2="188.5" y2="49.5" class="pa-guide"/>
+<path d="M185.6 48.8 L193.5 47.4 L192 53.5 Z" class="pa-axis-fill"/>
+<text x="318" y="176" class="geo-side-label">隣り合わない2頂点</text>
+<text x="318" y="194" class="geo-angle-label">→ 対角線</text>
+<line x1="258" y1="186" x2="173.2" y2="130.9" class="pa-guide"/>
+<path d="M170.7 129.2 L178.6 130.6 L175.2 135.9 Z" class="pa-axis-fill"/>
+</svg>

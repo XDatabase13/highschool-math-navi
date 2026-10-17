@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 436 242" role="img" aria-label="行を大きいさいころの目、列を小さいさいころの目とした目の和の表。和が8になる(2,6)、(3,5)、(4,4)、(5,3)、(6,2)の5つのマスを塗りつぶしている">
+<rect x="30" y="16" width="374" height="210" class="pa-figure-line" fill="none"/>
+<text x="61" y="35" class="pa-label pa-table-cell-strong">大＼小</text>
+<text x="118" y="35" class="pa-label pa-table-cell-strong">1</text>
+<text x="170" y="35" class="pa-label pa-table-cell-strong">2</text>
+<text x="222" y="35" class="pa-label pa-table-cell-strong">3</text>
+<text x="274" y="35" class="pa-label pa-table-cell-strong">4</text>
+<text x="326" y="35" class="pa-label pa-table-cell-strong">5</text>
+<text x="378" y="35" class="pa-label pa-table-cell-strong">6</text>
+<text x="61" y="65" class="pa-label pa-table-cell-strong">1</text>
+<text x="118" y="65" class="pa-label">2</text>
+<text x="170" y="65" class="pa-label">3</text>
+<text x="222" y="65" class="pa-label">4</text>
+<text x="274" y="65" class="pa-label">5</text>
+<text x="326" y="65" class="pa-label">6</text>
+<text x="378" y="65" class="pa-label">7</text>
+<text x="61" y="95" class="pa-label pa-table-cell-strong">2</text>
+<text x="118" y="95" class="pa-label">3</text>
+<text x="170" y="95" class="pa-label">4</text>
+<text x="222" y="95" class="pa-label">5</text>
+<text x="274" y="95" class="pa-label">6</text>
+<text x="326" y="95" class="pa-label">7</text>
+<rect x="352" y="76" width="52" height="30" fill="var(--color-accent)" fill-opacity="0.3"/>
+<text x="378" y="95" class="pa-label pa-table-cell-strong">8</text>
+<text x="61" y="125" class="pa-label pa-table-cell-strong">3</text>
+<text x="118" y="125" class="pa-label">4</text>
+<text x="170" y="125" class="pa-label">5</text>
+<text x="222" y="125" class="pa-label">6</text>
+<text x="274" y="125" class="pa-label">7</text>
+<rect x="300" y="106" width="52" height="30" fill="var(--color-accent)" fill-opacity="0.3"/>
+<text x="326" y="125" class="pa-label pa-table-cell-strong">8</text>
+<text x="378" y="125" class="pa-label">9</text>
+<text x="61" y="155" class="pa-label pa-table-cell-strong">4</text>
+<text x="118" y="155" class="pa-label">5</text>
+<text x="170" y="155" class="pa-label">6</text>
+<text x="222" y="155" class="pa-label">7</text>
+<rect x="248" y="136" width="52" height="30" fill="var(--color-accent)" fill-opacity="0.3"/>
+<text x="274" y="155" class="pa-label pa-table-cell-strong">8</text>
+<text x="326" y="155" class="pa-label">9</text>
+<text x="378" y="155" class="pa-label">10</text>
+<text x="61" y="185" class="pa-label pa-table-cell-strong">5</text>
+<text x="118" y="185" class="pa-label">6</text>
+<text x="170" y="185" class="pa-label">7</text>
+<rect x="196" y="166" width="52" height="30" fill="var(--color-accent)" fill-opacity="0.3"/>
+<text x="222" y="185" class="pa-label pa-table-cell-strong">8</text>
+<text x="274" y="185" class="pa-label">9</text>
+<text x="326" y="185" class="pa-label">10</text>
+<text x="378" y="185" class="pa-label">11</text>
+<text x="61" y="215" class="pa-label pa-table-cell-strong">6</text>
+<text x="118" y="215" class="pa-label">7</text>
+<rect x="144" y="196" width="52" height="30" fill="var(--color-accent)" fill-opacity="0.3"/>
+<text x="170" y="215" class="pa-label pa-table-cell-strong">8</text>
+<text x="222" y="215" class="pa-label">9</text>
+<text x="274" y="215" class="pa-label">10</text>
+<text x="326" y="215" class="pa-label">11</text>
+<text x="378" y="215" class="pa-label">12</text>
+<line x1="30" y1="46" x2="404" y2="46" class="pa-figure-line"/>
+<line x1="30" y1="76" x2="404" y2="76" class="pa-guide"/>
+<line x1="30" y1="106" x2="404" y2="106" class="pa-guide"/>
+<line x1="30" y1="136" x2="404" y2="136" class="pa-guide"/>
+<line x1="30" y1="166" x2="404" y2="166" class="pa-guide"/>
+<line x1="30" y1="196" x2="404" y2="196" class="pa-guide"/>
+<line x1="92" y1="16" x2="92" y2="226" class="pa-figure-line"/>
+<line x1="144" y1="16" x2="144" y2="226" class="pa-guide"/>
+<line x1="196" y1="16" x2="196" y2="226" class="pa-guide"/>
+<line x1="248" y1="16" x2="248" y2="226" class="pa-guide"/>
+<line x1="300" y1="16" x2="300" y2="226" class="pa-guide"/>
+<line x1="352" y1="16" x2="352" y2="226" class="pa-guide"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 118" role="img" aria-label="女子のまとまりの内部に女子4人を並べる。並べ方は4!通り">
+<rect x="60" y="26" width="220" height="48" rx="10" fill="var(--color-surface)"/>
+<rect x="60" y="26" width="220" height="48" rx="10" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="60" y="26" width="220" height="48" class="pa-figure-line" rx="10"/>
+<circle cx="90" cy="50" r="18" fill="var(--color-surface)"/>
+<circle cx="90" cy="50" r="18" class="pa-figure-line"/>
+<text x="90" y="55" class="geo-point-label">女1</text>
+<circle cx="143" cy="50" r="18" fill="var(--color-surface)"/>
+<circle cx="143" cy="50" r="18" class="pa-figure-line"/>
+<text x="143" y="55" class="geo-point-label">女2</text>
+<circle cx="196" cy="50" r="18" fill="var(--color-surface)"/>
+<circle cx="196" cy="50" r="18" class="pa-figure-line"/>
+<text x="196" y="55" class="geo-point-label">女3</text>
+<circle cx="249" cy="50" r="18" fill="var(--color-surface)"/>
+<circle cx="249" cy="50" r="18" class="pa-figure-line"/>
+<text x="249" y="55" class="geo-point-label">女4</text>
+<text x="170" y="104" class="geo-angle-label">女子のまとまりの内部に4人を並べる：4!通り</text>
+</svg>

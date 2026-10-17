@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 222" role="img" aria-label="円形に並ぶ8人分の位置。8人のうち1人を固定し、残り7人を並べる">
+<circle cx="150" cy="112" r="76" class="pa-guide"/>
+<circle cx="150" cy="36" r="18" fill="var(--color-surface)"/>
+<circle cx="150" cy="36" r="18" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="150" cy="36" r="18" class="pa-figure-line"/>
+<text x="150" y="41" class="geo-point-label">固定</text>
+<circle cx="203.7" cy="58.3" r="15" fill="var(--color-surface)"/>
+<circle cx="203.7" cy="58.3" r="15" class="pa-guide"/>
+<circle cx="226" cy="112" r="15" fill="var(--color-surface)"/>
+<circle cx="226" cy="112" r="15" class="pa-guide"/>
+<circle cx="203.7" cy="165.7" r="15" fill="var(--color-surface)"/>
+<circle cx="203.7" cy="165.7" r="15" class="pa-guide"/>
+<circle cx="150" cy="188" r="15" fill="var(--color-surface)"/>
+<circle cx="150" cy="188" r="15" class="pa-guide"/>
+<circle cx="96.3" cy="165.7" r="15" fill="var(--color-surface)"/>
+<circle cx="96.3" cy="165.7" r="15" class="pa-guide"/>
+<circle cx="74" cy="112" r="15" fill="var(--color-surface)"/>
+<circle cx="74" cy="112" r="15" class="pa-guide"/>
+<circle cx="96.3" cy="58.3" r="15" fill="var(--color-surface)"/>
+<circle cx="96.3" cy="58.3" r="15" class="pa-guide"/>
+<text x="150" y="108" class="geo-side-label">残り7人を</text>
+<text x="150" y="126" class="geo-side-label">並べる</text>
+<text x="318" y="40" class="geo-side-label">8人のうち1人を</text>
+<text x="318" y="58" class="geo-side-label">1か所に固定</text>
+<line x1="268" y1="46" x2="179" y2="36.3" class="pa-guide"/>
+<path d="M176 36 L183.7 33.7 L183 39.9 Z" class="pa-axis-fill"/>
+</svg>

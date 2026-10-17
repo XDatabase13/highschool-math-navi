@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 222" role="img" aria-label="全体120人を数学検定の合格者82人と英語検定の合格者73人が覆い、2つの集合の外側が0人になる配置">
+<rect x="62" y="70" width="296" height="112" class="pa-figure-line" fill="none"/>
+<line x1="264.3" y1="70" x2="264.3" y2="182" class="pa-figure-line"/>
+<line x1="177.9" y1="70" x2="177.9" y2="182" class="pa-figure-line"/>
+<text x="120" y="88" class="geo-side-label">数学</text>
+<text x="311.1" y="88" class="geo-side-label">英語</text>
+<path d="M62 65 L62 58 L264.3 58 L264.3 65" class="pa-figure-line"/>
+<text x="163.1" y="51" class="geo-angle-label">数学 82人</text>
+<path d="M177.9 187 L177.9 194 L358 194 L358 187" class="pa-figure-line"/>
+<text x="268" y="211" class="geo-angle-label">英語 73人</text>
+<text x="318" y="50" class="geo-angle-label">全体 120人（外側 0人）</text>
+</svg>

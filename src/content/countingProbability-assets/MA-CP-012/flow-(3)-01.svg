@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140" role="img" aria-label="百の位に5を固定すると、十の位は5通り、一の位は4通りで、どの並びも420より大きい">
+<text x="93" y="31" class="geo-side-label">百の位</text>
+<rect x="50" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="50" y="40" width="86" height="58" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="50" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="93" y="74" class="geo-point-label">5</text>
+<text x="151" y="74" class="geo-point-label">×</text>
+<text x="209" y="31" class="geo-side-label">十の位</text>
+<rect x="166" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="166" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="209" y="74" class="geo-point-label">5通り</text>
+<text x="267" y="74" class="geo-point-label">×</text>
+<text x="325" y="31" class="geo-side-label">一の位</text>
+<rect x="282" y="40" width="86" height="58" fill="var(--color-surface)"/>
+<rect x="282" y="40" width="86" height="58" class="pa-figure-line"/>
+<text x="325" y="74" class="geo-point-label">4通り</text>
+<text x="194" y="126" class="geo-angle-label">5□□ はどれも 420 より大きい</text>
+</svg>

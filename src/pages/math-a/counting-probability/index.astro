@@ -1,0 +1,31 @@
+---
+import { getVerifiedCollection } from '../../../utils/verifiedCollection';
+import { prepareCountingProbabilityEntry } from '../../../utils/prepareCountingProbabilityEntry';
+import { buildCountingProbabilityCenterItems } from '../../../utils/countingProbabilityDbItems';
+import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
+import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+
+// 数学A「場合の数・確率」単元トップ。数学Iの各単元と同じ共通3ペインDB UI
+// （ProblemDbShell + Quadratic27Detail）をそのまま共有する。公開contract
+// （index対象・sitemap掲載・canonicalは自身のURL）も数学Iの単元トップと同格とする。
+// 掲載するのは独立検算済みの問題だけ（未検算の問題は一覧・個別ページ・sitemapに出ない）。
+// 型ページはこの単元にはまだ無いため、中央列は問題一覧だけを出す。
+const countingProbability = (await getVerifiedCollection('countingProbability')).sort(
+  (a, b) => a.data.display_order - b.data.display_order,
+);
+const centerItems = buildCountingProbabilityCenterItems(countingProbability);
+const defaultEntry = countingProbability[0];
+const prepared = await prepareCountingProbabilityEntry(defaultEntry);
+---
+
+<ProblemDbShell
+  title="数学A 場合の数・確率 | 高校数学ナビ"
+  description={`数学A「場合の数・確率」の問題データベースです。集合の要素の個数、場合の数、順列、組合せについて、全${countingProbability.length}問を収録しています。`}
+  canonicalPath="/math-a/counting-probability/"
+  breadcrumbItems={[{ label: '数学A' }, { label: '場合の数・確率' }]}
+  activeUnitId="counting-probability"
+  activeItemId={defaultEntry.id}
+  centerItems={centerItems}
+>
+  <Quadratic27Detail prepared={prepared} unitHeading="数学A 場合の数・確率" />
+</ProblemDbShell>

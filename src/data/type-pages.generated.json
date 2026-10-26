@@ -1303,6 +1303,539 @@
           "role": "標準：確率を計算して行う仮説検定"
         }
       ]
+    },
+    {
+      "id": "CP-T01",
+      "unitId": "counting-probability",
+      "name": "集合の要素の個数",
+      "slug": "set-cardinality",
+      "status": "published",
+      "displayOrder": 1,
+      "primaryKeyword": "集合 要素の個数",
+      "problems": [
+        {
+          "problemId": "MA-CP-001",
+          "membership": "primary",
+          "role": "入口：倍数から集合の要素の個数を数える"
+        },
+        {
+          "problemId": "MA-CP-002",
+          "membership": "primary",
+          "role": "基本：2集合の人数と領域を整理する"
+        },
+        {
+          "problemId": "MA-CP-003",
+          "membership": "primary",
+          "role": "応用：共通部分の最大・最小を考える"
+        },
+        {
+          "problemId": "MA-CP-004",
+          "membership": "primary",
+          "role": "応用：3集合の重なりを包除原理で数える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T02",
+      "unitId": "counting-probability",
+      "name": "樹形図・書き出しと和の法則・積の法則",
+      "slug": "counting-rules",
+      "status": "published",
+      "displayOrder": 2,
+      "primaryKeyword": "和の法則 積の法則 見分け方",
+      "problems": [
+        {
+          "problemId": "MA-CP-005",
+          "membership": "primary",
+          "role": "入口：終了条件までの並びを樹形図で数える"
+        },
+        {
+          "problemId": "MA-CP-006",
+          "membership": "primary",
+          "role": "基本：さいころの条件を表・書き出しで数える"
+        },
+        {
+          "problemId": "MA-CP-007",
+          "membership": "primary",
+          "role": "比較：余事象と偶奇による数え上げ"
+        },
+        {
+          "problemId": "MA-CP-008",
+          "membership": "primary",
+          "role": "基本：和の法則・積の法則を使い分ける"
+        }
+      ]
+    },
+    {
+      "id": "CP-T03",
+      "unitId": "counting-probability",
+      "name": "約数の個数と総和",
+      "slug": "divisor-count-and-sum",
+      "status": "published",
+      "displayOrder": 3,
+      "primaryKeyword": "約数の個数 総和",
+      "problems": [
+        {
+          "problemId": "MA-CP-009",
+          "membership": "primary",
+          "role": "入口：約数の個数と総和を計算する"
+        }
+      ]
+    },
+    {
+      "id": "CP-T04",
+      "unitId": "counting-probability",
+      "name": "順列と条件のある並べ方",
+      "slug": "permutations",
+      "status": "published",
+      "displayOrder": 4,
+      "primaryKeyword": "条件 の ある 順列",
+      "problems": [
+        {
+          "problemId": "MA-CP-010",
+          "membership": "primary",
+          "role": "入口：順列の記号と基本計算"
+        },
+        {
+          "problemId": "MA-CP-011",
+          "membership": "primary",
+          "role": "基本：役職・番号付き座席への割り当て"
+        },
+        {
+          "problemId": "MA-CP-012",
+          "membership": "primary",
+          "role": "条件：0・偶奇・大小を含む整数の並べ方"
+        },
+        {
+          "problemId": "MA-CP-013",
+          "membership": "primary",
+          "role": "条件：まとまり・端・交互配置を数える"
+        },
+        {
+          "problemId": "MA-CP-014",
+          "membership": "primary",
+          "role": "条件：文字の端・間隔を指定する"
+        }
+      ]
+    },
+    {
+      "id": "CP-T05",
+      "unitId": "counting-probability",
+      "name": "円順列・じゅず順列",
+      "slug": "circular-permutations",
+      "status": "published",
+      "displayOrder": 5,
+      "primaryKeyword": "円順列 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-015",
+          "membership": "primary",
+          "role": "入口：回転による重複を除く円順列"
+        },
+        {
+          "problemId": "MA-CP-016",
+          "membership": "primary",
+          "role": "条件：隣り合う・向かい合う円順列"
+        },
+        {
+          "problemId": "MA-CP-017",
+          "membership": "primary",
+          "role": "条件：まとまり・交互配置の円順列"
+        },
+        {
+          "problemId": "MA-CP-018",
+          "membership": "primary",
+          "role": "比較：裏返しも同じとするじゅず順列"
+        }
+      ]
+    },
+    {
+      "id": "CP-T06",
+      "unitId": "counting-probability",
+      "name": "重複順列と選択の割り当て",
+      "slug": "repeated-permutations",
+      "status": "published",
+      "displayOrder": 6,
+      "primaryKeyword": "重複順列 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-019",
+          "membership": "primary",
+          "role": "入口：0を含む数字の繰り返し"
+        },
+        {
+          "problemId": "MA-CP-020",
+          "membership": "primary",
+          "role": "基本：じゃんけんの手を各人に割り当てる"
+        },
+        {
+          "problemId": "MA-CP-021",
+          "membership": "primary",
+          "role": "読み替え：入れる・入れない選択で部分集合を数える"
+        },
+        {
+          "problemId": "MA-CP-022",
+          "membership": "primary",
+          "role": "比較：空室を許す部屋分けと許さない部屋分け"
+        }
+      ]
+    },
+    {
+      "id": "CP-T07",
+      "unitId": "counting-probability",
+      "name": "組合せと条件のある選び方",
+      "slug": "combinations",
+      "status": "published",
+      "displayOrder": 7,
+      "primaryKeyword": "組み合わせ 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-024",
+          "membership": "primary",
+          "role": "入口：組合せの記号と基本計算"
+        },
+        {
+          "problemId": "MA-CP-025",
+          "membership": "primary",
+          "role": "基本：多角形の頂点から図形を選ぶ"
+        },
+        {
+          "problemId": "MA-CP-026",
+          "membership": "primary",
+          "role": "基本：平行線を選んで平行四辺形を数える"
+        },
+        {
+          "problemId": "MA-CP-027",
+          "membership": "primary",
+          "role": "条件：人物・男女の条件を満たす委員選出"
+        },
+        {
+          "problemId": "MA-CP-028",
+          "membership": "primary",
+          "role": "複合：人を選んでから円形に並べる"
+        }
+      ]
+    },
+    {
+      "id": "CP-T08",
+      "unitId": "counting-probability",
+      "name": "組分けと組の区別",
+      "slug": "group-partitions",
+      "status": "published",
+      "displayOrder": 8,
+      "primaryKeyword": "場合の数 組み分け 区別なし",
+      "problems": [
+        {
+          "problemId": "MA-CP-022",
+          "membership": "secondary",
+          "role": "比較：023の人数未指定の組み分けと部屋分けを対照する"
+        },
+        {
+          "problemId": "MA-CP-023",
+          "membership": "primary",
+          "role": "入口：人数未指定の組み分けと組の名前の有無"
+        },
+        {
+          "problemId": "MA-CP-029",
+          "membership": "primary",
+          "role": "比較：人数指定の組み分けと同人数の組の重複"
+        }
+      ]
+    },
+    {
+      "id": "CP-T09",
+      "unitId": "counting-probability",
+      "name": "同じものを含む順列と最短経路",
+      "slug": "multiset-permutations",
+      "status": "published",
+      "displayOrder": 9,
+      "primaryKeyword": "同じものを含む順列 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-030",
+          "membership": "primary",
+          "role": "入口：同じ文字を含む並べ方"
+        },
+        {
+          "problemId": "MA-CP-031",
+          "membership": "primary",
+          "role": "典型：格子道路の最短経路と通過点の条件"
+        },
+        {
+          "problemId": "MA-CP-032",
+          "membership": "primary",
+          "role": "応用：文字を選んでから同じものを含めて並べる"
+        }
+      ]
+    },
+    {
+      "id": "CP-T10",
+      "unitId": "counting-probability",
+      "name": "重複組合せと整数解",
+      "slug": "combinations-with-repetition",
+      "status": "published",
+      "displayOrder": 10,
+      "primaryKeyword": "重複組み合わせ 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-033",
+          "membership": "primary",
+          "role": "入口：同じものを分配して仕切りで数える"
+        },
+        {
+          "problemId": "MA-CP-034",
+          "membership": "primary",
+          "role": "読み替え：非負整数解と正の整数解を数える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T11",
+      "unitId": "counting-probability",
+      "name": "場合の数から求める確率",
+      "slug": "probability-by-counting",
+      "status": "published",
+      "displayOrder": 11,
+      "primaryKeyword": "確率 求め方 高校",
+      "problems": [
+        {
+          "problemId": "MA-CP-035",
+          "membership": "primary",
+          "role": "入口：さいころの結果・事象と基本確率"
+        },
+        {
+          "problemId": "MA-CP-036",
+          "membership": "primary",
+          "role": "基本：組合せを使った玉の同時抽出"
+        },
+        {
+          "problemId": "MA-CP-037",
+          "membership": "primary",
+          "role": "基本：文字の順列から確率を求める"
+        },
+        {
+          "problemId": "MA-CP-038",
+          "membership": "primary",
+          "role": "応用：4人のじゃんけんの勝敗を数える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T12",
+      "unitId": "counting-probability",
+      "name": "確率の加法定理と場合分け",
+      "slug": "probability-addition",
+      "status": "published",
+      "displayOrder": 12,
+      "primaryKeyword": "確率 加法定理",
+      "problems": [
+        {
+          "problemId": "MA-CP-039",
+          "membership": "primary",
+          "role": "入口：共通部分・和事象・排反を確認する"
+        },
+        {
+          "problemId": "MA-CP-040",
+          "membership": "primary",
+          "role": "基本：排反な同色抽出の確率を加える"
+        },
+        {
+          "problemId": "MA-CP-041",
+          "membership": "primary",
+          "role": "基本：倍数の共通部分を引いて確率を加える"
+        },
+        {
+          "problemId": "MA-CP-042",
+          "membership": "primary",
+          "role": "条件：当たり本数で場合分けして加える"
+        },
+        {
+          "problemId": "MA-CP-044",
+          "membership": "primary",
+          "role": "応用：複数色の玉を色数で場合分けする"
+        }
+      ]
+    },
+    {
+      "id": "CP-T13",
+      "unitId": "counting-probability",
+      "name": "余事象を使う確率",
+      "slug": "complementary-probability",
+      "status": "published",
+      "displayOrder": 13,
+      "primaryKeyword": "余事象 求め方",
+      "problems": [
+        {
+          "problemId": "MA-CP-043",
+          "membership": "primary",
+          "role": "入口：硬貨の少なくともを余事象で求める"
+        },
+        {
+          "problemId": "MA-CP-045",
+          "membership": "primary",
+          "role": "応用：さいころの目の一致・積の偶奇を余事象で考える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T14",
+      "unitId": "counting-probability",
+      "name": "独立な試行の確率",
+      "slug": "independent-trials",
+      "status": "published",
+      "displayOrder": 14,
+      "primaryKeyword": "独立な試行 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-046",
+          "membership": "primary",
+          "role": "入口：独立な2試行の確率を掛ける"
+        },
+        {
+          "problemId": "MA-CP-047",
+          "membership": "primary",
+          "role": "基本：別々の袋から取り出す確率を掛ける"
+        },
+        {
+          "problemId": "MA-CP-048",
+          "membership": "primary",
+          "role": "条件：初めて起こる回を指定する"
+        },
+        {
+          "problemId": "MA-CP-049",
+          "membership": "primary",
+          "role": "余事象：少なくとも1人が合格する確率"
+        },
+        {
+          "problemId": "MA-CP-050",
+          "membership": "primary",
+          "role": "応用：さいころの最大値・最小値を条件にする"
+        }
+      ]
+    },
+    {
+      "id": "CP-T15",
+      "unitId": "counting-probability",
+      "name": "反復試行の確率",
+      "slug": "repeated-trials",
+      "status": "published",
+      "displayOrder": 15,
+      "primaryKeyword": "反復試行の確率 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-051",
+          "membership": "primary",
+          "role": "入口：反復試行の公式の意味を確認する"
+        },
+        {
+          "problemId": "MA-CP-052",
+          "membership": "primary",
+          "role": "条件：回数の範囲と指定回での発生を考える"
+        },
+        {
+          "problemId": "MA-CP-053",
+          "membership": "primary",
+          "role": "余事象：少なくとも2回の反復試行"
+        },
+        {
+          "problemId": "MA-CP-054",
+          "membership": "primary",
+          "role": "応用：移動後の位置から発生回数を逆算する"
+        },
+        {
+          "problemId": "MA-CP-055",
+          "membership": "primary",
+          "role": "応用：規定回数へ先に到達する勝敗を考える"
+        },
+        {
+          "problemId": "MA-CP-056",
+          "membership": "primary",
+          "role": "応用：3種類の結果の発生回数を指定する"
+        }
+      ]
+    },
+    {
+      "id": "CP-T16",
+      "unitId": "counting-probability",
+      "name": "条件付き確率と確率の乗法定理",
+      "slug": "conditional-probability",
+      "status": "published",
+      "displayOrder": 16,
+      "primaryKeyword": "条件付き確率 公式",
+      "problems": [
+        {
+          "problemId": "MA-CP-057",
+          "membership": "primary",
+          "role": "入口：人数・割合から条件に合う分母を定める"
+        },
+        {
+          "problemId": "MA-CP-058",
+          "membership": "primary",
+          "role": "比較：条件付き確率と積事象の確率を区別する"
+        },
+        {
+          "problemId": "MA-CP-060",
+          "membership": "primary",
+          "role": "応用：戻さないくじの抽出順と公平性を考える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T17",
+      "unitId": "counting-probability",
+      "name": "場合分けと逆向きの条件付き確率",
+      "slug": "inverse-conditional-probability",
+      "status": "published",
+      "displayOrder": 17,
+      "primaryKeyword": "条件付き確率 問題 応用",
+      "problems": [
+        {
+          "problemId": "MA-CP-059",
+          "membership": "primary",
+          "role": "入口：観測結果から選んだ箱の構成を考える"
+        },
+        {
+          "problemId": "MA-CP-061",
+          "membership": "primary",
+          "role": "複合：玉の移し替えと結果からの逆向きの条件"
+        },
+        {
+          "problemId": "MA-CP-062",
+          "membership": "primary",
+          "role": "典型：検査の陽性率と陽性者の感染確率を整理する"
+        },
+        {
+          "problemId": "MA-CP-063",
+          "membership": "primary",
+          "role": "応用：不良品という結果から製造元を考える"
+        }
+      ]
+    },
+    {
+      "id": "CP-T18",
+      "unitId": "counting-probability",
+      "name": "期待値とゲームの損得",
+      "slug": "expected-value",
+      "status": "published",
+      "displayOrder": 18,
+      "primaryKeyword": "期待値 高校数学",
+      "problems": [
+        {
+          "problemId": "MA-CP-064",
+          "membership": "primary",
+          "role": "入口：賞金の分布から期待値を計算する"
+        },
+        {
+          "problemId": "MA-CP-065",
+          "membership": "primary",
+          "role": "基本：反復試行の成功回数・得点の期待値"
+        },
+        {
+          "problemId": "MA-CP-066",
+          "membership": "primary",
+          "role": "活用：支払いの符号と参加費から損得を判断する"
+        }
+      ]
     }
   ]
 }

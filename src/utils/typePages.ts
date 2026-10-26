@@ -4,18 +4,20 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { z } from 'astro/zod';
 import snapshotJson from '../data/type-pages.generated.json';
 import {
-  EXPECTED_PUBLISHED_TYPE_PAGE_COUNT,
+  TYPE_PAGE_PUBLICATION_GROUPS,
   TYPE_PAGE_SLUG_PATTERN,
   TYPE_PAGE_SNAPSHOT_SCHEMA_VERSION,
   TYPE_PAGE_UNITS,
   problemUrl,
   typePageUnitById,
   typePageUrl,
+  unitUrl,
+  type TypePagePublicationGroupId,
   type TypePageProblemCollection,
   type TypePageUnitConfig,
   type TypePageUnitId,
 } from '../data/type-page-units';
-import { TYPE_PAGES_PUBLICATION_APPROVED } from '../data/type-page-publication';
+import { TYPE_PAGE_GROUP_PUBLICATION_APPROVED } from '../data/type-page-publication';
 import { getVerifiedCollection } from './verifiedCollection';
 import { parseMarkdownSections, findSection } from './markdownSections';
 import { prepareProblemPreview, type ProblemPreview } from './prepareProblemPreview';
@@ -24,12 +26,13 @@ import { assertSvgIdReferences } from './svgIdNamespace';
 // 型ページ（問題タイプ）のWebデータ層。入力はcommit済みの2つのスナップショットだけ
 // （src/data/type-pages.generated.json と typePages Content Collection）で、xlsxは読まない。
 //
-// 公開ゲート（仕様v1.1の一括公開ゲートを2026-09-28に改訂）：
-// - 型Markdownは0〜38件のどの状態でも保存・同期・ローカル確認してよい。
-// - productionで型route・型一覧nav・sitemapを出すのは「published全38件のMarkdownがそろっている」
-//   かつ「人間が公開を明示承認した（src/data/type-page-publication.ts が true）」ときだけで、
-//   38件を一括で出す。それ以外は1件も出さない（型ページなしの190 URLのまま）。
-// - 承認済みなのに38件そろっていない、orphan・hold型のMarkdownがある … buildエラー。
+// 公開ゲート（仕様v1.1の一括公開ゲートを2026-09-28に改訂、§20.3で公開グループ別に拡張）：
+// - 型Markdownはどの件数の状態でも保存・同期・ローカル確認してよい。
+// - 公開グループ（数学I 38型／数学A 場合の数・確率 18型）ごとに、productionで型route・型一覧nav・
+//   sitemapを出すのは「そのグループのpublished全件のMarkdownがそろっている」かつ「人間がその
+//   グループの公開を明示承認した（src/data/type-page-publication.ts）」ときだけで、グループ単位で
+//   一括で出す。それ以外のグループは1件も出さない。グループの判定は互いに独立。
+// - 承認済みのグループで全件そろっていない、orphan・hold型のMarkdownがある … buildエラー。
 // 開発時（astro dev）は公開前でも、Markdownがある型を同じroute・component経由で
 // ローカル確認できる（noindex付き。productionには出さない）。
 
@@ -81,7 +84,7 @@ const snapshotSchema = z
             .array(
               z
                 .object({
-                  problemId: z.string().regex(/^M1-[A-Z]{2}-\d{3}$/),
+                  problemId: z.string().regex(/^(?:M1|MA)-[A-Z]{2}-\d{3}$/),
                   membership: z.enum(['primary', 'secondary']),
                   role: z.string().min(1),
                 })
@@ -117,15 +120,19 @@ function validateSnapshot(raw: unknown): TypePageSnapshot {
     ordersByUnit.add(orderKey);
     const problemIds = new Set<string>();
     for (const ref of page.problems) {
-      if (!ref.problemId.startsWith(`M1-${unit.problemPrefix}-`)) errors.push(`${page.id}: ${ref.problemId} は単元外の問題です。`);
+      if (!ref.problemId.startsWith(`${unit.problemIdPrefix}-`)) errors.push(`${page.id}: ${ref.problemId} は単元外の問題です。`);
       if (problemIds.has(ref.problemId)) errors.push(`${page.id}: ${ref.problemId} が重複登録されています。`);
       problemIds.add(ref.problemId);
     }
     if (!page.problems.some((ref) => ref.membership === 'primary')) errors.push(`${page.id}: primary問題がありません。`);
   }
-  const publishedCount = snapshot.typePages.filter((p) => p.status === 'published').length;
-  if (publishedCount !== EXPECTED_PUBLISHED_TYPE_PAGE_COUNT) {
-    errors.push(`published型ページが${publishedCount}件です（初版は${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件固定）。`);
+  for (const group of TYPE_PAGE_PUBLICATION_GROUPS) {
+    const publishedCount = snapshot.typePages.filter(
+      (p) => p.status === 'published' && typePageUnitById(p.unitId).publicationGroup === group.id,
+    ).length;
+    if (publishedCount !== group.expectedPublishedCount) {
+      errors.push(`${group.label}: published型ページが${publishedCount}件です（${group.expectedPublishedCount}件固定）。`);
+    }
   }
   if (errors.length > 0) throw new Error(`type-pages.generated.json の検証に失敗しました:\n${errors.join('\n')}`);
   return snapshot;
@@ -146,11 +153,13 @@ function typePageRecordById(id: string): TypePageRecord {
 type TypePageMarkdownEntry = CollectionEntry<'typePages'>;
 
 interface TypePagePublication {
-  // 同期済みの型Markdown（0〜38件。制作途中の保存・同期・ローカル確認は可）。
+  // 同期済みの型Markdown（全グループ。制作途中の保存・同期・ローカル確認は可）。
   markdownById: Map<string, TypePageMarkdownEntry>;
-  // productionで型route・nav・sitemapを出すか（38件完了 かつ 公開承認済みのときだけtrue）。
-  isPublic: boolean;
+  // productionで型route・nav・sitemapを出す公開グループ（そのグループの全件完了 かつ 公開承認済み）。
+  publicGroups: Set<TypePagePublicationGroupId>;
 }
+
+const groupOf = (record: TypePageRecord) => typePageUnitById(record.unitId).publicationGroup;
 
 // content.config.tsのtypePages loaderと同じ判定。0件のcollectionに対してgetCollectionを
 // 呼ぶとAstroが「does not exist or is empty」警告を出すため、0件のときは呼ばない。
@@ -170,18 +179,23 @@ async function loadPublication(): Promise<TypePagePublication> {
     if ((entry.body ?? '').trim() === '') errors.push(`型Markdown ${entry.id} の本文が空です。`);
     markdownById.set(entry.id, entry);
   }
-  const missing = snapshot.typePages
-    .filter((p) => p.status === 'published' && !markdownById.has(p.id))
-    .map((p) => p.id);
-  const isComplete = missing.length === 0 && markdownById.size === EXPECTED_PUBLISHED_TYPE_PAGE_COUNT;
-  if (TYPE_PAGES_PUBLICATION_APPROVED && !isComplete) {
-    errors.push(
-      `公開承認済み（TYPE_PAGES_PUBLICATION_APPROVED = true）ですが、型Markdownが` +
-        `${markdownById.size}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜37件だけの公開はしません）。不足: ${missing.join(', ')}`,
-    );
+  const publicGroups = new Set<TypePagePublicationGroupId>();
+  for (const group of TYPE_PAGE_PUBLICATION_GROUPS) {
+    const inGroup = snapshot.typePages.filter((p) => p.status === 'published' && groupOf(p) === group.id);
+    const present = inGroup.filter((p) => markdownById.has(p.id)).length;
+    const missing = inGroup.filter((p) => !markdownById.has(p.id)).map((p) => p.id);
+    const isComplete = missing.length === 0 && present === group.expectedPublishedCount;
+    const approved = TYPE_PAGE_GROUP_PUBLICATION_APPROVED[group.id];
+    if (approved && !isComplete) {
+      errors.push(
+        `${group.label}: 公開承認済みですが、型Markdownが${present}/${group.expectedPublishedCount}件です` +
+          `（グループ内の一部だけの公開はしません）。不足: ${missing.join(', ')}`,
+      );
+    }
+    if (approved && isComplete) publicGroups.add(group.id);
   }
   if (errors.length > 0) throw new Error(`型ページの公開ゲート検証に失敗しました:\n${errors.join('\n')}`);
-  return { markdownById, isPublic: TYPE_PAGES_PUBLICATION_APPROVED && isComplete };
+  return { markdownById, publicGroups };
 }
 
 // productionでは1回だけ読む。devでは型Markdownの追加・編集を反映するため毎回読む。
@@ -193,14 +207,15 @@ function getPublication(): Promise<TypePagePublication> {
 }
 
 // route・navに出す型ページ（hold型は常に含めない）。
-// - 公開（38件完了＋公開承認）: published全件。production・devとも同じ。
-// - 公開前のproduction: 0件（1〜38件のMarkdownがあっても出さない）。
-// - 公開前のdev（includeLocalPreview指定時）: Markdownがある型（ローカル確認用）。
+// 単元が属する公開グループで判定する。
+// - 公開グループ（全件完了＋公開承認）: published全件。production・devとも同じ。
+// - 公開前グループのproduction: 0件（Markdownがあっても出さない）。
+// - 公開前グループのdev（includeLocalPreview指定時）: Markdownがある型（ローカル確認用）。
 async function listRoutableTypePages(unitId: TypePageUnitId, includeLocalPreview: boolean): Promise<TypePageRecord[]> {
   const publication = await getPublication();
   const inUnit = (p: TypePageRecord) => p.unitId === unitId && p.status === 'published';
   let pages: TypePageRecord[] = [];
-  if (publication.isPublic) {
+  if (publication.publicGroups.has(typePageUnitById(unitId).publicationGroup)) {
     pages = snapshot.typePages.filter(inUnit);
   } else if (includeLocalPreview && import.meta.env.DEV) {
     pages = snapshot.typePages.filter((p) => inUnit(p) && publication.markdownById.has(p.id));
@@ -245,7 +260,7 @@ export async function getTypePageRoutes(unitId: TypePageUnitId, problemSlugs: st
   return pages.map((page) => ({ id: page.id, slug: page.slug }));
 }
 
-// sitemap用。公開（38件完了＋公開承認）のときだけpublished全件。承認前のローカル確認用の型は
+// sitemap用。公開グループ（全件完了＋公開承認）の単元だけpublished全件。承認前のローカル確認用の型は
 // 開発時でも含めない。
 export async function getPublishedTypePagePaths(): Promise<Map<TypePageUnitId, string[]>> {
   const result = new Map<TypePageUnitId, string[]>();
@@ -310,7 +325,7 @@ export interface TypePageView {
   url: string;
   description: string;
   overviewHtml: string;
-  // 公開ゲート（38件完了＋公開承認）を通過したページならtrue。公開前のローカル確認
+  // 公開ゲート（所属グループの全件完了＋公開承認）を通過したページならtrue。公開前のローカル確認
   // （devでの承認前Markdown）ではfalseで、noindexを付ける。
   isPublic: boolean;
   problems: TypePageProblemView[];
@@ -326,7 +341,7 @@ export function typePageShellProps(view: TypePageView) {
     canonicalPath: view.url,
     breadcrumbItems: [
       { label: view.unit.subjectName },
-      { label: view.unit.unitName, href: `/math1/${view.unit.routeBase}/` },
+      { label: view.unit.unitName, href: unitUrl(view.unit) },
       { label: view.name },
     ],
     noindex: !view.isPublic,
@@ -349,8 +364,9 @@ export async function buildTypePageView(typePageId: string): Promise<TypePageVie
   const publication = await getPublication();
 
   const entry = publication.markdownById.get(record.id);
-  if (!publication.isPublic && !import.meta.env.DEV) {
-    throw new Error(`型ページ ${record.id} は公開前（38件完了＋公開承認の前）のため生成できません。`);
+  const isPublic = publication.publicGroups.has(unit.publicationGroup);
+  if (!isPublic && !import.meta.env.DEV) {
+    throw new Error(`型ページ ${record.id} は公開前（所属グループの全件完了＋公開承認の前）のため生成できません。`);
   }
   // 公開後、または公開前のdevでのローカル確認（承認前の正式Markdown）。
   if (!entry) throw new Error(`型ページ ${record.id} のMarkdownがありません。`);
@@ -387,7 +403,7 @@ export async function buildTypePageView(typePageId: string): Promise<TypePageVie
     url: typePageUrl(unit, record.slug),
     description,
     overviewHtml: await renderOverviewHtml(overviewMarkdown, record.id),
-    isPublic: publication.isPublic,
+    isPublic,
     problems,
   };
 }

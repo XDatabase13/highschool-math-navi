@@ -79,10 +79,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 // ---------------------------------------------------------------------------
 // frontmatterの読込（ページ側は astro:content 経由。ここでは同じ項目を最小パーサーで読む）
 // ---------------------------------------------------------------------------
-// 数学I 180問（5単元・22 section）＋数学A 場合の数・確率 34問（独立検算済みのみ。1単元・4 section）。
-const EXPECTED_PROBLEMS = 214;
+// 数学I 180問（5単元・22 section）＋数学A 場合の数・確率 66問（独立検算済みのみ。1単元・8 section）。
+const EXPECTED_PROBLEMS = 246;
 const EXPECTED_UNITS = 6;
-const EXPECTED_SECTIONS = 26;
+const EXPECTED_SECTIONS = 30;
 
 function readFrontmatter(file) {
   const text = readFileSync(file, 'utf-8');
@@ -424,7 +424,7 @@ const rangesToTest = [
   check('URL: 出力が問題DB側の形式判定（抽出モードの起動条件）を通る', shape);
 
   check('URL: 単元全体・科目全体・全マスの省略表現', serializeState(index, normalizeState(index, ['sl1', 'sl2', 'qf1', 'qf2'], ['41']).state) === 'v=1&r=sl,qf1,qf2&c=41' && serializeState(index, normalizeState(index, m1Sections, ALL_CELLS.filter((c) => countCells(candidateProblems(index, m1Sections))[c] > 0)).state).startsWith('v=1&r=m1&c=') && serializeState(index, normalizeState(index, allSections, ['41']).state) === 'v=1&r=m1,ma&c=41');
-  check('URL: 範囲トークンの展開（科目・単元・section）', same(normalizeState(index, ['m1'], []).state.sections, m1Sections) && same(normalizeState(index, ['ma'], []).state.sections, ['cp1', 'cp2', 'cp3', 'cp4']) && same(normalizeState(index, ['qf'], []).state.sections, ['qf1', 'qf2', 'qf3', 'qf4', 'qf5', 'qf6', 'qf7']));
+  check('URL: 範囲トークンの展開（科目・単元・section）', same(normalizeState(index, ['m1'], []).state.sections, m1Sections) && same(normalizeState(index, ['ma'], []).state.sections, ['cp1', 'cp2', 'cp3', 'cp4', 'cp5', 'cp6', 'cp7', 'cp8']) && same(normalizeState(index, ['qf'], []).state.sections, ['qf1', 'qf2', 'qf3', 'qf4', 'qf5', 'qf6', 'qf7']));
   check('URL: セルを選んでいない条件も読める', same(parseStateString(index, 'v=1&r=sl').state, { sections: ['sl1', 'sl2'], cells: [] }));
 
   // 未知ID：その値だけ無視し、残りを正規化する。

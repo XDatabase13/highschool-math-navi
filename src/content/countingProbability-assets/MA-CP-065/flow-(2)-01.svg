@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 308 108" role="img" aria-label="得点0点・30点・120点の確率が、それぞれ4/8・3/8・1/8であることを示す表">
+<text x="58" y="36" class="pa-label pa-table-cell-strong">得点</text>
+<text x="128" y="36" class="pa-label">0点</text>
+<text x="192" y="36" class="pa-label">30点</text>
+<text x="256" y="36" class="pa-label">120点</text>
+<text x="58" y="74" class="pa-label pa-table-cell-strong">確率</text>
+<text x="128" y="66" class="pa-label">4</text>
+<line x1="121.5" y1="70" x2="134.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="128" y="82" class="pa-label">8</text>
+<text x="192" y="66" class="pa-label">3</text>
+<line x1="185.5" y1="70" x2="198.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="192" y="82" class="pa-label">8</text>
+<text x="256" y="66" class="pa-label">1</text>
+<line x1="249.5" y1="70" x2="262.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="256" y="82" class="pa-label">8</text>
+<rect x="20" y="16" width="268" height="76" class="pa-figure-line" fill="none"/>
+<line x1="20" y1="48" x2="288" y2="48" class="pa-figure-line"/>
+<line x1="96" y1="16" x2="96" y2="92" class="pa-figure-line"/>
+<line x1="160" y1="16" x2="160" y2="92" class="pa-guide"/>
+<line x1="224" y1="16" x2="224" y2="92" class="pa-guide"/>
+</svg>

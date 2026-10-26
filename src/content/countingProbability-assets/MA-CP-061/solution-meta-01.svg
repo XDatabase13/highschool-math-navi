@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 300" role="img" aria-label="移す玉の色、Bから取り出す玉の色の順に上から下へ枝分かれする樹形図。赤を移す枝4/6、白を移す枝2/6。赤を移した後はBから赤3/6・白3/6、白を移した後はBから赤2/6・白4/6。経路の確率は赤→赤12/36、赤→白12/36、白→赤4/36、白→白8/36で、最後が赤になる2経路を強調している">
+<text x="40" y="82" class="geo-side-label">移す玉</text>
+<text x="40" y="176" class="geo-side-label">Bから</text>
+<text x="40" y="192" class="geo-side-label">取り出す玉</text>
+<line x1="245" y1="42" x2="150" y2="106" class="pa-figure-line"/>
+<line x1="150" y1="132" x2="102" y2="202" class="pa-axis-highlight"/>
+<line x1="150" y1="132" x2="198" y2="202" class="pa-figure-line"/>
+<line x1="245" y1="42" x2="340" y2="106" class="pa-figure-line"/>
+<line x1="340" y1="132" x2="292" y2="202" class="pa-axis-highlight"/>
+<line x1="340" y1="132" x2="388" y2="202" class="pa-figure-line"/>
+<text x="245" y="35" class="geo-point-label">箱A</text>
+<rect x="137" y="108" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="137" y="108" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="150" y="125" class="geo-point-label">赤</text>
+<rect x="89" y="204" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="89" y="204" width="26" height="24" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="89" y="204" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="102" y="221" class="geo-point-label">赤</text>
+<rect x="185" y="204" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="185" y="204" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="198" y="221" class="geo-point-label">白</text>
+<rect x="327" y="108" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="327" y="108" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="340" y="125" class="geo-point-label">白</text>
+<rect x="279" y="204" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="279" y="204" width="26" height="24" rx="3" fill="var(--color-accent)" fill-opacity="0.3"/>
+<rect x="279" y="204" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="292" y="221" class="geo-point-label">赤</text>
+<rect x="375" y="204" width="26" height="24" rx="3" fill="var(--color-surface)"/>
+<rect x="375" y="204" width="26" height="24" rx="3" class="pa-figure-line"/>
+<text x="388" y="221" class="geo-point-label">白</text>
+<text x="179.5" y="76" class="geo-angle-label">4/6</text>
+<text x="109" y="169" class="geo-angle-label">3/6</text>
+<text x="102" y="254" class="geo-point-label">12/36</text>
+<text x="191" y="169" class="geo-angle-label">3/6</text>
+<text x="198" y="254" class="geo-side-label">12/36</text>
+<text x="310.5" y="76" class="geo-angle-label">2/6</text>
+<text x="299" y="169" class="geo-angle-label">2/6</text>
+<text x="292" y="254" class="geo-point-label">4/36</text>
+<text x="381" y="169" class="geo-angle-label">4/6</text>
+<text x="388" y="254" class="geo-side-label">8/36</text>
+<line x1="86" y1="236" x2="436" y2="236" class="pa-guide"/>
+<text x="40" y="259" class="geo-side-label">経路の確率</text>
+</svg>

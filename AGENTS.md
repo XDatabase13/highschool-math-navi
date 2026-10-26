@@ -16,6 +16,8 @@
 
 数学A「場合の数・確率」MA-CP-001〜034（34問）は全問独立検算済みで、Codex最終構造監査（BLOCKERなし）を経て、2026-10-17に本番公開しました。詳細は「数学A 場合の数・確率の現在地」節を参照してください。
 
+2026-10-26現在、追加のMA-CP-035〜066（32問）は教材化・独立検算・人間レビュー後修正・Codex構造監査まで完了し、ローカルでは計246問です。追加32問は未コミット・未push・未公開で、本番214問の公開記録とは区別してください。通常buildは299ページ、sitemapは296 URLです。
+
 数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
 
 数学I「集合と論証」M1-SL-001〜018（18問、集合／命題・論証の2区分）は全問独立検算済みで、教材化・人間による実画面・SSレビューを経て、2026-09-27に本番公開しました（AI-context・Worker対応も同日）。詳細は「集合と論証の現在地」節を参照してください。
@@ -122,17 +124,19 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## 数学A 場合の数・確率の現在地
 
-数学A「場合の数・確率」MA-CP-001〜034（34問）は、全問独立検算済み（master「公開問題管理」でPASS 34問、要図照合・FAIL・REVIEWは0問）です。教材化、asset生成、34ページの生成、全展開スクリーンショットの目視確認まで完了しています。Codex最終構造監査を経て、2026-10-17に本番公開しました（GitHub Actions deploy）。
+数学A「場合の数・確率」MA-CP-001〜066（66問）は全問独立検算済みで、master「公開問題管理」もPASS 66問です。001〜034は2026-10-17に本番公開済みです。追加035〜066は教材化・asset生成・全32ページの人間によるレビュー・レビュー後修正・2026-10-26のCodex最終構造監査を完了し、未コミット・未push・未公開の状態です。054の問題図も人間の実物確認後にPASSへ同期済みです。ローカル通常buildは全体299ページ・sitemap 296 URL・個別問題246問です。
 
 - 正本は`math_db_quadratic_working/problems/MA-CP/`・`assets/`です（正本の`problems/`は単元別のサブフォルダに分けています。`sync-quadratic-content.mjs`はサブフォルダと旧フラット配置の両方を読みます）。スナップショットは`src/content/countingProbability/`・`src/content/countingProbability-assets/`、Content Collectionは`countingProbability`です。表示は`prepareCountingProbabilityEntry.ts`経由で`Quadratic27Detail.astro`を再利用します。
-- ルートは`/math-a/counting-probability/`・`/math-a/counting-probability/MA-CP-001/`〜`/MA-CP-034/`で、数学Iの単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`dbSubjectNav`では科目「数学A」の単元として置いています（単元名は正本frontmatterの`unit`と同じ「場合の数・確率」にしてください。4×4ナビが照合します）。
-- 中央一覧は`src/utils/countingProbabilityDbItems.ts`の`SECTION_TO_GROUP`で、`section`値ベースの4区分（集合の要素の個数／場合の数／順列／組合せ）に分けます。MA-CP-030〜032が「順列」、033・034が「組合せ」で、`display_order`順のままだと区分が途中で分かれてしまうため、この単元だけ区分順→`display_order`順に並べてから渡します。
-- 4×4ナビでは科目`ma`・単元`cp`・section`cp1`〜`cp4`です。
-- masterは`problem_master/counting_probability_problem_master.xlsx`です。MA-CP-035以降はmaster上の仮登録で、正本・Webにはまだありません。
+- ルートは`/math-a/counting-probability/`・`/math-a/counting-probability/MA-CP-001/`〜`/MA-CP-066/`で、数学Iの単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`dbSubjectNav`では科目「数学A」の単元として置いています（単元名は正本frontmatterの`unit`と同じ「場合の数・確率」にしてください。4×4ナビが照合します）。
+- 中央一覧は`src/utils/countingProbabilityDbItems.ts`の`SECTION_TO_GROUP`で、`section`値ベースの8区分（集合の要素の個数／場合の数／順列／組合せ／確率とその基本性質／独立な試行と反復試行／条件付き確率／期待値）に分けます。MA-CP-030〜032が「順列」、033・034が「組合せ」で、`display_order`順のままだと区分が途中で分かれてしまうため、この単元だけ区分順→`display_order`順に並べてから渡します。
+- 4×4ナビでは科目`ma`・単元`cp`・section`cp1`〜`cp8`です。
+- masterは`problem_master/counting_probability_problem_master.xlsx`です。全66問の正本・master・Webスナップショットが一致しています。035〜066の独立検算記録は`independent_result_batch_MA-CP-035_to_066`です。
 - 型ページ・外部追加演習リンクはありません。
 - **AI-context JSON・Workerの問題ID許可はMA-CPに未対応です**（意図的。場合の数・確率の全問題がそろってからまとめて対応する予定です）。本番は`PUBLIC_AI_ENABLED=false`なので、数学Iと同じく「AIに聞く」を開いても準備中の案内が出るだけで、Workerへは通信しません（ローカルの`.env`でAIを有効にしている場合、MA-CPでは対象外のエラーになります）。
 - MA-CP-033・034では、数式内の「○」でKaTeXの`unknownSymbol`警告が出ます。表示は正常で、既知の警告として扱っています。
-- Codex最終構造監査：2026-10-17に完了（`PUBLIC_AI_ENABLED=false`の本番条件で実施、BLOCKERなし）。
+- Codex最終構造監査：001〜034は2026-10-17、035〜066を中心とする全66問は2026-10-26に完了（`PUBLIC_AI_ENABLED=false`、BLOCKERなし）。報告は教材側`review/MA-CP-035_to_066_structure_audit/report.md`です。公開前のdescription・TOP件数・現在地文書の指摘も反映済みです。
+- ローカルレビュー用`REVIEW_INCLUDE_PROBLEM_IDS`は通常buildでは指定しません。CI上の指定はエラーになります。レビュー用出力は`dist-review/`へ分離します。054も現在は例外指定なしで通常buildに含まれます。
+- メタ・ThinkingFlowの濃度統一は数学I・A全体の完成後へ保留しています。AI・型ページ対応は別工程で、今回の公開準備には含めません。
 - Opus asset横断レビュー：未実施です。
 
 ---
@@ -148,7 +152,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - **UI**：PC中央列とスマホ問題一覧dialogに「問題タイプ / 問題一覧」切替を追加しました（`ProblemDbShell.astro`、型一覧が0件のページでは切替を出さず従来と同じマークアップ）。初期タブは型ページだけ「問題タイプ」、それ以外は「問題一覧」です。型一覧は `TypePageList.astro`（masterの表示順のフラットリスト）、本文は `TypePageDetail.astro`、問題previewは `TypeProblemPreview.astro`（ネイティブ`details`、初期全閉、型ページ内だけ単一open）。previewに出すのは「## 問題」（小問含む）と `placement: problem` のassetだけで、`prepareProblemPreview.ts` が用意します。型内の問題順は既存の `display_order` 昇順（`orderTypeProblems(..., {mode:'number'})`）。既存の `ProblemGroupList`・分類utils・`Quadratic27Detail` は変更していません。
 - **SVG**：1ページに複数問題のinline SVGが並ぶため、preview用assetの内部IDは `tp-<問題ID>-a<n>-` で名前空間化し、参照（`url(#…)`・`href`・`xlink:href`・aria）も書き換えます（`src/utils/svgIdNamespace.ts`）。重複id・参照切れはbuildエラーです。problem assetを持つ型はQF-T01・TR-T01・TR-T09・DA-T01・DA-T02・DA-T05の6つだけです。
 - **開発確認用fixture**：正式Markdown 38件の同期に伴い、2026-09-29に`src/dev-fixtures/typePageFixture.ts`（QF-T03の仮文）と`typePages.ts`の読込分岐を削除しました。DEVで表示されるのは同期済みの正式Markdownがある型だけです。`audit-type-pages`は旧fixtureの文字列がbuild成果物へ混入していないかを引き続き検査します。
-- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→226、38件承認あり→264、37件承認あり→buildエラー。件数は4×4ナビの `/navigator/`・`/about/` と数学A「場合の数・確率」の35 URLを含む。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
+- **監査・テスト**：`npm run build && npm run audit-type-pages`（公開集合・sitemap件数・hold・旧fixture残骸・exceljs混入・全38型のSVG監査）、`node scripts/test-type-pages.mjs sync`（同期の正常系・異常系）、`node scripts/test-type-pages.mjs gate`（1件・37件・38件承認なし→258、38件承認あり→296、37件承認あり→buildエラー。件数は4×4ナビの `/navigator/`・`/about/` と数学A「場合の数・確率」の67 URLを含む。スナップショットと承認フラグを一時的に書き換え、終了時に復元）。
 - **初版でやらないこと**：推薦順・4×4・ユーザー条件・推薦理由、型同士のリンク、個別問題本文からの所属型リンク、primary/secondary・roleの表示、型専用GA4 event。将来の推薦は `orderTypeProblems` の新modeとして分離し、master・型Markdown・問題データへ順序情報を持たせないでください。
 - **本文の自動検査**：spec §3.2・§3.4（2026-09-29改訂）どおり、本文中の問題ID（`M1-XX-999`形式）・3桁の問題番号（数式外の単独の3桁数字。角度`180°`等は除き、`020〜023`は範囲展開）は所属問題の例示として許可し、warningとして報告します。その型の所属問題でない番号・別単元の問題IDだけが同期エラーです（`scripts/sync-type-pages.mjs`の`checkMentionedProblems`）。句点数（目安2〜4文）もwarningだけです。warningが出ても承認済み本文・descriptionを自動修正しないでください。
 - **残作業**：Codexによる型ページ横断監査（公開後に実施予定）。型を追加・削除する場合は、`EXPECTED_PUBLISHED_TYPE_PAGE_COUNT`・テスト・この節・SEO節（sitemap件数）を一緒に更新してください。
@@ -171,7 +175,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - **保存**：アカウント・サーバー・外部DBは使わず、localStorage（key `mathnavi.navigator`、形式version 1）へ「条件」だけを保存します（問題ID一覧・進捗・正誤は保存しない）。保存済み設定（複数。自動名・名前変更・開く・共有・削除）、前回使用設定、下書きの3種です。復元の優先順位は「URLの条件 → 前回使用設定 → 下書き → 新規」で、前回使用設定・下書きは自動適用せず「続ける／新しく設定する」を提示します。共有URLを開いただけでは保存データへ書き込みません（利用者が「この条件で学習する」か保存を選んだ後に記録）。localStorageが使えない・容量超過・壊れたデータでもナビ・共有・DB利用は継続でき、読めない保存データは利用者が明示的に初期化するまで上書きしません。
 - **共有された条件の扱い（抽出モード）**：この端末の前回設定・下書き・保存済み設定のどれとも違う条件で開いたときは、帯に「共有された条件を表示しています」と「この条件で学習する」を出し、選ぶまで保存データへ記録しません。記録に失敗したときは案内を残したまま理由を表示し、`navigator_resume` は送りません。
 - **GA4イベント**：`navigator_open`・`navigator_range_select`・`navigator_cell_select`・`navigator_extract`・`navigator_result_view`・`navigator_save`・`navigator_share`・`navigator_resume`（`src/utils/navigatorBrowser.ts`）。`navigator_result_view` は、問題DBで抽出表示が実際に成立したときに `navigatorDbMode.ts` が送ります（`problem_count`＝実際の抽出件数。読み込み失敗・条件不正・0件では送らない）。送るのは抽出モードへ入ったときの1回だけで（`isNavModeEntry()`：参照元が設定画面・`/app/navigation/`・外部・直接のURL）、抽出モードのまま問題を移動したとき・再読み込み・戻る／進むでは送りません。`/app/navigation/` の転送前には送りません（二重計測しない）。送るのは件数と種別だけで、section名・設定名・問題ID・条件文字列は送りません。
-- **テスト・監査**：`npm run test-navigator`（buildなし。候補214問＝数学I 180問・5単元22 section＋数学A 34問・1単元4 section・不正値検出・範囲集計・抽出・並び順・0問セル・URL状態・抽出モードの一覧／前後移動／単元リンク・保存と復元）、`npm run build && npm run audit-navigator`（両ルートのindex契約・`data.json`・抽出モード用の帯が静的HTMLでは空で非表示・sitemap 264件・robots・既存214問／単元トップ6／型ページ38の回帰・GA4の二重読込なし。`NAV_AUDIT_BASELINE=<実装前のdist>` を渡すと既存ページの静的HTMLが実装前と同じことも比較）。抽出モードのDOM操作そのもの（行の絞り込み・帯の表示）は自動テストがなく、ブラウザで確認します。
+- **テスト・監査**：`npm run test-navigator`（buildなし。候補246問＝数学I 180問・5単元22 section＋数学A 66問・1単元8 section・不正値検出・範囲集計・抽出・並び順・0問セル・URL状態・抽出モードの一覧／前後移動／単元リンク・保存と復元）、`npm run build && npm run audit-navigator`（両ルートのindex契約・`data.json`・抽出モード用の帯が静的HTMLでは空で非表示・sitemap 296件・robots・既存246問／単元トップ6／型ページ38の回帰・GA4の二重読込なし。`NAV_AUDIT_BASELINE=<実装前のdist>` を渡すと既存ページの静的HTMLが実装前と同じことも比較）。抽出モードのDOM操作そのもの（行の絞り込み・帯の表示）は自動テストがなく、ブラウザで確認します。
 - **数学A追加時の拡張点**：(1) `dbSubjectNav` に科目・単元を追加、(2) `navigator-config.ts` に科目（例 `ma`）・単元・sectionのIDを追加、(3) `navigatorData.ts` の `SOURCES` に新しいcollectionを追加。状態形式・抽出ロジック・UIは変更不要です（科目横断の選択・並び順はテスト済み）。数学Aを同じ4×4へ載せる前に、数学Iと同じ尺度で重要度・難易度を付け、科目横断監査を通してください。仮データ・空の科目は置かないでください。
 - **Privacyページ**：「ブラウザ内への保存について」節（2026-10-01追加、`src/pages/privacy/index.astro`）で、localStorageの利用、保存するもの（条件・保存済み設定とその名称・前回使用設定・下書き）、保存しないもの（問題の一覧・進捗・解答や正誤）、サイトとして氏名などの個人情報の入力は求めないことと、自由入力の設定名へ個人情報を入れないよう求める案内、保存先がブラウザ内だけであること、削除方法（「学習設定」からの削除・ブラウザのサイトデータ削除）を説明しています。内部key名は本文に出していません。保存対象・保存先・削除操作を変えるときは、この節も合わせて直してください。
 - **Codex監査（2026-10-01）**：指摘2点を修正しました。(1) 抽出モードの「この条件で学習する」（`navigatorDbMode.ts`）が `store.setLast()` の戻り値を見ずに案内を隠し、「記録しました」の表示と `navigator_resume` の送信をしていたため、記録に成功したときだけそうするよう変更。失敗（`write-failed` 等）では案内を残し、`saveFailureMessage()` の理由を表示します（抽出表示・共有など保存に依存しない機能はそのまま使えます）。「学習設定を保存」側の動作は変えていません。(2) Privacyページの「氏名などの個人情報は保存しません」は、設定名が自由入力で実装と矛盾するため、「入力を求めない・設定名に個人情報を入れないでください」という案内へ変更。
@@ -220,7 +224,7 @@ M1-EC-025（「事前知識・使用公式」）専用。自然数⊂整数⊂�
 
 ThinkingFlow単位のAI質問機能（Cloudflare Worker＋Gemini接続）は実装・本番Worker構築・本番end-to-end実証まで完了していますが、AI機能群全体（類題生成等）の整備が進むまで、本番では`PUBLIC_AI_ENABLED`により意図的にOFFにしています。Cloudflare本番Worker自体はdeploy済みのまま維持しています。詳細・現在地は`math_service_design_summary.md`第36節を正本としてください。
 
-**AI-context JSON（`/ai-context/<problem_id>.json`、`src/pages/ai-context/[id].json.ts`）はAI-context対象の数学I 180問（QF54・TR41・DA23・EC44・SL18）すべてが対象です**（数学A「場合の数・確率」MA-CP-001〜034は意図的に未対応。「数学A 場合の数・確率の現在地」節を参照）（2026-09-24にDA/ECへ、2026-09-27にSLへ拡張）。build時に5コレクションの独立検算済み問題から自動生成し、手動の許可リストは持ちません。AI用のFlow識別は`problem_id`＋`context_key`（1問題内の表示順`f1`,`f2`,...）で、既存の`part`/`flow`/`flow_key`も維持しています。含めるのは問題文・問題の言い換え（存在する場合）・ThinkingFlow全体・最終解答・asset metadataだけで、**「事前知識・使用公式」・問題メタ・解法メタは含めません**。HTMLコメント（`<!-- ... -->`、制作用メモ）も生成時に除去します（正本は無変更）。Worker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`は`/^M1-(QF|TR|DA|EC|SL)-\d{3}$/`で、本番Workerへdeploy済みです（2026-09-27、Version `c9fd20e4-e191-415c-977b-411f5810e311`）。この正規表現は`M1-SL-000`のような存在しない番号も形式上は通しますが、対応するAI-context JSONがないためWorkerは404「対象外」を返し、Geminiには到達しません。**本番Workerのdeployは`worker/`で`npm run deploy -- --env production`です**（素の`npm run deploy`は`wrangler.toml`の既定＝ローカル開発用設定（参照先localhost）で、本番とは別のWorkerになります）。Webを先にdeployして本番にAI-context JSONが出てからWorkerをdeployしてください。新しい単元を追加する場合は、`[id].json.ts`・`aiContext.ts`の`AiContextCollection`へコレクションを追加し、Workerの正規表現も拡張・再deployしてください。
+**AI-context JSON（`/ai-context/<problem_id>.json`、`src/pages/ai-context/[id].json.ts`）はAI-context対象の数学I 180問（QF54・TR41・DA23・EC44・SL18）すべてが対象です**（数学A「場合の数・確率」MA-CP-001〜066は意図的に未対応。「数学A 場合の数・確率の現在地」節を参照）（2026-09-24にDA/ECへ、2026-09-27にSLへ拡張）。build時に5コレクションの独立検算済み問題から自動生成し、手動の許可リストは持ちません。AI用のFlow識別は`problem_id`＋`context_key`（1問題内の表示順`f1`,`f2`,...）で、既存の`part`/`flow`/`flow_key`も維持しています。含めるのは問題文・問題の言い換え（存在する場合）・ThinkingFlow全体・最終解答・asset metadataだけで、**「事前知識・使用公式」・問題メタ・解法メタは含めません**。HTMLコメント（`<!-- ... -->`、制作用メモ）も生成時に除去します（正本は無変更）。Worker側`worker/src/validate.ts`の`PROBLEM_ID_PATTERN`は`/^M1-(QF|TR|DA|EC|SL)-\d{3}$/`で、本番Workerへdeploy済みです（2026-09-27、Version `c9fd20e4-e191-415c-977b-411f5810e311`）。この正規表現は`M1-SL-000`のような存在しない番号も形式上は通しますが、対応するAI-context JSONがないためWorkerは404「対象外」を返し、Geminiには到達しません。**本番Workerのdeployは`worker/`で`npm run deploy -- --env production`です**（素の`npm run deploy`は`wrangler.toml`の既定＝ローカル開発用設定（参照先localhost）で、本番とは別のWorkerになります）。Webを先にdeployして本番にAI-context JSONが出てからWorkerをdeployしてください。新しい単元を追加する場合は、`[id].json.ts`・`aiContext.ts`の`AiContextCollection`へコレクションを追加し、Workerの正規表現も拡張・再deployしてください。
 
 公開95問（QF・TR）のうちFTEXT（CC BY 4.0の外部フリー教材）とEXACT水準で対応する47問には、問題文直下に「追加で練習する」外部リンクを実装し、本番公開済みです（`src/data/external-practice-links.json`、`Quadratic27Detail.astro`）。CLOSE／BROAD／NONE判定の問題にはリンクを追加していません。データの分析（M1-DA-001〜023）も、EXACT判定の12問に外部サイト「教科書より詳しい高校数学」（yorikuwa.com）への同じ「追加で練習する」リンクを追加し、本番公開済みです（コミット`c0b7d45`、同じ`external-practice-links.json`に追記。表示ロジックは共通）。同ファイルの登録は計59問（QF26・TR21・DA12）です。数と式（M1-EC-001〜044）・集合と論証（M1-SL-001〜018）はリンク未登録です。詳細は同文書第37節を正本としてください。
 
@@ -240,7 +244,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
 - `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 - `src/content/setLogic/`・`src/content/setLogic-assets/`（集合と論証、M1-SL-001〜018。2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
-- `src/content/countingProbability/`・`src/content/countingProbability-assets/`（数学A 場合の数・確率、MA-CP-001〜034。2026-10-17本番公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
+- `src/content/countingProbability/`・`src/content/countingProbability-assets/`（数学A 場合の数・確率、MA-CP-001〜066。001〜034は2026-10-17本番公開、035〜066はローカル準備完了・未公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
 - `src/content/typePages/`・`src/data/type-pages.generated.json`（型ページの本文・構造。正本は `type_pages/*.md` とmaster xlsx。詳細は「型ページ（問題タイプ）の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
@@ -290,7 +294,7 @@ npm run sync-content
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
 - `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 - `/math1/set-logic/`：数学I「集合と論証」上位区分の単元トップ、`/math1/set-logic/M1-SL-001/` 〜 `/M1-SL-018/`（2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
-- `/math-a/counting-probability/`：数学A「場合の数・確率」の単元トップ、`/math-a/counting-probability/MA-CP-001/` 〜 `/MA-CP-034/`（2026-10-17本番公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
+- `/math-a/counting-probability/`：数学A「場合の数・確率」の単元トップ、`/math-a/counting-probability/MA-CP-001/` 〜 `/MA-CP-066/`（001〜034は2026-10-17本番公開、035〜066は未公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
 - `/navigator/`：4×4ナビゲーションの設定画面、`/app/navigation/`：その抽出結果の入口（どちらも `BaseLayout`。抽出結果そのものは、条件のfragmentを付けた既存の個別問題URL＝問題DBの抽出モードで表示する。詳細は「4×4ナビゲーションの現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
@@ -303,7 +307,7 @@ SPA化や複雑なクライアント状態管理を、明示的な要求なし�
 
 ### 中央問題一覧の分類・共有コンポーネント
 
-中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分、数と式＝4区分、集合と論証＝2区分、場合の数・確率＝4区分）。
+中央問題一覧は単元ごとにアコーディオン＋行リストで表示します（二次関数＝二次関数／二次方程式／二次不等式の3区分、三角比＝4区分、データの分析＝5区分、数と式＝4区分、集合と論証＝2区分、場合の数・確率＝8区分）。
 
 - 区分への分類は問題IDのレンジではなく、正本frontmatterの `section` 値をキーにした対応表（`quadraticDbItems.ts` / `trigDbItems.ts` / `dataAnalysisDbItems.ts` / `expressionCalculationDbItems.ts` / `setLogicDbItems.ts` の `SECTION_TO_GROUP`）で単元ごとに行います。分類ロジック自体は `src/utils/dbCenterList.ts`（`groupCenterItems`）に一本化しています。
 - 一覧のマークアップ・スタイルは `src/components/ProblemGroupList.astro` に一本化し、PC中央列・スマホ用問題一覧ダイアログの両方から同じ実装を再利用します。
@@ -356,7 +360,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 ### sitemap / robots
 
 `sitemap.xml` は検索対象ページを掲載します（`src/pages/sitemap.xml.ts`）。
-現行214問（数学I 180問＝QF54・TR41・DA23・EC44・SL18、数学A 34問＝CP34）時点の内訳は、
+ローカルの次回公開準備246問（数学I 180問＝QF54・TR41・DA23・EC44・SL18、数学A 66問＝CP66）の内訳は、
 
 - `/`
 - `/navigator/`（4×4ナビゲーションの設定画面）
@@ -365,13 +369,13 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - `/math1/data-analysis/` ＋ 個別問題23URL ＋ 型ページ6URL
 - `/math1/suto-shiki/` ＋ 個別問題44URL ＋ 型ページ8URL
 - `/math1/set-logic/` ＋ 個別問題18URL ＋ 型ページ5URL
-- `/math-a/counting-probability/` ＋ 個別問題34URL（型ページなし）
+- `/math-a/counting-probability/` ＋ 個別問題66URL（型ページなし）
 - `/about/`（このサイトについて）
 - `/privacy/`
 - `/disclaimer/`
 - `/contact/`
 
-の計264 URLです（型ページなしの226＋型ページ38。2026-09-29時点の227 URLに、4×4ナビゲーションの `/navigator/` 1件と「このサイトについて」の `/about/` 1件（2026-10-02）を加えた従来の229 URLに、数学A「場合の数・確率」の35 URLを加えたもの。型ページは各単元の個別問題の後ろに並びます）。
+の計296 URLです（型ページなし258＋既存型ページ38）。本番は2026-10-17公開時点の264 URL（個別問題214問）で、追加32問はまだ公開していません。型ページは各単元の個別問題の後ろに並びます。
 
 `/app/`・`/app/navigation/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 
@@ -628,10 +632,10 @@ PrivacyのGoogle Analytics／Googleフォームに関する記述を、実装変
 - 個別HTMLに固有の問題本文が含まれるか
 - title / description / canonical / noindexの意図しない変更
 - Analyticsの二重読み込み
-- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 264件）
+- 型ページの公開集合・SVG監査（`npm run audit-type-pages`。build後に実行。公開承認済みの現在は型route 38件・sitemap 296件）
 - 4×4ナビゲーションのロジックテスト（`npm run test-navigator`。buildなしで実行可）とbuild監査（`npm run audit-navigator`。build後に実行）
 
-M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。** MA-CP-001〜034はCodex最終構造監査済み（2026-10-17、BLOCKERなし）で、Opus asset横断レビューは未実施です。
+M1-QF-001〜054・M1-TR-001〜041・M1-DA-001〜023・M1-EC-001〜044はCodex構造監査済みです（QF/TRはFIX相当の構造的不整合なし、ECはPASS WITH REVIEW・BLOCKERなし）。**M1-SL-001〜018はCodex構造監査・Opus asset横断レビューとも未実施のまま本番公開しています。** MA-CP-001〜034は2026-10-17、追加035〜066を含む全66問は2026-10-26にCodex最終構造監査済み（BLOCKERなし）です。Opus asset横断レビューは未実施です。
 **M1-DA-001〜023はOpus asset横断レビューのみ未実施のまま本番公開しています。** DAへ追加修正を行う際は、この監査が別途必要になる可能性を踏まえてください。
 
 既存問題を変更した場合は、変更内容に応じて再監査・再独立検算が必要かを判断してください。

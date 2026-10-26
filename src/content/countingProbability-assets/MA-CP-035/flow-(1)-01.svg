@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 187" role="img" aria-label="行を大きいさいころの目a、列を小さいさいころの目bとした6×6の表。各マスに目の組(a,b)を書き、全部で36マスある">
+<text x="30" y="22.5" class="pa-label pa-table-cell-strong">大＼小</text>
+<text x="74" y="22.5" class="pa-label pa-table-cell-strong">1</text>
+<text x="114" y="22.5" class="pa-label pa-table-cell-strong">2</text>
+<text x="154" y="22.5" class="pa-label pa-table-cell-strong">3</text>
+<text x="194" y="22.5" class="pa-label pa-table-cell-strong">4</text>
+<text x="234" y="22.5" class="pa-label pa-table-cell-strong">5</text>
+<text x="274" y="22.5" class="pa-label pa-table-cell-strong">6</text>
+<text x="30" y="47.5" class="pa-label pa-table-cell-strong">1</text>
+<text x="74" y="47.5" class="pa-label">(1,1)</text>
+<text x="114" y="47.5" class="pa-label">(1,2)</text>
+<text x="154" y="47.5" class="pa-label">(1,3)</text>
+<text x="194" y="47.5" class="pa-label">(1,4)</text>
+<text x="234" y="47.5" class="pa-label">(1,5)</text>
+<text x="274" y="47.5" class="pa-label">(1,6)</text>
+<text x="30" y="72.5" class="pa-label pa-table-cell-strong">2</text>
+<text x="74" y="72.5" class="pa-label">(2,1)</text>
+<text x="114" y="72.5" class="pa-label">(2,2)</text>
+<text x="154" y="72.5" class="pa-label">(2,3)</text>
+<text x="194" y="72.5" class="pa-label">(2,4)</text>
+<text x="234" y="72.5" class="pa-label">(2,5)</text>
+<text x="274" y="72.5" class="pa-label">(2,6)</text>
+<text x="30" y="97.5" class="pa-label pa-table-cell-strong">3</text>
+<text x="74" y="97.5" class="pa-label">(3,1)</text>
+<text x="114" y="97.5" class="pa-label">(3,2)</text>
+<text x="154" y="97.5" class="pa-label">(3,3)</text>
+<text x="194" y="97.5" class="pa-label">(3,4)</text>
+<text x="234" y="97.5" class="pa-label">(3,5)</text>
+<text x="274" y="97.5" class="pa-label">(3,6)</text>
+<text x="30" y="122.5" class="pa-label pa-table-cell-strong">4</text>
+<text x="74" y="122.5" class="pa-label">(4,1)</text>
+<text x="114" y="122.5" class="pa-label">(4,2)</text>
+<text x="154" y="122.5" class="pa-label">(4,3)</text>
+<text x="194" y="122.5" class="pa-label">(4,4)</text>
+<text x="234" y="122.5" class="pa-label">(4,5)</text>
+<text x="274" y="122.5" class="pa-label">(4,6)</text>
+<text x="30" y="147.5" class="pa-label pa-table-cell-strong">5</text>
+<text x="74" y="147.5" class="pa-label">(5,1)</text>
+<text x="114" y="147.5" class="pa-label">(5,2)</text>
+<text x="154" y="147.5" class="pa-label">(5,3)</text>
+<text x="194" y="147.5" class="pa-label">(5,4)</text>
+<text x="234" y="147.5" class="pa-label">(5,5)</text>
+<text x="274" y="147.5" class="pa-label">(5,6)</text>
+<text x="30" y="172.5" class="pa-label pa-table-cell-strong">6</text>
+<text x="74" y="172.5" class="pa-label">(6,1)</text>
+<text x="114" y="172.5" class="pa-label">(6,2)</text>
+<text x="154" y="172.5" class="pa-label">(6,3)</text>
+<text x="194" y="172.5" class="pa-label">(6,4)</text>
+<text x="234" y="172.5" class="pa-label">(6,5)</text>
+<text x="274" y="172.5" class="pa-label">(6,6)</text>
+<rect x="6" y="6" width="288" height="175" class="pa-figure-line" fill="none"/>
+<line x1="6" y1="31" x2="294" y2="31" class="pa-figure-line"/>
+<line x1="6" y1="56" x2="294" y2="56" class="pa-guide"/>
+<line x1="6" y1="81" x2="294" y2="81" class="pa-guide"/>
+<line x1="6" y1="106" x2="294" y2="106" class="pa-guide"/>
+<line x1="6" y1="131" x2="294" y2="131" class="pa-guide"/>
+<line x1="6" y1="156" x2="294" y2="156" class="pa-guide"/>
+<line x1="54" y1="6" x2="54" y2="181" class="pa-figure-line"/>
+<line x1="94" y1="6" x2="94" y2="181" class="pa-guide"/>
+<line x1="134" y1="6" x2="134" y2="181" class="pa-guide"/>
+<line x1="174" y1="6" x2="174" y2="181" class="pa-guide"/>
+<line x1="214" y1="6" x2="214" y2="181" class="pa-guide"/>
+<line x1="254" y1="6" x2="254" y2="181" class="pa-guide"/>
+</svg>

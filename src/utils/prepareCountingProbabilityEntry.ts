@@ -4,7 +4,7 @@ import { readProblemAssetSvg } from './readProblemAsset';
 import { flowAssetKey } from './prepareQuadratic27Entry';
 import { injectInlineAssets, verifyNoStrayMarkers } from './prepareSetLogicEntry';
 
-// countingProbability（MA-CP-001〜034、数学A「場合の数・確率」）1件分を、Web表示に必要な形へ
+// countingProbability（MA-CP-001〜066、数学A「場合の数・確率」）1件分を、Web表示に必要な形へ
 // 分解する処理。prepareSetLogicEntry.tsと同じ構造で、Astroのコレクション型
 // （CollectionEntry<'countingProbability'>）が別ものなので、asset振り分けの薄いswitch部分だけを
 // このファイルに複製している。見出しパーサー・flowAssetKey、問題メタ・解法メタ本文中の

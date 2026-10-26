@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 import type { DbCenterItem } from './dbCenterList';
 
-// countingProbability（MA-CP-001〜034、数学A「場合の数・確率」）の正本frontmatterに実在する
+// countingProbability（MA-CP-001〜066、数学A「場合の数・確率」）の正本frontmatterに実在する
 // section値を中央ペインの区分見出しへ対応させる表。setLogicDbItems.ts等と同じ方式
 // （section値をキーにした対応表・未知のsectionはエラーで止める）を踏襲する。
 // 区分は問題IDのレンジではなくsection値で決める（例：MA-CP-030〜032は「順列」、033・034は「組合せ」）。
@@ -10,6 +10,10 @@ const SECTION_TO_GROUP: Record<string, { groupId: string; groupLabel: string }> 
   場合の数: { groupId: 'cp-counting', groupLabel: '場合の数' },
   順列: { groupId: 'cp-permutations', groupLabel: '順列' },
   組合せ: { groupId: 'cp-combinations', groupLabel: '組合せ' },
+  確率とその基本性質: { groupId: 'cp-probability-basics', groupLabel: '確率とその基本性質' },
+  独立な試行と反復試行: { groupId: 'cp-independent-trials', groupLabel: '独立な試行と反復試行' },
+  条件付き確率: { groupId: 'cp-conditional-probability', groupLabel: '条件付き確率' },
+  期待値: { groupId: 'cp-expected-value', groupLabel: '期待値' },
 };
 
 function resolveGroup(section: string): { groupId: string; groupLabel: string } {

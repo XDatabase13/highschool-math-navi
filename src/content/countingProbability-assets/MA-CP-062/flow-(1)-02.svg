@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 160" role="img" aria-label="全体を1000人とした人数表。感染している20人は陽性18人・陰性2人、感染していない980人は陽性49人・陰性931人、合計は陽性67人・陰性933人・全体1000人">
+<text x="76" y="36" class="pa-label-muted">単位：人</text>
+<text x="170" y="36" class="pa-label pa-table-cell-strong">陽性</text>
+<text x="246" y="36" class="pa-label pa-table-cell-strong">陰性</text>
+<text x="322" y="36" class="pa-label pa-table-cell-strong">合計</text>
+<text x="76" y="68" class="pa-label pa-table-cell-strong">感染している</text>
+<text x="170" y="68" class="pa-label">18</text>
+<text x="246" y="68" class="pa-label">2</text>
+<text x="322" y="68" class="pa-label">20</text>
+<text x="76" y="100" class="pa-label pa-table-cell-strong">感染していない</text>
+<text x="170" y="100" class="pa-label">49</text>
+<text x="246" y="100" class="pa-label">931</text>
+<text x="322" y="100" class="pa-label">980</text>
+<text x="76" y="132" class="pa-label pa-table-cell-strong">合計</text>
+<text x="170" y="132" class="pa-label">67</text>
+<text x="246" y="132" class="pa-label">933</text>
+<text x="322" y="132" class="pa-label">1000</text>
+<rect x="20" y="16" width="340" height="128" class="pa-figure-line" fill="none"/>
+<line x1="20" y1="48" x2="360" y2="48" class="pa-figure-line"/>
+<line x1="20" y1="80" x2="360" y2="80" class="pa-guide"/>
+<line x1="20" y1="112" x2="360" y2="112" class="pa-figure-line"/>
+<line x1="132" y1="16" x2="132" y2="144" class="pa-figure-line"/>
+<line x1="208" y1="16" x2="208" y2="144" class="pa-guide"/>
+<line x1="284" y1="16" x2="284" y2="144" class="pa-figure-line"/>
+</svg>

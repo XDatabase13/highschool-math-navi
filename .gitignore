@@ -1,5 +1,7 @@
 # build output
 dist/
+# ローカルレビュー用build（REVIEW_INCLUDE_PROBLEM_IDS指定時の出力先）
+dist-review/
 # generated types
 .astro/
 

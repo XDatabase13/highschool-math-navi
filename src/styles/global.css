@@ -1866,6 +1866,13 @@ ul {
 .q27-detail .thinking-step-body .katex-display:last-child {
   margin-bottom: 0;
 }
+/* レビュー指摘（MA-CP-051・056・061）：縦型の分数（\dfrac）を含む箇条書きで、上下の項目が詰まって見えた。
+   正本側で項目の間に空行を入れた箇条書き（loose list：li > p）にしたうえで、項目どうしの間隔をli側で確保する。
+   ThinkingFlow本文・問題メタではli内のpの余白が0に打ち消されるため。pの余白がある箇所（解法メタ等）は
+   marginの相殺で見た目が変わらない。影響範囲：loose listを使う問題だけ（既存ではM1-QF-011の最終解答）。 */
+.q27-detail li:has(> p) {
+  margin: 0.45rem 0;
+}
 .q27-detail .result-box {
   margin-top: 0.45rem;
   padding: 0.65rem 0.85rem;

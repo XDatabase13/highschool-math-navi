@@ -15,9 +15,10 @@
 // - すべての検査が通った場合だけ、一時ディレクトリへ生成してから置換する
 //   （途中失敗で既存の正常スナップショットを消さない）。
 // - 出力はdeterministic（timestamp等は入れない）。
-// - 型Markdownは0〜38件のどの状態でも（制作途中でも）検査に通ったものを同期する。
-//   同期は公開を決めない。productionで型route・nav・sitemapを出すのは「published全38件の
-//   Markdown」かつ「人間の公開承認（src/data/type-page-publication.ts）」がそろったときだけで、
+// - 型Markdownはどの件数の状態でも（制作途中でも）検査に通ったものを同期する。
+//   同期は公開を決めない。productionで型route・nav・sitemapを出すのは、公開グループ
+//   （数学I 38型／数学A 場合の数・確率 18型）ごとに「そのグループのpublished全件のMarkdown」かつ
+//   「そのグループの人間の公開承認（src/data/type-page-publication.ts）」がそろったときだけで、
 //   その判定はbuild側（src/utils/typePages.ts）と監査（scripts/audit-type-pages.mjs）で行う。
 //
 // 使い方: npm run sync-type-pages（npm run sync-content からも問題同期の後に呼ばれる）
@@ -33,7 +34,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import {
   TYPE_PAGE_UNITS,
-  EXPECTED_PUBLISHED_TYPE_PAGE_COUNT,
+  TYPE_PAGE_PUBLICATION_GROUPS,
   TYPE_PAGE_SNAPSHOT_SCHEMA_VERSION,
   TYPE_PAGE_SLUG_PATTERN,
   typePageUrl,
@@ -62,7 +63,10 @@ const PROBLEM_SHEET = '公開問題管理';
 const HEADER_ROW = 4;
 const STATUS_MAP = { 採用: 'published', 保留: 'hold' };
 const TYPE_ID_PATTERN = /^([A-Z]{2})-T(\d{2})$/;
-const PROBLEM_ID_PATTERN = /^M1-([A-Z]{2})-\d{3}$/;
+// 問題ID（数学I M1-QF-001、数学A MA-CP-001）。単元との対応は単元設定のproblemIdPrefixで照合する。
+const PROBLEM_ID_PATTERN = /^(?:M1|MA)-[A-Z]{2}-\d{3}$/;
+const PROBLEM_ID_IN_TEXT = /\b(M1|MA)-([A-Z]{2})-(\d{3})/g;
+const unitOfProblemId = (problemId) => problemId.replace(/-\d{3}$/, '');
 const NO_TYPE_PAGE = 'なし';
 
 const SNAPSHOT_NOTICE =
@@ -71,8 +75,9 @@ const SNAPSHOT_NOTICE =
   '`npm run sync-type-pages`（scripts/sync-type-pages.mjs）でコピーしたものです。\n' +
   '同じ同期で `src/data/type-pages.generated.json`（型構造。正本はmaster xlsx）も生成されます。\n\n' +
   '直接編集しないでください。編集は正本側で行い、その後このコマンドで再同期してください。\n' +
-  '制作途中（0〜37件）の型Markdownも同期されますが、productionで型ページを公開するのは\n' +
-  '「published全38件がそろう」かつ「src/data/type-page-publication.ts で公開承認」のときだけです。\n';
+  '制作途中の型Markdownも同期されますが、productionで型ページを公開するのは、公開グループ\n' +
+  '（数学I 38型／数学A 場合の数・確率 18型）ごとに「そのグループのpublished全件がそろう」かつ\n' +
+  '「src/data/type-page-publication.ts でそのグループを公開承認」のときだけです。\n';
 
 const errors = [];
 const warnings = [];
@@ -239,18 +244,18 @@ const ALLOWED_NODE_TYPES = new Set([
   'root', 'heading', 'paragraph', 'text', 'strong', 'emphasis', 'inlineMath', 'break',
 ]);
 
-// 本文中の問題ID（M1-XX-999）・3桁の問題番号（spec §3.2・§3.4、2026-09-29改訂）。
+// 本文中の問題ID（M1-XX-999・MA-XX-999）・3桁の問題番号（spec §3.2・§3.4、2026-09-29改訂、§20.1）。
 // 所属問題の例示に使ってよいためwarningとして報告し、その型の所属問題でない番号だけをエラーにする。
 // 3桁番号は数式（$…$）の外にある単独の3桁の数字で、角度（180°等）は除く。「020〜023」は範囲として展開する。
-function checkMentionedProblems(body, record, label) {
-  const prefix = record.id.slice(0, 2);
+// 照合する所属問題は、その型の主・副所属を合わせた集合。
+function checkMentionedProblems(body, record, unit, label) {
   const text = body.replace(/\$[^$]*\$/g, ' ');
   const numbers = new Set();
-  for (const m of text.matchAll(/M1-([A-Z]{2})-(\d{3})/g)) {
-    if (m[1] !== prefix) fail(`${label}: 本文の問題ID M1-${m[1]}-${m[2]} は別単元の問題です。`);
-    else numbers.add(m[2]);
+  for (const m of text.matchAll(PROBLEM_ID_IN_TEXT)) {
+    if (`${m[1]}-${m[2]}` !== unit.problemIdPrefix) fail(`${label}: 本文の問題ID ${m[0]} は別単元の問題です。`);
+    else numbers.add(m[3]);
   }
-  const bare = text.replace(/M1-[A-Z]{2}-/g, '');
+  const bare = text.replace(/\b(?:M1|MA)-[A-Z]{2}-/g, '');
   for (const m of bare.matchAll(/(?<![\d.])(\d{3})\s*〜\s*(\d{3})(?![\d.°])/g)) {
     for (let n = Number(m[1]); n <= Number(m[2]); n += 1) numbers.add(String(n).padStart(3, '0'));
   }
@@ -258,14 +263,14 @@ function checkMentionedProblems(body, record, label) {
   if (numbers.size === 0) return;
   const members = new Set(record.problems.map((p) => p.problemId));
   const sorted = [...numbers].sort();
-  const outside = sorted.filter((n) => !members.has(`M1-${prefix}-${n}`));
+  const outside = sorted.filter((n) => !members.has(`${unit.problemIdPrefix}-${n}`));
   if (outside.length > 0) {
     fail(`${label}: 本文の問題番号 ${outside.join(', ')} は ${record.id} の所属問題ではありません。`);
   }
   warn(`${label}: 本文に問題ID・問題番号があります（${sorted.join(', ')}、いずれも所属問題と照合済み）。人間レビューで確認してください。`);
 }
 
-function validateTypeMarkdown(markdown, expectedId, label, record) {
+function validateTypeMarkdown(markdown, expectedId, label, record, unit) {
   const { data, body } = parseTypeFrontmatter(markdown, label);
   if (data.type_page_id !== undefined && data.type_page_id !== expectedId) {
     fail(`${label}: filenameと type_page_id（${data.type_page_id}）が一致しません。`);
@@ -275,7 +280,7 @@ function validateTypeMarkdown(markdown, expectedId, label, record) {
   }
   if (body.trim() === '') fail(`${label}: 本文が空です。`);
   if (/\[asset:/.test(body)) fail(`${label}: asset記法（[asset: ...]）は使えません。`);
-  checkMentionedProblems(body, record, label);
+  checkMentionedProblems(body, record, unit, label);
 
   const tree = markdownParser.parse(body);
   let overviewCount = 0;
@@ -362,8 +367,8 @@ async function main() {
     for (const row of problemRows) {
       const where = `${label}「${PROBLEM_SHEET}」${row.__row}行目`;
       const problemId = cellText(row.problem_id).trim();
-      if (!PROBLEM_ID_PATTERN.test(problemId) || problemId.split('-')[1] !== unit.problemPrefix) {
-        fail(`${where}: problem_id「${problemId}」が単元（${unit.problemPrefix}）の問題ID形式ではありません。`);
+      if (!PROBLEM_ID_PATTERN.test(problemId) || unitOfProblemId(problemId) !== unit.problemIdPrefix) {
+        fail(`${where}: problem_id「${problemId}」が単元（${unit.problemIdPrefix}-999）の問題ID形式ではありません。`);
         continue;
       }
       if (unitProblemIds.has(problemId)) fail(`${where}: problem_id ${problemId} が重複しています。`);
@@ -421,7 +426,7 @@ async function main() {
       if (slugs.has(slug)) fail(`${where}: slug「${slug}」が単元内で重複しています（${slugs.get(slug)}）。`);
       slugs.set(slug, id);
       // 型slugと既存問題slug（問題ID）・予約routeとの衝突
-      if (/^m1-/i.test(slug) || slug === 'index') fail(`${where}: slug「${slug}」が既存問題URL・予約routeと衝突します。`);
+      if (/^m[1a]-/i.test(slug) || slug === 'index') fail(`${where}: slug「${slug}」が既存問題URL・予約routeと衝突します。`);
 
       const statusRaw = cellText(row['状態']).trim();
       const status = STATUS_MAP[statusRaw];
@@ -445,7 +450,7 @@ async function main() {
       // 対象問題ID（型ページ管理側）
       const typeSide = new Map();
       for (const token of cellText(row['対象問題ID']).split(/\r?\n/).map((t) => t.trim()).filter(Boolean)) {
-        const m = token.match(/^(M1-[A-Z]{2}-\d{3})(\(副\))?$/);
+        const m = token.match(/^((?:M1|MA)-[A-Z]{2}-\d{3})(\(副\))?$/);
         if (!m) {
           fail(`${where}: 対象問題ID「${token}」を解釈できません。`);
           continue;
@@ -527,8 +532,13 @@ async function main() {
   }
 
   const published = typePages.filter((t) => t.status === 'published');
-  if (published.length !== EXPECTED_PUBLISHED_TYPE_PAGE_COUNT) {
-    fail(`published（採用）型ページが${published.length}件です（初版の一括公開監査では${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件固定）。`);
+  const groupOf = (t) => TYPE_PAGE_UNITS.find((u) => u.unitId === t.unitId).publicationGroup;
+  // 公開グループごとのpublished件数（グループ単位の一括公開監査、§20.3）。
+  for (const group of TYPE_PAGE_PUBLICATION_GROUPS) {
+    const count = published.filter((t) => groupOf(t) === group.id).length;
+    if (count !== group.expectedPublishedCount) {
+      fail(`${group.label}: published（採用）型ページが${count}件です（公開グループの件数は${group.expectedPublishedCount}件固定）。`);
+    }
   }
 
   // --- 型Markdown（正本） ---
@@ -545,11 +555,11 @@ async function main() {
       continue;
     }
     const markdown = readFileSync(path.join(canonicalTypePages, file), 'utf-8');
-    validateTypeMarkdown(markdown, id, label, record);
+    validateTypeMarkdown(markdown, id, label, record, TYPE_PAGE_UNITS.find((u) => u.unitId === record.unitId));
     if (record.status === 'published') markdownById.set(id, markdown);
   }
 
-  // 制作途中（0〜37件）でも同期してよい。完了状況は報告だけ（公開判定はbuild側）。
+  // 制作途中でも同期してよい。完了状況は報告だけ（公開判定はbuild側）。
   const missing = published.filter((t) => !markdownById.has(t.id)).map((t) => t.id);
 
   for (const w of warnings) console.warn(`[warning] ${w}`);
@@ -595,11 +605,15 @@ async function main() {
       `所属${relations}件（主${relations - secondary}・副${secondary}）`,
   );
   console.log(`型Markdown: ${markdownById.size}/${published.length}件を同期しました。`);
-  console.log(
-    missing.length === 0
-      ? '  published全件そろっています。productionでの公開は、人間の公開承認（src/data/type-page-publication.ts）後だけです。'
-      : `  未作成 ${missing.length}件（productionでは型ページを1件も公開しません。devではMarkdownがある型をローカル確認できます）。`,
-  );
+  for (const group of TYPE_PAGE_PUBLICATION_GROUPS) {
+    const inGroup = published.filter((t) => groupOf(t) === group.id);
+    const groupMissing = inGroup.filter((t) => missing.includes(t.id));
+    console.log(
+      groupMissing.length === 0
+        ? `  ${group.label}: ${inGroup.length}/${inGroup.length}件そろっています。productionでの公開は、そのグループの公開承認（src/data/type-page-publication.ts）後だけです。`
+        : `  ${group.label}: 未作成 ${groupMissing.length}件（このグループの型ページはproductionで1件も公開しません。devではMarkdownがある型をローカル確認できます）。`,
+    );
+  }
   const holdMarkdown = markdownFiles.filter((f) =>
     typePages.some((t) => `${t.id}.md` === f && t.status !== 'published'),
   );

@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // 型ページ（問題タイプ）のproduction build監査。`npm run build` の後に実行する。
 //
-// 1. 公開集合: 公開ゲート＝「published全38件の型Markdown」かつ「公開承認
-//    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜38件の
-//    どの状態でも）、dist・sitemapに型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと
-//    （sitemapは既存の258 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（296 URL）。
-//    承認済みなのに38件そろっていない状態は監査エラー（buildもエラーになる）。
+// 1. 公開集合: 公開グループ（数学I 38型／数学A 場合の数・確率 18型）ごとの公開ゲート＝
+//    「そのグループのpublished全件の型Markdown」かつ「そのグループの公開承認
+//    （src/data/type-page-publication.ts）」。ゲート未通過のグループは（型Markdownが何件でも）、
+//    dist・sitemapにそのグループの型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと。
+//    ゲート通過グループだけ、published全件が一括で存在すること。sitemapは型ページなし258 URL＋
+//    通過グループの型数（数学Iだけなら296、両方なら314）。
+//    承認済みなのに全件そろっていないグループは監査エラー（buildもエラーになる）。
 // 2. hold型が、distのどこにも出ていないこと（2026-09-29に削除した開発確認用fixtureの残骸も検査する）。
 // 3. xlsx読取依存（exceljs）がbuild成果物に含まれていないこと。
 // 4. SVG: 全型ページ（published・hold）について、同じページに並ぶ placement: problem assetを
@@ -17,9 +19,9 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { TYPE_PAGE_UNITS, EXPECTED_PUBLISHED_TYPE_PAGE_COUNT, typePageUrl } from '../src/data/type-page-units.ts';
+import { TYPE_PAGE_UNITS, TYPE_PAGE_PUBLICATION_GROUPS, typePageUrl, unitUrl } from '../src/data/type-page-units.ts';
 import { namespaceSvgIds, auditSvgIdReferences } from '../src/utils/svgIdNamespace.ts';
-import { TYPE_PAGES_PUBLICATION_APPROVED } from '../src/data/type-page-publication.ts';
+import { TYPE_PAGE_GROUP_PUBLICATION_APPROVED } from '../src/data/type-page-publication.ts';
 import { dbSubjectNav } from '../src/data/subjects.ts';
 import { NAVIGATOR_SUBJECTS } from '../src/data/navigator-config.ts';
 
@@ -70,19 +72,27 @@ const hold = snapshot.typePages.filter((t) => t.status !== 'published');
 const markdownFiles = existsSync(markdownDir)
   ? readdirSync(markdownDir).filter((f) => /^[A-Z]{2}-T\d{2}\.md$/.test(f))
   : [];
-const markdownCount = markdownFiles.length;
-const isComplete =
-  published.length === EXPECTED_PUBLISHED_TYPE_PAGE_COUNT && published.every((t) => markdownFiles.includes(`${t.id}.md`));
-const isPublished = TYPE_PAGES_PUBLICATION_APPROVED && isComplete;
-if (TYPE_PAGES_PUBLICATION_APPROVED && !isComplete) {
-  fail(`公開承認済みですが、型Markdownが${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件です（1〜37件だけの公開は禁止）。`);
-}
-// ゲート未通過なら、型Markdownのdescriptionがbuild成果物に出ていないこと（本文流出の検査）。
-const unpublishedDescriptions = isPublished
-  ? []
-  : markdownFiles
-      .map((f) => readFileSync(path.join(markdownDir, f), 'utf-8').match(/^description:\s*"?(.*?)"?\s*$/m)?.[1])
-      .filter((d) => d && d.length >= 8);
+const unitOf = (t) => TYPE_PAGE_UNITS.find((u) => u.unitId === t.unitId);
+const groupStates = TYPE_PAGE_PUBLICATION_GROUPS.map((group) => {
+  const pages = published.filter((t) => unitOf(t).publicationGroup === group.id);
+  const markdownCount = pages.filter((t) => markdownFiles.includes(`${t.id}.md`)).length;
+  const isComplete = pages.length === group.expectedPublishedCount && markdownCount === pages.length;
+  const approved = TYPE_PAGE_GROUP_PUBLICATION_APPROVED[group.id];
+  if (approved && !isComplete) {
+    fail(`${group.label}: 公開承認済みですが、型Markdownが${markdownCount}/${group.expectedPublishedCount}件です（グループ内の一部だけの公開は禁止）。`);
+  }
+  return { group, pages, markdownCount, approved, isPublished: approved && isComplete };
+});
+const publicPages = groupStates.filter((s) => s.isPublished).flatMap((s) => s.pages);
+const unpublishedPages = groupStates.filter((s) => !s.isPublished).flatMap((s) => s.pages);
+const unpublishedUnits = TYPE_PAGE_UNITS.filter(
+  (u) => !groupStates.find((s) => s.group.id === u.publicationGroup).isPublished,
+);
+// ゲート未通過グループの型Markdownのdescriptionがbuild成果物に出ていないこと（本文流出の検査）。
+const unpublishedDescriptions = unpublishedPages
+  .filter((t) => markdownFiles.includes(`${t.id}.md`))
+  .map((t) => readFileSync(path.join(markdownDir, `${t.id}.md`), 'utf-8').match(/^description:\s*"?(.*?)"?\s*$/m)?.[1])
+  .filter((d) => d && d.length >= 8);
 
 const sitemapUrls = [...readFileSync(path.join(dist, 'sitemap.xml'), 'utf-8').matchAll(/<loc>https:\/\/math-navi\.com([^<]*)<\/loc>/g)].map((m) => m[1]);
 if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemapにURLの重複があります。');
@@ -105,8 +115,8 @@ for (const unit of dbUnits) {
     }
   }
 }
-const typeUrl = (t) => typePageUrl(TYPE_PAGE_UNITS.find((u) => u.unitId === t.unitId), t.slug);
-const expectedUrls = [...expectedBase, ...(isPublished ? published.map(typeUrl) : [])];
+const typeUrl = (t) => typePageUrl(unitOf(t), t.slug);
+const expectedUrls = [...expectedBase, ...publicPages.map(typeUrl)];
 const missingUrls = expectedUrls.filter((u) => !sitemapUrls.includes(u));
 const extraUrls = sitemapUrls.filter((u) => !expectedUrls.includes(u));
 if (missingUrls.length > 0) fail(`sitemapに欠けているURL: ${missingUrls.join(', ')}`);
@@ -118,13 +128,23 @@ for (const url of expectedUrls) {
 const htmlFiles = walk(dist).filter((f) => f.endsWith('.html'));
 const builtFiles = walk(dist).filter((f) => /\.(html|js|css|xml|json|mjs)$/.test(f));
 const typePagesInDist = published.filter((t) => existsSync(path.join(dist, typeUrl(t), 'index.html')));
-if (!isPublished && typePagesInDist.length > 0) fail(`公開ゲート未通過なのに型ページがdistにあります:${typePagesInDist.map((t) => t.id).join(', ')}`);
-if (isPublished && typePagesInDist.length !== published.length) fail(`published型ページのうち${typePagesInDist.length}件しかdistにありません。`);
+const leaked = typePagesInDist.filter((t) => unpublishedPages.includes(t));
+if (leaked.length > 0) fail(`公開ゲート未通過のグループの型ページがdistにあります: ${leaked.map((t) => t.id).join(', ')}`);
+const publicInDist = typePagesInDist.filter((t) => publicPages.includes(t));
+if (publicInDist.length !== publicPages.length) fail(`公開グループの型ページのうち${publicInDist.length}/${publicPages.length}件しかdistにありません。`);
 
+// 公開前グループの単元のHTML（単元トップ・個別問題）には、切替・型一覧navが出ていないこと。
+const unpublishedUnitDirs = unpublishedUnits.map((u) => path.join(dist, unitUrl(u)));
 let switchPages = 0;
+let unpublishedSwitchPages = 0;
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf-8');
-  if (html.includes('data-list-view-switch') || html.includes('db-type-link')) switchPages += 1;
+  const hasSwitch = html.includes('data-list-view-switch') || html.includes('db-type-link');
+  if (hasSwitch) switchPages += 1;
+  if (hasSwitch && unpublishedUnitDirs.some((dir) => file.startsWith(dir))) unpublishedSwitchPages += 1;
+  for (const t of unpublishedPages) {
+    if (html.includes(`href="${typeUrl(t)}"`)) fail(`公開ゲート未通過の型 ${t.id} へのリンクが ${path.relative(dist, file)} に出ています。`);
+  }
   // --- 2. hold型・fixture ---
   for (const t of hold) {
     if (html.includes(`href="${typeUrl(t)}"`) || html.includes(t.name)) {
@@ -135,7 +155,7 @@ for (const file of htmlFiles) {
     }
   }
 }
-if (!isPublished && switchPages > 0) fail(`公開ゲート未通過なのに「問題タイプ」切替・型一覧navが${switchPages}ページに出ています。`);
+if (unpublishedSwitchPages > 0) fail(`公開ゲート未通過のグループの単元で「問題タイプ」切替・型一覧navが${unpublishedSwitchPages}ページに出ています。`);
 for (const t of hold) {
   if (existsSync(path.join(dist, typeUrl(t)))) fail(`hold型 ${t.id} のrouteがdistにあります。`);
   if (sitemapUrls.includes(typeUrl(t))) fail(`hold型 ${t.id} がsitemapにあります。`);
@@ -179,11 +199,13 @@ for (const page of snapshot.typePages) {
 
 // --- 結果 ---
 const withAssets = svgReport.filter((r) => r.assets > 0);
-console.log(
-  `公開状態: ${isPublished ? '公開（38件完了＋公開承認）' : '公開前'}` +
-    `（型Markdown ${markdownCount}/${EXPECTED_PUBLISHED_TYPE_PAGE_COUNT}件、公開承認 ${TYPE_PAGES_PUBLICATION_APPROVED ? 'あり' : 'なし'}）`,
-);
-console.log(`sitemap: ${sitemapUrls.length} URL（既存 ${expectedBase.length}＝単元トップ${dbUnits.length}＋問題${problemCount}＋固定6、型 ${isPublished ? published.length : 0}）`);
+for (const s of groupStates) {
+  console.log(
+    `公開状態 ${s.group.label}: ${s.isPublished ? '公開（全件完了＋公開承認）' : '公開前'}` +
+      `（型Markdown ${s.markdownCount}/${s.group.expectedPublishedCount}件、公開承認 ${s.approved ? 'あり' : 'なし'}）`,
+  );
+}
+console.log(`sitemap: ${sitemapUrls.length} URL（既存 ${expectedBase.length}＝単元トップ${dbUnits.length}＋問題${problemCount}＋固定6、型 ${publicPages.length}）`);
 console.log(`型ページ in dist: ${typePagesInDist.length}件 / 切替・型一覧navを含むHTML: ${switchPages}件`);
 console.log(`SVG監査: 全${svgReport.length}型、problem assetを持つ型 ${withAssets.length}件（${withAssets.map((r) => `${r.id}:${r.assets}`).join(' ')}）`);
 const rawCollisions = svgReport.filter((r) => r.rawDuplicates.length > 0);

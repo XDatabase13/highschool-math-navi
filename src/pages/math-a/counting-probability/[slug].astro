@@ -4,45 +4,85 @@ import { prepareCountingProbabilityEntry } from '../../../utils/prepareCountingP
 import { buildCountingProbabilityCenterItems } from '../../../utils/countingProbabilityDbItems';
 import Quadratic27Detail from '../../../components/Quadratic27Detail.astro';
 import ProblemDbShell from '../../../components/ProblemDbShell.astro';
+import TypePageDetail from '../../../components/TypePageDetail.astro';
 import type { CollectionEntry } from 'astro:content';
+import {
+  buildTypePageView,
+  getTypeNavItems,
+  getTypePageRoutes,
+  typePageShellProps,
+} from '../../../utils/typePages';
 
 // 数学A「場合の数・確率」の個別問題ページ。数学Iの各単元の[slug].astroと同じ構成
 // （静的生成・共通DBシェル再利用）をcountingProbabilityコレクションに対しても使う。
 // 公開contract（index対象・sitemap掲載・canonicalは自身のURL）は数学Iの個別問題と同格。
 // 生成対象は独立検算済みの問題だけ（getVerifiedCollection）。未検算の問題は、正本の
 // verification_statusが更新されて再同期されるまで、ページも一覧項目も生成されない。
-// 型ページはこの単元にはまだ無いため、問題routeだけを返す。
+//
+// 型ページ（/math-a/counting-probability/{型slug}/）も同じURL階層のため、別の動的routeは作らず、
+// ここでproblem/typeのunionを返す（型routeは公開グループ「数学A 場合の数・確率」が公開ゲートを
+// 通過した後のpublished全件だけ。公開前のproduction buildでは0件で、既存の問題routeだけが生成される）。
 export async function getStaticPaths() {
   const problems = await getVerifiedCollection('countingProbability');
-  return problems.map((problem) => ({
-    params: { slug: problem.id },
-    props: { problem },
-  }));
+  const typeRoutes = await getTypePageRoutes('counting-probability', problems.map((problem) => problem.id));
+  return [
+    ...problems.map((problem) => ({
+      params: { slug: problem.id },
+      props: { kind: 'problem' as const, problem },
+    })),
+    ...typeRoutes.map((route) => ({
+      params: { slug: route.slug },
+      props: { kind: 'type' as const, typePageId: route.id },
+    })),
+  ];
 }
 
-type Props = { problem: CollectionEntry<'countingProbability'> };
+type Props =
+  | { kind: 'problem'; problem: CollectionEntry<'countingProbability'> }
+  | { kind: 'type'; typePageId: string };
 
-const { problem } = Astro.props;
-const prepared = await prepareCountingProbabilityEntry(problem);
+const props = Astro.props;
+const problem = props.kind === 'problem' ? props.problem : undefined;
+const prepared = problem ? await prepareCountingProbabilityEntry(problem) : undefined;
+const typeView = props.kind === 'type' ? await buildTypePageView(props.typePageId) : undefined;
 
 const allProblems = (await getVerifiedCollection('countingProbability')).sort(
   (a, b) => a.data.display_order - b.data.display_order,
 );
 const centerItems = buildCountingProbabilityCenterItems(allProblems);
+const typeItems = await getTypeNavItems('counting-probability');
 ---
 
-<ProblemDbShell
-  title={`${problem.data.title} | 数学A 場合の数・確率 | 高校数学ナビ`}
-  description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学A「場合の数・確率」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
-  canonicalPath={`/math-a/counting-probability/${problem.id}/`}
-  breadcrumbItems={[
-    { label: '数学A' },
-    { label: '場合の数・確率', href: '/math-a/counting-probability/' },
-    { label: problem.data.title },
-  ]}
-  activeUnitId="counting-probability"
-  activeItemId={problem.id}
-  centerItems={centerItems}
->
-  <Quadratic27Detail prepared={prepared} />
-</ProblemDbShell>
+{typeView ? (
+  <ProblemDbShell
+    {...typePageShellProps(typeView)}
+    activeUnitId="counting-probability"
+    centerItems={centerItems}
+    typeItems={typeItems}
+    activeListView="types"
+    activeTypeId={typeView.id}
+    detailLabel="選択中の問題タイプ"
+  >
+    <TypePageDetail view={typeView} />
+  </ProblemDbShell>
+) : (
+  problem &&
+  prepared && (
+    <ProblemDbShell
+      title={`${problem.data.title} | 数学A 場合の数・確率 | 高校数学ナビ`}
+      description={`${problem.data.title}（重要度：${problem.data.importance_label}／難易度：${problem.data.difficulty}）。数学A「場合の数・確率」の問題データベースより、問題文・ThinkingFlow・最終解答を確認できます。`}
+      canonicalPath={`/math-a/counting-probability/${problem.id}/`}
+      breadcrumbItems={[
+        { label: '数学A' },
+        { label: '場合の数・確率', href: '/math-a/counting-probability/' },
+        { label: problem.data.title },
+      ]}
+      activeUnitId="counting-probability"
+      activeItemId={problem.id}
+      centerItems={centerItems}
+      typeItems={typeItems}
+    >
+      <Quadratic27Detail prepared={prepared} />
+    </ProblemDbShell>
+  )
+)}

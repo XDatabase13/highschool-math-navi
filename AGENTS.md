@@ -16,7 +16,7 @@
 
 数学A「場合の数・確率」MA-CP-001〜034（34問）は全問独立検算済みで、Codex最終構造監査（BLOCKERなし）を経て、2026-10-17に本番公開しました。詳細は「数学A 場合の数・確率の現在地」節を参照してください。
 
-2026-10-26現在、追加のMA-CP-035〜066（32問）は教材化・独立検算・人間レビュー後修正・Codex構造監査まで完了し、ローカルでは計246問です。追加32問は未コミット・未push・未公開で、本番214問の公開記録とは区別してください。通常buildは299ページ、sitemapは296 URLです。
+2026-10-26に、追加のMA-CP-035〜066（32問）を本番公開し、計246問になりました（feature先端 `b20aca1` をmasterへ `--no-ff` merge＝`6d41c75`、GitHub Actions Deploy Run `40248584721` 成功）。通常buildは299ページ、sitemapは296 URLです。
 
 数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
 
@@ -124,7 +124,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 
 ## 数学A 場合の数・確率の現在地
 
-数学A「場合の数・確率」MA-CP-001〜066（66問）は全問独立検算済みで、master「公開問題管理」もPASS 66問です。001〜034は2026-10-17に本番公開済みです。追加035〜066は教材化・asset生成・全32ページの人間によるレビュー・レビュー後修正・2026-10-26のCodex最終構造監査を完了し、未コミット・未push・未公開の状態です。054の問題図も人間の実物確認後にPASSへ同期済みです。ローカル通常buildは全体299ページ・sitemap 296 URL・個別問題246問です。
+数学A「場合の数・確率」MA-CP-001〜066（66問）は全問独立検算済みで、master「公開問題管理」もPASS 66問です。001〜034は2026-10-17に本番公開済みです。追加035〜066は教材化・asset生成・全32ページの人間によるレビュー・レビュー後修正・2026-10-26のCodex最終構造監査を経て、2026-10-26に本番公開しました（feature先端 `b20aca1` をmasterへ `--no-ff` merge＝`6d41c75`、GitHub Actions Deploy Run `40248584721` 成功）。054の問題図も人間の実物確認後にPASSへ同期済みです。本番は全体299ページ・sitemap 296 URL・個別問題246問です。公開後、本番のPC（1440px）・スマホ（390px）で単元トップ・054・問題一覧（8区分）・4×4ナビ（cp7・cp8の抽出）・sitemap・AI OFF（Worker通信なし、MA-CPのAI-contextは404）を確認しました。
 
 - 正本は`math_db_quadratic_working/problems/MA-CP/`・`assets/`です（正本の`problems/`は単元別のサブフォルダに分けています。`sync-quadratic-content.mjs`はサブフォルダと旧フラット配置の両方を読みます）。スナップショットは`src/content/countingProbability/`・`src/content/countingProbability-assets/`、Content Collectionは`countingProbability`です。表示は`prepareCountingProbabilityEntry.ts`経由で`Quadratic27Detail.astro`を再利用します。
 - ルートは`/math-a/counting-probability/`・`/math-a/counting-probability/MA-CP-001/`〜`/MA-CP-066/`で、数学Iの単元と同格の公開contract（index対象・sitemap掲載・canonicalは各URL自身）です。`dbSubjectNav`では科目「数学A」の単元として置いています（単元名は正本frontmatterの`unit`と同じ「場合の数・確率」にしてください。4×4ナビが照合します）。
@@ -244,7 +244,7 @@ Web repoでは、GitHub Actions単独でbuildできるよう公開用スナッ�
 - `src/content/dataAnalysis/`・`src/content/dataAnalysis-assets/`（データの分析）
 - `src/content/expressionCalculation/`・`src/content/expressionCalculation-assets/`（数と式、M1-EC-001〜044。2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 - `src/content/setLogic/`・`src/content/setLogic-assets/`（集合と論証、M1-SL-001〜018。2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
-- `src/content/countingProbability/`・`src/content/countingProbability-assets/`（数学A 場合の数・確率、MA-CP-001〜066。001〜034は2026-10-17本番公開、035〜066はローカル準備完了・未公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
+- `src/content/countingProbability/`・`src/content/countingProbability-assets/`（数学A 場合の数・確率、MA-CP-001〜066。001〜034は2026-10-17、035〜066は2026-10-26本番公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
 - `src/content/typePages/`・`src/data/type-pages.generated.json`（型ページの本文・構造。正本は `type_pages/*.md` とmaster xlsx。詳細は「型ページ（問題タイプ）の現在地」節を参照）
 
 **公開用スナップショットは正本ではありません。直接編集しないでください。**
@@ -294,7 +294,7 @@ npm run sync-content
 - `/math1/data-analysis/`：数学I「データの分析」上位区分の単元トップ、`/math1/data-analysis/M1-DA-001/` 〜 `/M1-DA-023/`
 - `/math1/suto-shiki/`：数学I「数と式」上位区分の単元トップ、`/math1/suto-shiki/M1-EC-001/` 〜 `/M1-EC-044/`（2026-09-23本番公開。詳細は「数と式の現在地」節を参照）
 - `/math1/set-logic/`：数学I「集合と論証」上位区分の単元トップ、`/math1/set-logic/M1-SL-001/` 〜 `/M1-SL-018/`（2026-09-27本番公開。詳細は「集合と論証の現在地」節を参照）
-- `/math-a/counting-probability/`：数学A「場合の数・確率」の単元トップ、`/math-a/counting-probability/MA-CP-001/` 〜 `/MA-CP-066/`（001〜034は2026-10-17本番公開、035〜066は未公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
+- `/math-a/counting-probability/`：数学A「場合の数・確率」の単元トップ、`/math-a/counting-probability/MA-CP-001/` 〜 `/MA-CP-066/`（001〜034は2026-10-17、035〜066は2026-10-26本番公開。詳細は「数学A 場合の数・確率の現在地」節を参照）
 - `/navigator/`：4×4ナビゲーションの設定画面、`/app/navigation/`：その抽出結果の入口（どちらも `BaseLayout`。抽出結果そのものは、条件のfragmentを付けた既存の個別問題URL＝問題DBの抽出モードで表示する。詳細は「4×4ナビゲーションの現在地」節を参照）
 
 個別問題URLをブログ型・縦長型の別UIへ戻さないでください。
@@ -360,7 +360,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 ### sitemap / robots
 
 `sitemap.xml` は検索対象ページを掲載します（`src/pages/sitemap.xml.ts`）。
-ローカルの次回公開準備246問（数学I 180問＝QF54・TR41・DA23・EC44・SL18、数学A 66問＝CP66）の内訳は、
+現行246問（数学I 180問＝QF54・TR41・DA23・EC44・SL18、数学A 66問＝CP66）の内訳は、
 
 - `/`
 - `/navigator/`（4×4ナビゲーションの設定画面）
@@ -375,7 +375,7 @@ PC幅では現在の3ペインUIを維持します。狭幅では、同じ `Prob
 - `/disclaimer/`
 - `/contact/`
 
-の計296 URLです（型ページなし258＋既存型ページ38）。本番は2026-10-17公開時点の264 URL（個別問題214問）で、追加32問はまだ公開していません。型ページは各単元の個別問題の後ろに並びます。
+の計296 URLです（型ページなし258＋既存型ページ38）。2026-10-17公開時点の264 URL（個別問題214問）から、2026-10-26の追加32問公開で296 URLになりました。型ページは各単元の個別問題の後ろに並びます。
 
 `/app/`・`/app/navigation/` はsitemapへ含めません（旧6サンプルrouteは2026-09-24に削除済み）。
 

@@ -16,7 +16,7 @@
 
 数学A「場合の数・確率」MA-CP-001〜034（34問）は全問独立検算済みで、Codex最終構造監査（BLOCKERなし）を経て、2026-10-17に本番公開しました。詳細は「数学A 場合の数・確率の現在地」節を参照してください。
 
-2026-10-26に、追加のMA-CP-035〜066（32問）を本番公開し、計246問になりました（feature先端 `b20aca1` をmasterへ `--no-ff` merge＝`6d41c75`、GitHub Actions Deploy Run `40248584721` 成功）。同日、数学A「場合の数・確率」の型ページ18件も公開し、通常buildは317ページ、sitemapは314 URLです。
+2026-10-26に、追加のMA-CP-035〜066（32問）を本番公開し、計246問になりました（feature先端 `b20aca1` をmasterへ `--no-ff` merge＝`6d41c75`、GitHub Actions Deploy Run `40248584721` 成功）。同日、数学A「場合の数・確率」の型ページ18件も公開し（feature先端 `902b653` をmasterへ `--no-ff` merge＝`1a4a227`、GitHub Actions Deploy Run `40296057824` 成功）、通常buildは317ページ、sitemapは314 URLです。
 
 数学I「数と式」M1-EC-001〜044（44問、式の計算／因数分解／実数・平方根／一次不等式の4区分）は全問独立検算済みで、教材化・技術実装・人間による全44ページSSレビュー・Codex最終構造監査を経て、2026-09-23に本番公開しました。詳細は「数と式の現在地」節を参照してください。
 
@@ -131,7 +131,7 @@ TOPページ（`/`）の現行ビジュアルデザイン（配色・タイポ�
 - 中央一覧は`src/utils/countingProbabilityDbItems.ts`の`SECTION_TO_GROUP`で、`section`値ベースの8区分（集合の要素の個数／場合の数／順列／組合せ／確率とその基本性質／独立な試行と反復試行／条件付き確率／期待値）に分けます。MA-CP-030〜032が「順列」、033・034が「組合せ」で、`display_order`順のままだと区分が途中で分かれてしまうため、この単元だけ区分順→`display_order`順に並べてから渡します。
 - 4×4ナビでは科目`ma`・単元`cp`・section`cp1`〜`cp8`です。
 - masterは`problem_master/counting_probability_problem_master.xlsx`です。全66問の正本・master・Webスナップショットが一致しています。035〜066の独立検算記録は`independent_result_batch_MA-CP-035_to_066`です。
-- 型ページ18型（CP-T01〜18）は、人間の画面レビュー・構造監査（教材側`review/MA-CP_type_pages_structure_audit/report.md`、PASS）と人間の公開承認を経て、2026-10-26に本番公開しました（`CP_TYPE_PAGES_PUBLICATION_APPROVED = true`）。URLは`/math-a/counting-probability/{型slug}/`。詳細は「型ページ（問題タイプ）の現在地」節。外部追加演習リンクはありません。
+- 型ページ18型（CP-T01〜18）は、人間の画面レビュー・構造監査（教材側`review/MA-CP_type_pages_structure_audit/report.md`、PASS）と人間の公開承認を経て、2026-10-26に本番公開しました（`CP_TYPE_PAGES_PUBLICATION_APPROVED = true`、feature先端 `902b653` をmasterへ `--no-ff` merge＝`1a4a227`、GitHub Actions Deploy Run `40296057824` 成功）。公開後、本番のPC（1440px）・スマホ（390px）で、全18型のHTTP 200・self-canonical・noindexなし・初期全閉、単元トップの型一覧18件、スマホ問題一覧dialogの型一覧18件→CP-T08→previewの単一open→既存問題MA-CP-023への遷移、代表5型（集合の要素の個数・組分けと組の区別・同じものを含む順列と最短経路・反復試行の確率・期待値とゲームの損得）の表示とスマホの横はみ出しなし、sitemap 314件（CP型18件・重複なし）、数学I型ページの回帰、AI OFF（Worker通信なし、MA-CPのAI-contextは404）を確認した（画像は教材側`review/MA-CP_type_pages_production_check/`）。URLは`/math-a/counting-probability/{型slug}/`。詳細は「型ページ（問題タイプ）の現在地」節。外部追加演習リンクはありません。
 - **AI-context JSON・Workerの問題ID許可はMA-CPに未対応です**（意図的。場合の数・確率の全問題がそろってからまとめて対応する予定です）。本番は`PUBLIC_AI_ENABLED=false`なので、数学Iと同じく「AIに聞く」を開いても準備中の案内が出るだけで、Workerへは通信しません（ローカルの`.env`でAIを有効にしている場合、MA-CPでは対象外のエラーになります）。
 - MA-CP-033・034では、数式内の「○」でKaTeXの`unknownSymbol`警告が出ます。表示は正常で、既知の警告として扱っています。
 - Codex最終構造監査：001〜034は2026-10-17、035〜066を中心とする全66問は2026-10-26に完了（`PUBLIC_AI_ENABLED=false`、BLOCKERなし）。報告は教材側`review/MA-CP-035_to_066_structure_audit/report.md`です。公開前のdescription・TOP件数・現在地文書の指摘も反映済みです。

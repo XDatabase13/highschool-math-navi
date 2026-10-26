@@ -9,11 +9,11 @@
 //   node scripts/test-type-pages.mjs gate
 //     src/content/typePages/ と src/data/type-page-publication.ts を一時的に書き換えて
 //     production buildと監査（audit-type-pages）を実行し、次を確認する。終了時（失敗時も）に元へ戻す。
-//       1. 1〜37件のMarkdown → productionの型ページ 0件・sitemap 226件
-//       2. 38件そろっても公開承認なし → 226件
-//       3. 38件＋公開承認あり → 264件（38型一括）
-//     （226＝TOP・4×4ナビ設定画面 /navigator/・このサイトについて /about/・数学Iの単元トップ5・問題180・
-//       数学A 場合の数・確率の単元トップ1・問題34・Privacy/Disclaimer/Contact）
+//       1. 1〜37件のMarkdown → productionの型ページ 0件・sitemap 258件
+//       2. 38件そろっても公開承認なし → 258件
+//       3. 38件＋公開承認あり → 296件（38型一括）
+//     （258＝TOP・4×4ナビ設定画面 /navigator/・このサイトについて /about/・数学Iの単元トップ5・問題180・
+//       数学A 場合の数・確率の単元トップ1・問題66・Privacy/Disclaimer/Contact）
 //       4. 公開承認ありで37件 → buildエラー
 //     distは上書きされるため、最後に現状（元の状態）で再buildする。
 
@@ -129,10 +129,10 @@ function gateTests() {
   cpSync(markdownDir, path.join(backupDir, 'typePages'), { recursive: true });
   const flagBackup = readFileSync(flagFile, 'utf-8');
   const scenarios = [
-    { name: '1件・承認なし', count: 1, approved: false, build: true, sitemap: 226 },
-    { name: '37件・承認なし', count: 37, approved: false, build: true, sitemap: 226 },
-    { name: '38件・承認なし', count: 38, approved: false, build: true, sitemap: 226 },
-    { name: '38件・承認あり', count: 38, approved: true, build: true, sitemap: 264 },
+    { name: '1件・承認なし', count: 1, approved: false, build: true, sitemap: 258 },
+    { name: '37件・承認なし', count: 37, approved: false, build: true, sitemap: 258 },
+    { name: '38件・承認なし', count: 38, approved: false, build: true, sitemap: 258 },
+    { name: '38件・承認あり', count: 38, approved: true, build: true, sitemap: 296 },
     { name: '37件・承認あり（部分公開は禁止）', count: 37, approved: true, build: false },
   ];
   try {

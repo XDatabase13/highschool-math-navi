@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 336 108" role="img" aria-label="成功回数0回・1回・2回・3回の確率が、それぞれ1/8・3/8・3/8・1/8であることを示す表">
+<text x="58" y="36" class="pa-label pa-table-cell-strong">成功回数</text>
+<text x="126" y="36" class="pa-label">0回</text>
+<text x="186" y="36" class="pa-label">1回</text>
+<text x="246" y="36" class="pa-label">2回</text>
+<text x="306" y="36" class="pa-label">3回</text>
+<text x="58" y="74" class="pa-label pa-table-cell-strong">確率</text>
+<text x="126" y="66" class="pa-label">1</text>
+<line x1="119.5" y1="70" x2="132.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="126" y="82" class="pa-label">8</text>
+<text x="186" y="66" class="pa-label">3</text>
+<line x1="179.5" y1="70" x2="192.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="186" y="82" class="pa-label">8</text>
+<text x="246" y="66" class="pa-label">3</text>
+<line x1="239.5" y1="70" x2="252.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="246" y="82" class="pa-label">8</text>
+<text x="306" y="66" class="pa-label">1</text>
+<line x1="299.5" y1="70" x2="312.5" y2="70" class="pa-figure-line" stroke-width="1"/>
+<text x="306" y="82" class="pa-label">8</text>
+<rect x="20" y="16" width="316" height="76" class="pa-figure-line" fill="none"/>
+<line x1="20" y1="48" x2="336" y2="48" class="pa-figure-line"/>
+<line x1="96" y1="16" x2="96" y2="92" class="pa-figure-line"/>
+<line x1="156" y1="16" x2="156" y2="92" class="pa-guide"/>
+<line x1="216" y1="16" x2="216" y2="92" class="pa-guide"/>
+<line x1="276" y1="16" x2="276" y2="92" class="pa-guide"/>
+</svg>

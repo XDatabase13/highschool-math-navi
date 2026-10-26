@@ -59,11 +59,11 @@ function readFrontmatter(file) {
   }
   return data;
 }
-// 公開対象の問題数・section数・単元数（数学I 180問・22 section・5単元＋数学A 場合の数・確率 34問・4 section・1単元）。
-const EXPECTED_PROBLEMS = 214;
-const EXPECTED_SECTIONS = 26;
+// 公開対象の問題数・section数・単元数（数学I 180問・22 section・5単元＋数学A 場合の数・確率 66問・8 section・1単元）。
+const EXPECTED_PROBLEMS = 246;
+const EXPECTED_SECTIONS = 30;
 const EXPECTED_UNITS = 6;
-const EXPECTED_SITEMAP = 264;
+const EXPECTED_SITEMAP = 296;
 const entries = [];
 const titles = new Map();
 // 正本スナップショットにあるが未検算の問題（ページ・一覧・sitemapに出してはいけない）。

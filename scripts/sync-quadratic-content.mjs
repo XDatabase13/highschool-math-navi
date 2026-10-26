@@ -39,7 +39,7 @@ const UNITS = [
   { prefix: 'M1-EC', collection: 'expressionCalculation', label: 'expressionCalculation・数と式' },
   // 集合と論証（M1-SL-001〜018）
   { prefix: 'M1-SL', collection: 'setLogic', label: 'setLogic・集合と論証' },
-  // 数学A 場合の数・確率（MA-CP-001〜034）
+  // 数学A 場合の数・確率（MA-CP-001〜066）
   { prefix: 'MA-CP', collection: 'countingProbability', label: 'countingProbability・場合の数・確率' },
 ];
 

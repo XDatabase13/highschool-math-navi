@@ -4,7 +4,7 @@
 // 1. 公開集合: 公開ゲート＝「published全38件の型Markdown」かつ「公開承認
 //    （src/data/type-page-publication.ts が true）」。ゲート未通過なら（型Markdownが0〜38件の
 //    どの状態でも）、dist・sitemapに型route・型一覧nav・切替UI・型Markdown本文が1件も存在しないこと
-//    （sitemapは既存の226 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（264 URL）。
+//    （sitemapは既存の258 URLのまま）。ゲート通過時だけ、published 38型が一括で存在すること（296 URL）。
 //    承認済みなのに38件そろっていない状態は監査エラー（buildもエラーになる）。
 // 2. hold型が、distのどこにも出ていないこと（2026-09-29に削除した開発確認用fixtureの残骸も検査する）。
 // 3. xlsx読取依存（exceljs）がbuild成果物に含まれていないこと。

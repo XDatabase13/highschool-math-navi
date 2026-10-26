@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 236" role="img" aria-label="全体の中に「すべて4以下」の領域があり、その内側に「すべて3以下」の領域がある。外側から内側を除いたドーナツ状の領域を塗り、最大値が4の場合に対応させたベン図">
+<rect x="20" y="24" width="340" height="200" class="pa-figure-line" fill="none"/>
+<text x="56" y="17" class="geo-side-label">全体</text>
+<path d="M94 128 a96 96 0 1 0 192 0 a96 96 0 1 0 -192 0 Z M138 128 a52 52 0 1 0 104 0 a52 52 0 1 0 -104 0 Z" fill-rule="evenodd" fill="var(--color-accent)" fill-opacity="0.3"/>
+<circle cx="190" cy="128" r="96" class="pa-figure-line"/>
+<circle cx="190" cy="128" r="52" class="pa-figure-line"/>
+<text x="190" y="124" class="geo-side-label">すべて</text>
+<text x="190" y="140" class="geo-side-label">3以下</text>
+<text x="190" y="54" class="geo-point-label">すべて4以下</text>
+<text x="190" y="206" class="geo-angle-label">最大値が4</text>
+</svg>

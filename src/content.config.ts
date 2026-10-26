@@ -53,8 +53,8 @@ const problemAssetSchema = z
 // verification_statusの許可値。公開対象の判定（verifiedCollection.ts）は「独立検算済み」だけを使う。
 // 任意文字列を通すと、誤字や更新漏れがあってもbuildは成功し、その問題が一覧・個別ページ・
 // sitemapから黙って消えるため、想定外の値はここでビルド時エラーにする。
-// 「未検算」は正本で実際に使われる値（検算前・更新漏れ時）なので許可し、非公開として扱う。
-const verificationStatusSchema = z.enum(['独立検算済み', '未検算']);
+// 「未検算」「検算中」は正本で実際に使われる値（検算前・照合途中・更新漏れ時）なので許可し、非公開として扱う。
+const verificationStatusSchema = z.enum(['独立検算済み', '未検算', '検算中']);
 
 const quadratic27 = defineCollection({
   loader: glob({

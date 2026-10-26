@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 178" role="img" aria-label="全体を100個分に換算した量の表。工場Aは製品50個分・不良品50×0.02＝1個分、工場Bは30個分・30×0.04＝1.2個分、工場Cは20個分・20×0.05＝1個分">
+<text x="175" y="22" class="geo-side-label">全体を100個分に換算した量（実際の個数ではない）</text>
+<text x="55" y="54" class="pa-label pa-table-cell-strong">製造元</text>
+<text x="135" y="54" class="pa-label pa-table-cell-strong">製品数</text>
+<text x="255" y="54" class="pa-label pa-table-cell-strong">不良品数</text>
+<text x="55" y="86" class="pa-label pa-table-cell-strong">A</text>
+<text x="135" y="86" class="pa-label">50個分</text>
+<text x="255" y="86" class="pa-label">50×0.02＝1個分</text>
+<text x="55" y="118" class="pa-label pa-table-cell-strong">B</text>
+<text x="135" y="118" class="pa-label">30個分</text>
+<text x="255" y="118" class="pa-label">30×0.04＝1.2個分</text>
+<text x="55" y="150" class="pa-label pa-table-cell-strong">C</text>
+<text x="135" y="150" class="pa-label">20個分</text>
+<text x="255" y="150" class="pa-label">20×0.05＝1個分</text>
+<rect x="20" y="34" width="310" height="128" class="pa-figure-line" fill="none"/>
+<line x1="20" y1="66" x2="330" y2="66" class="pa-figure-line"/>
+<line x1="20" y1="98" x2="330" y2="98" class="pa-guide"/>
+<line x1="20" y1="130" x2="330" y2="130" class="pa-guide"/>
+<line x1="90" y1="34" x2="90" y2="162" class="pa-figure-line"/>
+<line x1="180" y1="34" x2="180" y2="162" class="pa-guide"/>
+</svg>
